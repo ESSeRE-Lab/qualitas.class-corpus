@@ -1,0 +1,113 @@
+<?xml version="1.0"?>
+<!--
+ *  Copyright (c) 2002
+ *  bestsolution EDV Systemhaus GmbH,
+ *  http://www.bestsolution.at
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2, or (at your option)
+ * any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+ *
+ *  $Header: /usr/bestsolution/cvsroot/java/draw_swf/build.xml,v 1.24 2004/05/05 08:04:58 tom Exp $
+-->
+
+<project name="DrawSWF" basedir="." default="all">
+
+<property file="build.properties"/>
+
+<taskdef resource="net/sf/antcontrib/antcontrib.properties">
+  <classpath>
+    <pathelement location="./lib/ant-contrib-0.2.jar"/>
+  </classpath>
+</taskdef>
+  <target name="clean">
+    <delete failonerror="false" includeEmptyDirs="true">
+      <fileset dir="." includes="**/*.class"/>
+      <fileset dir="dist"/>
+    </delete>
+  </target>
+
+  <target name="compile-plugins">
+	  <javac srcdir="." destdir="." debug="false" optimize="false" target="1.4" deprecation="true" classpath=".:lib/commons-httpclient-2.0-alpha2.jar" includes="at/bestsolution/drawswf/plugin/**" fork="true"/>
+  </target>
+
+  <target name="compile-main">
+    <javac srcdir="." destdir="." debug="false" optimize="false" target="1.4" deprecation="true" excludes="at/bestsolution/drawswf/plugin/**" fork="true"/>
+  </target>
+
+  <target name="bin-dist-plugin" depends="compile-plugins">
+    <foreach target="jar-dist-plugin" param="plugin-name" list="${drawswf.plugins}"/>
+  </target>
+
+  <target name="jar-dist-plugin" depends="compile-plugins">
+    <echo>working on plugin ${plugin-name}</echo>
+    <mkdir dir="build/plugin"/>
+    <mkdir dir="build/lib"/>
+    <property file="${plugin-name}.properties"/>
+    <jar jarfile="build/plugin/${plugin-name}-${plugin.version}.jar" manifest="at/bestsolution/drawswf/plugin/${plugin-name}/manifest.txt">
+      <fileset dir="." includes="at/bestsolution/drawswf/plugin/${plugin-name}/**/*.class"/>
+      <fileset dir="." includes="at/bestsolution/drawswf/plugin/${plugin-name}/**/*.properties"/>
+      <fileset dir="." includes="at/bestsolution/drawswf/plugin/${plugin-name}/images/**/*"/>
+    </jar>
+    <foreach target="jar-copy-4-plugin" param="lib-jar" list="${plugin-jar-libs}"/>
+    <zip zipfile="dist/${plugin-name}-${plugin.version}.zip">
+      <zipfileset dir="build" includes="**/*.jar"/>
+      <zipfileset dir="at/bestsolution/drawswf/plugin/remotesave/" includes="README"/>
+    </zip>
+    <delete failonerror="false" includeEmptyDirs="true">
+     <fileset dir="build"/> 
+    </delete>
+  </target>
+
+  <target name="jar-copy-4-plugin">
+<!--    <echo>FROM "${lib-jar}" TO "${lib-jar}"</echo>-->
+    <copy file="lib/${lib-jar}" tofile="build/lib/${lib-jar}"/>
+  </target>
+
+  <target name="bin-dist-main" depends="compile-main">
+    <property name="bin-prefix" value="drawswf"/>
+    <mkdir dir="dist"/>
+    <jar jarfile="dist/${bin-prefix}-${drawswf.version}.jar" manifest="manifest.txt">
+      <fileset dir="." includes="**/*.class" excludes="at/bestsolution/drawswf/plugin"/>
+      <fileset dir="." includes="*.properties"/>
+      <fileset dir="." includes="at/bestsolution/drawswf/images/**/*"/>
+      <fileset dir="." includes="com/incors/plaf/kunststoff/icons/*"/>
+      <fileset dir="." includes="README, GPL_V2, JavaSWF2-BSD.LICENSE.txt, kunststoff-license.txt"/>
+    </jar>
+  </target>
+
+  <target name="src-dist">
+    <property name="src-prefix" value="drawswf-src"/>
+    <mkdir dir="dist"/>
+    <zip zipfile="dist/${src-prefix}-${drawswf.version}.zip">
+      <zipfileset dir="." includes="**/*.java" prefix="${src-prefix}-${drawswf.version}"/>
+      <zipfileset dir="." includes="**/*.properties" prefix="${src-prefix}-${drawswf.version}"/>
+      <zipfileset dir="." includes="**/manifest.txt" prefix="${src-prefix}-${drawswf.version}"/>
+      <zipfileset dir="." includes="at/bestsolution/drawswf/images/**/*" prefix="${src-prefix}-${drawswf.version}"/>
+      <zipfileset dir="." includes="com/incors/plaf/kunststoff/icons/*" prefix="${src-prefix}-${drawswf.version}"/>
+      <zipfileset dir="." includes="README, GPL_V2, build.xml, JavaSWF2-BSD.LICENSE.txt, kunststoff-license.txt, lib/*.jar" prefix="${src-prefix}-${drawswf.version}"/>
+    </zip>
+  </target>
+
+  <target name="gallery-dist">
+    <property name="gal-prefix" value="gallery"/>
+    <mkdir dir="dist"/>
+    <zip zipfile="dist/${gal-prefix}-${drawswf.version}.zip">
+      <fileset dir="." includes="drawings/*"/>
+    </zip>
+  </target>
+
+  <target name="all" depends="clean, compile-main, src-dist, bin-dist-main, bin-dist-plugin" description="Build everything.">
+    <echo message="All built."/>
+  </target>
+</project>
