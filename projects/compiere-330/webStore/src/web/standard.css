@@ -1,0 +1,521 @@
+/** Compiere Web Store (c) Jorg Janke */
+/** $Id: standard.css,v 1.6 2006/05/15 23:02:35 mdeaelfweald Exp $ */
+
+
+/* GLOBAL STYLES */
+html{
+}
+
+body{
+	font-family: Arial, sans-serif;
+	color: #333333;
+    font-size:14px;
+	margin: 0px;
+	padding: 0px;
+	background: #ffffff url('backgroundGradient.jpg') repeat-x; 
+	height: 100%;
+	width: 100%;
+    }
+
+#page{
+	background-color: transparent;
+    }
+
+#main {
+	width: 100%;
+	border: 0px;
+	min-width:875px;
+    }
+
+a {
+	color: #000066;
+	text-decoration: none;
+    }
+
+a:hover {
+	text-decoration: underline;
+    }
+
+h1 {
+	color: #003366;
+	font-size: x-large;
+	margin-bottom: 10px;
+	margin-top: 0;
+    }
+
+h2 {
+	color: #333333;
+	font-size: large;
+	font-style: italic;
+    }
+
+h3 {
+	color: #006699;
+	font-size: medium;
+	font-style: normal;
+	font-weight: bold;
+    }
+
+h4 {
+	color: #6600CC;
+	font-size: medium;
+	font-style: italic;
+    }
+h5 {
+	color: #660099;
+	font-size: medium;
+	font-weight: normal;
+    }
+
+h6 {
+	font-size: larger;
+	font-weight: bold;
+    }
+
+hr {
+	padding-bottom: 0;
+	padding-top: 0;
+    }
+
+p {
+	text-align: justify;
+   }
+
+th {
+	font-family: Verdana, Helvetica, Sans;
+    font-weight:bold;
+    color: #FFFFFF;
+	border: 1px;
+    border-color: #CCCCCC;
+    border-style: outset;
+	background-color: #718493;
+    padding:4px;
+	text-align: left;
+    vertical-align: top;
+    }
+
+
+
+
+/* HEADER STYLE */
+
+#header{
+	background-color:#FFFFFF;
+	height: 60px;
+  	min-width:875px;
+  	width: 100%
+    }
+
+#headerIcon {	
+	margin-left: 20px;
+	 border: 0px;
+	 float: left;
+    }
+
+#headerIcon img{
+	width: 120px;
+	height: 60px;
+    }
+
+#headerContent {
+	text-align: left;
+	height: 50px;
+	float: left;
+	padding-top: 10px;
+	margin-left: 10px;
+    }
+
+#help {
+	text-align: center;
+	width: 30px;
+	height: 60px;
+	float: right; 
+	margin-right: 15px;
+	padding-top: 7px;
+    }
+
+#helpIcon {
+    background-image:url('help.jpg');
+    background-repeat:no-repeat;
+    width:24px;
+    height:24px;
+    margin-right: auto;
+    margin-left: auto;
+    vertical-align:top;
+   }  
+#help img {
+  display: block;
+  border: 0;
+  margin-left: auto;
+  margin-right: auto;
+  }
+   
+#help h2 {
+    font-family: Arial, Helvetica, Sans;
+    font-size:13px;
+    font-weight:bold;
+    display: block;
+    color:#0A496D;
+    font-style: normal;
+    margin-top: 0;
+    }
+
+
+#headerBottomBorder{
+    text-align:left;
+    margin-top:0px;
+    width:100%;
+    height:8px;
+    background-color:#0A496D;
+    }
+
+
+/* MAIN BODY STYLES  */
+
+#content {
+
+	vertical-align: top;
+  float: right;
+	padding-left: 2px;
+	background-color: #FFFFFF;
+	border-left: 1px solid #CCCCCC;
+	width: 87%;
+    
+    }
+
+#banner {
+    width:714px;
+    height:93px;
+    background-image:url(banner.jpg);
+    background-repeat:no-repeat;
+    }
+
+.trainingIcon {
+    background-image:url(icon_training.png);
+    background-repeat:no-repeat;
+    width:32px;
+    height:32px;
+    margin: 0 4px 20px 40px;
+    float:left;
+    vertical-align:middle;
+   }
+
+#newsBlurb {
+    font-family: Verdana, Arial;
+    font-size: 16px;
+    font-style: italic;
+    color: #0A496D;
+    }
+
+.newsBlurbValue {
+     color: #6C848E;
+    }
+
+/* SIDE MENU */
+
+#menu {
+float: left;
+padding: 2px;
+width: 12%;
+
+}
+.sidenav {
+	
+    vertical-align:top;
+    }
+
+.sidenav ul {
+	padding: 0;
+	border-top: 1px solid #596D76;
+    margin:0;
+    }
+
+.sidenav li {border-bottom:1px solid #596D76; list-style-type:none}
+.sidenav li a {
+    font-family:Arial, Helvetica, Sans;
+	font-size: 16px;
+	color: #E4E9EB;
+    background-image:url(menubg.png);
+    background-repeat:repeat-x;
+	display: block;
+	padding: 6px 0 6px 5%;
+	text-decoration: none;
+	width: 100%;
+    }
+
+.sidenav li a:hover {
+	color: #FFFFFF;
+	padding: 6px 0 6px 5%;
+    background-image:url(menubg_hover.png);
+    background-repeat:repeat-x;
+    text-decoration: none;
+    }
+
+
+
+       /* DATA TABLE STYLES */
+           .contentTable{
+	            width: 94%;
+	            border: 1px;
+	            border-spacing: 2px;
+                padding: 2px;
+                border-color: #CCCCCC;
+                border-style: solid;
+                }
+
+           .contentTable td {
+                padding:4px;
+                }
+
+           .tableNav {
+	            vertical-align: top;
+	            text-align: left;
+	            width: 100%;
+                }
+
+           .internalTable{
+                width: 100%;
+                padding: 2px;
+                border-style: none;
+                }
+
+           .adTable{
+	            width: 100%;
+	            border: 1px;
+	            border-spacing: 1px;
+	            padding: 5px;
+                }
+
+           .oddRow{
+	            background-color: #FFFFFF;
+                }
+
+           .evenRow{
+	            background-color: #DAE4E6;
+                }
+           .amount{
+	            text-align: right;
+                }
+
+           .quantity{
+	            text-align: right;
+                }
+
+           .numeric{
+	            text-align: right;
+                }
+
+
+/* FOOTER STYLES */
+
+#footer{
+    background-color:#FFFFFF;
+	width: 100%;
+	padding: 0px 3px;
+	white-space: nowrap;
+	width: 90%;
+    margin-left:39px;
+    vertical-align: bottom;
+    min-width:875px;
+    }
+
+#footerParam4{
+	width: 130px;
+	text-align: left;
+    display:inline;
+    float: left;
+	white-space: nowrap;
+    }
+
+#footerParam5{
+	text-align: left;
+    display:inline;
+    float: left;
+	white-space: nowrap;
+    }
+
+#footerParam6{
+	text-align: right;
+    display:inline;
+    float: right;
+	white-space: nowrap;
+    }
+
+
+caption {
+	color: #660099;
+	text-align: left;
+	font-style: italic;
+	font-weight: bolder;
+    }
+.menuDetail{
+	color: #006699;
+	font-family: Arial,Helvetica,sans-serif;
+	font-size: 12px;
+	padding-bottom: 0;
+	padding-left: 20px;
+	padding-top: 0;
+	text-decoration: none;
+    }
+.menuDetail:hover{
+	color: #006699;
+	font-family: Arial,Helvetica,sans-serif;
+	font-size: 12px;
+	padding-bottom: 0;
+	padding-left: 20px;
+	padding-top: 0;
+	text-decoration: underline;
+    }
+.menuMain{
+	color: #006699;
+	font-family: Arial,Helvetica,sans-serif;
+	font-size: 16px;
+	text-align: left;
+	text-decoration: none;
+	padding-left: 5px;
+    }
+.menuMain:hover{
+	color: #006699;
+	font-family: Arial,Helvetica,sans-serif;
+	font-size: 16px;
+	text-align: left;
+	text-decoration: underline;
+	padding-left: 5px;
+    }
+.menuSub{
+	color: #006699;
+	font-family: Arial,Helvetica,sans-serif;
+	font-size: 14px;
+	padding-left: 10px;
+	text-align: left;
+	text-decoration: none;
+    }
+.menuSub:hover{
+	color: #006699;
+	font-family: Arial,Helvetica,sans-serif;
+	font-size: 14px;
+	padding-left: 10px;
+	text-align: left;
+	text-decoration: underline;
+    }
+.error{
+	border: 1px solid #FF4A4A;
+    color: #FF0000;
+    font-weight: bold;
+    text-align: center;
+    width: 100%;
+    }
+
+/* FORM STYLES */
+
+form{
+	width: 100%;
+    }
+fieldset{
+	border: 1px solid #AAAAAA;
+	clear: both;
+    width:85%;
+    margin-left:40px;
+    }
+legend{
+	color: #003366;
+	background: #EEEEEE;
+	border: 1px solid #999999;
+	padding: 2px 6px;
+    }
+label{
+	clear: left;
+	width: 35%;
+	float: left;
+	text-align: right;
+	margin-right: 0.8em;
+	display: block;
+    font-weight: bold;
+	vertical-align: baseline;
+	white-space: nowrap;
+    }
+
+select{
+	color: #000000;
+	background: #ffffff;
+	border: 1px solid #CCCCCC;
+    }
+.mandatory{
+	background:#FFFF99;
+    }
+input.disabled{
+	border: 0px;
+	background: transparent;
+    }
+.buttons{
+	text-align:center;
+    }
+.Cbasket{
+	font-size: 9px;
+	display: inline;
+    }
+#imgButton{
+	border-style:outset;
+    }
+#imgButtonPressed{
+	border-style:inset;
+    }
+#status{
+    background-color: #fff8dc;
+    color: #000000;
+    display: none;
+    }
+
+#validationInfo{
+    text-align: center;
+    }
+
+
+
+
+
+
+#visaBox{
+    width: 40%;
+    float:left;
+    text-align: right;
+}
+#amexBox{
+    width: 40%;
+    float:right;
+    text-align: left;
+}
+.availProduct{
+    /* comment out next line to show the Availability column */
+    display:none;
+}
+label#productSearch{
+    width:150px;
+    float: left;
+    text-align: right;
+    margin-right: 0.5em;
+    display: block;
+}
+.nobr{
+    white-space: nowrap;
+}
+.wideText{
+    width:100%;
+}
+.lineItem{
+    vertical-align: top;
+}
+.entryNote{
+    font-size: small;
+    color: #666666;
+    text-align: center;
+    vertical-align: top;
+}
+.emphasized{
+    font-weight: bold;
+}
+.disabledMsg{
+	display: none;
+	font-style: italic;
+	text-align: center;
+}

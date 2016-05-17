@@ -1,0 +1,23 @@
+<div class="sidenav">
+<!--  <div id="menu">
+<ul>
+	<li> <a  href="index.jsp">Web Store</a> </li>
+	<cws:checkOutLink oneLine='N'/>
+	<cws:infoLink oneLine='N'/> 	
+	<li> <a  href="request.jsp?ForwardTo=/wstore/">Contact us</a> </li>
+	<c:out value='${ctx.webParam3}' escapeXml='false'/>
+</ul>
+</div> -->
+
+
+
+ <div id="menu">
+	<a class="menuMain" href="index.jsp">Web Store</a><br>
+	<cws:checkOutLink oneLine='N'/>
+	<cws:infoLink oneLine='N'/>
+	<hr width="90%" align="left">
+	<a class="menuMain" href="request.jsp?ForwardTo=/wstore/">Contact us</a>
+	  <c:out value='${ctx.webParam3}' escapeXml='false'/>
+</div>
+</div>
+
