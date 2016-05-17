@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<data-map xmlns="http://cayenne.apache.org/schema/3.0/modelMap"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://cayenne.apache.org/schema/3.0/modelMap http://cayenne.apache.org/schema/3.0/modelMap.xsd"
+  project-version="3.0.0.1">
+	<property name="defaultPackage" value="test"/>
+	<db-entity name="BASEENTITY">
+		<db-attribute name="ID" type="INTEGER" isPrimaryKey="true" isMandatory="true"/>
+		<db-attribute name="LINKID" type="INTEGER" isPrimaryKey="true" isMandatory="true"/>
+		<db-attribute name="REF" type="VARCHAR" isMandatory="true" length="10"/>
+	</db-entity>
+	<db-entity name="INSTR">
+		<db-attribute name="ATTRIBUTE" type="VARCHAR" length="200"/>
+		<db-attribute name="ID" type="INTEGER" isPrimaryKey="true" isMandatory="true"/>
+	</db-entity>
+	<db-entity name="TRADE">
+		<db-attribute name="ATTRIBUTE" type="VARCHAR" length="200"/>
+		<db-attribute name="ID" type="INTEGER" isPrimaryKey="true" isMandatory="true"/>
+	</db-entity>
+	<obj-entity name="BaseEntity" className="test.BaseEntity" dbEntityName="BASEENTITY">
+		<obj-attribute name="ref" type="java.lang.String" db-attribute-path="REF"/>
+	</obj-entity>
+	<obj-entity name="Instr" superEntityName="BaseEntity" className="test.Instr">
+		<qualifier><![CDATA[ref = "Instr"]]></qualifier>
+		<obj-attribute name="instrAttribute" type="java.lang.String" db-attribute-path="instr.ATTRIBUTE"/>
+	</obj-entity>
+	<obj-entity name="Trade" superEntityName="BaseEntity" className="test.Trade">
+		<qualifier><![CDATA[ref = "Trade"]]></qualifier>
+		<obj-attribute name="tradeAttribute" type="java.lang.String" db-attribute-path="trade.ATTRIBUTE"/>
+	</obj-entity>
+	<db-relationship name="instr" source="BASEENTITY" target="INSTR" toMany="false">
+		<db-attribute-pair source="LINKID" target="ID"/>
+	</db-relationship>
+	<db-relationship name="trade" source="BASEENTITY" target="TRADE" toMany="false">
+		<db-attribute-pair source="LINKID" target="ID"/>
+	</db-relationship>
+	<db-relationship name="baseEntity" source="INSTR" target="BASEENTITY" toDependentPK="true" toMany="false">
+		<db-attribute-pair source="ID" target="LINKID"/>
+	</db-relationship>
+	<db-relationship name="baseEntity" source="TRADE" target="BASEENTITY" toDependentPK="true" toMany="false">
+		<db-attribute-pair source="ID" target="LINKID"/>
+	</db-relationship>
+</data-map>

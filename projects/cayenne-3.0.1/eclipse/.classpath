@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="src" path="cayenne3.0/inheritance-test/src"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="lib" path="lib/cayenne-client-3.0.1.jar"/>
+	<classpathentry kind="lib" path="lib/cayenne-modeler-3.0.1.jar"/>
+	<classpathentry kind="lib" path="lib/cayenne-server-3.0.1.jar"/>
+	<classpathentry kind="lib" path="lib/cayenne-tools-3.0.1.jar"/>
+	<classpathentry kind="output" path="cayenne3.1/cay-1468/bin"/>
+</classpath>
