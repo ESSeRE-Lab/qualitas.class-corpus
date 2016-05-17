@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry including="**/*.java" kind="src" path="src/main/java"/>
+	<classpathentry excluding="**/*.java" kind="src" path="src/main/resources"/>
+	<classpathentry kind="src" path="/castor-1.3.3_codegen"/>
+	<classpathentry kind="src" path="/castor-1.3.3_core"/>
+	<classpathentry kind="src" path="/castor-1.3.3_ddlgen"/>
+	<classpathentry kind="src" path="/castor-1.3.3_xml"/>
+	<classpathentry kind="src" path="/castor-1.3.3_xml-schema"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="lib" path="target/dependency/ant-1.6.jar"/>
+	<classpathentry kind="lib" path="target/dependency/commons-logging-1.1.1.jar"/>
+	<classpathentry kind="lib" path="target/dependency/junit-4.8.2.jar"/>
+	<classpathentry kind="lib" path="target/dependency/log4j-1.2.16.jar"/>
+	<classpathentry kind="output" path="target/classes"/>
+</classpath>

@@ -1,0 +1,3 @@
+#Fri Apr 20 22:43:38 CEST 2012
+org.exolab.castor.builder.appInfo.generated.complexContent.Person=org.exolab.castor.builder.appInfo.generated.complexContent.descriptors.PersonDescriptor
+org.exolab.castor.builder.appInfo.generated.complexContent.Insurant=org.exolab.castor.builder.appInfo.generated.complexContent.descriptors.InsurantDescriptor

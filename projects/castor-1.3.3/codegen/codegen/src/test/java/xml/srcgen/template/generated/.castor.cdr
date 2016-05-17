@@ -1,0 +1,3 @@
+#Fri Apr 20 22:43:39 CEST 2012
+xml.srcgen.template.generated.ListOfIntegers=xml.srcgen.template.generated.descriptors.ListOfIntegersDescriptor
+xml.srcgen.template.generated.IllegalJava5Generic=xml.srcgen.template.generated.descriptors.IllegalJava5GenericDescriptor

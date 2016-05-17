@@ -1,0 +1,13 @@
+#Fri May 10 17:47:15 BRT 2013
+org.castor.jdo.conf.ClassMapping=org.castor.jdo.conf.descriptors.ClassMappingDescriptor
+org.castor.jdo.conf.Jndi=org.castor.jdo.conf.descriptors.JndiDescriptor
+org.castor.jdo.conf.TransactionManager=org.castor.jdo.conf.descriptors.TransactionManagerDescriptor
+org.castor.jdo.conf.TransactionDemarcation=org.castor.jdo.conf.descriptors.TransactionDemarcationDescriptor
+org.castor.jdo.conf.JdoConf=org.castor.jdo.conf.descriptors.JdoConfDescriptor
+org.castor.jdo.conf.Param=org.castor.jdo.conf.descriptors.ParamDescriptor
+org.castor.jdo.conf.DataSource=org.castor.jdo.conf.descriptors.DataSourceDescriptor
+org.castor.jdo.conf.DatabaseChoice=org.castor.jdo.conf.descriptors.DatabaseChoiceDescriptor
+org.castor.jdo.conf.PackageMapping=org.castor.jdo.conf.descriptors.PackageMappingDescriptor
+org.castor.jdo.conf.Driver=org.castor.jdo.conf.descriptors.DriverDescriptor
+org.castor.jdo.conf.Database=org.castor.jdo.conf.descriptors.DatabaseDescriptor
+org.castor.jdo.conf.Mapping=org.castor.jdo.conf.descriptors.MappingDescriptor

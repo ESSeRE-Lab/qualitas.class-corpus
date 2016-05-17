@@ -1,0 +1,3 @@
+#Fri May 10 18:57:58 BRT 2013
+org.castor.cpa.test.test2996.onetomany.House=org.castor.cpa.test.test2996.onetomany.jdo_descriptors.HouseJDODescriptor
+org.castor.cpa.test.test2996.onetomany.Flat=org.castor.cpa.test.test2996.onetomany.jdo_descriptors.FlatJDODescriptor

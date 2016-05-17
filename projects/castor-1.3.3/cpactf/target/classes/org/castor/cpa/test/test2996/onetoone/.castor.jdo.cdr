@@ -1,0 +1,3 @@
+#Fri May 10 18:57:58 BRT 2013
+org.castor.cpa.test.test2996.onetoone.Employee=org.castor.cpa.test.test2996.onetoone.jdo_descriptors.EmployeeJDODescriptor
+org.castor.cpa.test.test2996.onetoone.Address=org.castor.cpa.test.test2996.onetoone.jdo_descriptors.AddressJDODescriptor

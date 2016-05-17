@@ -1,0 +1,3 @@
+#Fri Apr 20 22:43:38 CEST 2012
+org.exolab.castor.builder.cdr.generated.nonjdo.BookType=org.exolab.castor.builder.cdr.generated.nonjdo.descriptors.BookTypeDescriptor
+org.exolab.castor.builder.cdr.generated.nonjdo.Book=org.exolab.castor.builder.cdr.generated.nonjdo.descriptors.BookDescriptor

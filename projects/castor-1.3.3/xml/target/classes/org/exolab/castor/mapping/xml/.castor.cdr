@@ -1,0 +1,20 @@
+#Fri May 10 17:54:46 BRT 2013
+org.exolab.castor.mapping.xml.BindXml=org.exolab.castor.mapping.xml.descriptors.BindXmlDescriptor
+org.exolab.castor.mapping.xml.FieldHandlerDef=org.exolab.castor.mapping.xml.descriptors.FieldHandlerDefDescriptor
+org.exolab.castor.mapping.xml.Container=org.exolab.castor.mapping.xml.descriptors.ContainerDescriptor
+org.exolab.castor.mapping.xml.Include=org.exolab.castor.mapping.xml.descriptors.IncludeDescriptor
+org.exolab.castor.mapping.xml.Param=org.exolab.castor.mapping.xml.descriptors.ParamDescriptor
+org.exolab.castor.mapping.xml.Ldap=org.exolab.castor.mapping.xml.descriptors.LdapDescriptor
+org.exolab.castor.mapping.xml.ClassChoice=org.exolab.castor.mapping.xml.descriptors.ClassChoiceDescriptor
+org.exolab.castor.mapping.xml.NamedQuery=org.exolab.castor.mapping.xml.descriptors.NamedQueryDescriptor
+org.exolab.castor.mapping.xml.ClassMapping=org.exolab.castor.mapping.xml.descriptors.ClassMappingDescriptor
+org.exolab.castor.mapping.xml.CacheTypeMapping=org.exolab.castor.mapping.xml.descriptors.CacheTypeMappingDescriptor
+org.exolab.castor.mapping.xml.FieldMapping=org.exolab.castor.mapping.xml.descriptors.FieldMappingDescriptor
+org.exolab.castor.mapping.xml.MappingRoot=org.exolab.castor.mapping.xml.descriptors.MappingRootDescriptor
+org.exolab.castor.mapping.xml.Sql=org.exolab.castor.mapping.xml.descriptors.SqlDescriptor
+org.exolab.castor.mapping.xml.KeyGeneratorDef=org.exolab.castor.mapping.xml.descriptors.KeyGeneratorDefDescriptor
+org.exolab.castor.mapping.xml.MapTo=org.exolab.castor.mapping.xml.descriptors.MapToDescriptor
+org.exolab.castor.mapping.xml.Property=org.exolab.castor.mapping.xml.descriptors.PropertyDescriptor
+org.exolab.castor.mapping.xml.PropertyType=org.exolab.castor.mapping.xml.descriptors.PropertyTypeDescriptor
+org.exolab.castor.mapping.xml.QueryHint=org.exolab.castor.mapping.xml.descriptors.QueryHintDescriptor
+org.exolab.castor.mapping.xml.NamedNativeQuery=org.exolab.castor.mapping.xml.descriptors.NamedNativeQueryDescriptor

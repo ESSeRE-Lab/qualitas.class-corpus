@@ -1,0 +1,20 @@
+#Fri May 10 18:52:39 BRT 2013
+org.exolab.castor.builder.binding.xml.Excludes=org.exolab.castor.builder.binding.xml.descriptors.ExcludesDescriptor
+org.exolab.castor.builder.binding.xml.NamingType=org.exolab.castor.builder.binding.xml.descriptors.NamingTypeDescriptor
+org.exolab.castor.builder.binding.xml.FieldType=org.exolab.castor.builder.binding.xml.descriptors.FieldTypeDescriptor
+org.exolab.castor.builder.binding.xml.EnumClassName=org.exolab.castor.builder.binding.xml.descriptors.EnumClassNameDescriptor
+org.exolab.castor.builder.binding.xml.ComponentBindingTypeChoice=org.exolab.castor.builder.binding.xml.descriptors.ComponentBindingTypeChoiceDescriptor
+org.exolab.castor.builder.binding.xml.EnumBindingType=org.exolab.castor.builder.binding.xml.descriptors.EnumBindingTypeDescriptor
+org.exolab.castor.builder.binding.xml.ClassType=org.exolab.castor.builder.binding.xml.descriptors.ClassTypeDescriptor
+org.exolab.castor.builder.binding.xml.ComponentBindingType=org.exolab.castor.builder.binding.xml.descriptors.ComponentBindingTypeDescriptor
+org.exolab.castor.builder.binding.xml.Exclude=org.exolab.castor.builder.binding.xml.descriptors.ExcludeDescriptor
+org.exolab.castor.builder.binding.xml.NamingXMLType=org.exolab.castor.builder.binding.xml.descriptors.NamingXMLTypeDescriptor
+org.exolab.castor.builder.binding.xml.Binding=org.exolab.castor.builder.binding.xml.descriptors.BindingDescriptor
+org.exolab.castor.builder.binding.xml.ContentMemberType=org.exolab.castor.builder.binding.xml.descriptors.ContentMemberTypeDescriptor
+org.exolab.castor.builder.binding.xml.PackageTypeChoice=org.exolab.castor.builder.binding.xml.descriptors.PackageTypeChoiceDescriptor
+org.exolab.castor.builder.binding.xml.Interface=org.exolab.castor.builder.binding.xml.descriptors.InterfaceDescriptor
+org.exolab.castor.builder.binding.xml.IncludeType=org.exolab.castor.builder.binding.xml.descriptors.IncludeTypeDescriptor
+org.exolab.castor.builder.binding.xml.Forces=org.exolab.castor.builder.binding.xml.descriptors.ForcesDescriptor
+org.exolab.castor.builder.binding.xml.AutomaticNamingType=org.exolab.castor.builder.binding.xml.descriptors.AutomaticNamingTypeDescriptor
+org.exolab.castor.builder.binding.xml.PackageType=org.exolab.castor.builder.binding.xml.descriptors.PackageTypeDescriptor
+org.exolab.castor.builder.binding.xml.EnumMember=org.exolab.castor.builder.binding.xml.descriptors.EnumMemberDescriptor
