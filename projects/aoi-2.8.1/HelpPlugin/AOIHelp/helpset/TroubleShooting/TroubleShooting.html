@@ -1,0 +1,92 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<HTML>
+<HEAD>
+	<META HTTP-EQUIV="CONTENT-TYPE" CONTENT="text/html; charset=utf-8">
+	<TITLE>Reference</TITLE>
+	<META NAME="GENERATOR" CONTENT="OpenOffice.org 2.0  (Linux)">
+	<META NAME="CREATED" CONTENT="20060903;21101800">
+	<META NAME="CHANGED" CONTENT="20060903;22453200"><STYLE>
+	<!--
+		TD P { color: #000000 }
+		P { color: #000000 }
+	-->
+	</STYLE>
+</HEAD>
+<BODY LANG="en-US" TEXT="#000000" BGCOLOR="#f8e89e" DIR="LTR">
+    <P align=LEFT style="margin-bottom: 0in">
+      <A NAME="further help"></A>
+	<FONT face="tahoma"><STRONG><FONT SIZE=5><FONT COLOR="#3300cc">
+	When things go wrong
+	</FONT></FONT></STRONG></FONT>
+	<A name="further-content"></A>
+	<FONT face="tahoma"><FONT size=4><STRONG><FONT COLOR="#ff6633">
+	<br><br>1 HELP! What do I do?</FONT></STRONG></FONT></FONT></P>
+
+    <P ALIGN=LEFT STYLE="margin-bottom: 0in"><FONT face="tahoma">
+	
+	<br>Here is a short list of troubleshooting procedures you can try:
+	<ul>
+	<LI><b>view the logs</b>
+	<br>Many functions within AOI produce logging output, either to display status or to log errors. You can collect and view this output in one of two ways:
+	
+	<br><br><em>enable the LogPlugin</em>
+	<br>If you don't already have the LogPlugin installed, you can install it, either automatically using the <i>Scripts and Plugin Manager</i> (in the AOI <i>tools</i> menu); or manually by downloading the most recent LogPlugin_xxx.jar file from <a href="http://aoisp.sourceforge.net/AoIRepository/Plugins/LogPlugin/">the AOI plugins repository</a> and copying this <b>without extracting it</b> into the <i>Plugins</i> folder in your Art Of Illusion installation folder.
+	<br><br><em>start AOI from a command shell</em>
+	<br>If you start AOI from a command shell, then the logging output is printed directly into the shell window. On most platforms, you can then copy and paste the output into a file, or (better) redirect the output to a file.
+	<br>Exactly how you do this varies by platform. Basically you open a command window or shell, and enter a command of the form:
+	<br><code>java -Xmx256m -jar path-to-aoi/ArtOfIllusion.jar</code>
+	<br><br>On Windows, the command shell is called <i>CMD.EXE</i>, on MacOSX you can run <i>??</i>, and on linux you can run any of <i>xterm, konsole, or sh</i>.
+	</LI>
+	<br><li><b>look for obvious problems</b>
+	<br>The simplest errors to locate in the logs are <i>exceptions</i>. These are <i>'thrown'</i> whenever an unexpected error condition is encountered within AOI. A good example would be an <i>OutOfMemoryException</i> which tells you that what you were trying to do did not fit into the memory available to Java on your machine. (See below for more details on common exceptions.)
+	</li>
+	<br><li><b>ask someone</b>
+	<br>The logs may not help you much, particularly if you are new to AOI, Java, and/or 3D modelling. However, armed with your log output, you are well-equiped to ask someone more experienced, using the forums or chat resources available (see <a href="../FurtherHelp/FurtherHelp.html#asking-for-help"> the Further Help page</a> for details).
+	</li>
+	<br><li><b>check the plugins</b>
+	<br>AOI can be extended using <i>plugins</i>. Many of these are started when AOI itself starts up (basically while the <i>splash screen</i> is being displayed).
+	<br>If AOI fails to start after installing or upgrading a plugin, then you can try
+	uninstalling it.
+	<br>You can run the AOI scripts and plugins manager stand-alone, without having to start AOI. Use a command like:
+	<br>java -jar path-to-aoi/Plugins/SPManager.jar. You can then select "manage", select the plugn, and click "Delete this plugin". Note that SPManager has to find where AOI keeps its plugins, and this is sometimes difficult. If SPManager shows <i>no</i> plugins, then execute the command from <i>inside</i> the ArtOfIllusion directory.
+	<br><br>You can also manually <i>move</i> the plugin file(s) out of the <i>Plugins</i> folder (changing a file's name does <b>not</b> disable it).
+	<b><i>**BEWARE:</i></b> a number of 'standard' AOI features are shipped as plugins. Deleting or removing the these files (eg, by deleting <i>all</i> plugin files) will result in a <i>very</i> limited AOI installation.
+	</li>
+	</ul><br>  </FONT></P>
+	
+	<FONT face="tahoma"><FONT size=4><STRONG><FONT COLOR="#ff6633">
+	<br><br>2 What can go wrong?</FONT></STRONG></FONT></FONT></P>
+	
+    <P ALIGN=LEFT STYLE="margin-bottom: 0in"><FONT face="tahoma">
+	
+	Well, a few things actually.
+	<br><br>Art Of Illusion is a powerful piece of software, and with that power comes complexity, and sadly, the potential for things to break - or at least, not work as expected.
+	<br><br>Here is a list of the more common sources of problems:</font></p>
+
+<ul>
+	<li>Problems starting AOI
+	<br>
+        These are usually caused by issues in the installation of AOI, or plugins. The easiest fix is normally to ensure the installation is correct in the first place, or to reinstall to fix any mysterious problems caused later. Either way, AOI is easy to install, and so it is usually much quicker to simply reinstall than it is to try debugging a damaged installation.
+	<br><i>That being said, the installation usually works first time, and usually doesn't break</i>
+	<br><br><b>Use an Installer</b>
+	<br>The simplest way to ensure a smooth and operational installation is to use one fo the <b>installers</b>. These are available for Windows, MacOS, and Linux. The benefit of using an installer is that it knows how to locate and configure the various add-ons which unleash the full power of AOI.
+	<br><br><b>Download and extract the ZIP file</b>
+	<br>If you are installing manually, make sure the <b>unzip</b> tool you use is not breaking things. If you don't have WinZIP, or suspect your problems may be caused by WinZIP, you can download a good free alternative from here: http://www.izarc.org/
+	<br><br><b>Use a launcher</b>
+	<br>There are <b>launcher</b> programs available for Windows and MacOSX. These are already configured to run AOI in a generally useful way, although they cannot give optimal performance for all machines.
+	<br><br><b>AdditionalExternal libraries</b>
+	<br>Art Of Illusion can make use of external libraries to enhance its performance or features. The two primary ones are:
+	<br><b>JOGL</b>, which enables AOI to use the accelerator of your graphics card (through OpenGL). Problems with JOGL have been known to cause AOI to crash during startup, and/or to produce odd display problems, such as elements which should be <i>in front of</i> others being <i>behind them</i> instead.
+	<br><b>JMF</b>, which enables AOI to read and write a variety of video file formats including Quicktime. There have not been reports of JMF causing AOI to crash or bahave erratically. The worst problem we have seen is that if JMF is not configured correctly, then additional file formats such as Quicktime are unavailable.
+	<br>These external libraries are configured properly for you by the <b>installers</b>, so this is one good reason to use an installer if possible.
+	<br>If you have installed manually or are experiencing problems with an external library, try removing the library. If you have JOGL enabled, and are getting wierd behaviour, it is worth updating your graphics drivers before going too much further.
+	<br><b>To remove/disable JOGL</b> simply remove the <i>jogl.jar</i> file from your ArtOfIllusion installation folder.
+	<br><b>to remove/disable JMF</b> simply remove the <i>jmf.jar</i> file from your ArtOfIllusion installation folder.
+
+	<br><br><b>Plugins</b>
+	<br>...
+        </li>
+ </ul>
+<br/>
+</BODY>
+</HTML>

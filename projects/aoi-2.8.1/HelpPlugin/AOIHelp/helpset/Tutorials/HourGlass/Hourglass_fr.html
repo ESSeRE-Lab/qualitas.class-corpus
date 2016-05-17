@@ -1,0 +1,569 @@
+<html>
+<head>
+	<title>Art-of-Illusion modelling tutorial - le sablier</title>
+</head>
+
+<body>
+	<center>
+	
+  <h1>Art-of-Illusion - didacticiel de mod&eacute;lisation<br>
+    le sablier</h1>
+  <br>
+  Version 1.1</br> Pour Art of Illusion version 0.9</br> Copyright 2001, <a href="mailto:kwikrick@users.sourceforge.net">Rick 
+  van der Meiden</a></br> <br>
+  Traduction: les Manuels d'Aide en Fran&ccedil;ais sur <a href="http://manuelsdaide.com" target="_blank">manuelsdaide.com</a><br>
+  <raduction: >
+</center>
+<p></p>
+
+<center><img src="images/hourglass_final.jpg"></img></center>
+
+<h3>Introduction</h3>
+Dans ce didacticiel, vous allez apprendre &agrave; mod&eacute;liser un objet simple 
+avec Art-of-Illusion (AoI), &agrave; l'aide de l'exemple du sablier de l'illustration 
+ci-dessus. Ce didacticiel ne couvre pas toutes les fonctions disponibles dans 
+AoI, elles sont tout simplement trop nombreuses, mais vous en saurez suffisamment 
+pour une mise en route. Vous arriverez probablement &agrave; comprendre le reste 
+en essayant, en exp&eacute;rimentant, en cr&eacute;ant des images sympas. </p> 
+Si vous &ecirc;tes d&eacute;j&agrave; familiaris&eacute; avec la mod&eacute;lisation 
+3D, vous n'aurez sans doute pas besoin de suivre ce didacticiel pas &agrave; pas. 
+Vous pourrez y jeter un coup d'oeil pour avoir une id&eacute;e des possibilit&eacute;s 
+du programme, et vous pourrez vous lancer et l'essayer vous-m&ecirc;me. Pour les 
+novices: Je vais vous permettre de cr&eacute;er votre propre image 3D en quelques 
+minutes. </p> Pour &ecirc;tre complet, un fichier de sc&egrave;ne AoI nomm&eacute; 
+<i>"hourglass.aoi"</i> (ce fichier a &eacute;t&eacute; cr&eacute;&eacute; de toute 
+pi&egrave;ce par l'auteur de la traduction, car le fichier d'origine ne correspond 
+plus &agrave; la version actuelle du programme) est distribu&eacute; avec ce didacticiel. 
+Vous pouvez simplement l'ouvrir avec le programme de mod&eacute;lisation. Cependant, 
+si vous souhaitez apprendre avec ce didacticiel, vous devriez essayer de cr&eacute;er 
+la sc&egrave;ne vous-m&ecirc;me. 
+<h3>Tour d'horizon</h3>
+Supposons que vous ayez t&eacute;l&eacute;charg&eacute; la totalit&eacute; des 
+&eacute;l&eacute;ments de AoI, que vous ayez la bonne version de JDK, que vous 
+ayez lu les fichiers readme, et que tout est en place. Si &ccedil;a n'est pas 
+le cas, consultez la <a href="http://www.artofillusion.org/">page d'accueil de 
+Art-of-Illusion</a>. Lorsque vous lancez AOI, l'&eacute;cran principal appara&icirc;t. 
+En haut de la fen&ecirc;tre se trouve la barre de menu de base; examinez-la, voyez 
+ce qu'elle contient comme sous-menus. Si vous ne comprenez pas encore les nombreux 
+&eacute;l&eacute;ments qu'elle contient, ne vous en faites pas, vous les ma&icirc;triserez 
+en son temps. A gauche de la fen&ecirc;tre se trouvent des ic&ocirc;nes. Si vous 
+cliquez dessus, vous s&eacute;lectionnez un outil et une br&egrave;ve ligne d'information 
+appara&icirc;t en bas de l'&eacute;cran. Ces ic&ocirc;nes sont les suivantes:</p> 
+<table width="652">
+  <tbody>
+	<tr>
+		
+      <td width="327" align=right>d&eacute;placer un objet</td>
+		<td width="32"><img src=images/move.gif></td>
+		<td width="32"><img src=images/rotate.gif></td>
+		
+      <td width="334">pivoter une objet</td>
+	</tr>
+	<tr>
+		
+      <td align=right>redimensionner un objet</td>
+		<td><img src=images/resize.gif></td>
+		<td><img src=images/cube.gif></td>
+		
+      <td>cr&eacute;er un cube</td>
+	</tr>
+	<tr>
+		
+      <td align=right>cr&eacute;er une sph&egrave;re</td>
+		<td><img src=images/sphere.gif></td>
+		<td><img src=images/cylinder.gif></td>
+		
+      <td>cr&eacute;er un cylindre</td>
+	</tr>
+	<tr>
+		
+      <td align=right>cr&eacute;er un maillage spline</td>
+		<td><img src=images/splineMesh.gif></td>
+		<td><img src=images/polygon.gif></td>
+		
+      <td>cr&eacute;er un polygone</td>
+	</tr>
+	<tr>
+		
+      <td align=right>ins&eacute;rer un appareil photo</td>
+		<td><img src=images/camera.gif></td>
+		<td><img src=images/light.gif></td>
+		
+      <td>ins&eacute;rer un &eacute;clairage</td>
+	</tr>
+	<tr>
+		
+      <td align=right>cr&eacute;er une courbe interpol&eacute;e</td>
+		<td><img src=images/interpCurve.gif></td>
+		<td><img src=images/approxCurve.gif></td>
+		
+      <td>cr&eacute;er une courbe approximative</td>
+	</tr>
+	<tr>
+		
+      <td align=right>d&eacute;placer une vue</td>
+		<td><img src=images/moveView.gif></td>
+		<td><img src=images/rotateView.gif></td>
+		
+      <td>pivoter une vue</td>
+	</tr>
+</tbody>
+</table>
+</p>
+L'&eacute;cran affiche quatre vues du mod&egrave;le 3D: <i>Devant, Gauche, Dessus</i> 
+et <i>Camera 1</i>. Pour chacune des vues, l'utilisateur peut d&eacute;finir un 
+appareil photo (Cam&eacute;ra) ou point de vue standard (devant, gauche, dessus, 
+ect), un mode Perspective ou visualisation parall&egrave;le, et un facteur de 
+zoom (100 par d&eacute;faut). Ces points de vue peuvent &ecirc;tre modifi&eacute;s 
+&agrave; l'aide des deux outils appropri&eacute;s, D&eacute;placer un Objet et 
+Pivoter un Objet. Vous changerez souvent l'&eacute;chelle et la position de ces 
+vues, mais pas le point de vue. Les vues standard sont tout &agrave; fait suffisantes 
+pour la plupart des sessions de mod&eacute;lisation. Seule, la vue inf&eacute;rieure 
+droite, <i>Camera 1</i>, sera souvent modifi&eacute;e car elle est tr&egrave;s 
+utile pour v&eacute;rifier le mod&egrave;le. A droite (vide actuellement) se trouve 
+un espace affichant la Liste des Objets (formes) de votre mod&egrave;le. A partir 
+de cette liste, vous pouvez s&eacute;lectionner ou d&eacute;-s&eacute;lectionner 
+les objets en cliquant sur leur nom. De m&ecirc;me, double-cliquer dessus fera 
+appara&icirc;tre la bo&icirc;te de dialogue d'&eacute;dition de l'objet.</p> Avant 
+de commencer, vous devez savoir ce que l'on entend par Coordonn&eacute;es. La 
+position et les dimensions des objets sont d&eacute;termin&eacute;es par un syst&egrave;me 
+de coordonn&eacute;es selon trois axes nomm&eacute;s X, Y et Z. L'axe des X est 
+consid&eacute;r&eacute; comme pointant vers la droite, c'est-&agrave;-dire que 
+plus la coordonn&eacute;e X d'un point est &eacute;lev&eacute;e, plus elle se 
+situe vers la droite du mod&egrave;le. De m&ecirc;me, l'axe des Y pointe vers 
+le haut et celui des Z en dehors de l'&eacute;cran, vers vous (en jargon, on appelle 
+ceci un syst&egrave;me de coordonn&eacute;es &agrave; droite).</p> 
+<h3>Mise en route</h3>
+Il est souvent conseill&eacute; de d&eacute;buter une session de mod&eacute;lisation 
+3D en cr&eacute;ant d'abord une esquisse de votre mod&egrave;le sur un papier 
+quadrill&eacute;, pour avoir une id&eacute;e de ses dimensions et de sa forme. 
+Si vous ne le faites pas, placez au moins une grille dans la programme de mod&eacute;lisation: 
+<ul>
+  <li> s&eacute;lectionnez le menu <b>Sc&egrave;ne->Grilles</b></li>
+  <li> r&eacute;glez <b>Espacement de la grille</b> sur 0.5</li>
+  <li> r&eacute;glez <b>Subdivisions</b> sur 10</li>
+  <li> activez Montrer la grille et Coller &agrave; la grille</li>
+  <li> cliquez sur OK</li>
+</ul>
+Ce qui vous permettra de dessiner des objets facilement selon une position et 
+des dimensions pr&eacute;cises et de les aligner de fa&ccedil;on orthogonale. 
+Vous pouvez changer les param&egrave;tres de la grille &agrave; tout moment, pour 
+satisfaire vos besoins, en grille plus fine ou plus grossi&egrave;re. Maintenant, 
+vous pouvez commencer &agrave; dessiner. Dessinez d'abord un Cube pour le haut 
+et le bas de l'image sablier: 
+<ul>
+  <li> s&eacute;lectionnez l'outil <img src=images/cube.gif></img> <b>'cr&eacute;er un 
+    cube'</b> </li>
+  <li> tracez un cube de 1.5 unit&eacute;s de large sur 0.1 unit&eacute;s de haut, 
+    dans le <em>vue de Devant</em>. C'est-&agrave;-dire, avec une grille de 0.5 
+    unit&eacute;s et de 10 subdivision, 3 lignes de grille en largeur et une subdivision 
+    en hauteur. 
+  <li> s&eacute;lectionner l'outil <img src=images/resize.gif></img> <b>'redimensionner 
+    un objet'</b></li>
+  <li> mettez l'objet &agrave; l'&eacute;chelle dans la <em>vue de Dessus</em> 
+    jusqu'&agrave; obtenir un carr&eacute; de 1.5 sur 1.5 unit&eacute;s. 
+  <li> s&eacute;lectionnez l'outil <img src=images/move.gif></img> <b>'d&eacute;placer 
+    un objet'</b> </li>
+  <li> d&eacute;placez l'objet de fa&ccedil;on &agrave; le centrer dans la <em>vue 
+    de Dessus</em>. </li>
+  <li> d&eacute;placez-le dans la <em>vue de Devant </em>de fa&ccedil;on &agrave; 
+    le placer juste en dessous de la seconde ligne de la grille &agrave; partir 
+    du centre. </li>
+  <li> v&eacute;rifiez les coordonn&eacute;es du cube &agrave; partir du menu 
+    <b>Objet->Disposition de l'objet</b>. La taille du cube doit &ecirc;tre de 
+    1.5 unit&eacute;s pour l'axe des X, 0.1 unit&eacute;s pour l'axe des Y, et 
+    1.5 pour l'axe des Z. Son origine doit &ecirc;tre positionn&eacute;e &agrave; 
+    <0, -1.05, 0>. A partir de cette bo&icirc;te de dialogue, vous pouvez changer 
+    la taille, la position et l'orientation du cube (illustration ci-dessous).<br>
+<img src=images/boxlayout.png></li>
+</ul>
+
+
+Notez que vous pouvez dessiner un objet dans la <em>vue de Devant</em>, de <em>Gauche</em> 
+ou de <em>Dessus</em>. Comme vous ne pouvez dessiner que deux dimensions &agrave; 
+la fois, vous aurez &agrave; d&eacute;finir par la suite une troisi&egrave;me 
+dimension. Vous pouvez utiliser les outils D&eacute;placer et Redimensionner pour 
+changer la position et les dimensions du cube. Mais si vous avez une id&eacute;e 
+pr&eacute;cise des dimensions souhait&eacute;es, la bo&icirc;te de dialogue Disposition 
+de l'Objet est plus rapide.</p> Le premier Cube sera le bas ou base du mod&egrave;le. 
+Le haut du mod&egrave;le sera exactement identique, et vous pouvez donc le cr&eacute;er 
+par la copie du pr&eacute;c&eacute;dent. 
+<ul>
+  <li>s&eacute;lectionnez d'abord la premier cube, <i>Cube 1</i> &agrave; partir 
+    de la liste des objets &agrave; droite</li>
+  <li>s&eacute;lectionnez le menu <b>&Eacute;dition->Copier</b> </li>
+  <li>s&eacute;lectionnez le menu <b>&Eacute;dition->Coller</b></li>
+  <li>d&eacute;placez la copie vers le haut jusqu'&agrave; placer le bas du cube 
+    &agrave; y=1. Pour ce faire, vous pouvez utiliser: 
+    <ul>
+      <li>l'outil <img src="images/move.gif"></img> <b>'d&eacute;placer un objet'</b>. 
+        Maintenez enfonc&eacute;e la touche Maj pour un d&eacute;placement orthogonal 
+        seul.</li>
+      <li>l'option de menu <b>Objet->Disposition de l'Objet</b>. Centrez-le &agrave; 
+        y=1.05.</li>
+      <li>l'option de menu <b>Objet->Transformer l'Objet</b>. D&eacute;placez-le 
+        de 2 unit&eacute;s vers le haut sur l'axe des Y. </li>
+      <li>l'option de menu <b>Objet->Aligner les Objets</b>. Alignez le bas (axe 
+        des y) sur 0. 
+    </ul>
+</ul>
+</p>
+Nous avons maintenant deux cubes, sym&eacute;triques par rapport &agrave; l'origine 
+des axes. Notez que les deux cubes sont toujours nomm&eacute;s <i>Cube1</i>. Vous 
+pouvez changer le nom des objets en choisissant l'option de menu <b>Objet->Renommer 
+l'Objet</b>. Les noms appropri&eacute;s pourraient &ecirc;tre 'Haut' et 'Bas'. 
+Il devient alors simple de les s&eacute;lectionner &agrave; partir de la liste 
+des objets.</p> En utilisant les techniques ci-dessus, vous pouvez aussi cr&eacute;er 
+les quatre piliers entre les plaquettes du haut et du bas. Utilisez l'outil <img src=images/cylinder.gif></img> 
+<b>'cr&eacute;er un cylindre'</b> pour cr&eacute;er un cylindre selon les proportions 
+suivantes: 
+<ul>
+<li>position: X = 0.6, Y = 0, Z = 0.6</li>
+  <li>taille: X = 0.1, Y = 2, Z = 0.1<br>
+  </li>
+</ul>
+et cr&eacute;ez trois autres cylindres pour les autres piliers du mod&egrave;le 
+sablier. <br>
+<br>
+Conseils: 
+<ul>
+  <li>tracez le premier cylindre dans la <em>vue de Devant </em>ou la <em>vue 
+    de Gauche</em>, ce qui vous permettra de d&eacute;finir son diam&egrave;tre 
+    ainsi que sa longueur. Placez le cylindre en utilisant les autres vues. </li>
+  <li>Cr&eacute;ez les autres cylindres en les copiant et en les d&eacute;pla&ccedil;ant. 
+  </li>
+  <li>Vous ne pourrez pas voir les cylindres cr&eacute;&eacute;s dans la <em>vue 
+    de Dessus</em> car ils sont cach&eacute;s par le cube sup&eacute;rieur. S&eacute;lectionnez 
+    le menu <b>Sc&egrave;ne->Mode d'Affichage->Fil de fer</b>, et vous pourrez 
+    les faire appara&icirc;tre. </li>
+</ul>
+</p>
+<p>Nous avons d&eacute;sormais un cadre pour le sablier. Maintenant, utilisez 
+  l'outil <img src=images/moveView.gif> <b>'d&eacute;placer une vue' </b> et l'outil 
+  <img src=images/rotateView.gif> <b>'pivoter une vue'</b> pour modifier la vue <em>Camera 
+  1</em> ou <em>vue en Perspective</em>. Vous pouvez alors voir le mod&egrave;le 
+  &agrave; partir de l'un des angles de vue de votre choix. Le r&eacute;sultat 
+  devrait avoir cet aspect: </p>
+<p></p> <img src="images/image2.png"></img> </p>
+<h3> Un objet complexe</h3>
+<p>La forme la plus complexe de cette sc&egrave;ne est le R&eacute;servoir de 
+  Verre. Il sera cr&eacute;&eacute; &agrave; l'aide de l'outil Tour. Un tour est 
+  un objet cr&eacute;&eacute; en faisant tourner une courbe spline, qui d&eacute;termine 
+  le contour de la forme, autour d'un axe. Pour cr&eacute;er la courbe contour, 
+  nous utiliserons l'outil <img src=images/approxCurve.gif> <b>'cr&eacute;er une courbe 
+  approximative'</b>. Pour &eacute;viter un travail de pr&eacute;cision p&eacute;nible 
+  &agrave; la souris, cr&eacute;ez d'abord une Grille plus fine: Espacement 0.2 
+  avec 2 subdivisions. S&eacute;lectionnez ensuite le menu <b>Sc&egrave;ne->Maximiser 
+  la Vue</b>. Vous pouvez alors r&eacute;gler le facteur de zoom sur 200 pourcent. 
+  Cr&eacute;ez ensuite la courbe spline en ajoutant les points 1 &agrave; 9 comme 
+  illustr&eacute; dans l'image ci-dessous (dans cet ordre). Double-cliquez sur 
+  le point 9 pour terminer la courbe spline. V&eacute;rifiez que le premier et 
+  le dernier point soient plac&eacute;s convenablement sur l'axe des Y et tangents 
+  aux cubes sup&eacute;rieurs et inf&eacute;rieurs cr&eacute;&eacute;s pr&eacute;c&eacute;demment.</p>
+<p align="center"></p> <img src="images/points.png"></img></p>
+<p> </p> 
+La courbe approximative n'est pas tr&egrave;s intuitive, mais vous permet de d&eacute;terminer 
+la direction de la courbe de fa&ccedil;on plus pr&eacute;cise que ne le ferait 
+une courbe interpol&eacute;e. La direction de la courbe au d&eacute;but et &agrave; 
+la fin est d&eacute;termin&eacute;e par le seul point adjacent. La courbe est 
+verticale au point 5 car les points 4 et 6 sont tous deux plac&eacute;s verticalement 
+&agrave; partir de ce point. En g&eacute;n&eacute;ral, la courbe &agrave; tout 
+point est d&eacute;termin&eacute;e par le point qui le pr&eacute;c&egrave;de et 
+les deux points de d&eacute;finition suivants (la courbe est un spline quadratique, 
+ou spline de troisi&egrave;me ordre). Comme axe central du R&eacute;servoir de 
+Verre, nous utiliserons la ligne passant par les deux points du d&eacute;but et 
+de la fin de la courbe. Dans notre trac&eacute;, il s'agit de l'axe des Y, mais 
+en utilisant la premi&egrave;re ligne, il en r&eacute;sulte un objet compact. 
+Pour cr&eacute;er le Tour, s&eacute;lectionnez d'abord la courbe et choisissez 
+le menu <b>Outils->Tour</b>. Dans la bo&icirc;te de dialogue Tour, choisissez 
+la <b>Line though endpoints</b> comme axe du tour (illustration ci-dessous). </p> 
+<p></p>
+<p align="center"><img src="images/dialog1.png"></img> </p> </p>
+<p>La forme du Tour est centr&eacute;e automatiquement sur 0,0,0. C'est exactement 
+  l&agrave; o&ugrave; nous voulons qu'il soit plac&eacute;, donc ne touchons &agrave; 
+  rien (bien entendu, il ne s'agit pas d'une co&iuml;ncidence, c'est de cette 
+  fa&ccedil;on que nous l'avons d&eacute;fini!). La courbe spline que nous avons 
+  cr&eacute;&eacute; en premier est d&eacute;sormais redondante. Vous pouvez l'effacer, 
+  mais &ccedil;a n'est pas n&eacute;cessaire car elle n'appara&icirc;tra pas lors 
+  de la conversion finale. Pour supprimer un objet, s&eacute;lectionnez-le (&agrave; 
+  partir de la liste des objets) et appuyez sur la touche <strong>Suppr</strong> 
+  du clavier. Vous pouvez aussi utiliser l'option de menu <b>&Eacute;dition->Effacer</b>. 
+</p> 
+</p>
+<h3>Pr&eacute;sentation de la sc&egrave;ne</h3>
+Maintenant, nous avons termin&eacute; la mod&eacute;lisation de toutes les formes. 
+Nous voudrions essayer de convertir la sc&egrave;ne avec les formes et &eacute;clairages 
+appropri&eacute;s. Avant la conversion, nous allons d&eacute;terminer la pr&eacute;sentation 
+des &eacute;l&eacute;ments cl&eacute;s de la sc&egrave;ne, l'appareil photo <em>(Camera)</em> 
+et l'&eacute;clairage. </p> Tout d'abord, d&eacute;terminons la position et l'orientation 
+de l'appareil photo. Ce qui se fait facilement avec la <em>vue appareil photo 
+1</em> en bas &agrave; droite. D&eacute;placez et faites pivoter la vue &agrave; 
+l'aide des outils <img src=images/moveView.gif> <b>D&eacute;placer une vue</b> et <img src=images/rotateView.gif> 
+<b>Pivoter une vue</b>. Maintenez enfonc&eacute;e la touche CTRL lors du d&eacute;placement 
+de la souris sur le vue pour effectuer un zoom avant et arri&egrave;re. Et vous 
+pouvez retourner la vue en maintenant la touche CTRL enfonc&eacute;e et en utilisant 
+l'outil Pivoter une vue. Vous pouvez aussi positionner l'appareil photo &agrave; 
+l'aide des outils <img src=images/move.gif> <b>d&eacute;placer un objet</b> et <img src=images/rotate.gif> 
+<b>pivoter un objet</b> ou via les options du menu <b>Disposition de l'objet</b>. 
+L'appareil photo est un objet comme un autre. La position selon laquelle vous 
+pouvez voir le haut et deux autres c&ocirc;t&eacute;s de l'objet peut &ecirc;tre 
+une bonne position. </p> Ensuite, il nous faut &eacute;clairer la sc&egrave;ne. 
+Comme vous pouvez le voir, une source lumineuse est d&eacute;j&agrave; pr&eacute;sente 
+dans la sc&egrave;ne depuis le d&eacute;but de la session, <i>Light 1</i>. La 
+source lumineuse doit &ecirc;tre plac&eacute;e de telle sorte qu'elle &eacute;claire 
+le c&ocirc;t&eacute; de l'objet que nous regardons. <i>Light 1</i> n'est probablement 
+pas positionn&eacute;e correctement en fonction d'une position donn&eacute;e de 
+l'appareil photo. Comme la source est &eacute;galement &eacute;loign&eacute;e, 
+nous allons la supprimer et en cr&eacute;er une nouvelle. AoI prend en charge 
+trois types de sources lumineuses: lumi&egrave;re ponctuelle, lumi&egrave;re directionnelle 
+et lumi&egrave;re spot. Nous utiliserons la plus simple d'entre elles, la lumi&egrave;re 
+ponctuelle. Suivez les &eacute;tapes d&eacute;crites ci-dessous pour &eacute;clairer 
+correctement la sc&egrave;ne: 
+<ul>
+  <li>Trouvez une position pour le nouvel &eacute;clairage, pr&egrave;s de l'appareil 
+    photo ou tout du moins du m&ecirc;me c&ocirc;t&eacute; que l'appareil photo 
+    par rapport aux objets. Utilisez un facteur de zoom plus faible (30) pour 
+    trouver l'appareil dans les diff&eacute;rentes vues. </li>
+  <li>Pour cr&eacute;er l'&eacute;clairage, cliquez sur l'ic&ocirc;ne <img src=images/light.gif> 
+    <b>cr&eacute;er une source lumineuse</b> et cliquez &agrave; l'emplacement 
+    souhait&eacute; pour placer cette source. Vous aurez probablement &agrave; 
+    d&eacute;placer cette source lumineuse (exactement comme tout autre objet) 
+    dans l'une des autres vues pour obtenir une position satisfaisante dans l'espace 
+    3D. </li>
+  <li> s&eacute;lectionnez le menu <b>Objet->&Eacute;diter l'Objet</b>. Il vous 
+    faut changer certains propri&eacute;t&eacute;s de la source lumineuse pour 
+    accorder sa position relative au sablier. Voyez l'illustration ci-dessous 
+    pour vous caler sur les valeurs ad&eacute;quates. La valeur par d&eacute;faut 
+    de <b>Intensity</b> est un peu &eacute;lev&eacute;e, ce qui fait que l'appareil 
+    photo, aveugl&eacute; par la lumi&egrave;re, produirait une image surexpos&eacute;e. 
+    Changez l'intensit&eacute; pour la valeur 0.8. R&eacute;glez <b>Decay Rate</b> 
+    sur z&eacute;ro. Cette valeur d&eacute;termine la vitesse &agrave; laquelle 
+    l'intensit&eacute; lumineuse d&eacute;cline avec la distance. En r&eacute;alit&eacute;, 
+    le d&eacute;clin de l'intensit&eacute; lumineuse est relatif au carr&eacute; 
+    de la distance. La valeur par d&eacute;faut de Decay Rate produirait une image 
+    tr&egrave;s sombre. Cette simple sc&egrave;ne ne n&eacute;cessite pas de r&eacute;alisme 
+    trop pouss&eacute;, et les choses seront plus simples en d&eacute;sactivant 
+    cette option.<br>
+    <br>
+    <img src="images/dialog2.png"></img> </li>
+</ul>
+
+<p>Maintenant, passons &agrave; la conversion. S&eacute;lectionnez le menu <b>Sc&egrave;ne->Rendre 
+  la Sc&egrave;ne</b>. Ne vous ennuyez pas avec les r&eacute;glages, cliquez simplement 
+  sur le bouton OK de la bo&icirc;te de dialogue. Le r&eacute;sultat devrait s'approcher 
+  de l'illustration ci-dessous: </p>
+</p>
+<p align="center"> <img src="images/render1.jpg"></img> </p> </p>
+<p>Plut&ocirc;t rudimentaire, n'est-ce pas ? Tout para&icirc;t si monotone. On 
+  pr&eacute;f&eacute;rait du bois et du verre en ajoutant des textures.</p>
+</p>
+<h3>Textures et mat&eacute;riaux</h3>
+<h4>Bois</h4>
+<p>Cr&eacute;ons une texture imitant le bois. S&eacute;lectionnez le menu <b>Sc&egrave;ne->Textures</b> 
+  et cliquez sur le bouton <b>Nouveau</b> dans la bo&icirc;te de dialogue Textures. 
+  Dans la fen&ecirc;tre suivante, nommez la texture <i>Bois</i> et choisissez 
+  le type <b>proc&eacute;dural 3D</b> (voir ci-dessous). </p>
+</p>
+<p align="center"> <img src="images/dialog3.png"></img> </p> </p>
+<p>Les textures proc&eacute;durales 3D d&eacute;terminent la couleur, la rugosit&eacute;, 
+  la r&eacute;flexion et autres propri&eacute;t&eacute;s de surface comme une 
+  fonction de coordonn&eacute;es 3D. Pour toute position dans l'espace, la texture 
+  d&eacute;finit l'aspect de la surface de la forme, comme si on avait extrait 
+  la forme d'un bloc uniforme de ce 'mat&eacute;riau'. Cependant, pour les objets 
+  dont on peut voir l'int&eacute;rieur, les objets transparents, nous utiliserons 
+  un <b>mat&eacute;riau</b> pour d&eacute;finir l'int&eacute;rieur, et non pas 
+  une texture. Les textures ne d&eacute;finissent que l'aspect de la surface d'un 
+  objet. </p>
+Une fonction de mappage des coordonn&eacute;es 3D aux valeurs des propri&eacute;t&eacute;s 
+de la texture est cr&eacute;&eacute;e en reliant graphiquement les composants 
+fonctionnels. Six cat&eacute;gories de composants sont propos&eacute;es: </p> 
+<ul>
+	
+  <li><b>Valeurs</b> d&eacute;termine une couleur constante ou une valeur qui 
+    peut &ecirc;tre utilis&eacute;e comme entr&eacute;e pour d'autres valeurs.</li>
+  <li><b>Fonctions</b> sont des composants qui produisent des valeurs scalaires.</li>
+  <li><b>Fonctions couleur </b>produisent des valeurs de couleur.</b></li>
+  <li><b>Transformations</b> transforment les coordonn&eacute;es en un nouveau 
+    jeu de coordonn&eacute;es.</l> 
+  <li><b>Motifs</b> d&eacute;terminent une valeur scalaire comme une fonction 
+    de valeurs de coordonn&eacute;es. Cette valeur scalaire peut &ecirc;tre utilis&eacute;e 
+    pour d&eacute;finir un motif de couleur pour la texture ou pour &eacute;chantillonner 
+    d'autres propri&eacute;t&eacute;s de texture. </li>
+</ul>
+</p>
+Lorsque vous avez cr&eacute;&eacute; une nouvelle texture, une bo&icirc;te de 
+dialogue vous demandera de la d&eacute;finir. Elle affiche une zone vierge importante 
+dans laquelle nous ajouterons les composants fonctionnels. A droite se trouvent 
+des blocs portant des noms comme <i>diffus, sp&eacute;culaire, tansparent</i>, 
+etc. Ce sont les propri&eacute;t&eacute;s d'une texture qui seront reli&eacute;es 
+aux composants que nous ajoutons dans la zone vierge. Les composants suivants 
+sont ajout&eacute;s &agrave; la proc&eacute;dure pour cr&eacute;er la texture 
+<em>Bois</em>: 
+<ul>
+  <li>S&eacute;lectionnez le menu <b>Ins&eacute;rer->Motifs->Bois</b>. Il s'agit 
+    d'un motif fait de bandes circulaires concentriques autour de l'axe des Z, 
+    exactement comme la section transversale d'un tronc d'arbre. Les valeurs par 
+    d&eacute;faut de ce composant sont les trois valeurs des coordonn&eacute;es 
+    X, Y, Z et l'amplitude du bruit &agrave; 0.5. Elles sont satisfaisantes, et 
+    nous n'avons donc pas &agrave; leur ajouter de composants. </li>
+  <li> Nous utiliserons ce motif pour la couleur diffuse de la texture. S&eacute;lectionnez 
+    le menu <b>Ins&eacute;rer->Fonction Couleur->Personnalis&eacute;e</b>. Reliez 
+    le motif Bois &agrave; la fonction Couleur Personnalis&eacute;e, et reliez 
+    la fonction Couleur Personnalis&eacute;e au composant Couleur Diffuse &agrave; 
+    droite de la bo&icirc;te de dialogue (illustration ci-dessous). Maintenant, 
+    vous voyez appara&icirc;tre des anneaux concentriques dans l'aper&ccedil;u 
+    de l'image.<br>
+    <br>
+    <img src="images/woodfunction.png"></img> <br>
+  </li>
+  <li>Ensuite, nous allons ajouter des couleurs imitation bois &agrave; la texture.</li>
+  Pour ce faire, double-cliquez sur la fonction Couleur Personnalis&eacute;e. 
+  La fen&ecirc;tre ci-dessous appara&icirc;t. Ajoutez des curseurs suppl&eacute;mentaires 
+  (petits triangles) et d&eacute;finissez la couleur de chacun d'entre eux pour 
+  obtenir l'illustration ci-dessous.<br>
+  <br>
+  <img src="images/woodcolor.png"></img><br></li>
+  <li>Enfin, nous allons augmenter l&eacute;g&egrave;rement la densit&eacute; 
+    de la texture Bois, avec plus d'anneaux. Double-cliquez sur le composant motif 
+    Bois et r&eacute;glez les valeurs comme dans l'illustration ci-dessous:<br>
+    <br>
+    <img src="images/wooddialog.png"></img><br>
+  </li>
+</ul>
+L'aper&ccedil;u a maintenant cet aspect:</p><br>
+<br>
+<img src="images/wood.png"></img></p> <br>
+<br>
+La texture n'a pas vraiment un aspect tr&egrave;s r&eacute;aliste, mais nous allons 
+y rem&eacute;dier maintenant. Pour cr&eacute;er des textures plus complexes, consultez 
+la section concernant les textures du <a href="manual">manuel de Art-of-Illusion</a>.</p> 
+Cette texture sera assign&eacute;e aux plaquettes sup&eacute;rieure et inf&eacute;rieure, 
+ainsi qu'aux piliers que nous avons cr&eacute;&eacute;e pr&eacute;c&eacute;demment. 
+S&eacute;lectionnez toutes les formes auxquelles vous souhaitez assigner la texture 
+Bois. S&eacute;lectionnez ensuite le menu <b>Objet->D&eacute;finir une Texture</b>. 
+Choisissez la texture Bois et cliquez sur O.K. </p> S&eacute;lectionnez ensuite 
+les objets <em>Haut</em> et <em>Bas</em> seulement. Ouvrez &agrave; nouveau la 
+bo&icirc;te de dialogue de d&eacute;finition des textures. Cliquez sur le bouton 
+<b>&Eacute;diter la Cartographie</b>. Dans cette fen&ecirc;tre, vous pouvez calibrer, 
+translater et faire pivoter la texture pour qu'elle corresponde &agrave; l'objet. 
+Nous allons simplement faire pivoter la texture pour obtenir le r&eacute;sultat 
+suivant:</p><br>
+<br>
+<img src="images/woodmap2.png"></img></p> <br>
+<br>
+Passons aux piliers. S&eacute;lectionnez-les et &eacute;ditez &agrave; nouveau 
+le mappage. Entrez les valeurs suivantes:<br>
+<br></p>
+<img src="images/woodmap.png"></img></p> <br>
+<br>
+Voyons maintenant le r&eacute;sultat. L'image convertie aura cet aspect:</p><br>
+<br>
+<img src="images/render2.jpg"></img></p> 
+<h4>Verre</h4>
+L'objet R&eacute;servoir de Verre doit poss&eacute;der les propri&eacute;t&eacute;s 
+de mat&eacute;riau Verre. C'est-&agrave;-dire qu'il doit &ecirc;tre transparent 
+&agrave; la lumi&egrave;re et &eacute;galement r&eacute;fl&eacute;chir la lumi&egrave;re 
+&agrave; sa surface. La lumi&egrave;re qui passe &agrave; travers un objet en 
+verre est r&eacute;fract&eacute;e et att&eacute;nu&eacute;e (ex.: diminution, 
+changement de couleur). La r&eacute;flexion et la transparence sont des propri&eacute;t&eacute;s 
+de texture. La r&eacute;fraction et l'att&eacute;nuation sont des propri&eacute;t&eacute;s 
+d'un mat&eacute;riau d'objet. Les mat&eacute;riaux ne peuvent &ecirc;tre assign&eacute;s 
+qu'&agrave; des objets solides. Ce qui est logique car le niveau d'att&eacute;nuation 
+et la lumi&egrave;re apr&egrave;s r&eacute;fraction d&eacute;pend de l'endroit 
+o&ugrave; le rayon lumineux p&eacute;n&egrave;tre dans l'objet et de l'endroit 
+o&ugrave; ce m&ecirc;me rayon quitte l'objet. Heureusement, la forme R&eacute;servoir 
+est un objet solide. Toutes les formes Tour avec un axe de rotation qui passe 
+par les points du d&eacute;but et de la fin du profile de la courbe sont solides.</p> 
+Nous allons d'abord cr&eacute;er la texture Verre, puis le mat&eacute;riau Verre.</p> 
+Dans la bo&icirc;te de dialogue Texture, cr&eacute;ez une nouvelle <b>texture 
+uniforme </b> nomm&eacute;e <i>Verre</i>. Cette texture rend la surface transparente, 
+de sorte que l'int&eacute;rieur du mat&eacute;riau sera visible, et d&eacute;termine 
+le niveau de r&eacute;flexion sp&eacute;culaire. L'illustration ci-dessous indique 
+les r&eacute;glages &agrave; utiliser pour la nouvelle texture. La transparence 
+est contr&ocirc;l&eacute;e par les valeurs <b>Couleur Transparente</b> et <b>Transparence</b>. 
+La portion rouge, vert et bleu de la couleur transparente d&eacute;termine la 
+quantit&eacute; restante de chaque composant couleur lorsque la lumi&egrave;re 
+traverse la surface. Il s'agit d'un filtre de couleurs. Le blanc, la couleur par 
+d&eacute;faut, signifie que la lumi&egrave;re de chacune des couleurs traverse 
+la surface. Le noir signifie qu'aucune couleur ne traverse. La valeur de la transparence 
+d&eacute;termine la portion totale de lumi&egrave;re qui traverse. Une valeur 
+&agrave; 0.7 signifie que 70 pourcent de la lumi&egrave;re traverse la surface. 
+Elle signifie aussi que le composant transparent d&eacute;termine la couleur de 
+la surface &agrave; 70 pourcent. Les 30 pourcent restant de la couleur seront 
+concern&eacute;s &agrave; 100 pourcent par la r&eacute;flexion, et la valeur <b>Sp&eacute;cularit&eacute;</b> 
+sera ainsi r&eacute;gl&eacute;e sur 1.0. Le composant Couleur diffuse de la surface 
+n'affecte pas l'ensemble la totalit&eacute; de la couleur avec ces r&eacute;glages. 
+Nous allons utiliser les mat&eacute;riaux d'objets pour teinter le Verre.</p><br>
+<br>
+<img src="images/glasstexture.png"></img></p> <br>
+<br>
+Pour cr&eacute;er un nouveau mat&eacute;riau, s&eacute;lectionnez le menu <b>Sc&egrave;ne->Mat&eacute;riaux</b> 
+et cliquez sur le bouton <b>Nouveau</b>. Le nouveau mat&eacute;riau peut aussi 
+&ecirc;tre nomm&eacute; <i>Verre</i>. Ce sera un <b>mat&eacute;riau uniforme</b>. 
+Vous pouvez voir les param&egrave;tres dans l'illustration ci-dessous. La couleur 
+du mat&eacute;riau est affect&eacute;e par deux param&egrave;tres: la <b>Couleur 
+&eacute;mise</b> et la <b>Couleur de transparence</b>. Ces deux param&egrave;tres 
+att&eacute;nuent la couleur de la lumi&egrave;re lorsqu'elle traverse le mat&eacute;riau. 
+La couleur &eacute;mise n'affecte que la lumi&egrave;re qui atteint directement 
+l'appareil photo, c'est la couleur que l'objet semble poss&eacute;der. La Couleur 
+de Transparence affecte toute la lumi&egrave;re qui traverse l'objet, ainsi que 
+la couleur de l'ombre diffus&eacute;e par l'objet. Le premier param&egrave;tre 
+de couleur est facile &agrave; utiliser car il sp&eacute;cifie la couleur de l'objet 
+lui-m&ecirc;me. Mais la couleur transparente pr&eacute;cise la fraction de rouge, 
+vert et bleu qui traverse l'objet. Le reste de la lumi&egrave;re est r&eacute;fl&eacute;chie 
+et d&eacute;termines la couleur des objets. L'importance de l'att&eacute;nuation 
+de la lumi&egrave;re est d&eacute;finie par la valeur <b>Densit&eacute;</b>. Une 
+valeur &agrave; z&eacute;ro ne produit aucune att&eacute;nuation. Pour ce mat&eacute;riau 
+Verre, nous sp&eacute;cifierons une simple couleur de mat&eacute;riau, le vert, 
+qui n'appara&icirc;t que dans les objets tr&egrave;s massifs. <br>
+<br>
+</p>
+<img src="images/glassmaterial.png"></img></p> 
+<h3>La conversion finale</h3>
+Le Verre que nous avons cr&eacute;&eacute; ne peut pas &ecirc;tre converti par 
+le Convertisseur Raster. Ouvrez la bo&icirc;te de dialogue de conversion (<b>Sc&egrave;ne->Rendre 
+la Sc&egrave;ne</b>) et choisissez le convertisseur <b>Raytracer</b>. Le Raytracer 
+distribue les 'rayons lumineux' &agrave; partir de l'appareil photo jusqu'&agrave; 
+l'endroit o&ugrave; ils croisent les objets. A ce point de l'objet, les rayons 
+sont diffus&eacute;s vers la source lumineuse pour calculer la luminosit&eacute; 
+et d&eacute;finir les ombres. A partir des objets &agrave; composant de r&eacute;flexion 
+sp&eacute;culaire ou de transparence, de nouveaux rayons sont &eacute;mis pour 
+rencontrer les objets vus par r&eacute;flexion ou &agrave; travers un mat&eacute;riau 
+transparent. L'arri&egrave;re plan noir par d&eacute;faut </p>produit un mat&eacute;riau 
+Verre bizarre. Pour am&eacute;liorer l'apparence du verre, il nous faut d&eacute;finir 
+un arri&egrave;re plan clair. Suite &agrave; un bogue de la version 0.8, un arri&egrave;re 
+plan uni produit une conversion incorrecte; nous allons donc utiliser une texture 
+pour l'arri&egrave;re plan. S&eacute;lectionnez le menu <b>Sc&egrave;ne->Environnement</b>. 
+Dans cette bo&icirc;te de dialogue, choisissez <b>texture-diffuse</b> comme arri&egrave;re 
+plan. Vous pouvez cr&eacute;er une nouvelle texture de couleur diff&eacute;rente 
+ou peut-&ecirc;tre une image proc&eacute;durale (les nuages constituent un excellent 
+exercice) mais nous utiliserons la texture par d&eacute;faut pour l'instant. Enfin, 
+pour am&eacute;liorer la qualit&eacute; de l'image, activez l'option <b>anticr&eacute;nelage</b> 
+dans la bo&icirc;te de dialogue de conversion. Et si votre source lumineuse (non 
+directionnelle) est proche de l'objet, activer <b>ombres douces</b> produira une 
+image plus r&eacute;aliste. Les deux options permettent au convertisseur Raytracer 
+de diffuser plusieurs rayons par pixel. Il en r&eacute;sultera un image plus fluide. 
+Le nombre maximum et minimum de <b>rayons par pixel</b> aux valeurs les plus &eacute;lev&eacute;es 
+produira une image de meilleure qualit&eacute; et une vitesse de conversion plus 
+lente. Pour une image 'rapide', n'utilisez pas ces options. Vous pouvez obtenir 
+une bonne qualit&eacute; en r&eacute;glant les minimum et le maximum respectivement 
+sur 4 et 16 rayons. Davantage de rayons n&eacute;cessiteront des zones d'ombres 
+plus importantes. </p> Voici ces r&eacute;glages et le r&eacute;sultat de la conversion:</p> 
+<br>
+<br>
+<img src="images/raytracer.png"></img> <img src="images/render3.jpg"></img></p> 
+<h3>Place &agrave; l'imagination!</h3>
+Nous arrivons &agrave; la fin de ce didacticiel, mais Art of Illusion est capable 
+d'en faire beaucoup plus. Avec d'autres didacticiels et manuels, vous pourrez 
+en apprendre davantage. La plupart des super fonctions sont suffisamment intuitive, 
+et vous pouvez les essayer tout simplement pour voir leurs effets. </p> Utilisez 
+les bases de ce didacticiel pour commencer &agrave; vous lancer dans la mod&eacute;lisation 
+dans le monde de votre imagination. Progressivement, &agrave; mesure que vous 
+apprendrez &agrave; dominer toutes les fonctions du programme, vous ferez de mieux 
+en mieux... et deviendrez de plus en plus accro. Bonne chance. 
+<hr>
+
+</body>
+
+</html>
+

@@ -1,0 +1,111 @@
+<?xml version="1.0" standalone="yes"?>
+
+<script>
+  <name>HelpPlugin</name>
+  <version>1.0</version>
+  <beta>1</beta>
+  <author>Nik Trevallyn-Jones</author>
+  <date>June, 2007</date>
+  <external type="file" name="Help/helpgui-1.1a.jar" association="bundled" />
+  <external type="file" name="Help/jhall.jar" association="bundled" />
+  <external type="file" name="Help/jhelpaction.jar" association="bundled" />
+  <external type="file" name="Help/pircbot.jar" association="bundled" />
+  <fileset>
+     <file todir="Help">helpgui-1.1a.jar</file>
+     <file todir="Help">pircbot.jar</file>
+     <file todir="Help">jhall.jar</file>
+     <file todir="Help">jhelpaction.jar</file>
+     <file todir="Help">AOIHelp.zip</file>
+  </fileset>
+  <description>
+Help system
+  </description>
+  <comments>
+This plugin adds a Help menu item to AOI, and provides the supporting help
+viewer and search logic.
+  </comments>
+  <history>
+     <log version="0.18" date="Jan 11, 2007" author="Nik TJ" >
+- minor bug fix that could cause a null pointer
+- made memory display in HelpAbout clearer
+- source and build file rearranged to suit inclusion with AOI
+     </log>
+     <log version="0.16" date="Dec 10, 2006" author="Nik TJ" >
+- fixing problems with inclusion of latest helpset translations.
+     </log>
+     <log version="0.15" date="Dec 8, 2006" author="Nik TJ" >
+- updates to the French translation (more thanks to Francois!).
+     </log>
+     <log version="0.14b1" date="Dec 4, 2006" author="Nik TJ" >
+- imported the French transaltion of the AOIHelp helpset - thanks Francois!
+     </log>
+     <log version="0.13b1" date="November 14, 2006" author="Nik TJ" >
+- re-enabled the JavaHelp code as Sun have now (this morning) released JavaHelp
+  under the GPL.
+  -- The code attempts to switch gracefully from JavaHelp to HelpGUI if the
+     JavaHelp jars are not found, but this doesn't actually work.
+  -- text-search, context-sensitive help and ActiveLinks are available again.
+     </log>
+     <log version="0.12b1" date="November 13, 2006" author="Nik TJ" >
+- port to HelpGUI viewer, and removal of all dependancies on Sun's JavaHelp.
+  -- This is due to the restrictive and onerous requirements of Sun's JavaHelp Binary Licence.
+  -- With this initial version, text-search, context-sensitive help and Object tags are unavailable.
+     </log>
+     <log version="0.11b1" date="November 1, 2006" author="Nik TJ" >
+- initial release of the AOI chat client
+- changed to use plugin resources for plugin helpsets
+     </log>
+     <log version="0.10b2" date="October 02, 2006" author="Nik TJ" >
+- created default HowTo content
+     </log>
+     <log version="0.10b1" date="September 28, 2006" author="Nik TJ" >
+- modified FurthHelp.html to make all download links ActiveLinks
+     </log>
+     <log version="0.09b1" date="September 12, 2006" author="Nik TJ" >
+- restructured AOIHelp to simplify multiple language support.
+  -- created helpset projects for DE, IT, and ES locales.
+
+- minor enhancement to better support an AOI locale different to the system locale.
+     </log>
+     <log version="0.08b1" date="September 8, 2006" author="Nik TJ" >
+- replaced InstallBean class with generic ActiveLink class
+     </log>
+     <log version="0.07b1" date="September 7, 2006" author="Nik TJ" >
+- added ability for buttons to download content using SPManager
+     </log>
+     <log version="0.06b1" date="September 4, 2006" author="Nik TJ" >
+- more content
+- added a small IRC client for IRC help.
+     </log>
+     <log version="0.05b1" date="September 4, 2006" author="Nik TJ" >
+- more content:
+  -- GettingStarted now done (first cut).
+  -- Hourglass tutorial integrated (language issues still open)
+  -- CSH ids now point into the documentation
+
+     </log>
+     <log version="0.04b1" date="August 2006" author="Nik TJ" >
+- added further protection against missing files.
+     </log>
+     <log version="0.03" date="August 2006" author="Nik TJ" >
+- fixes for CSH
+  -- mapping entries now use double-quotes (JavaHelp doesn't recognise single quote)
+  -- auto register LayoutWindow and DockableWidgets
+  -- Key mappings moved to F1, F2, F3
+  -- Help About completed
+
+     </log>
+     <log version="0.02" date="August 2006" author="Nik TJ" >
+- fixes for windows
+- added component registration methods, for CSH
+- added keystroke mappings for help keys
+- added support for plugin help
+- added mapfile generation if a flag is set in the helpflags file
+
+     </log>
+     <log version="0.01" date="August 2006" author="Nik TJ" >
+- initial coding
+     </log>
+  </history>
+</script>
+

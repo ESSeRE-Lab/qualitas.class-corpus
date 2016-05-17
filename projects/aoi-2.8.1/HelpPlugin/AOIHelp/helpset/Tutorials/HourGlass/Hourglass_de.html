@@ -1,0 +1,286 @@
+<html>
+<head>
+	<title>Art-of-Illusion modelling tutorial - Das Stundenglas</title>
+</head>
+
+<body>
+	<center>
+	<h1>Art-of-Illusion modelling tutorial<br>
+	Das Stundenglas</h1><br>
+	Version 1.1</br>
+	For Art of Illusion version 0.9</br>
+	Copyright 2001, <a href="mailto:kwikrick@users.sourceforge.net">Rick van der Meiden</a></br>
+	German Translation Copyright  2002, <a href="mailto:kmansour@web.de">Kerim Mansour</a></br>
+	</center>
+<p></p>
+
+<center><img src="images/hourglass_final.jpg"></img></center>
+
+<h3>Einleitung</h3>
+In diesem Tutorial wollen wir Dir an hand des Stundenglases oben zeigen, wie man ein einfaches Objekt mit Art-of-Illusion (AoI) modellieren kann. Es werden hier nicht alle Features und Möglichkeiten von AOI erklärt -dazu sind es einfach zu viele- aber genug um einen Einstieg zu finden. Du wirst die anderen Features bestimmt durch Ausprobieren und Experimentieren erlernen. </p>
+Solltest Du Dich schon mit 3D-Modellierung auskennen, wirst Sie diesem Tutorial wahrscheinlich nicht Punkt für Punkt folgen müssen. Du kannst auch einfach den Text überfliegen um einen Eindruck von den Möglichkeiten zu bekommen. Probier es einfach aus. Für Anfänger: Ich werde Euch zeigen wie man in ein paar Minuten eigene 3D Grafiken erstellen kann. 
+</p>
+Aus Gründen der Vollständigkeit wird eine AOI Szenen Datei mit dem Namen <i>"hourglass.aoi"</i> mit diesem Tutorial mitgeliefert, welches einfach geöffnet werden kann. Es wird jedoch empfohlen die Szene selbst nachzustellen bzw. zu erzeugen. 
+
+<h3>Die Anwendung</h3>
+Wir nehmen jetzt einmal an, Du hast AOI heruntergeladen, das korrekte JDK installiert, die Readme Dateien gelesen und AOI gestartet. Sollte das nicht der Fall sein schaue bitte auf
+<a href="http://www.artofillusion.org/">der Homepage von Art-of-Illusion nach</a>. 
+Bei Starten von AOI zeigt sich das Hauptfenster. Oben befindet sich das Hauptmenu; schau Dich einfach mal um, sieh Dir die Pull-down Menues an. Falls da viel ist, was Du noch nicht verstehst, keine Sorge, das ändert sich bald.
+</p>
+
+Auf der linken Seite sind einige Icons. Das Klicken darauf selektiert ein Tool und es wird eine einzeilige Hilfe unten am Fenster angezeigt. Die Icons sind:</p>
+
+<table>
+<tbody>
+	<tr>
+		<td align=right>move object(bewege Objekt)</td>
+		<td><img src="images/move.gif"></td>
+		<td><img src="images/rotate.gif"></td>
+		<td>rotate object (rotiere Objekt)</td>
+	</tr>
+	<tr>
+		<td align=right>resize object (ändere die Größe)</td>
+		<td><img src="images/resize.gif"></td>
+		<td><img src="images/cube.gif"></td>
+		<td>generiere Box (create box)</td>
+	</tr>
+	<tr>
+		<td align=right>create sphere(generiere Kugel)</td>
+		<td><img src="images/sphere.gif"></td>
+		<td><img src="images/cylinder.gif"></td>
+		<td>create cylinder (generiere Zylinder)</td>
+	</tr>
+	<tr>
+		<td align=right>create spline mesh (generiere Spline-Netz)</td>
+		<td><img src="images/splineMesh.gif"></td>
+		<td><img src="images/polygon.gif"></td>
+		<td>create polygon (generiere Polygon)</td>
+	</tr>
+	<tr>
+		<td align=right>create camera (generiere Kamera)</td>
+		<td><img src="images/camera.gif"></td>
+		<td><img src="images/light.gif"></td>
+		<td>create lightsource (generiere Lichtquelle)</td>
+	</tr>
+	<tr>
+		<td align=right>create interpolated curve (generiere interpolierte Kurve)</td>
+		<td><img src="images/interpCurve.gif"></td>
+		<td><img src="images/approxCurve.gif"></td>
+		<td>create approximated curve (generiere angenäherte Kurve)</td>
+	</tr>
+	<tr>
+		<td align=right>move view (bewege Ansicht)</td>
+		<td><img src="images/moveView.gif"></td>
+		<td><img src="images/rotateView.gif"></td>
+		<td>rotate view (rotiere Ansicht)</td>
+	</tr>
+</tbody>
+</table>
+</p>
+
+Der Hauptteil des Schirms zeigt 4 Ansichten auf das 3D Model: <i>Vorne, Links, Oben</i> und <i>Kamera1</i>.
+Für jede Ansicht kann der Bentutzer eine Kamera, einen Standard-Blickwinkel (vorne, links, oben, etc.),eine perspektivische oder paralele Ansicht und einen Vergrößerungsfaktor (Standard ist 100) einstellen. Diese Blickwinkel können über die entsprechenden Tools für Bewegung und Rotation geändert werden.
+Du wirst den Maßstab und die Blickwinkel oft verändern aber nicht die Ansichten. Die Standardansichten sind für die meisten Arbeiten ausreichend. Nur die Ansicht unten Rechts, <i>Kamera1</i> wird in der Regel oft verändert, weil sie sehr nützlich ist um das Model von allen Seiten zu betrachten und zu überprüfen.
+</p>
+Auf der rechten Seite ist (momentan leerer) Raum zur Anzeige der Objekte (shapes) in Deinem Model. Von der Liste kannst Du Objekte selektieren bzw. deselektieren indem Du auf den Eintrag klickst. Ein Doppelklick wird den "edit-object" (Objekt bearbeiten)-Dialog öffnen.
+</p>
+Bevor wir jetzt anfangen muß noch der Begriff der Koordinaten erläutert werden. Die Position und Dimensionen von Ojekten werden durch ein Koordinatensystem mit 3 Dimensionen (X,Y,Z) festgelegt. Die X-Achse zeigt nach rechts, d.h. also je größer der Wert, desto weiter rechts ist er. Die Y-Achse zeigt nach oben, die Z-Achse zeigt aus dem Monitor heraus in Deine Richtung. Wir sprechen hier von einem rechtshändigem Koordinatensystem.
+</p>
+
+<h3>Erste Schritte</h3>
+Normalerweise beginnt man das Modellieren indem man einen kleinen Entwurf auf kariertem Papier malt um einen ersten Eindruck von Form und Größe zu bekommen. Wenn Du das nicht tun willst, dann las uns wenigstens ein Gitternetz im Modeller generieren:
+
+<ul>
+<li> wähle <b>Szene->Gitternetz (Scene->Grids)</b> aus dem Menu</li>
+<li> setze den <b>Abstand (Spacing)</b> auf 0.5</li>
+<li> setze die <b>Unterteilungen (Subdivisions)</b> auf 10</li>
+<li> selektiere <b>Gitternetz anzeigen und An Gitternetz ausrichten(Show grid/Snap to grid)</b></li>
+<li> klicke OK</li>
+</ul>
+Dies erlaubt uns einfach Objekte mit einer exakten Position und Größe zu zeichnen und diese orthogonal auszurichten. Du kannst die Parameter des Gitternetzes jederzeit ändern um feinere oder gröbere Netze zu erhalten.
+Jetzt fangen wir an zu zeichnen. Zuerst zeichne eine Box für den Boden bzw. Deckel des Stundenglases:
+
+<ul>
+<li> wähle das <img src="images/cube.gif"></img> <b>'generiere Box' (create box) Tool</b> </li>
+<li> zeichne eine Box die 1.5 Einheiten breit und 0.1 Einheiten hoch  ist in the Ansicht von vorne. Das entspricht bei einem Netz von 0.5 Einheiten und 10 Unterteilungen einer Breite von 3 Gitternetzlinien und einer Unterteilung nach oben.   
+<li> wähle das <img src="images/resize.gif"></img> <b>'Größenänderung's (resize object) Tool</b></li>
+<li> Ändere die Größe in der Ansicht von oben bis es quadratisch erscheint bei 1.5 auf 1.5 Einheiten.
+<li> wähle das <img src="images/move.gif"></img> <b>'bewege Objekt' (move object) Tool</b> </li>
+<li> bewege die Box, sodaß sie mittig in der Ansicht von oben ist. </li>
+<li> bewege sie in der Ansicht von vorne, so daß sie gerade unter der zweiten Gitternetzlinie von der Mitte ist. </li>
+<li> überprüfe die Koordindaten der Box mit <b>Object->Object-Layout</b> aus dem Menu.
+Die Box sollte eine Größe von 1.5 Einheiten auf der X-Achse, 0.1 Einheiten auf der Y-Achse und 1.5 Einheiten auf der Z-Achse haven. Sie sollte ihren Ursprung in den Koordinaten <0, -1.05,0> haben. In diesem Dialog kannst Du auch die Größe, Position und Orientierung ändern (siehe Bild unten).<br>
+<img src="images/boxlayout.png"></li>
+</ul>
+
+Beachte, daß Du jedes Objekt in jeder Ansicht zeichnen kannst. Da Du nur in zwei Dimensionen gleichzeitig zeichnen kannst, muß die dritte Dimension später modifiziert werden. Die Größe und Position der Box kannst Du über die entsprechenden Tools ändern, aber um eine klare Vorstellung der Dimensionen zu bekommen ist der "Object Layout" Dialog sehr viel schneller.</p>
+
+Die erste Box stellt den Boden des Modells dar. Da der Deckel genauso aussieht generieren wir Ihn duch Kopieren der ersten Box.
+
+<ul>
+<li>selektiere die erste Box, <i>Cube 1</i> aus der Liste auf der rechten Seite</li>
+<li>wähle <b>Bearbeiten->Kopieren (Edit->Copy)</b> aus dem Menu</li>
+<li>wähle <b>Bearbeiten->Einfügen (Edit->Paste)</b> aus dem Menu</li>
+<li>bewege die Kopie nach oben bis die untere Kante der Box bei y=1 ist. Das kannst Du folgendermaßen tun:
+	<ul>
+	<li>das <img src="images/move.gif"></img> <b>'bewege Objekt' (move object) Tool</b>. Halte die Feststelltaste gedrückt um nur orthogonal zu bewegen,</li>
+	<li>oder die <b>Object->Layout Object</b>-Option aus dem Menu. Zentriere die Box bei y=1.05,</li>
+	<li>oder die <b>Object->Transform Object</b>-Option aus dem Menu. Bewege sie 2 Eingeiten nach oben auf der Y-Achse, </li>
+	<li>oder die <b>Object->Align Objects</b>-Option aus dem Menu. Richte den Boden (y-axis) auf 0 aus.
+	</ul>
+</ul>
+</p>
+Jetzt haben wir 2 Boxen, symmetrisch zum Ursprung. Beachte, daß beide Boxen den Namen <i>Cube1</i> tragen. Du kannst die Objektnamen ändern indem Du die <b>Object->Rename Object</b>-Option aus dem Menu wählst. Geeignete Namen wären hier "Oben" und "Unten" um sie einfacher unterscheiden zu können auf der Liste.</p>
+Die oben beschriebenen Techniken sind auch geeignet um das Gestänge (4 Stangen) zwischen dem oberen und dem unteren Brett zu generieren. Benutze das <img src="images/cylinder.gif"></img> <b>'Generiere Zylinder' (create cylinder) Tool</b> um einen Zylinder der folgenden Ausmaße zu generieren:
+<ul>
+<li>Position: X = 0.6, Y = 0, Z = 0.6</li>
+<li>Größe: X = 0.1, Y = 2, Z = 0.1<br></li>
+</ul>
+Erzeuge 3 weiter Zylinder in den anderen Ecken des Gerüsts für das Stundenglas. <br>
+Hinweise:
+
+<ul>
+<li>zeichne den ersten Zylinder in der Ansicht von vorne oder von links. Das erlaubt Dir den Durchmesser und die Länge zu wählen. Positionier den Zylinder in den andern Ansichten. </li>
+<li>generiere die anderen Zylinder durch Kopieren und Verschieben. </li>
+<li>Du kannst die Zylinder nicht in der Ansicht von oben sehen, da sie vom Brett verdeckt werden. Wähle <b>Scene->Display Mode->Wireframe</b> aus dem Menu, und sie sollten sichtbar sein. </li>
+</ul>
+</p>
+
+Jetzt haven wir das Grundgerüst für das Stundenglas. Benutze nun das <img src="images/moveView.gif"> <b>'Verschiebe Blickwinkel' (move viewpoint) Tool</b> und das <img src="images/rotateView.gif"> <b>'rotiere Gesichtspunkt' (rotate viewpoint) Tool</b> um die Kamera1-Ansicht (Ansicht rechts unten) zu ändern. Jetzt kannst Du das Model aus jedem Winkel betrachten. Das Resultat sollte etwa so aussehen: </p>
+
+<img src="images/image2.png"></img>
+
+<h3> Ein komplexes Objekt </h3>
+Das komplizierteste Objekt in dieser Szene wird der Glaskörper sein. Wir generienen ihn mit Hilfe des <b>Rotations (Lathe)</b>Tools. Ein Lathe ist ein Objekt welches durch eine umlaufende Spline Kurve erzeugt wird. Die Kurve bestimmt dabei die Kontur des Objekts um eine Achse. 
+Um solch eine Kontur-Kurve zu erzeugen verwenden wir das <img src="images/approxCurve.gif"> <b>create approximated curve</b> Tool. Um uns die schwere Arbeit mit einer präzisen Mausführung zu ersparen generieren wir zuerst ein feiners Gitternetz: Abstand 0.2 mit 2 Unterteilungen. Dann wähle <b>Scene->One View</b> aus dem Menu. Du kannst den Vergrößerungsfaktor der Ansicht auf 200 Prozent setzen. Jetzt erzeuge die Spline Kurve indem Du die Punkte 1 bis 9 (siehe Bild unten) verbindest(in dieser Reihenfolge). Doppelklicke auf Punkt 9 um die Spline Kurve dort enden zu lassen. Achte darauf, daß der erste und der letzte Punkt auf der Y-Achse liegen und tangent zu dem oberen und unteren Brett sind die wir vorhin gemacht haben. 
+</p>
+<img src="images/points.png"></img>
+</p>
+Die Angenäherte Kurve ist nicht sehr intuitiv, erlaubt Dir aber die Richtung der Kurve besser zu bestimmen als die interpolierte Kurve. Die Richtung der Kurve am Anfang und am Ende wird nur duch den nächsten Punkt bestimmt. In Punkt 5 ist die Kurve vertikal weil Punkte 4 und 6 beide vertikal von Punkt 5 sind. Im allgemeinen wird die Kurve an jedem Punkt durch den direkt vorhergehenden und die zwei nächsten Punkte bestimmt (bei der Kurve handelt es sich um eine quadratische Spline Kurve bzw. Kurve dritten Grades).
+</p>
+Als zentrale Achse des Glaskörpers werden wir die Linie nehmen die durch den Anfangs- und Endpunkt geht. In unserer Zeichnug ist dies die Y-Achse. Um das "Lathe" zu generieren selektiere zuerst die Kurve und wähle dann <b>Tool->Lathe</b> aus dem Menu. Im Lathe Dialog wähle <b>Line though endpoints</b> als die Lathe Achse. (Siehe Bild unten).
+</p> 
+<img src="images/dialog1.png"></img>
+</p>
+Die Form wir automatisch bei 0,0,0 zentriert. Das ist exakt der Platz, an dem wir es haben wollen, also laß es da. (Natürlich ist dies kein Zufall, ich hab das so geplant!). Die Spline Kurve, die wir generiert haben ist nun überflüssig geworden. Du kannst die löschen, es ist jedoch eigentlich nicht nötig, da sie eh nicht auf dem gerenderten Bild erscheinen wird. Um ein Objekt zu löschen, selektiere es (in der Ansicht oder aus der Liste der Objekte) und drücke <b>Entf</b> auf der Tastatur. Alternativ kannst Du auch die Menuoption <b>Edit->Clear</b> verwenden.
+</p>
+<h3>Szenen Layout</h3>
+Wir haben jetzt alle Formen modelliert. Als nächstes sollten wir versuchen die Szene mit genauen Formen und Beleuchtung zu rendern. Vor dem Rendern sollten wir allerdings erst die Eigenschaften der Schlüsselelemente in der Szene bestimmen; Kamera und Licht. 
+</p>
+Zuerst bestimme die Position und Orientierung der Kamera. Das kann man einfach über die Kamera-Vorschau in der unteren rechten Ecke tun. Verschiebe oder rotiere die Ansicht über das <img src="images/moveView.gif"> <b>Move view Tool</b> und das <img src="images/rotateView.gif"> <b>Rotate view Tool</b>. Halte die Strg-Taste gedrückt wärend des Verschiebens der Ansicht um hinein bzw. herauszuzoomen. Das Drücken der Strg-Taste bei gleichzeitigem Benutzen des rotate View Tools erlaubt ein Überschlagen der Ansicht. Du kannst die Kamera auch positionieren indem Du das <img src="images/move.gif"> <b>move object Tool</b> und das <img src="images/rotate.gif"> <b>rotate object Tool</b> benutzt oder mit der <b>Layout object</b> Menuoption. Die Kamera ist ein Objekt wie jedes andere. Eine gute Position könnte ein Ort sein von dem man die obere und zwei weitere Seiten des Objektes sehen kann. 
+</p>
+Als nächstes sollten wir die Szene beleuchten. Wie man sehen kann existiert schon eine Lichtquelle in der Szene, <i>Light 1</i>. Die Lichtquelle sollte so positioniert werden, daß die Seite des Objekts welches wir ansehen beleuchtet wird. <i>Light 1</i> ist vielleicht nicht richtig positiniert, je nachdem wo die Kamera sich befindet. Da die Lichtquelle außerdem noch weit entfernt ist, löschen wir sie und generieren eine neue. AoI unterstützt drei Arten von Lichtquellen: punktuelles Licht, gerichtetes Licht und Spotlights. Wir benutzen die einfachste Form: punktuelles Licht. Führe folgende Schritte aus um die Szene korrekt zu beleuchten:
+
+<ul>
+	<li>Finde für das Licht eine Position nahe der Kamera oder zumindest auf der selben Seite des Objekts wie die Kamera. Benutze einen niedrigeren Zoomfaktor (30) um die Kamera in den Ansichten zu finden. </li>
+	
+	<li>Um das Licht zu erzeugen, klicke auf das <img src="images/light.gif"><b>create lightsource Icon</b> und klicke auf die Stelle an der Du das Licht haben willst. Du solltest das Licht vielleicht in einer anderen Ansicht auch bewegen (wie jedes andere Objekt) um eine gute Plazierung im Dreidimensionalen zu erhalten. </li>
+	
+	<li>Selektiere <b>Object->Edit Object</b> aus dem Menu. Wir sollten noch einige Eigenschaften der Lichtquelle ändern um ihre Position relativ zum Stundenglass anzupassen. Schau Dir das Bild unten an um gute Werte zu erhalten. Der Standardwert für <b>Intensity</b> ist etwas hoch was in einem Bild resultiert das aussieht als würde die Kamera selbst von Licht geblendet werden. Ändere den Wert auf 0.8. Setze die <b>Decay Rate</b> auf 0. Dieser Wert setzt fest wie schnell die Lichtintensität mit der Entfernung abnimmt. In Wirklichkeit hängt die Abnahme quadratisch von der Entfernung ab. Die Standardrate würde zu einem sehr dunklen Bild führen. Wir brauchen hier allerdings nicht sehr viel Realismus in dieser Szene, als machen wir es uns einfach und schalten sie aus. <br>
+<img src="images/dialog2.png"></img>
+</li>
+</ul>
+
+Jetzt lass uns rendern. Selektiere <b>Scene->Render Scene</b>aus dem Menu. Kümmer Dich momentan nicht um die Einstellungen; einfach nur in der Dialogbox OK drücken. Das Resultat sollte etwa so aussehen:
+</p>
+<img src="images/render1.jpg"></img>
+</p>
+Ziemlich langweilig nicht wahr ? Alles ist in ödem Weiß. Wir wollen aber Holz und Glas, also sollten wir noch Texturen hinzufügen.</p>
+
+<h3>Texturen und Materialien</h3>
+<h4>Holz</h4>
+Lass uns zuerst eine Textur kreieren die wie Holz aussieht. Selektiere <b>Scene->Textures</b> aus dem Menu und klicke <b>New</b> im Texturdialog. Im nächsten Dialogfenster gibst Du der Textur den Namen <i>Wood</i> und selektierst den <b>procedural 3D</b> Typ (siehe Bild unten).
+</p>
+<img src="images/dialog3.png"></img>
+</p>
+
+Prozedurale 3D Texturen definieren Farbe, Reflektion, Grobheit und andere Oberflächeneigenschaften als eine Funktion von 3D Koordinaten. Für jede Position im Raum definiert die Textur wie die Oberfläche des Objekts aussieht, als ob wir die Form aus einem Block dieses "Materials" herausgeschnitten hätten. Für Objekte deren Inneres wir sehen können (transparente Objekte) sollten wir lieber ein <b>Material</b> benutzen um das Innere zu definieren. Texturen definieren nur wie die Oberfläche eines Objektes aussieht.
+</p>
+Eine Funktion die 3D Koordinaten den Werten einer Textur zuordnet wir grafisch erzeugt indem funktionale Komponenten verbunden werden. Es gibt 6 Kategorien von Komponenten:
+<ul>
+	<li><b>Values (Werte)</b> definieren eine konstante Farbe oder einen Wert der als Eingabe für andere Werte verwendet werden kann.</li>
+
+	<li><b>Functions (Funktionen)</b> sind Komponenten die skalare Werte ausgeben.</li>
+
+	<li><b>Color functions (Farbfunktionen)</b>geben Farbwerte aus.</b></li>
+
+	<li><b>Transforms (Transformationen)</b> transformieren koordinaten zu einem neuen Set an koordinaten.</l>
+
+	<li><b>Patterns (Muster)</b> definieren einen skalaren Wert als Funktion von Koordinatenwerten. Dieser Wert kann dazu benutzt werden ein Farbpattern für die Texturen zu definieren oder eine andere Textureigenschaft zu ändern. </li>
+</ul>
+</p>
+Wenn Du eine neue Textur erzeugt hast erscheint ein Dialog indem Du sie genauer spezifizieren kannst. Es gibt eine große, leere, weiße Stelle in der wir funktionelle Komponenten hinzufügen können. Und auf der rechten Seite sind Blöcle mit Namen wie <i>diffuse, specular, tansparent</i>, etz. Dies sind Eigenschaften einer Textur, die mit den Komponenten die addiert wurde werbunden werden. 
+</p>
+Die folgenden Komponenten müssen hinzugefügt werden um eine Holztextur zu erstellen:
+<ul>
+<li>Selektiere <b>Insert->Patterns->Wood</b> aus dem Menu. Das ist ein Muster von konzentrischen, zylindrischen Bändern entlang der Z Achse, ähnlich dem Querschnitt einer Holzstammes. Die Standardeingabewerte dieser Komponenten sind Werte für die drei Koordinaten X, Y, Z und einem Wert von 0.5 für Rauschen. Das ist so in Ordnung, wir müssen da keine weiteren Komponenten hinzufügen. </li>
+
+<li>Wir werden dieses Muster für die diffuse Farbe der Textur verwenden. Selektiere <b>Insert->Color Fucntions->Custom</b> aus dem Menu. Verbinde die Holzmusterkomponente mit der "custom color"-Funktion, und verbinde diese mit der "diffuse color" Komponente aud der rechten Seite (siehe Bild unten). Jetzt sollten auf dem Vorschaubild Ringe erscheinen.<br>
+<img src="images/woodfunction.png"></img>
+</li>
+
+<li>Als nächstes sollten wir der Textur etwas hölzerne Farbe hinzufügen.</li> Um das zu tun klicke zweimal auf die "custom color" Funktionskomponente. Der Dialog unten sollte erscheinen. Setze einige Markierungen (die kleinen Dreiecke) und setze die Farbe bei jeder Markierung in etwa so wie im Bild unten gezeigt.<br>
+<img src="images/woodcolor.png"></img><br>
+</li>
+
+<li>Zum Schluß machen wir die Textur etwas dichter durch mehr Ringe. Klicke doppelt auf die Holzmusterkomponente und setze die Werte wie unten gezeigt:<br>
+<img src="images/wooddialog.png"></img><br>
+</li>
+</ul>
+
+Die Vorschau sollte in etwa so aussehen:</p>
+<img src="images/wood.png"></img></p>
+Die Textur sieht nicht wirklich realistisch aus aber für den Moment ist es ausreichend. Um komplexere Texturen zu erzeugen solltest Du das Kapitel über Texturen im <a href="Handbuch">the Art-of-Illusion manual</a> lesen.</p>
+
+Diese Textur wird dem oberen und unteren Brett sowie den Stäben zugewiesen die wir vorhin erzeugt haben. Selektiere alle Formen die die Holztextur zugewiesen bekommen sollen. Dann selektiere <b>Object->Set Texture</b> aus dem Menu. Jetzt wähle die Holztextur und klicke auf OK </p>
+Wähle nun nur die <i>Top</i> und <i>Bottom</i> Objekte. Rufe nochmals den "set texture" Dialog auf. Klicke auf den Button mit dem Namen <b>Edit Mapping (editiere Zuordnung)</b>. In diesem Dialog kannst Du die Textur rotieren, in der Größe verändern und drehen um besser zum Objekt zu passen. Wir rotieren nur um folgendes Resultat zu bekommen:</p>
+<img src="images/woodmap2.png"></img></p>
+
+Jetzt zu den Stäben. Selektiere sie alle und editiere die Zuordnung nochmal. Erzeuge ein Mapping wie dieses:</p>
+<img src="images/woodmap.png"></img></p>
+
+Schauen wir uns das Resultat mal an. Das gerenderte Bild sollte etwa so aussehen:</p>
+<img src="images/render2.jpg"></img></p>
+
+
+<h4>Glas</h4>
+Der Glaskörper sollte natürlich die Materialeigenschaften von Glas haben. Das heißt er sollte transparent sein für Licht und es auch auf der Oberfläche reflektieren. Licht das durch ein Glasobjekt hindurchgeht ändert Farbe, Richtung und Intensität (es wird gebrochen). Reflektion und Transparenz sind Textureigenschaften. Brechung und Dämpfung sind Eigenschaften des Materials an sich. Materialien können nur soliden Objekten zugeordnet werden. Das ist sinnvoll, den Dämpfung und der Lichtwinkel nach der Brechnung hängen davon ab wo ein Strahl in ein Objekt eindringt bzw. herauskommt. Glücklicherweise ist unser Glaskörper ein solides Objekt. Alle Lathes (Rotationskörper) mit einer Rotationsachse durch Anfangs- und Endpunkt der Profilkurve sind solide.</p>
+
+Zuerst erzeugen wir die Glastextur, dann das Material.</p>
+
+Im Texturdialog erzeuge zuerst eine neue <b>uniform texture (gleichmäßige Textur)</b> mit Namen <i>Glass</i>. Diese Textur mach die Oberfläche transparent sodaß das Innere sichtbar wird, und sie bestimmt die Höhe der gespiegelten Reflektion. Das Bild unten zeigt welche Einstellung für die neue Textur zu verwenden sind. Transparenz wird sowohl über die Werte von <b>Transparent Color</b> und <b>Transparency</b> definiert. Die Anteile für rot, grün und blau geben an wieviel der jeweiligen Farbe übrigbleibt wenn das Licht duch die Oberfläche fährt. Es ist ein Filter. Weiß - der Standard - bedeutet das Licht jeder Farbe ungehindert hindurchfahren kann. Schwarz bedeutet, daß kein Licht hindurch kann. Der Wert für die Transparenz gibt an welcher Prozentsatz an Licht insgesammt durchkommt. Ein Wert von 0.7 bedeutet, daß 70 Prozent des Lichts durch die Oberfläche hindurchtreten. Das bedeutet auch das die Transparenzkomponente die Farbe der Oberfläche zu 70 % bestimmt. Die restlichen 30% der Farbe werden komplett über die Reflektion bestimmt, also wird der Wert für die Spiegeleung (<b>Specular</b>) auf 1.0 gesetzt. Die Diffuse-komponente hat somit keinen Einfluß auf die Farbe. Wir werden die Materialeigenschaften benutzen um dem Glas eine Farbe zu geben.</p>
+
+<img src="images/glasstexture.png"></img></p>
+
+Um ein neues Material zu generieren wähle <b>Scene->Materials</b> und klicke auf den <b>New</b> Button. Wir können das neue Material auch <i>Glass</i> nennen. Es sollte eine einheitliches Material (<b>uniform material</b>) sein. Du kannst die Parametereinstellungen in dem Bild unten sehen. 
+Die Farbe des Materials wird durch zwei Parameter beeinflußt: <b>Material Farbe (Material color)</b> und <b>Transparente Farbe (Transparent Color)</b>.
+Beide Parameter mildern die Farbe des Lichts beim Durchtritt des Materials. Die Materialfarbe hat nur Einfluß auf den Teil des Lichts der die Kamera direkt erreicht, es ist die Farbe die das Objekt zu haben scheint. Die Transparenzfarbe beeinflußt jegliches Licht das durch den Körper tritt nud auch die Schatten die der Körper wirft. Der erste Parameter ist einfacher zu verwenden weil er spezifiziert wie das Objekt aussehen wird. Die Transparenzfarbe jedoch spezifiziert den Anteil an rot, grün und blau der durchkommt. Der Rest des Lichts wird reflektiert und bestimmt die Farbe des Objekts.
+Wie stark das Licht abgemildert wird stellt man über den Intensitätswert (<b>Desnity</b>) ein. Ein Wert von 0 bedeutet keine Abmildering. Für das Material hierspezifizieren wir eine einfache, grüne Farbe.
+</p>
+
+<img src="images/glassmaterial.png"></img></p>
+
+<h3>Das engültige Rendering</h3>
+Das von uns erzeugte Glas kann nicht mit dem normalen Rasterrenderer gerendert werden, den wir bis jetzt verwendet haben. Öffne den Renderdialog (<b>Scene->Render Scene</b>) und wähle den <b>Raytracer</b> Renderer. Der Raytracer wirft Lichtstrahlen von der Kamera zurück zu den Stellen wo sie auf Objekte treffen. An diesen Punkten werden Lichtstrahlen zu der Lichtquelle geworfen um Licht und Schatten zu berechnen. Ausgehend von Objekten mit Reflektionskomponenten oder Transparenz werden weitere Strahlen geworfen um weitere Objekte zu finden die gesehen werden (via Reflektion oder durch transparentes Material). </p>
+
+Der schwarze Hintergrund lässt das Glas merkwürdig aussehen. Um das zu Verbessern setzen wir einen hellen Hintergrund. Aufgrund eines Bugs in Version0.8 müssen wir eine Textur als Hintergrund verwenden (solide Objekte als Hintergrund resultieren in einem falschen Rendering). Wähle <b>Scene->Environment</b> aus dem Menu. In diesem Dialog, selektiere <b>texture-diffuse</b> als Hintergrund. Du kannst auch eine neue Textur mit verschiedenen Farben erzeugen, vielleicht prozedurale Bilder (Wolken sind eine schöne Übung) aber ich verwende hier eine einfache Textur für den Moment. </p>
+
+Schlußendlich zum Verbessern der Qualitat wähle die <b>antialiasing</b> Option im Renderdialog. Und wenn Dein (nichtgerichtetes) Licht nahe des Objektes ist wähle <b>soft shadows</b> um realistischere Bilder zu erhalten. Beide Optionen sorgen dafür, daß der Raytracer pro Pixel mehrere Strahlen losschickt. Die Resultate werden gemittelt um ein weicheres Bild zu erhalten. Eine Änderung der minimalen und maximalen Anzahl an Strahlen pro Pixel (<b>rays per pixel</b>) hin zu höheren Werten wird zu besserer Qualität des Bildes und langsameren Rendern führen. Um nur einen kurzen Eindruck zu gewinnen, sollten die Optionen nicht benutzt werden. Eine gute Qualität kann man durch Setzen der Werte auf 4 und 16 Strahlen erhalten. Mehr Strahlen kann man bei großflächigen weichen Schatten benötigen.</p>
+
+Die Settings und das Resultat kann man unten sehen:</p>
+
+<img src="images/raytracer.png"></img>	<img src="images/render3.jpg"></img></p>
+
+
+<h3>Zusammenfassung</h3>
+Hier endet das Tutorial aber Art of Illusion kann sehr viel mehr als hier gezeigt wurde. Mehr darüber kannst Du aus den anderen Tutorials und Anleitungen erfahren. Die meisten der coolen Features sind intuitiv genug um sie einfach mal auszuprobieren und die Resultate zu sehen. 
+</p>
+Mit den Grundlagen dieses Tutorials kannst Du jetzt damit anfangen die Welten Deiner Vorstellung zu realisieren. Mit der Zeit und dem Erlernen aller Features des Programms wirst Du besser und besser werden .... und süchtiger. 
+</p>
+Viel Glück.
+<hr>
+
+</body>
+
+</html>
+

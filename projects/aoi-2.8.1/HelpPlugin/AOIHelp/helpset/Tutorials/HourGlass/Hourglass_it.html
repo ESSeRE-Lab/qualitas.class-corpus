@@ -1,0 +1,522 @@
+<html>
+<head>
+	<title>Art-of-Illusion modelling tutorial - the hourglass</title>
+</head>
+
+<body>
+	<center>
+    <h1>Tutorial di modellazione con Art of Illusion<br>
+    La clessidra</h1><br>
+	Version 1.1
+	For Art of Illusion version 0.9
+	Copyright 2001, <a href="mailto:kwikrick@users.sourceforge.net">Rick van der Meiden</a><br>
+	Translated in Italian by Alberto Porru
+	</center>
+<p></p>
+
+<center><img src="images/hourglass_final.jpg"></img></center>
+
+    <h3>Introduzione</h3>
+In questo tutorial vi verrà mostrato come modellare un semplice oggetto
+    con Art-of-Illusion (AoI), usando come esempio la clessidra riportata
+    nella figura qui sopra. Questo tutorial non tratterà tutte le
+    caratteristiche e le opzioni che è possibile trovare in AoI, perchè sono
+    davvero troppe, ma dovrebbe costituire un buon punto di partenza. Potrete
+    scoprire il resto provando, sperimentando e creando belle immagini. Se già
+    avete familiarità con la modellazione tridimensionale, non avrete
+    probabilmente bisogno di seguire questo tutorial passo per passo. Potrete
+    dargli uno sguardo per avere un'idea delle possibilità del programma, ma è
+    proprio il caso di provarlo. Riuscirete ad ottenere la vostra immagine 3D in
+    pochi minuti. Per completezza, la scena di AoI chiamata <i>"hourglass.aoi"</i> 
+    viene distribuita assieme a questo tutorial e potrete aprirla con il
+    programma. Se tuttavia volete imparare qualcosa da questo tutorial, dovreste
+    provare a creare la scena per conto vostro.
+    
+    <h3>Uno sguardo d'insieme</h3>
+    
+    Ammettiamo che abbiate scaricato l'intero pacchetto di AoI, avete la
+    versione corretta di JDK, avete letto i file leggimi, ecc. Se non lo avete
+    fatto, collegatevi alla <a href="http://www.artofillusion.org/">Art-of-Illusion home page</a>.
+    Quando lanciate AOI, vi trovate di fronte una schermata principale. In
+    cima alla finestra troverete la barra dei menu; datele uno sguardo, guardate
+    cosa c'è nei menu a discesa. Se ci sono molte cose che non riuscite a
+    capire, non state a preoccuparvi, con il tempo ci riuscirete. A sinistra
+    vedete alcune icone. Cliccando su di esse selezionate uno strumento e un
+    aiuto contenuto in una linea di testo vi aiuterà per operazioni di base: lo
+    trovate in basso nella schermata. Le icone sono:
+
+<table>
+<tbody>
+	<tr>
+		<td align=right>sposta oggetto</td>
+		<td><img src="images/move.gif"></td>
+		<td><img src="images/rotate.gif"></td>
+		<td>ruota oggetto</td>
+	</tr>
+	<tr>
+		<td align=right>ridimensiona oggetto</td>
+		<td><img src="images/resize.gif"></td>
+		<td><img src="images/cube.gif"></td>
+		<td>crea parallelepipedo</td>
+	</tr>
+	<tr>
+		<td align=right>crea sfera</td>
+		<td><img src="images/sphere.gif"></td>
+		<td><img src="images/cylinder.gif"></td>
+		<td>crea cilindro</td>
+	</tr>
+	<tr>
+		<td align=right>crea mesh spline</td>
+		<td><img src="images/splineMesh.gif"></td>
+		<td><img src="images/polygon.gif"></td>
+		<td>crea poligono</td>
+	</tr>
+	<tr>
+		<td align=right>crea telecamera</td>
+		<td><img src="images/camera.gif"></td>
+		<td><img src="images/light.gif"></td>
+		<td>crea luce</td>
+	</tr>
+	<tr>
+		<td align=right>crea curva interpolata</td>
+		<td><img src="images/interpCurve.gif"></td>
+		<td><img src="images/approxCurve.gif"></td>
+		<td>crea curva approssimata</td>
+	</tr>
+	<tr>
+		<td align=right>muovi vista</td>
+		<td><img src="images/moveView.gif"></td>
+		<td><img src="images/rotateView.gif"></td>
+		<td>ruota vista</td>
+	</tr>
+</tbody>
+</table>
+
+    La pate più grande della finestra mostra le quattro viste del modello 3D: <i>Front
+    (Fronte), Left (Sinistra), Top (Sopra)</i> e <i>Camera1</i>. Per ciascuna
+    vista l'utente può impostare un punto di vista standard (front, left, top, ect)
+    o uno relativo ad una telecamera, con modalità prospettica o parallela, e
+    un fattore di ingrandimento (per default è 100). Questi punti di vista
+    possono essere cambiati usando i due appositi strumenti per la spostamento e
+    la rotazione delle viste. Spesso potrete cambiare la dimensione e la
+    posizione delle viste ma non il punto di vista. Le viste standard sono per
+    lo più sufficienti alla maggior parte delle sessioni di modellazione. Solo
+    la vista a destra in basso, <i>Camera1</i>, verrà modificata spesso perchè
+    è molto utile per la verifica del modello. A destra troverete una lista di
+    oggetti (per ora quasi vuota) del vostro modello. Da questa lista potrete
+    selezionare e deselezionare un oggetto cliccando sul suo nome. Inoltre,
+    facendo doppio click farete comparire la finestra di dialogo <i>edit object</i>
+    (modifica oggetto). Prima di iniziare, è necessario conoscere una cosa: le
+    coordinate. La posizione e la dimensione di un oggetto è determinata
+    da un sistema di coordinate con tre assi, X, Y e Z. L'asse delle X è
+    rivolto verso destra, cioè: maggiore è l'ascissa di un punto, più a
+    destra sarà il modello. Analogamente, l'asse Y punta verso l'alto e l'asse
+    Z punta in direzione del vostro punto di vista (è un sistema di coordinate
+    destrorso).
+    
+    <h3>Cominciamo</h3>
+    
+    E' comunemente considerata una buona pratica schizzare dapprima il vostro
+    modello 3D sulla carta millimetrata, per avere un'idea delle sue dimensioni
+    e della sua forma. Se non lo avete fatto, almeno impostate una griglia nel
+    programma:
+<ul>
+<li> selezionate <b>Scene->Grids</b>  dal menu</li>
+<li> impostate <b>Spacing</b> a 0.5</li>
+<li> impostate <b>Subdivisions</b> a 10</li>
+<li> spuntate Show grid e Snap to grid</li>
+<li> click OK</li>
+</ul>
+    Questo vi consentirà di disegnare facilmente gli oggetti nella posizione
+    corretta e con adeguate dimensioni, e di allineare gli oggetti
+    ortogonalmente. Potete cambiare i parametri della griglia in qualsiasi
+    momento, per adattarli alle vostre esigenze ottenendo una griglia più
+    stretta o più larga. Cominciamo a disegnare. Disegnate per prima cosa un
+    parallelepipedo per la tavoletta in legno superiore e inferiore che fanno
+    parte della clessidra:
+<ul>
+<li> selezionate lo strumento <img src="images/cube.gif"> <b>'create box'</b> </li>
+<li> disegnate un parallelepipedo largo 1.5 unità e alto 0.1 unità nella vista
+  frontale; quindi, con una griglia di 0.5 unità e 10 divisioni, 3 linee della
+  griglia di larghezza e una di altezza.   
+<li> selezionate lo strumento <img src="images/resize.gif"> <b>'resize object'</b></li>
+<li> ridimensionate l'oggetto nella vista dall'alto (top) finchè non diventa
+  quadrato, 1.5x1.5 unità.
+<li> selezionate lo strumento <img src="images/move.gif"> <b>'move object'</b> </li>
+<li> spostate il parallelepipedo in modo che sia centrato nella vista superiore </li>
+<li> spostatelo, stavolta nella vista frontale, in modo che si trovi appena al
+  di sotto della seconda linea della griglia dal centro. </li>
+<li> controllate la finestra di dialogo delle coordinate, dal menu <b>Object-&gt;Object-Layout</b>.
+  Dovreste leggere una dimensione (size) di 1.5 unità sull'asse X, 0.1 unità
+  sull'asse Y e di nuovo di 1.5 sull'asse Z. La posizione della sua origine
+  dovrebbe trovarsi a <0, -1.05, 0>. Da questa finestra di dialogo potete anche
+  cambiare la dimensione del parallelepipedo, la sua posizione e il suo
+  orientamento (vedi figura)
+<img src="images/boxlayout.png"></li>
+</ul>
+
+
+    Notate che potete disegnare qualsiasi oggetto sia nella vista top, sia left
+    sia front. Poichè potete disegnare al massimo due dimensioni per volta,
+    dovrete impostare in seguito la terza dimensione. Potete usare gli
+    strumenti scale e move per cambiare la dimensione e la posizione del
+    parallelepipedo. Ma se avete un'idea precisa di quali debbano essere le
+    dimensioni, è più veloce usare la finestra di dialogo Object Layout. Il
+    primo parallelepipedo costituisce la base del nostro modello. La parte
+    superiore è del tutto identica, quindi createla con una copia. 
+<ul>
+<li>selezionate il primo parallelepipedo, <i>Cube 1,</i>  dalla lista a destra</li>
+<li>selezionate <b>Edit->Copy</b>  dal menu</li>
+<li>selezionate <b>Edit->Paste</b>  dal menu</li>
+<li>spostate la copia verso l'alto finchè la parte inferiore del
+  parallelepipedo si trova a y=1. Fatelo usando indifferentemente:
+	<ul>
+	<li>lo strumento <img src="images/move.gif"> <b>'move object'</b>. Tenendo premuto
+      il tasto delle maiuscole, il movimento sarà solo ortogonale.</li>
+	<li>l'opzione del menu <b>Object->Layout Object</b>. Centratelo a y=1.05.</li>
+	<li>l'opzione del menu <b>Object->Transform Object</b>. Spostatelo 2 unità
+      verso l'alto nell'asse Y. </li>
+	<li>l'opzione del menu <b>Object->Align Objects</b>. Allineate la parte
+      inferiore (lungo l'asse Y) a 0.
+	</ul>
+</ul>
+
+    Ora abbiamo due parallelepipedi, simmetrici attorno all'origine. Notate che
+    entrambi i parallelepipedi sonno chiamati <i>Cube1</i>. Potete
+    cambiarne il nome selezionando dal menu l'opzione <b>Object-&gt;Rename Object</b>.
+    Nomi adatti potrebbero essere "Sopra" e "Base". In tal
+    modo è più facile individuarli quando li si seleziona dalla lista. Usando
+    le tecniche citate sopra possiamo anche creare i quattro sostegni tra le
+    tavolette superiore e inferiore. Usate lo strumento <img src="images/cylinder.gif"> <b>'create cylinder'
+    </b>per creare un cilindro con le seguenti proporzioni:
+<ul>
+<li>position: X = 0.6, Y = 0, Z = 0.6</li>
+<li>size: X = 0.1, Y = 2, Z = 0.1<br></li>
+</ul>
+    Create ora tre ulteriori cilindri negli altri angoli della clessidra. <br>
+    Istruzioni: 
+<ul>
+<li>disegnate il primo cilindro nella vista frontale o di sinistra, in
+  modo da impostare il suo diametro e la sua lunghezza. Posizionate il cilindro
+  usando le altre viste. </li>
+<li>Create gli altri cilindri attraverso copie e spostamenti. </li>
+<li>Non potete vedere i cilindri appena creati nella vista superiore perchè
+  sono coperti dalla tavoletta superiore. Selezionate dal menu <b>Scene->Display Mode->Wireframe</b>,
+  e sarete in grado di vederli di nuovo. </li>
+</ul>
+
+    Ora abbiamo il sostegno della clessidra. Usiamo ora lo strumento <img src="images/moveView.gif"> <b>'move viewpoint'
+    </b>e quello <img src="images/rotateView.gif"> <b>'rotate viewpoint' </b> per
+    cambiare la vista a destra in basso (camera1). Potrete ora vedere il modello
+    da qualunque angolazione. Il risultato dovrebbe essere qualcosa del
+    genere: <img src="images/image2.png">
+
+    <h3>Un oggetto complesso </h3>
+    La forma più complessa della scena è il bulbo in vetro. Dobbiamo crearlo
+    usando lo strumento Lathe (tornio). Un oggetto lathe viene creato grazie
+    alla rotazione di una curva spline attorno ad un asse, che determina il
+    contorno dell'oggetto. Per creare la curva di contorno useremo lo
+    strumento <img src="images/approxCurve.gif"> <b>create approximated curve</b>.
+    Per rendere più preciso il lavoro del mouse, create dapprima una griglia
+    più fitta: spacing 0.2 con 2 subdivisions. Selezionate quindi <b>Scene->One View</b> 
+    dal menu. Impostate il fattore di zoom al 200 per cento. Create la curva
+    spline aggiungendo i punti da 1 a 9, come mostrato nell'immagine qui sotto
+    (nello stesso ordine). Fate doppio click sul punto 9 per terminare la curva.
+    Assicuratevi che il primo e l'ultimo punto siano pressocchè allineati
+    sull'asse Y e tangenti alla tavoletta superiore e inferiore. <img src="images/points.png">
+    La curva approssimata non è molto intuitiva, ma consente di determinare la
+    direzione della curva in modo più esatto di quanto non sia possibile con la
+    curva interpolata. La direzione della curva all'inizio e alla fine viene
+    determinata solo dai punti adiacenti. La curva è verticale nel punto 5
+    perchè i punti 4 e 6 sono equidistanti verticalmente da tale punto. In
+    generale, in ogni punto la curva viene determinata dal punto immediatamente
+    precedente e dai due punti di definizione successivi (la curva è una spline
+    quadratica, detta anche spline di terzo ordine). Come asse centrale del
+    bulbo in vetro, useremo la linea che passa per le due estremità della
+    curva. Nel nostro disegno, questa è costituita dall'asse Y, ma usando la
+    linea anzidetta realizzeremo un oggetto solido. Per creare l'oggetto lathe,
+    selezionate dapprima la curva e scegliete dal menu <b>Tool-&gt;Lathe.</b>
+    Nella relativa finestra di dialogo, selezionate, come asse per l'operazione
+    di <i>tornitura</i>, <b>Line though endpoints</b>. (Vedi figura in
+    basso). 
+<img src="images/dialog1.png">
+    La forma viene automaticamente centrata a 0,0,0. E' esattamente quel che
+    volevamo, quindi lasciate le cose come stanno (naturalmente non è una
+    coincidenza, tutto era stato accuratamente pianificato!). La curva spline
+    creata per prima è ora ridondante. Potete cancellarla, ma non è
+    strettamente necessario visto che non comparirà nel rendering finale. Per
+    cancellare un oggetto, selezionatelo (dallo schermo o dalla lista degli
+    oggetti) e premete il tasto Canc della tastiera. Potete anche usare la voce
+    di menu <b>Edit->Clear</b>.
+<h3>Layout della scena</h3>
+    Abbiamo finito con la modellazione. Possiamo provare ad effettuare il
+    rendering della scena con le forme accurate e con le luci. Prima del
+    rendering, però, dovremmo determinare il layout degli elementi chiave della
+    scena, la telecamera e la luce. Per prima cosa, determiniamo la posizione e
+    l'orientamento della telecamera. Può essere fatto facilmente usando
+    l'anteprima della telecamera, nel quadrante in basso a destra. Traslate
+    e ruotate la vista usando lo strumento e <img src="images/moveView.gif"> <b>Move view</b>
+    e <img src="images/rotateView.gif"> <b>Rotate view</b>. Tenete premuto il tasto CTRL
+    mentre muovete la vista nelle diverse direzioni. Potete ruotare la vista
+    tenendo premuto il tasto CTRL e usando lo strumento Rotate View. Potete
+    anche posizionare la telecamera usando lo strumento <img src="images/move.gif"> <b>move object</b>
+    e <img src="images/rotate.gif"> <b>rotate object</b> o con l'opzione del menu <b>Layout object</b>.
+    La telecamera è un oggetto come qualsiasi altro. Una buona posizione
+    potrebbe essere quella in cui vedete l'oggetto dall'alto e dagli altri lati.
+    Ora dobbiamo illuminare la scena. Come potete vedere c'è già una sorgente
+    luminosa nella scena fin dall'inizio della sessione, <i>Light 1</i>.
+    La sorgente luminosa dovrebbe essere posizionata in modo da illuminare il
+    lato dell'oggetto che stiamo guardando. Data la posizione della telecamera, <i>Light 1</i> 
+    probabilmente non è posizionata correttamente. Poichè inoltre la luce è
+    troppo lontana, la cancelleremo e ne creeremo una nuova. AoI supporta tre
+    tipi di luce: <i> point lights</i>, <i> directional lights</i> e <i>spot lights</i>.
+    Useremo la più semplice di esse, point light. Seguite i passi
+    successivi per illuminare correttamente la scena:
+
+<ul>
+	<li>Trovate una posizione per la nuova luce vicino alla telecamera o almeno
+      dalla stessa parte dell'oggetto telecamera. Usate un basso fattore di zoom
+      (30) per individuare la telecamera nella viste. </li>
+	
+	<li>Per creare la luce, cliccate sull'icona <img src="images/light.gif"><b>create lightsource
+      (crea luce)</b> e cliccate sulla posizione in cui volete la luce. Dovrete
+      probabilmente muovere la luce (come muovereste un altro oggetto) in una
+      delle altre viste per ottenere la giusta posizione nello spazio
+      tridimensionale. </li>
+	
+	<li>selezionate <b>Object->Edit Object</b>  dal menu. Dovremo cambiare
+      qualche proprietà della sorgente luminosa per adeguare la sua posizione
+      relativamente alla clessidra. Guardate l'immagine relativa alla finestra
+      di dialogo, qui in basso, per i valori esatti. Il valore di default di <b>Intensity</b> 
+      è un po' alto, e produrrebbe una figura dove sembrerebbe che la
+      telecamera sia circondata dalla luce. Cambiate il valore dell'intensità a
+      0.8. Impostate il <b>Decay Rate</b> a zero. Questo valore determina
+      quanto velocemente decade l'intensità di luce con l'aumentare della
+      distanza. Ad onor del vero, il decadimento della intensità luminosa è
+      proporzionale al quadrato della distanza. Il valore di default di Decay Rate
+      potrebbe produrre un'immagine un po' scura. Questa scena semplice, del
+      resto, non richiede un realismo tanto spinto, quindi rendiamo le cose
+      semplici e disabilitiamo (impostandolo a 0) Decay Rate. <br>
+<img src="images/dialog2.png">
+</li>
+</ul>
+
+    Ora via con il rendering. Selezionate dal menu <b>Scene->Render Scene</b>.
+    Non perdete tempo con le impostazioni, premete OK nella finestra di dialogo
+    del render. Il risultato dovrebbe assomigliare a qualcosa del genere.
+    <p>
+<img src="images/render1.jpg">
+    Un po' noioso, non è vero? Tutto è bianco opaco. Vogliamo legno e vetro,
+    quindi è arrivato il momento di aggiungere le textures.</p>
+
+<h3>Textures e materiali</h3>
+<h4>Legno</h4>
+    Creiamo una texture che riproduca il legno. Selezionate dal menu <b>Scene->Textures</b> 
+    e premete <b>New</b>  nella finestra di dialogo relativa. Nella
+    finestra di dialogo che appare successivamente, chiamate la texture <i>Wood</i> 
+    e selezionate il tipo <b>procedural 3D</b> (vedi figura). <img src="images/dialog3.png">
+    Le texture procedurali 3D determinano colore, scabrezza, riflessione e
+    altre proprietà della superficie come una funzione delle coordinate 3D. Per
+    ciascuna posizione dello spazio, la texture definisce come deve apparire la
+    superficie, come se avessimo ricavato la forma ritagliandola da un blocco
+    solido di tale "materiale". Tuttavia, per gli oggetti in cui
+    possiamo realmente vedere all'interno, cioè oggetti trasparenti, dovremmo
+    usare un <b>materiale</b>  per definirne l'interno, non una texture.
+    Le texture determinano solo come deve apparire la superficie di un oggetto.
+    Una funzione che mappi le coordinate tridimensionali grazie ai valori delle
+    proprietà della texture viene creata connettendo graficamente i componenti
+    della funzione. Esistono sei categorie di componenti:
+<ul>
+	<li><b>Values</b>  (<b>Valori</b>) determinano un colore o un valore
+      costante, che può essere usata come input per altri valori.</li>
+
+	<li><b>Functions</b>  (<b>Funzioni</b>) sono componenti che restituiscono
+      valori scalari.</li>
+
+	<li><b>Color functions (Funzioni di colore) </b>restituiscono come output
+      valori di colore.</li>
+
+	<li><b>Transforms</b>  trasforma le coordinate in un nuovo insieme di
+      coordinate.</l>
+
+	<li><b>Patterns</b>  determinano un valore scalare come una funzione di
+      valori di coordinate. Questo valore scalare può essere usato per
+      determinare un pattern di colore per la texture o per realizzare un
+      pattern partendo da altre proprietà della texture. </li>
+</ul>
+    Quando create una nuova texture, vi viene presentato una finestra di dialogo
+    dove specificare la texture. C'è una grande area vuota, nella quale potete
+    aggiungere i componenti della funzione. A destra trovate dei riquadri con
+    nomi come <i>diffuse, specular, tansparent</i>, etc. Sono proprietà
+    della texture da connettere ai componenti aggiunti nell'area vuota. I
+    seguenti componenti devono essere aggiunti alla procedura per realizzare una
+    texture del legno:
+<ul>
+<li>Selezionate dal menu <b>Insert-&gt;Patterns-&gt;Wood</b>. E' un
+  pattern costituito da bande cilindriche concentriche lungo l'asse Z, come una
+  sezione del tronco di un albero che riporta anelli concentrici di colori
+  diversi. Gli input di default di questi componenti sono i valori delle
+  tre coordinate X, Y e Z e un valore di <i>rumore</i> di 0.5. Vanno bene così
+  come sono, quindi non dobbiamo aggiungervi altri componenti. </li>
+
+<li>Useremo questo pattern per il colore diffuso della texture. Selezionate dal
+  menu <b>Insert-&gt;Color Functions-&gt;Custom</b>. Connettete il componente
+  del pattern wood alla funzione di colore personalizzata, e connettete la
+  funzione di colore al componente del colore diffuso, a destra della finestra
+  di dialogo (vedi figura sotto). Vedrete apparire gli anelli nell'immagine di
+  anteprima.<br>
+<img src="images/woodfunction.png">
+</li>
+
+<li>Successivamente dobbiamo aggiungere qualche colore che ricordi il legno alla
+  texture.</li> Per farlo, fate doppio click sul componente della funzione
+di colore personalizzata; vi troverete di fronte a questa finestra di dialogo.
+Aggiungete dei markers (rappresentati da piccoli triangoli) e impostate il
+colore per ogni triangolo in modo da ottenere i colori come quelli riportati qui
+in basso.<br>
+<img src="images/woodcolor.png"><br>
+
+<li>Infine, renderemo la texture legnosa un po' più densa, con più anelli.
+  Cliccate due volte sul componente del pattern wood e impostatene i valori come
+  mostrato.<br>
+<img src="images/wooddialog.png"><br>
+</li>
+</ul>
+
+    L'anteprima ora appare come questa:
+<img src="images/wood.png">
+    La texture non sembra in verità molto realistica, ma per ora ci basterà.
+    Per creare texture più complesse, leggete la sezione delle texture
+    nel <a href="manual">manuale di Art-of-Illusion</a>. Questa
+    texture verrà assegnata alle tavolette superiore e inferiore e alle
+    bacchette tra essi, che abbiamo precedentemente creato. Selezionate tutti
+    gli oggetti a cui dobbiamo assegnare la texture legnosa. Quindi selezionate
+    dal menu <b>Object-&gt;Set Texture</b>. Ora selezionate la texture Wood e
+    premete O.K. Selezionate ora solo gli oggetti <i>Sopra</i> e <i>Base</i>.
+    Richiamate nuovamente la finestra di dialogo delle texture. Cliccate ora sul
+    pulsante indicato con <b>Edit Mapping</b>. In questa finestra di
+    dialogo, potete ridimensionare, traslare e ruotare la texture perchè si
+    adatti all'oggetto. La ruoteremo soltanto, per ottenere questo
+    risultato. <img src="images/woodmap2.png">
+
+    
+    <p>Ora pensiamo alle bacchette. Selezionatele tutte e modificate la
+    mappatura. Create una mappatura come questa:</p>
+    <p>
+<img src="images/woodmap.png">
+
+    <br>
+    Ora vediamo il risultato. L'immagine dopo il rendering dovrebbe somigliare a
+    questa: <img src="images/render2.jpg">
+
+
+    </p>
+
+
+<h4>Vetro</h4>
+    Il bulbo di vetro deve avere le proprietà del vetro. Cioè deve essere
+    trasparente alla luce e deve anche riflettere la luce sulla sua superficie.
+    La luce che passa attraverso un vetro viene rifratta e attenuata (cioè
+    diminuisce di intensità e cambia colore). La riflessione e la trasparenza
+    sono proprietà della texture. La rifrazione e l'attenuazione sono
+    proprietà del materiale dell'oggetto. I materiali possono essere assegnati
+    solo agli oggetti solidi. Questo ha senso perchè l'entità della
+    attenuazione e la direzione della luce dopo la rifrazione dipendono dal
+    punto in cui entra un raggio luminoso e dal punto attraverso il quale esce
+    dall'oggetto. Fortunatamente, il nostro bulbo è un oggetto solido. Tutte le
+    forme lathe, ottenute grazie alla rotazione attorno all'asse rappresentato
+    dalla linea che congiunge le estremità del profilo della curva, sono
+    solidi. Dapprima dovremo creare la texture per il vetro, e dopo il materiale
+    relativo. Nella finestra di dialogo per le texture, create una
+    nuova <b>uniform texture</b>  chiamandola <i>Glass</i>. Questa texture
+    rende la superficie trasparente, in modo che il materiale all'interno sia
+    visibile, e determina l'ammontare della riflessione speculare. l'immagine
+    sottostante mostra quali impostazioni devono essere usate per la texture. La
+    trasparenza è controllata sia da <b>Transparent Color</b>  sia dal valore
+    di <b>Transparency</b>. La frazione rossa, verde e blu del colore
+    trasparente determinano quanto rimane di ciascuna componente del colore
+    quando la luce passa attraverso al superficie. E' un filtro di colore. Il
+    colore di default, bianco, significa che passa attraverso la superficie la
+    luce di qualsiasi colore. Nero significa che non passa nessun colore. Il
+    valore della trasparenza determina la frazione totale della luce che vi
+    passa attraverso. Un valore di 0.7 significa che passa attraverso la
+    superficie il 70 per cento della luce incidente. Significa anche che il
+    componete trasparente determina il colore della superficie per il 70 per
+    cento. Il restante 30 per cento del colore sarà determinato al 100% dalla
+    riflessione, quindi il valore di <b>Specular</b>  dovrà essere
+    impostato a 1.0. La componente del colore diffuso della superficie non
+    influenza il colore risultante, date queste impostazioni. Useremo un
+    materiale per colorare il vetro. <img src="images/glasstexture.png">
+
+    Per creare un nuovo materiale, selezionate dal menu <b>Scene->Materials</b> 
+    e cliccate sul pulsante <b>New</b>. Il nuovo materiale può essere anch'esso
+    chiamato <i>Glass</i>. Deve essere un materiale uniforme (<b>uniform material)</b>.
+    Potete vedere l'impostazione dei parametri nell'immagine sottostante. Il
+    colore di un materiale è influenzato da due parametri: <b>Material color</b> 
+    e <b>Transparent Color</b>. Entrambi i parametri del colore attenuano il
+    colore della luce che passa attraverso il materiale. Il colore del materiale
+    influenza solo il colore della luce che colpisce la telecamera direttamente,
+    è il colore che l'oggetto sembra avere. Transparent Color influenza
+    tutta la luce che passa attraverso l'oggetto, e colore anche le ombre
+    proiettate dall'oggetto. Il primo parametro di colore è facile da usare
+    perchè specifica di quale colore deve apparire l'oggetto. Tuttavia, Transparent
+    Color specifica la frazione di rosso, verde e blu che vi passa attraverso.
+    Il resto della luce viene riflessa e determina il colore dell'oggetto.
+    L'entità dell'attenuazione è determinata dal valore di <b>Density</b>.
+    Un valore di zero significa che non c'è attenuazione. Per il vetro
+    specificheremo un colore verde che apparirà solo su oggetti molto massicci.
+    .
+
+<img src="images/glassmaterial.png">
+
+    <h3>Il rendering finale</h3>
+    Il vetro appena creato non può essere renderizzato con un rendering raster
+    usato precedentemente. Aprite la finestra di dialogo del render (<b>Scene->Render Scene</b>)
+    e selezionate il renderer <b>Raytracer</b>. Con la tecnica del raytracing,
+    vengono proiettati &quot;raggi di luce&quot; dalla telecamera e viene
+    rilevato dove questi intercettano gli oggetti. In questo punto dell'oggetto,
+    i raggi vengono proiettati verso la sorgente luminosa per calcolare
+    l'illuminazione e le ombre. Dagli oggetti con una componente di riflessione
+    speculare o di trasparenza, vengono proiettati nuovi raggi per calcolare
+    come si vede l'oggetto stesso in virtù della riflessione o del materiale
+    trasparente. Lo sfondo nero di default rende il materiale vetro poco
+    credibile. Per migliorare l'aspetto del vetro, abbiamo utilizzato uno sfondo
+    chiaro. Nella versione 0.8, c'è un errore per cui usando un colore solido
+    come sfondo si va incontro ad un errore del rendering, quindi useremo una
+    texture come sfondo. Selezionate <b>Scene->Environment</b>  dal menu. In
+    questa finestra di dialogo, selezionate come sfondo <b>texture-diffuse</b>.
+    Potete creare una nuova texture con un diverso colore o forse un'immagine
+    procedurale (le nuvole sono un buon esercizio) ma useremo per ora la texture
+    di default. Infine, per migliorare la qualità dell'immagine, spuntate
+    l'opzione <b>antialiasing</b>  nella finestra di dialogo del render. E
+    se la vostra sorgente di luce (non-direzionale) si trova vicino all'oggetto,
+    spuntando <b>soft shadows</b>  otterrete un'immagine più realistica.
+    Entrambi le opzioni impongono al raytracer di proiettare più raggi per
+    calcolare ciascun pixel. I risultati vengono mediati per creare un'immagine
+    meno netta. Il numero massimo e minimo di raggi per pixel (<b>rays per pixel)</b> 
+    impostati a valori alti forniscono una qualità dell'immagine superiore ma
+    rallentano il rendering. Per un'immagine da realizzare velocemente, non
+    usate queste opzioni. Si può ottenere una buona qualità impostando minimo
+    e massimo a 4 e 16 raggi rispettivamente. Sono necessari più raggi se sono
+    presenti ampie aree con ombre sfumate. Le impostazioni del raytracer e
+    l'immagine risultante sono mostrate sotto.
+    <p> <img src="images/raytracer.png">	<img src="images/render3.jpg">
+
+
+    </p>
+    <h3>Immaginate</h3>
+    Qui finisce il tutorial, ma Art of Illusion ha molte più capacità di
+    quelle mostrate qui. Dagli altri tutorial e manuali (nel momento di scrivere
+    ancora in fase di compilazione) potrete saperne di più. Molte delle
+    caratteristiche più intriganti sono abbastanza intuitive, e potete
+    semplicemente fare delle prove per valutarne l'effetto. Usando i concetti
+    fondamentali trattati in questo tutorial potete iniziare a modellare le
+    parole della vostra immaginazione. Gradualmente, non appena imparerete a
+    padroneggiare tutte le opzioni del programma, farete sempre di meglio. Buona
+    fortuna.
+<hr>
+
+</body>
+
+</html>
+

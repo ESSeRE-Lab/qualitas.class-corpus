@@ -1,0 +1,3 @@
+System.out.println("what...");
+PluginRegistry.invokeExportedMethod("artofillusion.HelpPlugin.what", new Object[] {null});
+//HelpPlugin.what(null);

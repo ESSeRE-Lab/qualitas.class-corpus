@@ -1,0 +1,274 @@
+<html>
+<head>
+	<title>Tutorial de modelado con Art-of-Illusion - el reloj de arena</title>
+</head>
+
+<body>
+	<center>
+	<h1>Tutorial de modelado con Art-of-Illusion<br>
+	el reloj de arena</h1><br>
+	Versi&oacute;n 1.1</br>
+	Para Art of Illusion versi&oacute;n 0.9</br>
+	Copyright 2001, <a href="mailto:kwikrick@users.sourceforge.net">Rick van der Meiden</a></br>
+	Copyright de la traducci&oacute;n al espa&ntilde;ol 2002, <a href="mailto:yokiyoki@users.sourceforge.net">Yokiyoki</a></br>
+	</center>
+<p></p>
+
+<center><img src="images/hourglass_final.jpg"></img></center>
+
+<h3>Introducci&oacute;n</h3>
+En este tutorial se mostrará el proceso de modelado de un objeto sencillo con Art-of-Illusion (AoI), tomando como ejemplo el reloj de arena que se muestra en la figura anterior. Este tutorial no contempla todas las características de la herramienta de modelado de AoI, ya que hay demasiadas, pero muestra lo suficiente como para empezar a utilizarla. Probablemente te será simple imaginar el resto a base de intentos, experimentación y creación de gráficos guais. </p>
+Si ya estás familiarizado con el modelado en tres dimensiones, probablemente no tendrás que seguir este tutorial paso a paso. Puedes hojearlo para hacerte una idea de las posibilidades del programa, pero por favor, anímate e inténtalo por tí mismo. Para los novatos: os voy a enseñar a hacer gráficos en tres dimensiones en sólo unos minutos.
+</p>
+En aras de la completitud, se distribuye con este tutorial un archivo que contiene una escena de AoI. El archivo se llama <i>"hourglass.aoi"</i>, y puedes limitarte a abrirlo con el  programa, pero si quieres aprender algo de este tutorial, lo mejor es que intentes construir la escena tú mismo.
+<h3>Mira a tu alrededor</h3>
+Supongamos que ya has descargado el paquete de AoI, tienes la versión adecuada del JDK, has leído los archivos léame, y el programa te funciona. Si no es así, busca información en la <a href="http://www.artofillusion.org/">página de inicio de Art-of-Illusion</a>.
+Cuando arrancas AoI, te aparece la pantalla principal. En la parte de arriba de la ventana se encuentra la barra de menú que es un estándar en estos casos: échale un vistazo para ver qué es lo que hay en los desplegables. Si no entiendes casi nada de lo que pone no te preocupes, lo entenderás con el tiempo. </p>
+A la izquierda deberías ver varios iconos. Al pulsarlos, seleccionas una herramienta y en la parte de abajo de la ventana aparece una línea de ayuda. Los iconos son:</p>
+<table>
+<tbody>
+	<tr>
+		<td align=right>mover objeto</td>
+		<td><img src="images/move.gif"></td>
+		<td><img src="images/rotate.gif"></td>
+		<td>girar objeto</td>
+	</tr>
+	<tr>
+		<td align=right>cambiar tamaño de objeto</td>
+		<td><img src="images/resize.gif"></td>
+		<td><img src="images/cube.gif"></td>
+		<td>crear caja</td>
+	</tr>
+	<tr>
+		<td align=right>crear esfera</td>
+		<td><img src="images/sphere.gif"></td>
+		<td><img src="images/cylinder.gif"></td>
+		<td>crear cilindro</td>
+	</tr>
+	<tr>
+		<td align=right>crear malla de aproximación</td>
+		<td><img src="images/splineMesh.gif"></td>
+		<td><img src="images/polygon.gif"></td>
+		<td>crear polígono</td>
+	</tr>
+	<tr>
+		<td align=right>crear cámara</td>
+		<td><img src="images/camera.gif"></td>
+		<td><img src="images/light.gif"></td>
+		<td>crear fuente de luz</td>
+	</tr>
+	<tr>
+		<td align=right>crear curva interpolada</td>
+		<td><img src="images/interpCurve.gif"></td>
+		<td><img src="images/approxCurve.gif"></td>
+		<td>crear curva aproximada</td>
+	</tr>
+	<tr>
+		<td align=right>mover el punto de vista</td>
+		<td><img src="images/moveView.gif"></td>
+		<td><img src="images/rotateView.gif"></td>
+		<td>girar el punto de vista</td>
+	</tr>
+</tbody>
+</table>
+</p>
+
+La mayor parte de la pantalla muestra cuatro vistas del modelo tridimensional: <i>Frente (Front), Izquierda (Left), Arriba (Top)</i> y <i>Cámara1 (Camera1)</i>.
+A cada vista se le puede asignar una cámara o un punto de vista estándar (frente, izquierda, arriba, etc), un modo de vista en perspectiva o en paralelo, y un factor de escala (que por defecto es 100). Se pueden cambiar los puntos de vista utilizando las herramientas apropiadas de movimiento y giro.
+A menudo cambiarás la escala y la posición de estas vistas, pero no el punto de vista. Las vistas estándar son suficientes para la mayoría de las sesiones de modelado. Sólo cambiarás a menudo la vista inferior derecha, <i>Camera1</i>, porque es muy útil para comprobar cómo va el modelo.
+</p>
+
+A la derecha hay un espacio (que ahora está casi vacío) que sirve para mostrar una lista de los objetos que hay en tu modelo. En esta lista puedes seleccionar o deseleccionar objetos pulsando su nombre. Además, si haces una pulsación doble en el nombre de un objeto aparecerá  la ventana de edición de los parámetros del objeto.</p>
+
+Antes de empezar, tienes que conocer un concepto más: coordenadas. La posición y las dimensiones de los objetos se determinan por un sistema de tres ejes de coordenadas que se llaman X, Y y Z. Se considera que el eje X apunta hacia la derecha, es decir, cuanto mayor sea la coordenada X de un punto, más a la derecha está en el modelo. Igualmente, el eje Y apunta hacia arriba y el eje Z hacia fuera de la pantalla, hacia ti. En jerga matemática, se dice que es un sistema de coordenadas de mano derecha.</p>
+
+<h3>El comienzo</h3>
+Normalmente se considera una buena práctica comenzar las sesiones de modelado tridimensional haciendo un croquis del modelo en papel cuadriculado, para hacerse una idea de sus dimensiones y de su forma. Si no vas a hacerlo, por lo menos haz que aparezca una cuadrícula en la herramienta de modelado:
+<ul>
+<li> selecciona <b>Scene&#8594;Grids <i>(Escena&#8594;Cuadrículas)</i></b> en el menú</li>
+<li> pon el valor de <b>Spacing <i>(Espaciado)</i></b> a 0.5</li>
+<li> haz que las <b>Subdivisions <i>(Subdivisiones)</i></b> sean 10</li>
+<li> marca Show grid (Mostrar cuadrícula) y Snap to grid (Ajustar a la cuadrícula)</li>
+<li> pulsa OK</li>
+</ul>
+Esto nos da la facilidad de dibujar objetos con posición y tamaño exactos y de alinear objetos ortogonalmente. Se pueden cambiar los parámetros de la cuadrícula en cualquier momento, para acomodarse a las necesidades que se tengan de cuadrículas más finas o más dispersas.
+Ya podemos empezar a dibujar. Dibujemos una caja para las partes superior e inferior del marco de madera del reloj de arena:
+<ul>
+<li> selecciona la <b>herramienta "crear caja"</b> <img src="images/cube.gif"></img></li>
+<li> dibuja una caja de 1.5 unidades de ancho y 0.1 unidades de alto en la vista Frente (Front). Es decir, con una cuadrícula de 0.5 unidades y 10 subdivisiones, 3 líneas de cuadrícula de ancho y una subdivisión de alto.</li>
+<li> selecciona la <b>herramienta "cambiar tamaño de objeto"</b> <img src="images/resize.gif"></img></li>
+<li> cambia el tamaño del objeto en la vista Arriba (Top) para hacerlo un cuadrado de 1.5 por 1.5 unidades.</li>
+<li> selecciona la <b>herramienta "mover objeto"</b> <img src="images/move.gif"></img></li>
+<li> mueve la caja hasta que la centres en la vista Arriba.</li>
+<li> muévela en la vista Frente hasta que esté justo debajo de la segunda línea de cuadrícula desde el centro.</li>
+<li> comprueba las coordenadas de la caja con la opción del menú <b>Object&#8594;Object Layout <i>(Objeto&#8594;Disposición del Objeto)</i></b>. La caja debe medir (Size) 1.5 unidades en el eje X, 0.1 unidades en el eje Y y 1.5 unidades también en el eje Z. Debe estar colocada (Position) con su origen en las coordenadas <0, -1.5, 0>. En esta ventana también se pueden cambiar el tamaño, la posición y la orientación de la caja (véase la siguiente figura).<br>
+<img src="images/boxlayout.png"></li>
+</ul>
+
+Date cuenta de que se pueden dibujar los objetos en cualquiera de las vistas, Frente, Arriba o Izquierda, pero como sólo se pueden controlar dos dimensiones a la vez, se tiene que ajustar la tercera dimensión después. Se pueden utilizar las herramientas mover y cambiar tamaño para esto, pero si se tiene una idea clara de qué dimensiones debe tener el objeto, la opción Disposición del Objeto es mucho más rápida.
+
+La primera caja es el fondo del modelo. La tapa tiene exactamente el mismo aspecto, así que la crearemos copiando el fondo.
+<ul>
+<li>selecciona la primera caja, <i>Cube 1 (Cubo 1)</i> de la lista de la derecha</li>
+<li>selecciona <b>Edit&#8594;Copy <i>(Edición&#8594;Copiar)</i></b> en el menú</li>
+<li>selecciona <b>Edit&#8594;Paste <i>(Edición&#8594;Pegar)</i></b> en el menú</li>
+<li>mueve la copia hacia arriba hasta que la parte de abajo de la caja esté en y=1. Lo puedes hacer de varias formas:
+	<ul>
+	<li>la <b>herramienta "mover objeto"</b> <img src="images/move.gif"></img>. Mantén pulsada la tecla mayúsculas para mover sólo ortogonalmente.</li>
+	<li>la opción del menú <b>Object&#8594;Object Layout <i>(Objeto&#8594;Disposición del Objeto)</i></b>, centrándolo en y=1.05.</li>
+	<li>la opción del menú <b>Object&#8594;Transform Object <i>(Objeto&#8594;Transformar Objeto)</i></b>. Muévela 2 unidades hacia arriba en el eje Y.</li>
+	<li>la opción del menú <b>Object&#8594;Align Objects <i>(Objeto&#8594;Alinear Objetos)</i></b>. Alinea la parte de abajo (eje y) a 0.</li>
+	</ul>
+</ul>
+</p>
+
+Ahora tenemos dos cajas, simétricas respecto al origen. Date cuenta de que las dos cajas se siguen llamando <i>Cube 1 (Cubo 1)</i>. Se puede cambiar de nombre a los objetos seleccionando la opción del menú <b>Object&#8594;Rename Object <i>(Objeto&#8594;Rebautizar Objeto)</i></b>. En este caso los nombres adecuados podrían ser "Superior" e "Inferior". Así es más fácil distinguirlos cuando estemos seleccionando objetos en la lista.</p>
+
+Utilizando las técnicas recién descritas se pueden crear también los cuatro palos que hay entre las tapas superior e inferior. Utiliza la <b>herramienta "crear cilindro"</b> <img src="images/cylinder.gif"></img> para crear un cilidro con las siguientes dimensiones: 
+<ul>
+<li>posición: X = 0.6, Y = 0, Z = 0.6</li>
+<li>tamaño: X = 0.1, Y = 2, Z = 0.1<br></li>
+</ul>
+Y crea tres cilindros más en las otras esquinas del marco del reloj de arena. <br>
+Consejos: 
+<ul>
+<li>dibuja el primer cilindro en la vista Frente o en la Izquierda, esto te permitirá ajustar tanto su diámetro como su longitud. Coloca el cilindro utilizando las otras vistas.</li>
+<li>Crea los otros cilindros copiando y moviendo.</li>
+<li>En la vista Arriba no se ven los cilindros que has creado porque los tapa la tapa superior. Selecciona en el menú <b>Scene&#8594;Display Mode&#8594;Wireframe <i>(Escena&#8594;Modo de Visualización&#8594;Estructura de Alambre)</i></b>, y de nuevo podrás verlos.</li>
+</ul>
+</p>
+
+Ya tenemos el marco del reloj de arena. Ahora utiliza la <b>herramienta "mover punto de vista"</b> <img src="images/moveView.gif"> y la <b>herramienta "girar punto de vista"</b>  <img src="images/rotateView.gif"> para cambiar la vista de abajo a la derecha (Camera1 - Cámara 1). Ahora puedes ver el modelo desde el ángulo que quieras. El resultado debería tener este aspecto:</p>
+
+<img src="images/image2.png"></img>
+
+<h3> Un objeto complejo </h3>
+La forma más compleja de esta escena es el frasco de cristal. Lo crearemos utilizando la herramienta Torno. Un objeto torneado es el que se crea girando un curva de aproximación, que determina el contorno del objeto, alrededor de un eje. 
+
+Para crear la curva del contorno utilizaremos la herramienta <b>crear curva aproximada</b> <img src="images/approxCurve.gif">. Para evitarnos el fatigoso trabajo de ser precisos con el ratón, crearemos primero una cuadrícula más fina: espaciado de 0.2 con dos subdivisiones. Después seleccionaremos <b>Scene&#8594;One View <i>(Escena&#8594;Una Vista)</i></b> en el menú. A continuación puedes ajustar el factor de aumento de la vista a un 200 por ciento. Y ya puedes crear la curva de aproximación añadiendo los puntos del 1 al 9 que se muestran en la siguiente imagen (en ese mismo orden). Haz una doble pulsación en el punto 9 para dar por terminada la curva de aproximación. Asegúrate de que el primer y el último puntos están sobre el eje Y y tangentes a las tapas superior e inferior que hicimos antes.
+</p>  
+<img src="images/points.png"></img>
+</p>
+Las curvas aproximadas no son muy intuitivas, pero permiten determinar la dirección de la curva con más exactitud que las curvas interpoladas. La dirección de la curva al principio y al final la determina el único punto adyacente. La curva es vertical en el punto 5 porque los puntos 4 y 6 sólo están desplazados verticalmente respecto a él. En general, la curva en cualquier punto se determina por el punto que lo precede inmediatamente y los dos que le siguen (la curva es una aproximación cuadrática, o aproximación de tercer orden).
+</p>
+Utilizaremos como eje central del frasco de cristal la línea que va entre los extremos finales de la curva. En nuestro dibujo es el eje Y, pero utilizar la primera línea da como resultado un objeto sólido. Para crear el objeto torneado, primero selecciona la curva y a continuación selecciona en el menú <b>Tool&#8594;Lathe <i>(Herramienta&#8594;Tornear)</i></b>. En la ventana de ajuste de los parámetros del torneado, selecciona como eje del torno (Lathe Axis) la <b>línea que atraviesa los puntos extremos (Line through endpoints)</b>. Obsérvalo en la siguiente figura.
+</p>  
+<img src="images/dialog1.png"></img>
+</p>
+El objeto torneado se centra automáticamente en 0,0,0. Ahí es exactamente donde lo queremos en este caso, así que dejémoslo (por supuesto que no ha sido coincidencia, ¡lo he planeado así!). La curva de aproximación que creamos hace un rato ahora sobra. La puedes eliminar, pero no es necesario porque no aparece en la representación final. Para eliminar un objeto se selecciona (en las vistas o en la lista de objetos) y se pulsa la tecla <b>Supr</b> del teclado. También se puede hacer con la opción del menú <b>Edit&#8594;Clear <i>(Edición&#8594;Eliminar)</i></b>.
+</p> 
+<h3>Disposición de la escena</h3>
+Ya hemos terminado de modelar todas las figuras. Podríamos intentar representar la escena con sombras e iluminación. Sin embargo, antes de la representación tenemos que determinar la disposición de los elementos clave de la escena, la cámara y la luz.
+</p> 
+Primero determinemos la posición y la orientación de la cámara. Se puede hacer fácilmente utilizando la vista Cámara de la esquina inferior derecha. Desplaza y gira la vista utilizando la <b>herramienta "mover el punto de vista"</b> <img src="images/moveView.gif"> y la <b>herramienta "girar el punto de vista"</b> <img src="images/rotateView.gif">. Mantén pulsada la tecla Control mientras mueves el punto de vista para agrandarla y empequeñecerla. Y también puedes girar la cámara manteniendo pulsada la tecla Control mientras giras el punto de vista. Otras formas de colocar la cámara son las herramientas <b>"mover objeto"</b> <img src="images/move.gif"> y <b>"girar objeto"</b> <img src="images/rotate.gif">, o la opción del menú <b>Layout Object <i>(Disposición del Objeto)</i></b>. La cámara es un objeto como cualquier otro. Una buena posición puede ser una en la que se vean la tapa de arriba y otros dos lados del objeto.
+</p>
+Después hay que iluminar la escena. Como puedes ver, ya había una fuente de luz en la escena desde el principio de la sesión, <i>Light 1 (Luz 1)</i>. La fuente de luz habría que colocarla de modo que ilumine la parte del objeto a la que estamos mirando. Según la orientación de la cámara, probablemente <i>Light 1 (Luz 1)</i> no esté bien colocada. Como además esta fuente de luz está lejos, la vamos a eliminar y a crear una nueva. AoI contempla tres tipos de fuentes de luz: luces puntuales, luces direccionales y focos de luz. Vamos a usar la más simple de las tres, la luz puntual. Sigue los siguientes pasos para iluminar correctamente la escena:
+
+<ul>
+	<li>Busca una posición para la nueva luz cerca de la cámara o al menos al mismo lado del objeto que la cámara. Usa un factor de escala pequeño (30) para encontrar a la cámara en las vistas. </li>	
+	<li>Para crear la luz, pulsa en la <b>herramienta "crear fuente de luz"</b> <img src="images/light.gif"> y a continuación en la posición donde quieres que aparezca la luz. Seguramente tengas que mover la fuente de luz (como cualquier otro objeto) en alguna de las otras vistas para darle su posición correcta en el espacio tridimensional. </li>
+		<li>selecciona en el menú la opción <b>Object&#8594;Edit Object <i>(Objeto&#8594;Editar Objeto)</i></b>. Tenemos que cambiar algunas propiedades de la fuente de luz para acomodarla a su posición respecto al reloj de arena. Observa la figura de debajo para ver los valores correctos. El valor predeterminado de <b>Intensity <i>(Intensidad)</i></b> es un poco alto, dando como resultado una imagen en la que parece que la cámara se ha cegado con la luz. Pon el valor de intensidad en 0.8. Pon la <b>Decay Rate <i>(Tasa de Desvanecimiento)</i></b> a cero. Este valor controla la velocidad a la que la intensidad de la luz decae con la distancia. El valor predeterminado de la tasa de desvanecimiento daría como resultado una imagen muy oscura. Esta escena tan simple no necesita tanto realismo, así que vamos a hacerlo fácil y desactivarlo.</br> 
+<img src="images/dialog2.png"></img>
+</li>
+</ul>
+
+Representemos la escena. Selecciona en el menú la opción <b>Scene&#8594;Render Scene <i>(Escena&#8594;Representar Escena)</i></b>. No te preocupes ahora de los ajustes y pulsa aceptar en la ventana de ajuste de los parámetros de la representación. El resultado debe parecerse a esto:
+</p>
+<img src="images/render1.jpg"></img>
+</p>
+Bastante aburrido ¿no? Todo de ese blanco tan soso. Queremos madera y cristal, así que tendremos que añadir texturas.</p>
+<h3>Texturas y materiales</h3>
+<h4>Madera</h4>
+Creemos una textura que parezca madera. Selecciona <b>Scene&#8594;Textures <i>(Escena&#8594;Texturas)</i></b> y pulsa <b>New <i>(Nueva)</i></b> en la ventana de texturas. En la ventana que se presenta, ponle a la textura el nombre (name) <i>Madera</i> y selecciona el tipo <b>procedural 3D</b> (observa la figura siguiente).
+</p>
+<img src="images/dialog3.png"></img>
+</p>
+
+Las texturas procedurales 3D determinan el color, la dureza, la reflexión y otras propiedades de las superficies como función de las coordenadas tridimensionales. Para una posición dada en el espacio, la textura define el aspecto de la superficie de una figura, como si hubiéramos recortado la figura de un bloque sólido de este "material". Sin embargo, para aquellos objetos de los que realmente vemos su interior -objetos transparentes-, habría que usar un <b>material</b> para definir su interior, no una textura. Las texturas sólo determinan el aspecto de la superficie de los objetos.
+</p>
+
+Las funciones que transforman las coordenadas tridimensionales en valores de propiedades de texturas se crean conectando gráficamente componentes funcionales. Hay seis categorías de componentes:
+<ul>
+	<li>Los <b>valores <i>(values)</i></b> determinan un valor o color constante que se puede utilizar como entrada para otros valores.</li>
+
+	<li>Las <b>funciones <i>(functions)</i></b> son componentes que ofrecen como resultado valores escalares (numéricos).</li>
+
+	<li>Las <b>funciones de color <i>(color functions)</i></b> ofrecen como resultado colores.</li>
+
+	<li>Las <b>transformaciones <i>(transforms)</i></b> transforman las coordenadas en otras coordenadas.</l>
+
+	<li>Los <b>patrones <i>(patterns)</i></b> determinan un valor numérico como función de los valores de las coordenadas. Este valor numérico se puede utilizar para determinar un patrón de colores para la textura o de otras propiedades de la textura. </li>
+</ul>
+</p>
+Al crear una textura nueva, se te presenta una ventana en la que puedes especificar la textura. Hay una gran área blanca vacía, en la que añadiremos componentes funcionales. Y a su derecha hay bloques con nombres del estilo de <i>diffuse (difundido), specular (especular), transparent (transparente)</i>, etc. Estas son las propiedades de la textura a las que conectaremos los componentes que añadamos en el área vacía de la izquierda.
+</p>
+Para hacer una textura de madera añadimos los siguientes componentes al proceso:
+<ul>
+<li>Selecciona <b>Insert&#8594;Patterns&#8594;Wood <i>(Insertar&#8594;Patrones&#8594;Madera)</i></b> en el menú. Este es un patrón de bandas cilíndricas concéntricas a lo largo del eje Z, igual que la sección transversal de los tochos de los árboles tienen círculos concéntricos de colores. Las entradas predeterminadas de este componente son los valores de las tres coordenadas X, Y y Z, y un valor de ruido de 0.5. Así está bien para nosotros, así que no les añadiremos componentes.</li>
+<li>Utilizaremos este patrón para el color difundido de la textura. Selecciona la opción de menú <b>Insert&#8594;Color Functions&#8594;Custom <i>(Insertar&#8594;Funciones de Color&#8594;A Medida)</i></b>. Conecta el componente de patrón de madera a la función de color a medida, y conecta la función de color a medida al componente de color difundido de la derecha de la ventana (mira la figura siguiente). Deberían haber aparecido anillos en la vista previa de la textura.<br>
+<img src="images/woodfunction.png"></img>
+</li>
+<li>Ahora habría que hacer que la textura tenga color de madera.</li> Para lograrlo, realiza una pulsación doble en el componente funcional de color a medida. Te saldrá la ventana que muestro debajo. Añade marcadores (los triangulitos) adicionales y pon el color de cada triángulo como los colores de la figura anterior.<br>
+<img src="images/woodcolor.png"></img><br>
+</li>
+
+<li>Por último, haremos la textura de madera un poco más densa, con más anillos. Realiza una pulsación doble sobre el componente de patrón de madera y pon los valores que se ven en la figura:<br>
+<img src="images/wooddialog.png"></img><br>
+</li>
+</ul>
+
+Ahora la vista previa tiene este aspecto:</p>
+<img src="images/wood.png"></img></p>
+La textura no es del todo realista pero tendrá que valer por ahora. Para crear texturas más complejas, lee la sección sobre texturas del <a href="manual">Manual de Art-of-Illusion</a>.</p>
+
+Asignaremos esta textura a los tableros superior e inferior y a los palos que los unen que creamos antes. Selecciona todas las figuras a las que hay que asignarles la textura de madera. Después selecciona la opción del menú <b>Object&#8594;Set Texture <i>(Objeto&#8594;Poner Textura)</i></b>. A continuación selecciona la textura Madera y pulsa Aceptar.</p>
+Ahora selecciona sólo los tableros superior e inferior. Vuelve a invocar la ventana de poner textura, y pulsa en el botón etiquetado <b>Edit Mapping <i>(Editar Mapeado)</i></b>. En esta ventana puedes cambiar de tamaño, desplazar y girar la textura para adaptarse al objeto. Sólo vamos a girar la textura, para alcanzar el siguiente resultado:</p>
+<img src="images/woodmap2.png"></img></p>
+
+Ahora los palos. Selecciónalos todos y vuelve a editar el mapeado. Crea un mapeado como este:</p>
+<img src="images/woodmap.png"></img></p>
+Vamos a ver cómo ha quedado. La imagen representada tiene esta pinta:</p>
+<img src="images/render2.jpg"></img></p>
+
+
+<h4>Cristal</h4>
+El objeto pantalla de cristal tiene que tener las propiedades materiales del cristal. Es decir, tiene que ser transparente a la luz y reflejarla en su superficie. La luz que pasa por un objeto de cristal se refracta y se atenúa (disminuye, cambia de color). La reflexión y la transparencia son propiedades de las texturas. La refracción y la atenuación son propiedades de los materiales de los objetos. Sólo se pueden asignar materiales a objetos sólidos. Esto tiene sentido, dado que la cantidad de atenuación y el cambio de dirección de la luz después de la refracción depende de por dónde entran y por dónde salen del objeto los rayos de luz. Afortunadamente, nuestro objeto pantalla es un sólido. Todas las figuras torneadas con el eje de rotación entre los puntos extremos de la curva perfil son sólidos.</p> 
+
+Primero crearemos la textura de cristal, y después el material de cristal.</p>
+
+En la ventana de texturas, crea una <b>textura uniforme <i>(uniform)</i></b> llamada <i>Cristal</i>. Esta textura hace que la superficie sea transparente, de modo que el material interior será visible, y determina la cantidad de reflexión especular. La imagen de debajo muestra los valores a utilizar para la nueva textura. La transparencia se controla tanto con el <b>Transparent Color <i>(Color Transparente)</i></b> como con el valor de la <b>Transparency <i>(Transparencia)</i></b>. Las fracciones roja, verde y azul del color transparente determinan cuánto de cada componente de color permanece cuando la luz pasa por la superficie. Es un color filtrante. El blanco, el color predeterminado, significa que por esa superficie pasa la luz de cualquier color. El negro significa que no la traspasa la luz de ningún color. El valor de la transparencia determina la fracción total de luz que atraviesa la superficie. Un valor de 0.7 significa que se deja pasar el 70 por ciento de la luz que llega. Esto también significa que el componente de transparencia determina sólo el 70 por ciento del color de la superficie. El 30 por ciento restante de color lo determinará hasta el 100 por cien la reflexión, así que el valor de <b>Specular <i>(Especular)</i></b> se pondrá en 1.0. Con estos ajustes, el componente diffuse (difundido) no afecta al color de la textura. Utilizaremos el material del objeto para colorear el cristal.</p> 
+
+<img src="images/glasstexture.png"></img></p>
+
+Para crear un material nuevo, selecciona <b>Scene&#8594;Materials <i>(Escena&#8594;Materiales)</i></b> y pulsa en el botón <b>New <i>(Nuevo)</i></b>. Este nuevo material también se puede llamar <i>Cristal</i>. Tiene que ser un <b>uniform material <i>(material uniforme)</i></b>. Copia los parámetros del material de la imagen que sigue. Al color de un material lo afectan dos parámetros: <b>Material Color <i>(Color del Material)</i></b> y <b>Transparent Color <i>(Color Transparente)</i></b>.
+Ambos colores atenúan el color de la luz al atravesar el material. El color del material sólo afecta a la luz que llega diréctamente a la cámara, es el color que el objeto parece tener. El color transparente afecta a toda la luz que atraviesa el objeto, y también colorea las sombras que el objeto pueda proyectar. Sin embargo, el primer color es más fácil de usar porque especifica de qué color se verá el objeto. El color transparente, en cambio, especifica la fracción de rojo, verde y azul que se deja pasar. El resto de la luz se refleja y determina el color del objeto. El valor de <b>Density <i>(Densidad)</i></b> determina cuánto se atenúa la luz. El valor cero hace que no se atenúe en absoluto. Para nuestro material de cristal definiremos un sencillo color de material verdoso que sólo se dejará ver en objetos muy masivos.
+</p>
+
+<img src="images/glassmaterial.png"></img></p>
+
+<h3>La representación final</h3>
+El representador rastreador que hemos utilizado hasta este momento no puede representar el cristal que hemos creado.
+Abre la ventana de representación
+(<b>Scene&#8594;Render Scene <i>(Escena&#8594;Representar Escena)</i></b>) y selecciona el representador  (renderer) de <b>trazado de rayos <i>(Raytracer)</i></b>. El trazador de rayos proyecta "rayos de luz" desde la cámara hasta donde corten a los objetos. En esos puntos de los objetos, se proyectan rayos de luz hacia las fuentes de iluminación para calcular la iluminación y las sombras. En los objetos que tienen reflexión o transparencia se proyectan más rayos para ver los objetos reflejados o los que se transparentan. </p> 
+
+El fondo negro predeterminado hace que el cristal se vea raro. Para mejorar la apariencia del cristal, vamos a poner un fondo claro. Debido a un error de la versión 0.8, si el fondo tiene un color sólido se obtiene una representación errónea, así que vamos a utilizar una textura para el fondo. Selecciona la opción del menú <b>Scene&#8594;Environment <i>(Escena&#8594;Entorno)</i></b>. En esta ventana, selecciona <b>texture-diffuse <i>(textura-difundida)</i></b> como fondo. Se pueden crear texturas nuevas de un color distinto o quizá una imagen procedural (las nubes son un buen ejercicio) pero por ahora vamos a utilizar la textura predeterminada. </p> 
+
+Finalmente, para mejorar la calidad de la imagen, marca la opción <b>antialiasing <i>(antidentado)</i></b> de la ventana de representación. Y si la fuente de luz (no direccional) está cerca del objeto, si marcas <b>soft shadows <i>(sombras suavizadas)</i></b> obtendrás una imagen más realista. Ambas opciones hacen que el trazador de rayos proyecte múltiples rayos por píxel. El resultado de esos múltiples rayos se promedia para crear una imagen más suave. Aumentar el número mínimo y máximo de rayos por pixel <i>(min. rays/pixel, max. rays/pixel)</i> hace que la imagen tenga más calidad y tarde más en representarse. Para imágenes rápidas no los aumentes. Se obtiene una buena calidad poniendo como mínimo y máximo número de rayos por píxel a 4 y 16 respectivamente. Puede que hagan falta más rayos para grandes áreas de sombras suavizadas. </p>  
+
+Debajo se muestran los ajustes del trazador de rayos y la imagen que sale:</p>
+
+<img src="images/raytracer.png"></img>	<img src="images/render3.jpg"></img></p>
+
+
+<h3>Imagínatelo</h3>
+Aquí acaba el tutorial, pero Art of Illusion es capaz de mucho más de lo que se ha mostrado aquí. En otros tutoriales y manuales (que en el momento de escribir este todavía no se han escrito) conocerás otras características. Sin embargo la mayoría de las características guais son bastante intuitivas, y puedes simplemente probarlas y ver qué hacen.
+</p>
+Usando las herramientas básicas que se han mostrado en este tutorial puedes empezar a modelar los mundos de tu imaginación. Gradualmente, según vayas aprendiendo a dominar todas las características del programa, lo harás cada vez mejor... y te engancharás.
+</p>
+Buena suerte.
+<hr>
+
+</body>
+
+</html>
+

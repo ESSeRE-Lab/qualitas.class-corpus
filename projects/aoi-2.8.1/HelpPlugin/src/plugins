@@ -1,0 +1,10 @@
+nik777.aoi.HelpPlugin
+
+import aoi.plugin.PluginRegistry
+
+use Help/helpgui-1.1a.jar Help/jhall.jar Help/jhelpaction.jar Help/pircbot.jar
+use Help/AOIHelp.zip 
+
+category net.sourceforge.helpgui.parser.DocSet$Parser
+
+local net.sourceforge.helpgui.parser.JavaHelpParser

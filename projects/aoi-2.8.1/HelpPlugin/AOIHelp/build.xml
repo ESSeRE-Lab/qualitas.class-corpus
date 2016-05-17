@@ -1,0 +1,62 @@
+<?xml version="1.0"?>
+
+<project name="AOIHelp" default="dist" basedir=".">
+
+  <!-- set global properties for this build -->
+
+  <!--  name of this package - typically the same as the project build -->
+  <property name="package" value="AOIHelp" />
+
+  <!-- set this to your name/handle/avatar -->
+  <property name="author" value="Nik Trevallyn-Jones" />
+
+  <!--  you won't normally need to change any of these  -->
+  <property name="dist" value="../Plugins/Help" />
+  <property name="build" value="../build" />
+  <property name="src-package" value="${package}-src" />
+  <property name="src-build" value="${build}/${package}" />
+  <property name="helpset" value="helpset" />
+  <property name="helpfile" value="AOIHelp.zip" />
+
+<!--  <property name="build.compiler" value="classic" /> -->
+
+  <target name="init">
+    <!-- Create the time stamp -->
+    <tstamp/>
+
+    <!-- Create the dist directory structure -->
+    <mkdir dir="${dist}" />
+
+    <!-- Create the help subdirectory structure -->
+    <mkdir dir="${helpdir}" />
+
+  </target>
+
+  <target name="dist" depends="init">
+
+    <!-- create the helpset -->
+    <zip file="${dist}/${helpfile}" >
+       <zipfileset prefix="${helpset}" dir="${helpset}" />
+    </zip>
+    
+  </target>
+
+  <target name="source">
+    <!-- create the source archives  -->
+    <zip file="../${src-package}.zip" >
+       <zipfileset prefix="${package}/${helpset}" dir="${helpset}" />
+       <zipfileset prefix="${package}" dir="." includes="*.xml" />
+    </zip>
+       
+    <tar tarfile="../${src-package}.tz" compression="gzip">
+       <tarfileset prefix="${package}/${helpset}" dir="${helpset}" />
+       <tarfileset prefix="${package}" dir="." includes="*.xml" />
+    </tar>
+  </target>
+
+  <target name="clean">
+    <!-- Delete the ${build} and ${docs} directory trees -->
+    <delete dir="${dist}" />
+  </target>
+</project>
+

@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="src" path="ArtOfIllusion/src"/>
+	<classpathentry kind="src" path="OSSpecific/src"/>
+	<classpathentry kind="src" path="PostInstall/src"/>
+	<classpathentry kind="src" path="Renderers/src"/>
+	<classpathentry kind="src" path="SPManager/src"/>
+	<classpathentry kind="src" path="Tests/src"/>
+	<classpathentry kind="src" path="Tools/src"/>
+	<classpathentry kind="src" path="Translators/src"/>
+	<classpathentry kind="lib" path="beanshell.jar"/>
+	<classpathentry kind="lib" path="Buoy.jar"/>
+	<classpathentry kind="lib" path="Buoyx.jar"/>
+	<classpathentry kind="lib" path="classes.jar"/>
+	<classpathentry kind="lib" path="HelpPlugin/lib/helpgui-1.1b.jar"/>
+	<classpathentry kind="lib" path="HelpPlugin/lib/jhall.jar"/>
+	<classpathentry kind="lib" path="HelpPlugin/lib/jhelpaction.jar"/>
+	<classpathentry kind="lib" path="HelpPlugin/lib/pircbot.jar"/>
+	<classpathentry kind="lib" path="lib/jogl.jar"/>
+	<classpathentry kind="lib" path="lib/jmf.jar"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/4"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="output" path="bin"/>
+</classpath>

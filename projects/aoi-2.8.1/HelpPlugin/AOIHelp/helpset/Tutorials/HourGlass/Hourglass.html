@@ -1,0 +1,286 @@
+<html>
+<head>
+	<title>Art of Illusion modeling tutorial - The Hourglass</title>
+</head>
+
+<body>
+	<center>
+	<h1>Art of Illusion modeling tutorial<br>
+	The Hourglass</h1><br>
+	Version 1.1</br>
+	For Art of Illusion version 2.4</br>
+	Copyright 2001, <a href="mailto:kwikrick@users.sourceforge.net">Rick van der Meiden</a></br>
+	</center>
+<p></p>
+
+<center><img src="images/hourglass_final.jpg"></img></center>
+
+<h3>Introduction</h3>
+In this tutorial you'll be shown how to model a simple object with Art of Illusion (AoI), using as an example the hourglass in the picture above. This tutorial does not cover all the features found in the AoI modeler; there are simply too many. We do try to cover enough to get you started. You will propably figure out the rest by reading the manual, viewing other tutorials available online, or experimenting on your own.  </p>
+If you are already familiar with 3D modeling, you will propably not need to follow this tuturial step by step. You might leaf through it to get some idea of the program's capabilities, but please try it out yourself. For you new users: I'll get you going making your own 3D graphics in just a few minutes. 
+</p>
+For the sake of completeness, an AoI scene file called <i>"hourglass.aoi"</i> is distributed with this tutorial that you can simply open with the modeler. However, if you want to learn from this tutorial, you should try building the scene yourself. 
+
+<h3>Look around</h3>
+Let's assume that you've downloaded AoI from the download page, you've got Java installed correctly, and got the program running. If not, refer to the <a href="http://www.artofillusion.org/">Art of Illusion home page</a>. 
+
+When you start AOI, you are presented with the main screen. On top of the window is you basic menu bar; take a look around, see what's in the pulldowns. If there's a lot up there that you don't understand, don't worry, you will, in time. </p>
+
+To the left you see some icons. Clicking them selects a tool and a single line of help is displayed at the bottom of the screen. The icons (perhaps with some variation if you're using the most current version) are:</p>
+
+<table>
+<tbody>
+	<tr>
+		<td align=right>move object</td>
+		<td><img src="images/move.gif"></td>
+		<td><img src="images/rotate.gif"></td>
+		<td>rotate object</td>
+	</tr>
+	<tr>
+		<td align=right>resize object</td>
+		<td><img src="images/resize.gif"></td>
+		<td><img src="images/cube.gif"></td>
+		<td>create box</td>
+	</tr>
+	<tr>
+		<td align=right>create sphere</td>
+		<td><img src="images/sphere.gif"></td>
+		<td><img src="images/cylinder.gif"></td>
+		<td>create cylinder</td>
+	</tr>
+	<tr>
+		<td align=right>create spline mesh</td>
+		<td><img src="images/splineMesh.gif"></td>
+		<td><img src="images/polygon.gif"></td>
+		<td>create polygon</td>
+	</tr>
+	<tr>
+		<td align=right>create camera</td>
+		<td><img src="images/camera.gif"></td>
+		<td><img src="images/light.gif"></td>
+		<td>create lightsource</td>
+	</tr>
+	<tr>
+		<td align=right>create interpolated curve</td>
+		<td><img src="images/interpCurve.gif"></td>
+		<td><img src="images/approxCurve.gif"></td>
+		<td>create approximated curve</td>
+	</tr>
+	<tr>
+		<td align=right>move view</td>
+		<td><img src="images/moveView.gif"></td>
+		<td><img src="images/rotateView.gif"></td>
+		<td>rotate view</td>
+	</tr>
+</tbody>
+</table>
+</p>
+
+The bulk of the screen displays four views on the 3D model: <i>Front, Left, Top</i> and <i>Camera1</i>.
+For each view the user can set a camera or standard viewpoint (front, left, top, ect), perspective or parallel viewing mode, and a zoom factor (default 100). These viewpoints can be changed using the two appropriate tools for movement and rotation (mouse shortcuts are also available - see the manual).
+You will often change the scale and position of these views but not the viewpoint. The standard views are quite sufficient for most modelling sessions. Only the lower right view, <i>Camera1</i>, will be changed often because it's very usefull for checking out the model. </p>
+
+On the right is a (now empty) space for showing a list of objects (shapes) in your model. From this list you can select or deselect objects by clicking on their name. Also, double clicking will bring up the edit-object dialog.</p>
+
+Before getting started, you need to know about one more thing: coordinates. The position and dimensions of objects is determined by a coordinate system with three axis, named X, Y and Z. The X axis is considered to be pointing to the right, that is: the greater the X coordinate of a point, the more to the right it is in the model. Likewise, the Y axis points upwards and the Z axis points out of the screen towards you. (In jargon this is called a right handed coordinate system)</p>
+
+<h3>Getting started</h3>
+It's commonly considered good practice to start a 3D modeling session by first sketching your model on grid paper, to get some idea of its dimensions and shape. If you don't, then at least set up a grid in the modeler:
+<ul>
+<li> select <b>Scene->Grids</b> from the menu</li>
+<li> set <b>Grid Spacing</b> to 0.5</li>
+<li> set <b>Snap-to Subdivisions</b> to 10</li>
+<li> check Show grid and Snap to grid</li>
+<li> click OK</li>
+</ul>
+This allows us to easily draw objects with an exact position and size and to align objects othogonally. You may change the grid parameters at any time to accomadate your needs for finer or coarser grids.
+
+Now let's start drawing. First, draw a box for the wooden top and bottom of the hourglass frame:
+<ul>
+<li> select the <img src="images/cube.gif"></img> <b>'create box' tool</b> </li>
+<li> draw a box of 1.5 units wide and 0.1 units height in the front view. That is, with a grid of 0.5 units and 10 subdivision, 3 gridlines wide and one subdivision high.   
+<li> select the <img src="images/resize.gif"></img> <b>'resize object' tool</b></li>
+<li> scale the object in the top view until it is square, 1.5 by 1.5 units.
+<li> select the <img src="images/move.gif"></img> <b>'move object' tool</b> </li>
+<li> move the box so it is centered in the top view. </li>
+<li> move it in the front view so it is just below the second grid line from the center. </li>
+<li> check out the box's coordinates with the <b>Object->Object Layout</b> from the menu. 
+The box should be sized 1.5 units on the x-axis, 0.1 units on the y-axis, and 1.5 again on the z-axis. It should be positioned with its origin at coordinate <0, -1.05, 0>. From this dialog you can also change the box's size, position and orientation (see figure below).<br>
+<img src="images/boxlayout.png"></li>
+</ul>
+
+
+Notice that you can draw any object in either the front, left or top view. Since you can only draw two dimensions at once, you'll have to edit the third dimension afterwards. You may use the scale and move tools for changing the position and size of the box. But if you have a clear idea of what the dimensions should be, the Object Layout dialog is much quicker.</p>
+
+The first box is the bottom of the model. The top looks exacly the same, so create a box for it by copying. 
+<ul>
+<li>select the first box, <i>Cube 1</i> from the list on the right</li>
+<li>select <b>Edit->Copy</b> from the menu</li>
+<li>select <b>Edit->Paste</b> from the menu</li>
+<li>move the copy upwards until the bottom of the box is at y=1. Do this by using either:
+	<ul>
+	<li>the <img src="images/move.gif"></img> <b>'move object' tool</b>. Hold shift to move only orthogonal.</li>
+	<li>the <b>Object->Layout Object</b> option from the menu. Center it at y=1.05.</li>
+	<li>the <b>Object->Transform Object</b> option from the menu. Move it 2 units upwards on the Y axis. </li>
+	<li>the <b>Object->Align Objects</b> option from the menu. Align the bottom (y-axis) to 0.
+	</ul>
+</ul>
+</p>
+
+Now we have two boxes, symmetrical about the origin. Note that both boxes are both still named <i>Cube1</i>. You may change object names by selecting the <b>Object->Rename Object</b> option from the menu. Proper names could be 'Top' and 'Bottom'. Now it is easier to keep them apart when selecting from the list.</p>
+
+Using the techniques above we can also create the four poles between the top and bottom boards. Use the <img src="images/cylinder.gif"></img> <b>'create cylinder' tool</b> to create a cylinder of the following proportions:
+<ul>
+<li>position: X = 0.6, Y = 0, Z = 0.6</li>
+<li>size: X = 0.1, Y = 2, Z = 0.1<br></li>
+</ul>
+And create tree more cylinders in the other corners of the hourglass frame. <br>
+Hints: 
+<ul>
+<li>draw the first cylinder in the front or left view, this allows you to set it's diameter as well as its length. Position the cylinder using the other views. </li>
+<li>Create the other cylinders by copying and moving. </li>
+<li>You cannot see the cylinders you've created in the top view because they are obscured by the top box. Select <b>Scene->Display Mode->Wireframe</b> from the menu, and you will be able to see them again. </li>
+</ul>
+</p>
+
+Now we have a frame for the hourglass. Now use the <img src="images/moveView.gif"> <b>'move viewpoint' tool</b> and the <img src="images/rotateView.gif"> <b>'rotate viewpoint' tool</b> to change the lower-right view (camera1). Now you can see the model from any angle you like. The result should look something like this: </p>
+
+<img src="images/image2.png"></img>
+
+<h3> A complex object </h3>
+The most complex shape in this scene is the glass bulb. It will be created using the Lathe tool. A lathe is an object created by revolving a spline curve, which determines the contour of the shape, around an axis. 
+
+To create the contour curve we will use the <img src="images/approxCurve.gif"> <b>create approximated curve</b> tool. To avoid painfully precise mouse work, create a first create a finer Grid: spacing 0.2 with 2 subdivisions. Then select <b>Scene->One View</b> from the menu. You can then set the zoom factor of the view to 200 percent. Now create the spline curve by adding the points 1 though 9 shown in the image below (in that order). Double click point 9 to finish the spline curve. Make sure that the first and the last point are nicely on the y axis and tangent to the the top and bottom boxes we made earlier. 
+</p>
+<img src="images/points.png"></img>
+</p>
+The approximated curve is not very intuitive, but allows you to determine the direction of the curve more exactly than the interpolated curve does. The direction of the curve at the beginning and end of the curve is determined by the only adjectent point. The curve is vertical at point 5 because points 4 and 6 are in both vertically displaced from this point. In general, the curve at any point is determined by the immediately preceding and the two next definition points (the curve is a quadratic spline, or, third order spline).
+</p>
+As the central axis of the glass bulb, we will use the line running though the endpoints of the curve. In our drawing, this is the y axis, but by using the first line results in a solid object. To create the lathe, first select the curve and then select <b>Tools->Lathe</b> from the menu. In the lathe dialog, select the <b>Line though endpoints</b> as the lathe axis. (See figure below).
+</p> 
+<img src="images/dialog1.png"></img>
+</p>
+The lathe shape is automatically centered at 0,0,0. This is exactly where we want it, so leave it. (Ofcourse this is no coincidence, I planned it that way!). The spline curve that we created first is now redundant. You may delete it, but you don't have to since it won't show up in the final rendering. To delete an object, select it (from screen or from list of objects) and press <b>backspace</b> on the keyboard. You may also use the menu option <b>Edit->Clear</b>.
+</p>
+<h3>Scene layout</h3>
+Now we've finished modeling all the shapes. We should try to render the scene with accurate shapes and lighting. Before rendering though, we should determine the layout of the key elements in the scene, the camera and the light. 
+</p>
+First, determine the position and orientation of the camera. This is easily done using the camera preview in the lower right corner. Translate and rotate the view using the <img src="images/moveView.gif"> <b>Move view tool</b> and the <img src="images/rotateView.gif"> <b>Rotate view tool</b>. Hold Control while moving the view to zoom in and out. And you may roll the view over by holding Control and using the rotate view tool. You may also position the camera using the <img src="images/move.gif"> <b>move object tool</b> and the <img src="images/rotate.gif"> <b>rotate object tool</b> or with the <b>Layout object</b> menu option. The camera is an object just like any other. A good position might be one where you can see the top and two other sides of the object. 
+</p>
+Next we should illuminate the scene. As you can see there already a light source in the scene from the beginning of the session, <i>Light 1</i>. The light source should be positioned so that it illuminates the side of the object we are looking at. <i>Light 1</i> is propably not positioned correcty given the position of the camera. Since this lightsource is also far away, we'll delete it and create a new one. AoI supports three types of lightsources: point lights, directional lights and spot lights. We'll use the simplest of them, the point light. Follow The next steps to correctly illuminate the scene:
+
+<ul>
+	<li>Find a position for the new light near the camera, or at least on the same side of the object as the camera. Use a lower zoom factor (30) to find the camera in the views. </li>
+	
+	<li>To create the light, click on the <img src="images/light.gif"><b>create lightsource icon</b> and click over the position where you want the light. 	You should propably move the light (just like moving other objects) in one of the other views to get the correct position in 3D space. </li>
+	
+	<li>select <b>Object->Edit Object</b> from the menu. We should change some properties of the light source to accomadte its position relative to the hourglass. See the dialog image below for the correct values. The default <b>Intensity</b> value is a bit high, resulting in picture that looks like the camera was blinded by the light. Change the intensity value to 0.8. Set the <b>Decay Rate</b> to zero. This value determines how fast light intensity decays over distance. In reality, light intensity decay is related to the squared distance. The default Decay Rate would result in a very dark image. This simple scene does not need this much realism anyway, so lets make things easy and turn it off. <br>
+<img src="images/dialog2.png"></img>
+</li>
+</ul>
+
+Now lets render. Select <b>Scene->Render Scene</b>from the menu. Don't bother with the settings yet, just press OK on the render dialog. The result should be something like this:
+</p>
+<img src="images/render1.jpg"></img>
+</p>
+Rather boring isn't it ? Everything is a dull white. We want wood and glass, we should add textures.</p>
+
+<h3>Textures and materials</h3>
+<h4>Wood</h4>
+Lets create a texture that looks like wood. Select <b>Scene->Textures</b> from the menu and press <b>New</b> in the texture dialog. In the next dialog, name the texture <i>Wood</i> and select the <b>procedural 3D</b> type (see dialog below).
+</p>
+<img src="images/dialog3.png"></img>
+</p>
+
+3D procedureal textures determine color, roughness, reflection and other surface properties as a function of 3D coordinates. For any position in space, the texture defines what a shape's surface looks like, as if we had cut the shape out of a solid block of this 'material'. However, for object of which we can actually see the inside, transparent objects, we should use a <b>material</b> to define the inside, not a texture. Textures only determine what the surface of an object looks like.
+</p>
+A function mapping 3D coordinates to the values of teture properies is created by graphically connecting functional modules in the procedural editor. There are six categories of modules:
+<ul>
+	<li><b>Values</b> determine a constant color or value that may 	be used as input for other values.</li>
+
+	<li><b>Functions</b> are components that output scalar values.</li>
+
+	<li><b>Color functions</b>output color values.</b></li>
+
+	<li><b>Transforms</b> transform coordinates to a new set of coordinates.</l>
+
+	<li><b>Patterns</b> determine a scalar value as a function of coodinate values. This scalar value may be used to determine a color pattern for the texture or to pattern some other texture property. </li>
+</ul>
+</p>
+When you've created a new texture, you'll be presented with a dialog in which you may specify the texture. There's a large empty white area, in which we'll add functional components. And to the right there are blocks with names like <i>diffuse, specular, tansparent</i>, etc. These are properties of a texture which will be connected to the components we've added in the empty area. 
+</p>
+The following components are added to the procedure to make a wood texture:
+<ul>
+<li>Select <b>Insert->Patterns->Wood</b> from the menu. This is a pattern of concentric cylinderical bands along the Z axis, just like the cross-section of a tree trunk has concentric rings of color. The default imputs of this components are the three coordinate values, X, Y, Z and a 0.5 noise value. These are fine, so we won't have to add components for them. </li>
+
+<li>We'll use this pattern for the diffuse color of the texture. Select <b>Insert->Color Functions->Custom</b> from the menu. Connect the wood pattern component to the custom color function, and connect the color function to the diffuse color component at the right of the dialog (see figure below). Now you should see rings apear on the preview image.<br>
+<img src="images/woodfunction.png"></img>
+</li>
+
+<li>Next we should add some nice woodish colors to the texture.</li> To do this, doule click the custom color function component. You'll be presented with the dialog below. Add extra markers (click the "Add" button to add more little trangles) and set the color at each triangle to match the colors in the dialog above.<br>
+<img src="images/woodcolor.png"></img><br>
+</li>
+
+<li>Finally, we'll make the wood texture a bit denser, more rings. Double click the wood pattern module and set the values shown in this dialog:<br>
+<img src="images/wooddialog.png"></img><br>
+</li>
+</ul>
+
+The preview now looks like this:</p>
+<img src="images/wood.png"></img></p>
+The texture doesn't realy look very realistic but it will have to do for now. To create more complex texture, read the section on textures of the <a href="manual">the Art of Illusion manual</a>.</p>
+
+This texture will be assigned to the top and bottom boards and the sticks in between that we've created earlier. Select all the shapes that should be assiged the Wood texture. Then select <b>Object->Set Texture</b> from the menu. Now select the Wood texture and press O.K. </p>
+Now select only the <i>Top</i> and <i>Bottom</i> objects. Again call up the set texture dialog. Now click on the button labeled <b>Edit Mapping</b>. In this dialog, yoou may scale, translate, and rotate the texture to fit the object. We'll only rotate the texture to get the following result:</p>
+<img src="images/woodmap2.png"></img></p>
+
+Now for the sticks. Select them all and edit the mapping mapping again. Create a mapping like this:</p>
+<img src="images/woodmap.png"></img></p>
+
+Now let's look at the result. The rendered image will look something like this:</p>
+<img src="images/render2.jpg"></img></p>
+
+
+<h4>Glass</h4>
+The glass bulb object should have the material properties of glass. That is, it should should be transparent to light and it should also reflect light on the surface. Light that passes through a glass object is refracted and attenuated (i.e., diminished or of changed color). Reflection and transparentcy are texture properties. Refraction and attenuation are properties of an object's material. Materials can only be assigned to solid objects. This makes sense because the amount of attenuation and direction of the light after refraction depends on where a ray of light enters and on where it leaves the object. Fortunately, our bulb shape is a solid object. All lathes shapes with the rotation axis through the begin- and endpoints of the profile curve are solids.</p>
+
+First we'll create the glass texture, and then the glass material.</p>
+
+In the texture's dialog, create a new <b>uniform texture</b> called <i>Glass</i>. This texture makes the surface transparent, so the inside material will be visible, and it determines the amount of specular reflection. The image below shows what settings to use for the new texture. Transparency is controlled by both the <b>Transparent Color</b> and the <b>Transparency</b> value. The red, green and blue fraction of the transparent color determine how much of each color component remains when light passes though the surface. It is a filter color. White, the default color, means that light of any colors passes the surface. Black means no light passes. The transparency value determines the total fraction of the light that passes though. A value of 0.7 means that 70 percent of the light is let through the surface. This also means that the transparent component determines the color of the surface for 70 percent. The remaining 30 percent of color will be determined for 100 percent by reflection, so the <b>Specular</b> value will be set to 1.0. The surface's diffuse component does not affect the total color with these settings. We'll use the objects material to color the glass.</p>
+
+<img src="images/glasstexture.png"></img></p>
+
+To create a new material, select <b>Scene->Materials</b> and click on the <b>New</b> button. The new material may also be named <i>Glass</i>. It should be a <b>uniform material</b>. You can see the parameter settings in the image below. 
+The color of a material is affected by two parameters: <b>Material color</b> and <b>Transparent Color</b>.
+Both color parameters attenuate the color of the light as it passes through the material. Material color only affects the light that reaches the camera directly, it is the color that the object appears to have. Transparent Color affects all light passing though the object, and also colors the shadows cast by the object. The first color paramter is easier to use though because it species what color the object will look like. Transparent color however, specifies the fraction of red, green and blue that passes though. The rest of the ligh is reflected and determines the objects color.
+Howmuch the light is attenuated is determined by the <b>Desnity</b> value. A value of zero results in no attenuation. For this glass material we'll specify a simple green material color that only shows on very massive objects.
+</p>
+
+<img src="images/glassmaterial.png"></img></p>
+
+<h3>The final rendering</h3>
+The glass we've created cannot be rendered by the raster renderer. Open the render dialog (<b>Scene->Render Scene</b>) and be sure you have selected the <b>Raytracer</b> renderer. The raytracer casts 'rays of light' from the camera back to where they intersect objects. At this point on the object, rays are cast towards the light source to calculate lighting and find shadows. From objects with a specular reflection component or transparency, new rays are cast to find objects seen in reflections or though transparent material. </p>
+
+The default black background makes the glass material look odd. To improve the aprearence of the glass, we'll set a bright background. We can use a plain solid color if we want, but right now let's use a texture for background. Select <b>Scene->Environment</b> from the menu. In this dialog, select <b>texture-diffuse</b> as a background. You may create a new texture with a diffent color or perhaps a procedural image (clouds make a nice exercise) but I'll use the default texture for now. </p>
+
+Finally, to improve the image quality, check the <b>antialiasing</b> option in the render dialog. And if your (non-directional) light source is near the object or has a large radius (like 1.0), checking <b>soft shadows</b> will result in a more realistic image. Both options cause the raytracer to cast multiple rays per pixel. The results are avaraged to create a smoother image. The minimum and maximum number of <b>rays per pixel</b> to higher values results in better image quality and slower rendering speed. For a quick image, don't use these options. Good qaulity is achieved by setting minimum and maximum to 4 and 16 rays respectively. More <b>max</b>rays may be needed to decrease noise in large <b>soft shadow</b> areas, but you should only increase the <b>min</b> rays if you know what you're doing (an increased number of rays slows down the render speed).</p>
+
+Raytracer settings and the resulting image are shown below:</p>
+
+<img src="images/raytracer.png"></img>	<img src="images/render3.jpg"></img>
+
+
+To increase the realism of the lighting scheme, try using two lamps, one of light blue color and the other light orange/yellow, on opposite sides of the model. For both lamps, set the decay rate to .3, the radius to 1 and enable <b>soft shadows</b> when you render the image.</p>
+
+<h3>Imagine it</h3>
+This is where the tutorial ends, but Art of Illusion is capable of much more than shown here, including photorealistic and even fantasy-style artwork. From other tutorials and manuals you should be able to learn how to work more effectively with AoI. Most of the cool features are intuitive enough, and you can simply try them all and see their effect. 
+</p>
+Using the basics from this tutorial you can now start modeling the worlds of your imagination. Gradually, as you learn to master all of the program's features, you'll get better and better... and more addicted. 
+</p>
+Good luck.
+<hr>
+
+</body>
+
+</html>
+

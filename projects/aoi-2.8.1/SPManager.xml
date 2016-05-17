@@ -1,0 +1,111 @@
+<?xml version="1.0"?>
+
+<project name="SPManager" default="dist" basedir=".">
+
+  <!-- set this to point to an appropriate ArtOfIllusion.jar -->
+  <property name="aoijar" value="ArtOfIllusion.jar" />
+
+  <!-- get the current build properties -->
+  <property file="SPManager/SPManager-build.props" />
+
+  <!-- set global properties for this build -->
+  <property name="package" value="SPManager" />
+  <property name="src" value="SPManager/src" />
+  <property name="build" value="SPManager/build" />
+  <property name="docs" value="SPManager/docs" />
+  <property name="postsrc" value="PostInstall/src" />
+  <property name="postbuild" value="PostInstall/build" />
+  <property name="postdocs" value="PostInstall/docs" />
+  <property name="dist" value="Plugins" />
+  <property name="src-package" value="SPManager-src-${curr-version}" />
+
+  <target name="init">
+    <!-- Create the time stamp -->
+    <tstamp/>
+
+    <!-- Create the build directory structure used by compile -->
+    <mkdir dir="${build}" />
+
+    <!-- Create the docs directory structure used by documentation -->
+    <mkdir dir="${docs}" />
+
+    <!-- Create the dist directory structure used by build -->
+    <mkdir dir="${dist}" />
+
+    <!-- Create the postbuild directory structure used by compile -->
+    <mkdir dir="${postbuild}" />
+    <!-- Create the postdocs directory structure used by documentation -->
+    <mkdir dir="${postdocs}" />
+
+    <!-- update the version number -->
+    <replace file="${src}/extensions.xml" >
+       <replacefilter token='version="${old-version}"&gt;'
+	      value='version="${curr-version}"&gt;' />
+
+       <!-- **NOTE** token is literal string: {version} -->
+       <replacefilter token="{version}" value="${curr-version}" />
+    </replace>
+
+    <!-- update the version number -->
+    <replace file="${src}/artofillusion/spmanager/SPManagerFrame.java"
+       token='version = "${old-version}"'
+       value='version = "${curr-version}"' />
+
+  </target>
+
+  <target name="compile" depends="init">
+    <!-- Compile the java code from ${src} into ${build} -->
+    <javac srcdir="${src}" destdir="${build}" classpath="${aoijar}" debug="on" target="1.5" source="1.5" />
+
+    <javac srcdir="${postsrc}" destdir="${postbuild}" classpath="${aoijar}" debug="on" target="1.5" source="1.5" />
+  </target>
+
+  <target name="dist" depends="compile">
+    <jar jarfile="${dist}/SPManager.jar" basedir="${build}" manifest="${src}/MANIFEST.MF">
+
+<!--  Only for update (ie prior to 2.5 final) packages
+       <fileset dir="${src}" includes="${package}.xml, plugins, *.properties, artofillusion/spmanager/icons/*" />
+ -->
+
+       <fileset dir="${src}" includes="extensions.xml *.properties, artofillusion/spmanager/icons/*" />
+    </jar>
+    
+    <!--  Create the PostInstall jar file -->
+    <jar jarfile="${dist}/PostInstall.jar" basedir="${postbuild}" >
+       <fileset dir="${postsrc}" includes="extensions.xml, *.properties, plugins" />
+<!--       <fileset dir="${src}" includes="*.properties" />  -->
+    </jar>
+
+
+  </target>
+
+  <target name="source">
+    <!-- create the source archives  -->
+    <zip file="${src-package}.zip" >
+       <zipfileset prefix="${package}/src" dir="${src}" />
+       <zipfileset prefix="PostInstall/src" dir="${postsrc}" />
+        <zipfileset dir="." includes="${package}.xml" />
+        <zipfileset prefix="${package}" dir="${package}" includes="${package}-build.props" />
+    </zip>
+       
+    <tar tarfile="${src-package}.tz" compression="gzip">
+       <tarfileset prefix="${package}/src" dir="${src}" />
+       <tarfileset prefix="PostInstall/src" dir="${postsrc}" />
+        <tarfileset dir="." includes="${package}.xml" />
+        <tarfileset prefix="${package}" dir="${package}" includes="${package}-build.props" />
+    </tar>
+  </target>
+
+  <target name="clean">
+    <!-- Delete the ${build} and ${docs} directory trees -->
+    <delete dir="${build}" />
+    <delete dir="${docs}" />
+
+    <!-- Delete the ${postbuild} and ${postdocs} directory trees -->
+    <delete dir="${postbuild}" />
+    <delete dir="${postdocs}" />
+
+    <delete file="${dist}/${package}.jar" />
+    <delete file="${dist}/PostInstall.jar" />
+  </target>
+</project>

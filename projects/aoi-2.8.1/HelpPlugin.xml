@@ -1,0 +1,155 @@
+<?xml version="1.0"?>
+
+<project name="HelpPlugin" default="dist" basedir=".">
+
+  <!-- set global properties for this build -->
+
+  <!--  name of this package - typically the same as the project build -->
+  <property name="package" value="HelpPlugin" />
+
+  <!-- set this to your name/handle/avatar -->
+  <property name="author" value="Nik Trevallyn-Jones" />
+
+  <!--
+	you will need to set this to point to to an existing ArtOfIllusion 
+	installation or build area, so the ArtOfIllusion classes are found.
+
+	If you are building within a standard AOI source distribution, then
+	the standard values will all work without change.
+   -->
+  <property name="aoi" value = "." />
+
+  <!-- this points to the directory which holds all the HelpPlugin files -->
+  <property name="home" value="HelpPlugin" />
+
+  <!-- set to the version  -->
+  <property name="version" value="1_21_2" />
+
+  <!--  you won't normally need to change any of these  -->
+  <property name="src" value="${home}/src" />
+  <property name="build" value="${home}/build" />
+  <property name="docs" value="${home}/docs" />
+  <property name="lib" value="${home}/lib" />
+
+  <property name="dist" value="${aoi}/Plugins" />
+
+  <property name="src-package" value="${package}-src-${version}" />
+  <property name="src-build" value="${build}/${package}" />
+  <property name="helpset" value="${home}/AOIHelp" />
+  <property name="helpfile" value="Help/AOIHelp.zip" />
+
+  <!--  these default to being in the AOI installation  -->
+  <property name="aoijar" value="${aoi}/ArtOfIllusion.jar" />
+  <property name="bshjar" value="${aoi}/beanshell.jar" />
+
+  <!-- these are bundled with HelpPlugin -->
+  <property name="helpjar"
+	value="${lib}/helpgui-1.1b.jar:${lib}/jhall.jar:${lib}/jhelpaction.jar" />
+  <property name="pircjar" value="${lib}/pircbot.jar" />
+
+
+<!--  <property name="build.compiler" value="classic" /> -->
+
+  <target name="init">
+    <!-- Create the time stamp -->
+    <tstamp/>
+
+    <!-- Create the build directory structure used by compile -->
+    <mkdir dir="${build}" />
+
+    <!-- Create the dist directory structure used by compile -->
+    <mkdir dir="${dist}" />
+
+    <!-- Create the dist directory structure used for help -->
+    <mkdir dir="${dist}/Help" />
+
+    <!-- Create the docs directory structure used by documentation -->
+    <mkdir dir="${docs}" />
+
+  </target>
+
+  <target name="compile" depends="init">
+
+    <!-- Compile the java code from ${src} into ${build} -->
+    <javac srcdir="${src}" destdir="${build}"
+	classpath="${aoijar}:${regjar}:${helpjar}:${bshjar}:${pircjar}"
+	debug="on" target="1.4" source="1.4" />
+  </target>
+
+  <target name="dist" depends="compile">
+
+    <!-- create the jar file -->
+    <jar jarfile="${dist}/${package}.jar" basedir="${build}" 
+       manifest="${src}/MANIFEST.MF">
+
+       <fileset dir="${src}" includes="extensions.xml, *.bsh, *.properties" />
+    </jar>
+
+    <!-- create the helpset -->
+    <zip file="${dist}/${helpfile}" >
+       <zipfileset prefix="helpset" dir="${helpset}/helpset" />
+    </zip>
+
+    <!-- copy the jars -->
+    <copy todir="${dist}/Help">
+	<fileset dir="${lib}" includes="*.jar" />
+    </copy>
+
+  </target>
+
+  <target name="bundle">
+
+    <!-- create the bundles  -->
+    <zip file="${package}-bundle-${version}.zip" >
+       <zipfileset prefix="${dist}" dir="${dist}" />
+       <zipfileset prefix="${dist}" file="${regjar}" />
+    </zip>
+       
+    <tar tarfile="${package}-bundle-${version}.tz" compression="gzip">
+       <tarfileset prefix="${dist}" dir="${dist}" />
+       <tarfileset prefix="${dist}" file="${regjar}" />
+    </tar>
+  </target>
+
+  <target name="source">
+    <!-- create the source archives  -->
+    <zip file="${src-package}.zip" >
+       <zipfileset prefix="${package}/src" dir="${src}" />
+       <zipfileset dir="." includes="${package}.xml, buildhelp.xml" />
+       <zipfileset prefix="${package}/lib" dir="${lib}" includes="*.jar" />
+       <zipfileset prefix="${package}/AOIHelp" dir="${home}/AOIHelp" />
+       <zipfileset prefix="${package}/licence" dir="${home}/licence" />
+    </zip>
+       
+    <tar tarfile="${src-package}.tz" compression="gzip">
+       <tarfileset prefix="${package}/src" dir="${src}" />
+       <tarfileset dir="." includes="${package}.xml, buildhelp.xml" />
+       <tarfileset prefix="${package}/lib" dir="${lib}" includes="*.jar" />
+       <tarfileset prefix="${package}/AOIHelp" dir="${home}/AOIHelp" />
+       <tarfileset prefix="${package}/licence" dir="${home}/licence" />
+    </tar>
+  </target>
+
+  <target name="docs" depends="init">
+    <javadoc packagenames="artofillusion.*"
+        sourcepath="${src}"
+        defaultexcludes="yes"
+        destdir="${docs}"
+        author="true"
+        version="true"
+        use="true"
+        source="1.4"
+        windowtitle="${package}"
+	public="true">
+      <doctitle><![CDATA[<h1>${package}</h1>]]></doctitle>
+      <bottom><![CDATA[<i>Copyright &#169; 2005 by ${author}.</i>]]></bottom>
+    </javadoc>
+  </target>
+
+  <target name="clean">
+    <!-- Delete the ${build} and ${docs} directory trees -->
+    <delete dir="${build}" />
+    <delete dir="${docs}" />
+  </target>
+</project>
+

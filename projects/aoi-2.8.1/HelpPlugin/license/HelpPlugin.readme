@@ -1,0 +1,28 @@
+README file for the Art Of Illusion HelpPlugin
+
+This plugin is distributed with a number of associated binary jar files, which
+are redistributed to you in accordance with the following terms and licences:
+
+1. helpgui-1.1a.jar
+Original copyright (C) 2003 Alexandre THOMAS  (alexthomas@free.fr)
+Added code copyright (C) 2006 Nik Trevallyn-Jones
+Original source available from http://helpgui.sourceforge.net
+Modified source as used in this plugin available from: http://aoisp.sf.net
+http://prdownloads.sourceforge.net/aoisp/helpgui-1.1a-src.zip?download
+Redistributed in accordance with the GPL.
+
+2. pircbot.jar
+Copyright (C) and licenced by Paul Mutton
+Originally available from: http://www.jibble.org/pircbot.php
+Redistributed in accordance with the GPL (see the above link for details).
+
+3. jhelpaction.jar
+Copyright (C) and licenced by Markus Kraetzig
+Originally available from: http://www.mk-home.de/jhelpaction.html
+Redistributed in accordance with the Lesser GPL (see above link for details)
+
+4. jhall.jar
+Copyright (C) 2006 Sun Microsystems, Inc.
+Originally available from http://javahelp.dev.java.net/
+Redistributed in accordance with the GPL
+(with classpath exception) (see above link for details).
