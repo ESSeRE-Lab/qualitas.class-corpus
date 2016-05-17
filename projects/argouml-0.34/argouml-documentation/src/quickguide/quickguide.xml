@@ -1,0 +1,169 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- $Id: quickguide.xml 285 2010-05-31 09:29:37Z mvw $ -->
+<!--
+ *******************************************************************************
+ * Copyright (c) 2009-2010 Contributors - see below
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *    Linus Tolke
+ *    Michiel van der Wulp
+ *    Yuri Cervoni yurop85@gmail.com - Italian translation.
+ *******************************************************************************
+ *
+ * Some portions of this file was previously release using the BSD License:
+ *
+// Copyright (c) 1996-2009 The Regents of the University of California. All
+// Rights Reserved. Permission to use, copy, modify, and distribute this
+// software and its documentation without fee, and without a written
+// agreement is hereby granted, provided that the above copyright notice
+// and this paragraph appear in all copies.  This software program and
+// documentation are copyrighted by The Regents of the University of
+// California. The software program and documentation are supplied "AS
+// IS", without any accompanying services from The Regents. The Regents
+// does not warrant that the operation of the program will be
+// uninterrupted or error-free. The end-user understands that the program
+// was developed for research purposes and is advised not to rely
+// exclusively on the program for any reason.  IN NO EVENT SHALL THE
+// UNIVERSITY OF CALIFORNIA BE LIABLE TO ANY PARTY FOR DIRECT, INDIRECT,
+// SPECIAL, INCIDENTAL, OR CONSEQUENTIAL DAMAGES, INCLUDING LOST PROFITS,
+// ARISING OUT OF THE USE OF THIS SOFTWARE AND ITS DOCUMENTATION, EVEN IF
+// THE UNIVERSITY OF CALIFORNIA HAS BEEN ADVISED OF THE POSSIBILITY OF
+// SUCH DAMAGE. THE UNIVERSITY OF CALIFORNIA SPECIFICALLY DISCLAIMS ANY
+// WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
+// MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE. THE SOFTWARE
+// PROVIDED HEREUNDER IS ON AN "AS IS" BASIS, AND THE UNIVERSITY OF
+// CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
+// UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
+-->
+<!DOCTYPE book PUBLIC "-//OASIS//DTD DocBook XML V4.2//EN" "../docbook-setup/docbookx/docbookx.dtd" [
+
+  <!-- ...................................................................... -->
+  <!-- Imported General Entity declarations ................................. -->
+  <!--                                                                        -->
+  <!-- Please look inside these files (below) for shortcuts to entering       -->
+  <!-- common information such as Author details, Argo/Tigris addresses etc.  -->
+  <!-- ...................................................................... -->
+  
+  <!ENTITY % author-entities SYSTEM "declare-authors.ent">
+  %author-entities;
+
+  <!ENTITY % argo-entities SYSTEM "declare-argostuff.ent">
+  %argo-entities;
+
+  <!--
+      FILE INCLUDE MACROS
+  -->
+  <!ENTITY preface.xml SYSTEM "qstart-preface.xml">
+  <!ENTITY chapter-introduction.xml SYSTEM "qstart-introduction.xml">
+  <!ENTITY chapter-installation.xml SYSTEM "qstart-installation.xml">
+  <!ENTITY chapter-credits.xml SYSTEM "qstart-credits.xml">
+  <!ENTITY chapter-running.xml SYSTEM "qstart-running.xml">
+  
+  <!--   
+      TEXT SUBSTITUTION MACROS
+      
+      These macros should be used to include links to the web site, etc...
+      e.g. To include a link to the "ArgoUML project" use:
+          &argo-project-link;
+  -->
+  <!ENTITY document-title   'ArgoUML Quick Guide'>
+  <!ENTITY document-subtitle  'Get started with ArgoUML @VERSION@'>
+
+  <!ENTITY document-title-de   'ArgoUML Kurzanleitung'>
+  <!ENTITY document-subtitle-de  'Beginnen Sie mit ArgoUML @VERSION@'>
+
+  <!ENTITY document-title-it   'Guida introduttiva ad ArgoUML'>
+  <!ENTITY document-subtitle-it  'inizia ad usare ArgoUML @VERSION@'>
+]>
+
+
+<book>
+  <title>
+    <phrase lang="en">&document-title;</phrase>
+    <phrase lang="de">&document-title-de;</phrase>
+    <phrase lang="es">ArgoUML Quick Guide</phrase>
+    <phrase lang="it">&document-title-it;</phrase>
+    <phrase lang="sv">ArgoUML Snabbguide</phrase>
+    <phrase lang="zh">ArgoUML 快速入门</phrase>
+  </title>
+  <bookinfo>
+
+    <mediaobject>
+      <imageobject>
+        <imagedata fileref="images/argologo200x190_on_ffffff.png" 
+                format="PNG"/>
+      </imageobject>
+    </mediaobject>
+    
+    <subtitle>
+      <phrase lang="en">&document-subtitle;</phrase>
+      <phrase lang="de">&document-subtitle-de;</phrase>
+      <phrase lang="es">Get started with ArgoUML @VERSION@</phrase>
+	  <phrase lang="it">&document-subtitle-it;</phrase>
+      <phrase lang="sv">Komma igång med ArgoUML @VERSION@</phrase>
+      <phrase lang="zh">ArgoUML 快速入门 @VERSION@</phrase>
+    </subtitle>
+
+    <authorgroup>
+      &author-kunle.odu;
+      &author-anthony.ogu;
+      <author>
+        <firstname>Linus</firstname>
+        <surname>Tolke</surname>
+      </author>
+      <author>
+        <firstname>Michiel</firstname>
+        <surname>van der Wulp</surname>
+      </author>
+    </authorgroup>
+
+    <copyright>
+      <year>2001</year>
+      <holder>Kunle Odutola</holder>
+    </copyright>
+    <copyright>
+      <year>2004-2010</year>
+      <holder>Michiel van der Wulp</holder>
+    </copyright>
+    <copyright lang="de">
+      <year lang="de">2008</year>
+      <holder lang="de">Übersetzung: Harald Braun</holder>
+    </copyright>
+    <copyright lang="it">
+      <year lang="it">2010</year>
+      <holder lang="it">Yuri Cervoni yurop85@gmail.com</holder>
+    </copyright>
+    <copyright lang="sv">
+      <year>2008</year>
+      <holder>Översättare: Linus Tolke</holder>
+    </copyright>
+    <copyright lang="zh">
+      <year>2008</year>
+      <holder>倪森 </holder>
+    </copyright>
+
+    <legalnotice>
+      <para lang="en">&open-content-license;</para>
+      <para lang="de">&open-content-license-de;</para>
+      <para lang="es">
+Este material se puede distribuir solamente conforme a los terminos y
+a las condiciones dispuestos en la licencia abierta de publicacion 
+(Open Publication License), v1.0 o superior (la version mas actual
+está disponible en http://www.opencontent.org/openpub/) 
+</para>
+	  <para lang="it">&open-content-license;</para>
+      <para lang="sv">&open-content-license;</para>
+      <para lang="zh">&open-content-license;</para>
+    </legalnotice>
+
+  </bookinfo>
+&preface.xml;
+&chapter-introduction.xml;
+&chapter-installation.xml;
+&chapter-running.xml;
+
+</book>

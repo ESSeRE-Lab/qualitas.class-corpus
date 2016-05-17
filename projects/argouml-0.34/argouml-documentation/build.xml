@@ -1,0 +1,698 @@
+<?xml version="1.0"?>
+<!-- $Id: build.xml 421 2011-12-15 20:23:37Z linus $ -->
+<!-- ArgoUML Manuals & Documentation Build file                             -->
+<!-- Author: Kunle Odutola  31-March-2001                                   -->
+<!--                                                                        -->
+<!-- Modified: Jeremy Bennett, Thierry Lach, Linus Tolke, Dave Thompson     -->
+<!-- 
+
+About this file
+===============
+
+This file is the build file for ArgoUML Manuals & Quick Guide. This
+build file is designed to be read by ANT. See http://jakarta.apache.org/ant/
+
+What tools do I need to use this build file?
+
+  The source repository contains most of the tools you needs:
+  - Tool 'Ant'
+  - The ArgoUML documentation source files (.xml).
+  - Norman Walsh's DocBook system.
+  - Tool 'FOP' (only requred for pdf versions)
+  
+  In addition to tbe above you will need:
+  - The Java 2 SDK.
+
+  If you are going to build pdf versions you also need:
+  - JIMI (see the fop readme file).
+
+  To run the build in Windows:
+  
+  > build.bat
+  
+  To run the build in Linux/Unix/Cygwin/(+Mac?):
+  
+  $ ./build.sh
+  
+  This will run the default target which generates the user manual and quick guide
+  in the multi-page 'chunked' html format, English translation only.
+ -->
+
+<project name="ArgoDocs" default="htmlchunked-en" basedir=".">
+
+  <property name="argo.core.version" value="0.34"/>
+
+  <!-- we really need an absolute path for argo.root.dir -->
+  <property name="argo.root.dir" value="${basedir}/../.."/>
+  <property name="build.dir" value="build"/>
+  <property name="tools.dir" value="tools"/>
+  <property name="tools.lib" value="${tools.dir}/lib"/>
+
+  <!-- Our defaults depend on and don't override main props, so they go 2nd -->
+
+  <property name="fop.version" value="fop-0.20.5"/>
+  <property name="fop.build.dir" value="${tools.dir}/${fop.version}/build"/>
+  <property name="fop.lib.dir" value="${tools.dir}/${fop.version}/lib"/>
+  <property name="docbook-xsl-version" value="1.69.1"/>
+  <property name="saxon.jar.path" value="${tools.lib}/saxon-6.5.2.jar"/>
+  <property name="jimi.jar.path" value="${tools.lib}/JimiProClasses.zip"/>
+  <property name="resolver.jar.path" value="${tools.lib}/resolver.jar"/>
+
+  <property name="docbook-setup.dir" value="src/docbook-setup"/>
+  <property name="docbook-xsl-root" 
+	    value="${docbook-setup.dir}/docbook-xsl"/>
+  <property name="docbook-xsl-source-url"
+            value="${docbook-xsl-source-url-base}docbook-xsl-${docbook-xsl-version}.zip"/>
+
+  <echo> "${fop.build.dir}"</echo>
+  <echo> "${saxon.jar.path}"</echo>
+  <path id="saxon.classpath">
+    <pathelement location="${saxon.jar.path}" />
+    <pathelement location="${resolver.jar.path}" />
+    <pathelement location="${docbook-setup.dir}" />
+  </path>
+
+  <target name="create-import-files"
+    description="Create or update the build-CODE.xml files.">
+    <copy file="build-language-template.xml" tofile="build-en.xml" overwrite="yes">
+      <filterset>
+        <filter token="LANGUAGE" value="English"/>
+        <filter token="CODE" value="en"/>
+      </filterset>
+    </copy>
+
+    <copy file="build-language-template.xml" tofile="build-es.xml" overwrite="yes">
+      <filterset>
+        <filter token="LANGUAGE" value="Spanish"/>
+        <filter token="CODE" value="es"/>
+      </filterset>
+    </copy>
+    <copy file="build-language-template.xml" tofile="build-de.xml" overwrite="yes">
+      <filterset>
+        <filter token="LANGUAGE" value="German"/>
+        <filter token="CODE" value="de"/>
+      </filterset>
+    </copy>
+    <copy file="build-language-template.xml" tofile="build-it.xml" overwrite="yes">
+      <filterset>
+        <filter token="LANGUAGE" value="Italian"/>
+        <filter token="CODE" value="it"/>
+      </filterset>
+    </copy>
+    <copy file="build-language-template.xml" tofile="build-sv.xml" overwrite="yes">
+      <filterset>
+        <filter token="LANGUAGE" value="Swedish"/>
+        <filter token="CODE" value="sv"/>
+      </filterset>
+    </copy>
+    <copy file="build-language-template.xml" tofile="build-zh.xml" overwrite="yes">
+      <filterset>
+        <filter token="LANGUAGE" value="Chinese"/>
+        <filter token="CODE" value="zh"/>
+      </filterset>
+    </copy>
+
+  </target>
+
+  <!-- targets for translations -->
+  <import file="build-en.xml"/>
+
+  <import file="build-de.xml"/>
+  <import file="build-es.xml"/>
+  <import file="build-it.xml"/>
+  <import file="build-sv.xml"/>
+  <import file="build-zh.xml"/>
+
+
+  <!-- =================================================================== -->
+  <!-- htmlchunked-en: Create English chunked HTML documentation only    -->
+  <!-- =================================================================== -->
+
+  <target name="htmlchunked-en" 
+  	      description="English multi-page HTML versions of all docs."
+  	      depends="quickguide-htmlchunked-en, manual-htmlchunked-en, 
+  	      tidy"/>
+	
+
+  <!-- =================================================================== -->
+  <!-- docs: Generates all documentation in all formats and languages      -->
+  <!-- =================================================================== -->
+  <target name="docs" 
+          description="Create all versions of all documents.
+          This target is used by the nightly build."
+
+          depends="
+	
+  	      quickguide-htmlchunked-en,quickguide-htmlsingle-en,quickguide-pdf-en,
+	      manual-htmlchunked-en,manual-htmlsingle-en,manual-pdf-en,
+  	
+          quickguide-htmlchunked-de,quickguide-htmlsingle-de,quickguide-pdf-de,
+          manual-htmlchunked-de,manual-htmlsingle-de,manual-pdf-de,
+
+          quickguide-htmlchunked-es,quickguide-htmlsingle-es,quickguide-pdf-es,
+          manual-htmlchunked-es,manual-htmlsingle-es,manual-pdf-es,
+
+          quickguide-htmlchunked-it,quickguide-htmlsingle-it,quickguide-pdf-it,
+
+          quickguide-htmlchunked-sv,quickguide-htmlsingle-sv,quickguide-pdf-sv,
+
+  	      quickguide-htmlchunked-zh,quickguide-htmlsingle-zh,quickguide-pdf-zh,
+
+  	      tidy
+  	      " />
+	
+  <!-- =================================================================== -->
+  <!-- pdf: Generates the pdf version of the English documentation         -->
+  <!-- =================================================================== -->
+  <target name="pdf" 
+          description="Create the pdf version of the English documentation."
+          depends="
+
+              quickguide-pdf-en,
+              manual-pdf-en,
+
+              tidy
+  	      " />
+
+  <target name="released-pdfs"
+          description="Create the pdf files that are included in the release."
+          depends="
+
+              quickguide-pdf-en,
+              manual-pdf-en,
+
+              quickguide-pdf-de,
+              manual-pdf-de,
+
+              tidy
+  	      " />
+
+
+  <target name="init">
+    <echo message="Using ${ant.version}"/>
+
+    <available property="jimi-is-available"
+               value="true"
+	       classname="com.sun.jimi.core.Jimi">
+        <classpath>
+            <pathelement location="${jimi.jar.path}" />
+	</classpath>
+    </available>
+
+    <echo message="Checking for docbook-xsl version ${docbook-xsl-version}"/>
+    <xmlproperty file="${docbook-xsl-root}/VERSION" prefix="scratch" />
+    <condition property="docbook-xsl-is-available">
+        <equals arg1="${scratch.xsl:stylesheet.fm:project.fm:Version}"
+                arg2="${docbook-xsl-version}"
+         />
+    </condition>
+
+  </target>
+
+  <!-- =================================================================== -->
+  <!-- Creates build directory, common properties, and custom stylesheets  -->
+  <!-- =================================================================== -->
+
+  <target name="prepare" depends="init">
+    <mkdir dir="${build.dir}"/>
+  
+    <!-- First we set up some properties to make our job easier     -->
+    <echo message="Setting up common properties"/>
+    <property name="profile.xsl"
+              value="${docbook-setup.dir}/docbook-xsl/profiling/profile.xsl"/>
+    <property name="chunked.xsl"
+              value="${docbook-setup.dir}/create-chunked.xsl"/>
+    <property name="printable.xsl"
+              value="${docbook-setup.dir}/create-printable.xsl"/>
+    <property name="pdf.xsl"
+              value="${docbook-setup.dir}/create-pdf.xsl"/>
+    <property name="preprocess-pdf.xsl"
+              value="${docbook-setup.dir}/preprocess-pdf.xsl"/>
+    <property name="javahelp.xsl"
+              value="${docbook-setup.dir}/create-javahelp.xsl"/>
+    <property name="titlepage-template.xsl"
+              value="${docbook-setup.dir}/docbook-xsl/template/titlepage.xsl"/>
+    <property name="titlepage-html.spec.xml"
+              value="${docbook-setup.dir}/titlepage-html.spec.xml"/>
+    <property name="titlepage-html.xsl"
+              value="${docbook-setup.dir}/titlepage-html.xsl"/>
+    <property name="titlepage-pdf.spec.xml"
+              value="${docbook-setup.dir}/titlepage-pdf.spec.xml"/>
+    <property name="titlepage-pdf.xsl"
+              value="${docbook-setup.dir}/titlepage-pdf.xsl"/>
+
+    <!-- Generate custom titlepage stylesheets -->
+    <echo message="Generating custom HTML titlepage XSL template"/>
+    <java classname="com.icl.saxon.StyleSheet"
+          fork="yes"
+          taskname="saxon"
+          dir="."
+          failonerror="true">
+      <classpath>
+        <path refid="saxon.classpath"/>
+      </classpath>
+      <arg line="-o '${titlepage-html.xsl}'"/>
+      <arg value="${titlepage-html.spec.xml}"/>
+      <arg value="${titlepage-template.xsl}"/>
+    </java>
+
+    <echo message="Generating custom PDF titlepage XSL template"/>
+    <java classname="com.icl.saxon.StyleSheet"
+          fork="yes"
+          taskname="saxon"
+          dir="."
+          failonerror="true">
+      <classpath>
+        <path refid="saxon.classpath"/>
+      </classpath>
+      <arg line="-o '${titlepage-pdf.xsl}'"/>
+      <arg value="${titlepage-pdf.spec.xml}"/>
+      <arg value="${titlepage-template.xsl}"/>
+    </java>
+    
+  </target>
+
+  <!-- =================================================================== -->
+  <!-- javahelp: Create javahelp documentation                             -->
+  <!-- =================================================================== -->
+
+  <target name="javahelp" depends="prepare"
+          description="Create javahelp documentation (currently not working).">
+  </target>
+  
+
+  <!-- =================================================================== -->
+  <!-- jimi-check: Download jimi                                             -->
+  <!-- =================================================================== -->
+
+  <target name="jimi-check" depends="prepare" unless="jimi-is-available">
+      <echo message="Jimi is not available.">
+
+The Jimi file is not available. The pdf result will be poor since
+most of the images cannot be included and you will get several
+[fop] [ERROR]:-messages.
+
+To remove this warning, 
+1) point your web browser to http://java.sun.com/products/jimi/, 
+2) download jimi1_0.zip or jimi1_0.tar.Z,
+3) extract JimiProClasses.zip to 
+   argouml-documentation/tools/lib/JimiProClasses.zip
+4) Retry the build.
+      	
+Please refer to the readme file in the tools/fop-0.20.3
+directory for further information.
+      </echo>
+  </target>
+
+  <target name="jimi-get" depends="prepare" unless="jimi-is-available">
+    <!-- We are missing an URL for this. -->
+    <get src="http://where.ever.jimi/is/residing/jimi-1.0.jar"
+         dest="${jimi.jar.path}"
+	 usetimestamp="true"
+	 verbose="false"
+	 ignoreerrors="true"/>
+
+    <!-- Alternative solution:
+    <get src="http://where.ever.jimi/is/residing/jimi-1.0.tar.Z"
+         dest="${jimi.jar.path}"
+	 usetimestamp="true"
+	 verbose="false"
+	 ignoreerrors="true"/>
+    <unpack/>
+    <build/>
+    <move/>
+     -->
+
+    <!-- Check availability again - if the get worked, it will be there. -->
+    <available file="${jimi.jar.path}" property="jimi-is-available"/>
+  </target>
+
+
+  <!-- =================================================================== -->
+  <!-- docbook-xsl-check: Check for docbook                                -->
+  <!-- =================================================================== -->
+
+  <target name="docbook-xsl-check" depends="prepare"
+          unless="docbook-xsl-is-available">
+      <fail message="${docbook-xsl-root} is not available.">
+
+The docbook-xsl package is not available or is not the correct version. 
+It is not possible to generate the documentation without it.
+
+Please try updating your working copy.
+          
+      </fail>
+  </target>
+
+  <!-- =================================================================== -->
+  <!-- Profiling macro.  Used to generate targets that split the           -->
+  <!-- source xml down into just one translation.                          -->
+  <!-- =================================================================== -->
+
+  <macrodef name="profile">
+    <attribute name="doc"/>
+    <attribute name="lang"/>
+    <sequential>
+        <!-- We generate a property file. -->
+      <copy file="src/@{doc}/@{doc}.xml"
+            tofile="src/@{doc}/@{doc}-generated.xml"
+            encoding="UTF-8"
+      >
+        <filterset>
+          <filter token="VERSION" value="${argo.core.version}"/>
+        </filterset>
+      </copy>
+      
+      <!-- Profile to split down into one language -->	
+      <echo message="Profiling '@{doc}' for language '@{lang}'"/>
+      <java classname="com.icl.saxon.StyleSheet"
+              fork="yes"
+              taskname="saxon"
+              dir="."
+              failonerror="true">
+        <classpath>
+          <path refid="saxon.classpath"/>
+        </classpath>
+        <arg line="-r org.apache.xml.resolver.tools.CatalogResolver" />
+        <arg line="-u" />
+        <arg line="-o 'src/@{doc}/@{doc}-generated-@{lang}.xml'"/>
+        <arg value="src/@{doc}/@{doc}-generated.xml"/>
+        <arg value="${profile.xsl}"/>
+        <arg value="profile.lang=@{lang}"/>
+      </java>  		
+  	</sequential>
+  </macrodef>
+  	
+  	
+  <!-- =================================================================== -->
+  <!-- Generates the online, multi-paged html documentation                -->
+  <!-- =================================================================== -->
+
+  <macrodef name="create-htmlchunked">
+    <attribute name="doc"/>
+    <attribute name="lang"/>
+    <!--
+        The local values we use in this target.  
+        Unfortunately we can't create these as properties because they would
+        be immutable, and wouldn't expand correctly on the second invocation 
+        of the macro.  So instead, they have to be written out in full for 
+        each use. 
+  	    source.dir="src/@{doc}"
+  	    source.xml="src/@{doc}/@{doc}-generated-@{lang}.xml"
+  	    source.xsl="${chunked.xsl}"
+  	    target.dir="${build.dir}/@{lang}/defaulthtml/@{doc}"
+  	-->
+    <sequential>
+      <!-- Create target directory -->
+  	  <mkdir dir="${build.dir}/@{lang}/defaulthtml/@{doc}"/>
+      <echo message="Building chunked HTML for src/@{doc}/@{doc}-generated-@{lang}.xml..."/>
+
+      <!-- Watch for the nasty - the base.dir MUST have a trailing / -->
+      <java classname="com.icl.saxon.StyleSheet"
+              fork="yes"
+              taskname="saxon"
+              dir="."
+              failonerror="true">
+        <classpath>
+          <path refid="saxon.classpath"/>
+        </classpath>
+        <arg line="-r org.apache.xml.resolver.tools.CatalogResolver" />
+        <arg line="-u" />
+        <!-- the source xml file -->
+  	    <arg value="src/@{doc}/@{doc}-generated-@{lang}.xml"/>
+  	    <!-- the source xsl file -->
+        <arg value="${chunked.xsl}"/>
+  	    <!-- the target dir *with trailing /*-->
+        <arg value="base.dir=${build.dir}/@{lang}/defaulthtml/@{doc}/"/>
+  	    <!-- the language -->
+        <arg value="l10n.gentext.default.language=@{lang}" />    
+      </java>
+
+      <!-- Delete spurious ld-*.html files created in the source directory. -->
+      <delete>
+        <fileset dir="src/@{doc}" includes="ld-*.html" /> 
+      </delete>
+
+      <!-- Copy remaining stylesheets, images and static HTML also    -->
+      <copy todir="${build.dir}/@{lang}/defaulthtml/@{doc}">
+        <fileset dir="src/@{doc}" includes="*.html,*.css,images/**" /> 
+      </copy>
+    </sequential>
+  </macrodef>
+	
+  <!-- =================================================================== -->
+  <!-- Generates the printable html documentation (one big page)           -->
+  <!-- =================================================================== -->
+
+  <macrodef name="create-htmlsingle">
+    <attribute name="doc"/>
+    <attribute name="lang"/>
+    <!--
+        The local values we use in this target.  
+        source.dir="src/@{doc}"
+        source.xml="src/@{doc}/@{doc}-generated-@{lang}.xml"
+        source.xsl="${printable.xsl}"
+        target.dir="${build.dir}/@{lang}/printablehtml/@{doc}"
+        target.html="@{doc}.html"
+    -->
+    <sequential>
+      <!-- Create target dir -->
+      <mkdir dir="${build.dir}/@{lang}/printablehtml/@{doc}"/>
+
+      <echo message="Building single file HTML for src/@{doc}/@{doc}-generated-@{lang}.xml..."/>
+
+      <java classname="com.icl.saxon.StyleSheet"
+              fork="yes"
+	          taskname="saxon"
+              dir="."
+      	      failonerror="true">
+        <classpath>
+          <path refid="saxon.classpath"/>
+        </classpath>
+        <arg line="-r org.apache.xml.resolver.tools.CatalogResolver" />
+        <arg line="-u" />
+      	<!-- target.dir and target.html -->
+        <arg line="-o '${build.dir}/@{lang}/printablehtml/@{doc}/@{doc}.html'"/>
+        <!-- source xml file -->
+      	<arg value="src/@{doc}/@{doc}-generated-@{lang}.xml"/>
+        <!-- source xsl file -->
+      	<arg value="${printable.xsl}"/>
+      	<!-- language -->
+        <arg value="l10n.gentext.default.language=@{lang}" />    
+      </java>
+
+      <!-- Delete spurious ld-*.html files created in the source directory. -->
+
+      <delete>
+        <fileset dir="src/@{doc}" includes="ld-*.html" /> 
+      </delete>
+
+      <copy todir="${build.dir}/@{lang}/printablehtml/@{doc}">
+        <fileset dir="src/@{doc}" includes="*.html,*.css,images/**" />
+      </copy>
+    </sequential>
+  </macrodef>
+  
+  <!-- =================================================================== -->
+  <!-- create-pdf: Generates the pdf documentation       -->
+  <!-- =================================================================== -->
+
+  <macrodef name="create-pdf">
+  	<attribute name="doc"/>
+  	<attribute name="lang"/>
+    <!--
+        The local values we use in this target.  
+        source.dir="src/@{doc}"
+        source.xml="src/@{doc}/@{doc}-generated-@{lang}.xml"
+        source.xsl="${pdf.xsl}"
+        preprocess.xsl="${preprocess-pdf.xsl}"
+        source.fo="@{doc}.fo"
+        target.dir="${build.dir}/@{lang}/pdf/@{doc}"
+        target.pdf="@{doc}.pdf"
+    -->
+    <sequential>
+      <mkdir dir="${build.dir}/@{lang}/pdf/@{doc}"/>
+
+      <echo message="Building Formatting Objects for src/@{doc}/@{doc}-generated-@{doc}.xml..."/>
+
+      <!-- preprocess the document for fop 0.20.5:
+           execute the stylesheet preprocess-pdf.xsl in docbook-setup/
+           on the xml source
+           The output is written to 
+           src/@{doc}/@{doc}-generated-@{lang}.xml.prep, 
+           which is picked up by the next step in the processing chain.
+        -->
+      <java classname="com.icl.saxon.StyleSheet"
+              fork="yes"
+	          taskname="saxon"
+              dir="."
+              failonerror="true">
+        <classpath>
+          <path refid="saxon.classpath"/>
+        </classpath>
+        <arg line="-r org.apache.xml.resolver.tools.CatalogResolver" />
+        <arg line="-u" />
+      	<arg line='-o "src/@{doc}/@{doc}-generated-@{lang}.xml.prep"'/>
+        <arg value="src/@{doc}/@{doc}-generated-@{lang}.xml"/>
+        <arg value="${preprocess-pdf.xsl}"/>
+      </java>
+
+
+      <java classname="com.icl.saxon.StyleSheet"
+              fork="yes"
+	          taskname="saxon"
+              dir="."
+      	      failonerror="true">
+        <classpath>
+          <path refid="saxon.classpath"/>
+        </classpath>
+        <arg line="-r org.apache.xml.resolver.tools.CatalogResolver" />
+        <arg line="-u" />
+        <arg line='-o "src/@{doc}/@{doc}.fo"'/>
+        <arg value="src/@{doc}/@{doc}-generated-@{lang}.xml.prep"/>
+        <arg value="${pdf.xsl}"/>
+        <arg value="l10n.gentext.default.language=@{lang}" />    
+      </java>
+  	
+      <!-- Invoke Fop on our terms. This is the only place we need more memory
+           (for the user manual), so we invoke as a forked process with a bigger
+           VM.
+
+           You should check that the classpath reflects the library of the Fop
+           build you are using (which should be copied in to $ARGO_HOME/lib).
+
+           To process the PNG images in the manual, you will need to have built
+           Fop from source using the Jimi library in your classpath, and also
+           place a jar of the Jimi library (jimi-1.0.jar) in the
+	       $ARGO_TOOLS/lib directory. If you don't do this, Fop
+	       will complain each time it encounters a PNG image, and they will
+	       not be included in the output. -->
+
+      <echo message="Building PDF for src/@{doc}/@{doc}.fo..."/>
+
+      <java classname="org.apache.fop.apps.Fop"
+              maxmemory="256M"
+              fork="yes"
+	          taskname="fop"
+              dir="."
+      	      failonerror="true">
+        <classpath>
+          <pathelement location="${jimi.jar.path}"/>
+          <pathelement location="${fop.build.dir}/fop.jar"/>
+      	  <pathelement location="${fop.lib.dir}/avalon-framework-cvs-20020806.jar"/>
+          <pathelement location="${fop.lib.dir}/batik.jar"/>
+          <pathelement location="${fop.lib.dir}/xalan-2.4.1.jar"/>
+          <pathelement location="${fop.lib.dir}/xml-apis.jar"/>
+          <pathelement location="${xerces.jar.path}"/>         
+        </classpath>
+        <!-- Idea 1: Change the -q to -d when you are trouble-shooting. -->
+        <arg value="-q"/>
+        <arg line='-fo "src/@{doc}/@{doc}.fo"'/>
+        <arg line='-pdf "${build.dir}/@{lang}/pdf/@{doc}/@{doc}.pdf"'/>
+      </java>
+
+      <!-- Idea 2: Comment the delete out so you can look at the .fo file. -->
+      <delete file="src/@{doc}/@{doc}.fo"/>
+      <delete file="src/@{doc}/@{doc}-generated-@{lang}.xml.prep"/>
+    </sequential>
+  </macrodef>
+
+  <!-- =================================================================== -->
+  <!-- create-javahelp: Generates the javahelp documentation               -->
+  <!-- =================================================================== -->
+
+<!--
+    <antcall target="create-javahelp">        
+      <param name="source.dir"  value="src/@{doc.subdir}"/>
+      <param name="source.xml"  value="src/@{doc.subdir}/@{doc.prefix}-generated-@{doc.lang}.xml"/>
+      <param name="source.xsl"  value="${javahelp.xsl}"/>
+      <param name="source.fo"   value="@{doc.prefix}.fo"/>
+      <param name="target.dir"  value="${build.dir}/@{doc.lang}/javahelp/@{doc.subdir}"/>
+      <param name="target.javahelp"  value="@{doc.prefix}.jh"/>
+      <param name="target.jar"  value="@{doc.subdir}.jar"/>
+      <param name="target.hs"  value="@{doc.subdir}.hs"/>
+    </antcall>
+  <target name="create-javahelp" if="generate-javahelp">
+    <mkdir dir="${target.dir}"/>
+
+    <echo message="Building JavaHelp for ${source.xml}..."/>
+
+    <java classname="com.icl.saxon.StyleSheet"
+          fork="yes"
+	  taskname="saxon"
+          dir="."
+          failonerror="true">
+      <classpath>
+        <path refid="saxon.classpath"/>
+      </classpath>
+      <arg value="${source.xml}"/>
+      <arg value="${javahelp.xsl}"/>
+      <arg value="base.dir=${target.dir}/"/>
+      <arg value="l10n.gentext.default.language=${doc.lang}" />    
+    </java>
+-->
+    <!-- Delete spurious ld-*.html files created in the source directory. -->
+<!--
+    <delete>
+      <fileset dir="${source.dir}" includes="ld-*.html" /> 
+    </delete>
+-->
+    <!-- Copy remaining stylesheets, images and static HTML also    -->
+<!--
+    <copy todir="${target.dir}">
+      <fileset dir="${source.dir}" includes="jhelp*,*.html,*.css,images/**" /> 
+    </copy>
+
+    <move file="${target.dir}/jhelpset.hs"
+          tofile="${target.dir}/${target.hs}"/>
+
+    <jar jarfile="${build.dir}/${target.jar}"
+         basedir="${target.dir}"
+         includes="**"
+         excludes="*.jar"/>
+  </target>
+-->
+  
+  
+  <!-- =================================================================== -->
+  <!-- Deletes output files from a previous build                          -->
+  <!-- =================================================================== -->
+
+  <target name="clean" depends="init, tidy"
+          description="Remove the generated files.">
+    <delete dir="${build.dir}"/>
+  </target>
+
+
+  <!-- =================================================================== -->
+  <!-- Deletes intermediate files                                          -->
+  <!-- =================================================================== -->
+  
+  <target name="tidy" depends="init"
+          description="Remove the intermediate files.">
+    <delete verbose="yes">
+      <fileset dir="src/manual">
+        <include name="manual-generated.xml"/>
+        <include name="manual-generated-*.xml"/>
+      </fileset>
+    </delete>
+    <delete verbose="yes">
+      <fileset dir="src/quickguide">
+        <include name="quickguide-generated.xml"/>
+        <include name="quickguide-generated-*.xml"/>
+      </fileset>
+	</delete>
+
+    <delete file="${docbook-setup.dir}/titlepage-html.xsl"/>
+    <delete file="${docbook-setup.dir}/titlepage-pdf.xsl"/>
+  </target>
+  
+
+  <!-- =================================================================== -->
+  <!-- Dummy target                                                        -->
+  <!-- =================================================================== -->
+
+  <target name="install" description="Do nothing."/>
+  
+</project>
+

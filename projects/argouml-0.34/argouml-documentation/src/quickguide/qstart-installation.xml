@@ -1,0 +1,1279 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- $Id: qstart-installation.xml 281 2010-05-23 17:50:55Z mvw $ -->
+<!--
+ *******************************************************************************
+ * Copyright (c) 2008 Contributors - see below
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *    Linus Tolke
+ *******************************************************************************
+ *
+ * Some portions of this file was previously release using the BSD License:
+ *
+// Copyright (c) 1996-2008 The Regents of the University of California. All
+// Rights Reserved. Permission to use, copy, modify, and distribute this
+// software and its documentation without fee, and without a written
+// agreement is hereby granted, provided that the above copyright notice
+// and this paragraph appear in all copies.  This software program and
+// documentation are copyrighted by The Regents of the University of
+// California. The software program and documentation are supplied "AS
+// IS", without any accompanying services from The Regents. The Regents
+// does not warrant that the operation of the program will be
+// uninterrupted or error-free. The end-user understands that the program
+// was developed for research purposes and is advised not to rely
+// exclusively on the program for any reason.  IN NO EVENT SHALL THE
+// UNIVERSITY OF CALIFORNIA BE LIABLE TO ANY PARTY FOR DIRECT, INDIRECT,
+// SPECIAL, INCIDENTAL, OR CONSEQUENTIAL DAMAGES, INCLUDING LOST PROFITS,
+// ARISING OUT OF THE USE OF THIS SOFTWARE AND ITS DOCUMENTATION, EVEN IF
+// THE UNIVERSITY OF CALIFORNIA HAS BEEN ADVISED OF THE POSSIBILITY OF
+// SUCH DAMAGE. THE UNIVERSITY OF CALIFORNIA SPECIFICALLY DISCLAIMS ANY
+// WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
+// MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE. THE SOFTWARE
+// PROVIDED HEREUNDER IS ON AN "AS IS" BASIS, AND THE UNIVERSITY OF
+// CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
+// UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
+-->
+<!-- 
+Part of the QuickGuide: Installation.
+-->
+<chapter id="installation">
+	<title lang="en">Installing ArgoUML</title>
+	<title lang="de">ArgoUML installieren</title>
+	<title lang="es">Instalando ArgoUML</title>
+	<title lang="it">Installazione di ArgoUML</title>
+	<title lang="zh">安装  ArgoUML</title>
+	<sect1>
+		<title lang="en">System requirements</title>
+		<title lang="de">Systemanforderungen</title>
+		<title lang="es">Instalando ArgoUML</title>
+		<title lang="it">Requisiti di Sistema</title>
+		<title lang="zh">系统要求</title>
+		
+			<para lang="en">
+Minimum system requirements:
+				<itemizedlist>
+					<listitem>
+						<para lang="en">
+              			  Any Operating System that supports Java.
+            		    </para>
+					</listitem>
+					<listitem>
+						<para lang="en">15MB of free disk storage space on your hard disk.
+                        </para>
+					</listitem>
+					<listitem>
+						<para lang="en">Mouse (or other pointing device) and a Keyboard.</para>
+					</listitem>
+					<listitem>
+						<para lang="en">
+                            Java JRE or JDK version 5 or higher.
+                        </para>
+					</listitem>
+				</itemizedlist>
+			</para>
+			<para lang="de">
+				Mindest-Systemanforderungen:
+				<itemizedlist>
+					<listitem>
+						<para lang="de">
+              			  Ein Betriebssystem, welches Java unterstützt.
+            		    </para>
+					</listitem>
+					<listitem>
+						<para lang="de">
+							15MB freier Festplatten-Speicherplatz.
+                        </para>
+					</listitem>
+					<listitem>
+						<para lang="de">
+							Eine Maus (oder ein anderes Zeigegerät) 
+							und eine Tastatur.
+						</para>
+					</listitem>
+					<listitem>
+						<para lang="de">
+              				Java JRE oder JDK Version 5 oder höher.
+            			</para>
+					</listitem>
+				</itemizedlist>
+			</para>
+      <para lang="es">Requerimientos minimos de sistema
+        <itemizedlist>
+          <listitem>
+            <para>Cualquier sistema operativo que soporte Java
+</para>
+          </listitem>
+          <listitem>
+            <para>10MB de espacio libre en el disco duro.
+</para>
+          </listitem>
+          <listitem>
+            <para>Mouse (u otro dispositivo similar) y teclado.</para>
+          </listitem>
+          <listitem>
+            <para>
+              Java 2 JRE o JDK version 1.4 o superior.
+</para>
+          </listitem>
+        </itemizedlist>
+</para>
+			<para lang="it">
+Requisiti minimi di sistema:
+				<itemizedlist>
+					<listitem>
+						<para lang="it">
+              			  Qualsiasi sistema operativo che supporti Java
+            		    </para>
+					</listitem>
+					<listitem>
+						<para lang="it">15 Mb di spazio libero su hardisk.
+                        </para>
+					</listitem>
+					<listitem>
+						<para lang="it">Mouse (oppure un altro sistema di puntamento) e una tastiera.</para>
+					</listitem>
+					<listitem>
+						<para lang="it">
+                            Java JRE o JDK versione 5 o superiore.
+                        </para>
+					</listitem>
+				</itemizedlist>
+			</para>
+	</sect1>
+	<sect1>
+		<title lang="en">Installation options</title>
+		<title lang="de">Installationsoptionen</title>
+		<title lang="es">Opcion de Instalacio</title>
+		<title lang="it">Opzioni di installazione</title>
+		<title lang="zh">安装选项</title>
+		<para lang="en">
+			Now that you have a computer that can install and run ArgoUML effectively, you need to decide which 
+			of the installation options available is appropriate for you. You can choose from the following options:
+			<itemizedlist>
+				<listitem>
+					<para lang="en">
+						Java Web Start
+					</para>
+					<para lang="en">
+						This alternative is good for occasional users and tests.
+						It is the easiest and quickest way to start using ArgoUML.
+						It requires connection to the &argo-homepage;.
+					</para>
+					<orderedlist>
+						<listitem>
+							<para lang="en">
+								Make sure you have 
+<ulink url="http://java.sun.com/products/javawebstart/">Java Web Start</ulink>
+								installed.
+							</para>
+						</listitem>
+						<listitem>
+							<para lang="en">
+								Follow the Launch ArgoUML-link from the 
+								&argo-homepage;.
+							</para>
+						</listitem>
+						<listitem>
+							<para lang="en">
+								ArgoUML will be downloaded, cached locally and 
+								started.
+							</para>
+						</listitem>
+						<listitem>
+							<para lang="en">
+								On subsequent starts, the ArgoUML is available 
+								also from the Java Web Start console (even 
+								without being connected to the internet)and 
+								(if connected) at each start the version is 
+								checked against that on the web server and 
+								updates are automatically downloaded.
+							</para>
+						</listitem>
+					</orderedlist>
+				</listitem>
+				<listitem>
+				  <para lang="en">
+				    Use the Windows Installer
+				  </para>
+				  <para lang="en">
+				    This installation method is the easiest way for most Windows users. 
+				    It also installs all available modules, 
+				    which includes support for e.g. C++ and PHP.
+				  </para>
+				  <orderedlist>
+				    <listitem>
+				      <para lang="en">
+				        Download the installer from the &argo-homepage;. 
+				        The filename is of the form 
+				        <filename>ArgoUML-vvvv-setup.exe</filename> 
+				        (with vvvv the version number).
+				      </para>
+				    </listitem>
+				    <listitem>
+				      <para lang="en">
+				        Run the downloaded installer program 
+				        and follow the directions on the screen.
+				      </para>
+				    </listitem>
+                    <listitem>
+                      <para lang="en">
+                        The install wizard gives you the opportunity to install 
+                        the latest "JRE" (Java Runtime Environment). 
+                        There is no need to select this if you already have a 
+                        Sun Java installed, version 5 or better.
+                      </para>
+                    </listitem>
+				  </orderedlist>
+				</listitem>
+				<listitem>
+					<para lang="en">
+						Binary distribution
+					</para>
+					<para lang="en">
+						This is good for regular users and guarantees that the
+						version of ArgoUML cannot change during the course of 
+						your project.
+					</para>
+					<orderedlist>
+						<listitem>
+							<para lang="en">
+								Make sure that you have a recent Java JRE 
+								installed.
+							</para>
+						</listitem>
+						<listitem>
+							<para lang="en">
+								Download the ArgoUML binary distribution from 
+								the &argo-homepage;.
+							</para>
+							<para lang="en">
+								This could also include copying it to and from a 
+								USB memory stick or CD in order to get it to the 
+								computer if no network connection is available.
+							</para>
+						</listitem>
+						<listitem>
+							<para lang="en">
+								Create an ArgoUML installation directory.
+							</para>
+						</listitem>
+						<listitem>
+							<para lang="en">
+								Change the current directory 
+								to the ArgoUML installation directory and 
+								extract the ArgoUML files to the installation 
+								directory.
+<!--:
+								<computeroutput>
+jar xvf <replaceable>ArgoUML-archive-filename</replaceable>
+								</computeroutput>
+							</para>
+							<para lang="en">
+Remember to use <command>jar</command> to do this.
+For some odd reason WinZIP might have problems with the 
+ArgoUML zip-files. -->
+							</para>
+
+						</listitem>
+						<listitem>
+							<para lang="en">
+								Start by running the <filename>argouml.jar
+								</filename> file, either by simply (double-)
+								clicking on the file, or by executing the 
+								following command:
+								<computeroutput>
+java -jar argouml.jar
+								</computeroutput>
+                				at the command line, or via a batch-file.
+							</para>
+						</listitem>
+					</orderedlist>
+				</listitem>
+			</itemizedlist>
+		</para>
+		<para lang="de">
+			Nachdem Sie jetzt einen Computer haben, auf dem ArgoUML installiert 
+			und gestartet werden kann, müssen Sie entscheiden, welche der 
+			Installationsoptionen für Sie die Richtigen sind. Sie können aus 
+			folgenden Optionen auswählen:
+			<itemizedlist>
+				<listitem>
+					<para lang="de">
+						Java Web Start
+					</para>
+					<para lang="de">
+						Diese Alternative ist für gelegentliche Anwender und 
+						Tester geeignet. Sie ist der leichteste und schnellste 
+						Weg mit ArgoUML zu starten. Sie erfordert eine 
+						Verbindung mit der &argo-homepage-de;.
+					</para>
+					<orderedlist>
+						<listitem>
+							<para lang="de">
+								Stellen Sie sicher, dass Sie  
+<ulink url="http://java.sun.com/products/javawebstart/">Java Web Start</ulink>
+								installiert haben.
+							</para>
+						</listitem>
+						<listitem>
+							<para lang="de">
+								Starten Sie ArgoUML, indem Sie auf den Link in 
+								der &argo-homepage-de; klicken.
+							</para>
+						</listitem>
+						<listitem>
+							<para lang="de">
+								ArgoUML wird jetzt heruntergeladen, 
+								zwischengespeichert und lokal gestartet.							
+							</para>
+						</listitem>
+						<listitem>
+							<para lang="de">
+								Bei nachfolgenden Starts ist ArgoUML von der Java 
+								Web Start-Konsole (auch ohne Verbindung mit dem 
+								Internet) verfügbar und (sofern verbunden) es 
+								wird bei jedem Start von ArgoUML die Version 
+								gegenüber den Webserver geprüft und Updates 
+								automatisch heruntergeladen.
+							</para>
+						</listitem>
+					</orderedlist>
+				</listitem>
+				<listitem>
+				  <para lang="de">
+				    Das Windows-Installationsprogramm verwenden
+				  </para>
+				  <para lang="de">
+				  	Diese Installationsmethode ist für die meisten Windowsnutzer 
+				  	die einfachste Methode. Sie installiert auch alle verfügbaren 
+				  	Module, die z.B. die Unterstützung für C++ und PHP zur 
+				  	Verfügung stellen.
+				  </para>
+				  <orderedlist>
+				    <listitem>
+				      <para lang="de">
+				      	Laden Sie das Installationsprogramm von der 
+				        &argo-homepage-de; herunter.
+				        Der Dateiname ist wie folgt aufgebaut: 
+				        <filename>ArgoUML-vvvv-setup.exe</filename> 
+				        (mit vvvv als Versionsnummer).
+				      </para>
+				    </listitem>
+				    <listitem>
+				      <para lang="de">
+				      	Starten Sie das heruntergeladene Installationsprogramm 
+				      	und folgen Sie den Anweisungen auf dem Bildschirm.
+				      </para>
+				    </listitem>
+                    <listitem>
+                      <para lang="de">
+                      	Der Installationsassistent ermöglicht es Ihnen, die 
+                      	letzte "JRE" (Java Runtime Environment) zu installieren.
+                      	Es gibt keine Notwendigkeit dies auszuwählen, wenn Sie 
+                      	bereits Sun Java, Version 5 oder höher installiert 
+                      	haben.
+                      </para>
+                    </listitem>
+				  </orderedlist>
+				</listitem>
+				<listitem>
+					<para lang="de">
+						Binäre Distribution
+					</para>
+					<para lang="de">
+						Sie ist für reguläre Anwender geeignet und garantiert, 
+						dass sich die Version von ArgoUML nicht während der 
+						Arbeit mit Ihrem Projekt ändert.
+					</para>
+					<orderedlist>
+						<listitem>
+							<para lang="de">
+								Stellen Sie sicher, dass Sie die neueste Java JRE 
+								installiert haben.							
+							</para>
+						</listitem>
+						<listitem>
+							<para lang="de">
+								Laden Sie die binäre Distribution von ArgoUML 
+								von der &argo-homepage-de; herunter.							
+							</para>
+							<para lang="de">
+								Damit Sie ArgoUML auf einem Computer einsetzen 
+								können, auf dem keine Netzwerkverbindung 
+								verfügbar ist, können Sie die Distribution auch 
+								auf und von USB-Speichersticks oder CD's 
+								kopieren.							
+							</para>
+						</listitem>
+						<listitem>
+							<para lang="de">
+								Legen Sie ein ArgoUML-Installationsverzeichnis an.							
+							</para>
+						</listitem>
+						<listitem>
+							<para lang="de">
+								Wechseln Sie in das 
+								ArgoUML-Installationsverzeichnis und extrahieren 
+								Sie die Dateien in das Installationsverzeichnis.							
+<!--:
+								<computeroutput>
+jar xvf <replaceable>ArgoUML-archive-filename</replaceable>
+								</computeroutput>
+							</para>
+							<para lang="de">
+Denken Sie daran, das <command>jar</command>-Kommando zu verwenden.
+In einigen seltenen Fällen kann WinZIP Probleme mit den ArgoUML-
+Zip-Dateien haben. -->
+							</para>
+
+						</listitem>
+						<listitem>
+							<para lang="de">
+								Sie starten ArgoUML, indem Sie entweder auf die 
+								Datei <filename>argouml.jar</filename> klicken 
+								(Doppelklick), oder indem Sie folgendes Kommando:
+							</para>
+							<para lang="de">
+								<computeroutput>
+java -jar argouml.jar
+								</computeroutput>
+							</para>
+							<para lang="de">
+                				auf der Kommandozeile oder per Batchdatei 
+								ausführen.								
+							</para>
+						</listitem>
+					</orderedlist>
+				</listitem>
+			</itemizedlist>
+		</para>
+        <para lang="es">
+          Ahora que Ud. tiene un computador en el que puede intalar y
+          ejecutar ArgoUML efectivamente, debe decidir
+          cual de las opciones de instalacion disponibles es
+          apropopiada para Ud.
+          Puede escoger entre las siguientes opciones:
+          <itemizedlist>
+            <listitem>
+              <para>
+                Java Web Start<!-- no lo traduje al español, ya que se conoce con ese nombre -->
+</para>
+              <para>
+                Esta alternativa es buena para los usuarios ocasionales y
+                los revisores. 
+                Esta es la forma mas facil y rapida de
+                para comenzar a utilizar ArgoUML.
+			    Requiere una conexion el sitio web de ArgoUML.
+</para>
+              <orderedlist>
+                <listitem>
+                  <para>
+Asegurese de tener
+<ulink url="http://java.sun.com/products/javawebstart/">
+Java Web Start
+</ulink>
+instalado.
+</para>
+                </listitem>
+                <listitem>
+                  <para>
+Siga el enlace que ejecuta ArgoUML desde el sitio web de ArgoUML.
+</para>
+                </listitem>
+                <listitem>
+                  <para>
+ArgoUML sera descargado, guardado localmente en cache e iniciado.
+</para>
+                </listitem>
+                <listitem>
+                  <para>
+De ahi en adelante para comenzar, ArgoUML estara disponible tambien desde la consola
+de Java Web Start (esto sin estar conectado a internet) y (si esta conectado)
+en cada comienzo la version sera revisada a traves del servidor web 
+y se descargaran automaticamente sus actualizaciones.
+</para>
+                </listitem>
+              </orderedlist>
+            </listitem>
+            <listitem>
+              <para>Distibucion binaria
+</para>
+              <para>
+Esta es buena para los usuarios regulares y  garantiza que la version 
+no cambie durante el curso de su proyecto.
+</para>
+              <orderedlist>
+                <listitem>
+                  <para>
+Asegurese que tiene instalado Java 2 JRE.
+</para>
+                </listitem>
+                <listitem>
+                  <para>
+Descargue la distribucion binaria de ArgoUML desde el sitio web de ArgoUML.
+</para>
+                  <para>
+Podria tambien incluir una copia a traves de disco o CD's de forma de 
+llevarlos a computadores que no tengan una conexion de red disponible.
+</para>
+                </listitem>
+                <listitem>
+                  <para>
+Cree un directorio de instalacion de ArgoUML.
+</para>
+                </listitem>
+                <listitem>
+                  <para>
+Cambie el directorio actual al directorio de instalacion de ArgoUML
+y descomprima los archivos de ArgoUML en el directorio de instalacion.
+</para>
+                </listitem>
+                <listitem>
+                  <para>
+Comience por ejecutar el archivo <filename>argouml.jar</filename>, 
+a traves de un simple doble click en el archivo o ejecutando el siguiente comando:
+                    <computeroutput>
+java -jar argouml.jar
+</computeroutput>
+en la linea de mando, o via un archivo batch.
+ <!-- la traduccion normal seria archivo de procesamiento por lotes -->
+</para>
+	            </listitem>
+              </orderedlist>
+	        </listitem>
+	      </itemizedlist>
+</para>
+		<para lang="it">
+			Adesso che tu disponi di un computer dove puo' essere installato e caricato ArgoUML, devi decidere 
+			quale opzione di installazione è più appropriata per te. Puoi scegliere tra le seguenti opzioni:
+			<itemizedlist>
+				<listitem>
+					<para lang="it">
+						Java Web Start
+					</para>
+					<para lang="it">
+					    Questa opzione è ottima per test fatti da utenti occasionali
+						Essa è la via più facile e veloce per cominciare ad usare ArgoUM
+						Esso richiede la connessione a &argo-homepage;.
+					</para>
+					<orderedlist>
+						<listitem>
+							<para lang="it">
+								Sicuramente tu hai 
+<ulink url="http://java.sun.com/products/javawebstart/">Java Web Start</ulink>
+								installato.
+							</para>
+						</listitem>
+						<listitem>
+							<para lang="it">
+								Segui il link &argo-homepage;.
+							</para>
+						</listitem>
+						<listitem>
+							<para lang="it">
+								ArgoUML è stato scaricato, copiato in una cartella temporanea ed è stato lanciato.
+							</para>
+						</listitem>
+						<listitem>
+							<para lang="it">
+								ArgoUML è disponibile anche dalla console Java Web Start 
+								(anche senza essere connessi a Internet) e (Se collegato) 
+								ad ogni avvio il programma controlla se è disponibile 
+								la una nuova versione sul web e gli aggiornamenti 
+								vengono scaricati automaticamente.
+							</para>
+						</listitem>
+					</orderedlist>
+				</listitem>
+				<listitem>
+				  <para lang="it">
+				    Eseguendo l'installazione da Windows
+				  </para>
+				  <para lang="it">
+				    Questo metodo d'installazione è il modo più facile per la maggior parte degli utenti Windows
+				    Esso include anche tutti i moduli avviabili di supporto come per C++ e PHP
+				  </para>
+				  <orderedlist>
+				    <listitem>
+				      <para lang="it">
+				        Scarica il setup su &argo-homepage;. 
+				        Il nome del file è nella forma 
+				        <filename>ArgoUML-vvvv-setup.exe</filename> 
+				        (con vvvv si intende il numero la versione del file).
+				      </para>
+				    </listitem>
+				    <listitem>
+				      <para lang="it">
+				        lancia il file di installazione e segui 
+				        e segui le istruzioni sullo schermo
+				      </para>
+				    </listitem>
+                    <listitem>
+                      <para lang="it">
+                        La procedura di installazione guidata ti offre la possibilità di installare
+                        l'ultimo "JRE" (Java Runtime Environment).
+                        Non c'è bisogno di selezionare questa voce se avete già installato 
+						una versione di Java 5 o superiore.
+                      </para>
+                    </listitem>
+				  </orderedlist>
+				</listitem>
+				<listitem>
+					<para lang="it">
+						Distribuzione di file Binari
+					</para>
+					<para lang="it">
+						Questo opzione è suggerita agli utenti "regolari" e garantisce che la
+						versione di ArgoUML non possa cambiare nel corso del progetto
+					</para>
+					<orderedlist>
+						<listitem>
+							<para lang="it">
+								Assicurati di avere una versione recente di Java JRE 
+								installata.
+							</para>
+						</listitem>
+						<listitem>
+							<para lang="it">
+								Scarica la distribuzione di file binari di ArgoUML da &argo-homepage;.
+							</para>
+							<para lang="it">
+							    Questo potrebbe anche dire che tu puoi copiare esso in una penna Usb o
+								in un cd e usare un computer che non ha connessione ad internet
+							</para>
+						</listitem>
+						<listitem>
+							<para lang="it">
+								Crea una directory di installazione per ArgoUML.
+							</para>
+						</listitem>
+						<listitem>
+							<para lang="it">
+							Cambia la directory corrente in quella di installazione di ArgoUML 
+							ed estrai i file di installazione nella directory
+<!--:
+								<computeroutput>
+jar xvf <replaceable>ArgoUML-archive-filename</replaceable>
+								</computeroutput>
+							</para>
+							<para lang="en">
+Remember to use <command>jar</command> to do this.
+For some odd reason WinZIP might have problems with the 
+ArgoUML zip-files. -->
+							</para>
+
+						</listitem>
+						<listitem>
+							<para lang="it">
+								Avviare eseguendo il file <filename>argouml.jar
+								</filename>, o semplicemente facendo doppio click sul file, 
+								oppure eseguendo il seguente comando:
+								<computeroutput>
+java -jar argouml.jar
+								</computeroutput>
+                				in riga di comando o tramite un file batch
+							</para>
+						</listitem>
+					</orderedlist>
+				</listitem>
+			</itemizedlist>
+		</para>
+
+
+	</sect1>
+  
+  <sect1>
+    <title lang="en">Installing Auxiliary Modules</title>
+    <title lang="de">Installieren zusätzlicher Module</title>
+    <title lang="es">Instalando Modulos Auxiliares</title>
+    <title lang="it">Installazione di moduli ausiliari</title>
+	<title lang="zh">安装辅助模块</title>
+    <para lang="en">
+      The standard installation of ArgoUML 
+      already comes with several modules 
+      which add e.g. support for C++, php and C# code
+      generation. 
+      In some cases, you may want to add even more functionality by adding a third party module.
+      To make this possible, you first need to download the 
+      module.
+    </para>
+    <para lang="de">
+      Die Standardinstallation von ArgoUML umfasst bereits mehrere Module, welche 
+      z.B. die Unterstützung für C++-, PHP- und C#-Codegenerierung enthalten. 
+      In einigen Fällen wollen Sie vielleicht noch mehr Funktionalität über 
+      Module von Drittanbietern hinzufügen. Um dies zu ermöglichen, müssen Sie 
+      zuerst das Modul herunterladen.
+    </para>
+    <para lang="es">
+      La instalacion normal de ArgoUML no soporta la generacion de codigo en C++, php y C#.
+      Para hacer esto posible, necesita descargar los 
+      <literal>modulos auxiliares</literal> 
+      desde la pagina de descarga del sitio web de ArgoUML.
+</para>
+    <para lang="it">
+       L'installazione standard di ArgoUML
+       viene fornita già con diversi moduli,
+	   ad esempio supporto per C ++, php e codice C#
+       In alcuni casi, è possibile aggiungere ulteriori funzionalità con l'aggiunta di un modulo di terze parti.
+       Per rendere possibile ciò, è innanzitutto necessario scaricare il modulo.	
+    </para>    
+    <para lang="en">
+      Unpack the downloaded file in the same directory as 
+      you unpacked ArgoUML itself.
+    </para>
+    <para lang="de">
+      Entpacken Sie die heruntergeladene Datei im selben Verzeichnis, in welches 
+      Sie auch ArgoUML entpackt haben.
+    </para>
+    <para lang="es">
+      Descomprima el archivo en el mismo directorio que desempaco 
+      el mismo ArgoUML.
+    </para>
+    <para lang="it">
+      Decomprimere il file scaricato nella stessa directory
+      dove si è decompresso ArgoUML.
+    </para>
+    
+    <para lang="en">
+      The result should be that the directory that contains the
+      <filename>argouml.jar</filename> file, now also contains a subdirectory
+      named <filename>ext</filename>, which contains the
+      <filename>.jar</filename> files for the extra languages.
+    </para>
+    <para lang="de">
+      Das Ergebnis sollte sein, dass das Verzeichnis, welches die Datei 
+      <filename>argouml.jar</filename> enthält nun auch ein 
+      Unterverzeichnis mit dem Namen <filename>ext</filename> aufweist,
+      welches die <filename>.jar</filename>-Dateien für jede zusätzliche  
+      Sprache enthält.
+    </para>
+    <para lang="es">
+      El resultado debe ser que el directorio que contiene el archivo
+      <filename>argouml.jar</filename>, ahora tambien contenga un
+      subdirectorio llamado <filename>ext</filename>, el cual contiene los archivos
+      <filename>.jar</filename> para los lenguajes extra.
+    </para>
+    <para lang="it">
+       Il risultato dovrebbe essere che la directory che contiene il file
+      <filename>argouml.jar</filename>, ora contiene anche una sottodirectory
+      chiamata <filename>ext</filename>,la quale contiene i file
+      <filename>.jar</filename> per le varie lingue.
+    </para>
+
+	</sect1>
+  
+  <sect1>
+    <title lang="en">Command Line Options</title>
+    <title lang="de">Kommandozeilen-Optionen</title>
+    <title lang="es">Opciones de Lia de Comandos</title>
+	<title lang="it">Opzioni da riga di comando</title>
+    <title lang="zh">命令行选项</title>        
+    <para lang="en">When starting ArgoUML from a command line, 
+    there are several extra possibilities.
+    Try typing:</para>
+    <para lang="de">Wenn Sie ArgoUML von der Kommandozeile aus starten,
+    gibt es verschiedene zusätzliche Startmöglichkeiten.
+    Geben Sie ein:</para>
+    <para lang="es">
+      Cuando ejecute ArgoUML desde la linea de comando,
+      entonces tiene varias posibilidades extra.
+      Pruebe tipiando:
+    </para>
+    <para lang="it">
+	Quando facciamo partire ArgoUML da linea di comando, 
+	ci sono diverse opzioni che possiamo scegliere proviamo a digitare:
+	</para>      
+
+    <para><command>java -jar argouml.jar -help</command>
+    </para>
+
+    <para lang="en">You will see the instructions:</para>
+    <para lang="de">Jetzt werden Sie die nachfolgenden Anweisungen sehen:</para>
+    <para lang="es">Ud. veria las instrucciones:</para>
+    <para lang="it">Vedremo le istruzioni:</para>  
+
+    <programlisting lang="en"><![CDATA[
+Usage: [options] [project-file]
+Options include:
+  -help           display this information
+  -big            use big fonts
+  -huge           use huge fonts
+  -nosplash       don't display logo at startup
+  -norecentfile   don't reload last saved file
+  -command <arg>  command to perform on startup
+  -batch          don't start GUI
+  -locale <arg>   set the locale (e.g. 'en_GB')
+  -open <arg>     open given file on startup
+  -print <arg>    print given file on startup (and exit)
+
+You can also set java settings which influence the behaviour of ArgoUML:
+  -Xms250M -Xmx500M  [makes ArgoUML reserve more memory for large projects]]]>
+    </programlisting>
+    <programlisting lang="de"><![CDATA[
+Syntax: [optionen] [projekt-datei]
+Optionen:
+  -help           gibt diese Information aus
+  -big            verwendet grosse Schriftzeichen
+  -huge           verwendet sehr grosse Schriftzeichen
+  -nosplash       unterdrückt das Logo beim Start
+  -noedem         unterdrückt Berichte
+  -nopreload      unterbindet das vorherige Laden gemeinsam genutzter Klassen
+  -norecentfile   unterbindet das Laden der zuletzt gespeicherten Datei
+  -command <arg>  Kommando, welches beim Start ausgeführt werden soll
+  -batch          unterbindet den Start der GUI
+  -locale <arg>   stellt die Sprache ein (z.B. 'de_DE')
+  -open <arg>     öffnet die benannte Datei beim Start
+  -print <arg>    druckt die benannte Datei bei Start (und endet)
+
+Sie können auch Javaeinstellungen verändern, welche auf das Verhalten von 
+ArgoUML Auswirkung haben:
+  -Xms250M -Xmx500M  [veranlasst ArgoUML mehr Speicher für grosse Projekte zu reservieren]]]>
+    </programlisting>
+    <programlisting lang="es"><![CDATA[
+Usage: [options] [project-file]
+Options include:
+  -help           display this information
+  -big            use big fonts
+  -huge           use huge fonts
+  -nosplash       don't display logo at startup
+  -noedem         don't report usage statistics
+  -nopreload      don't preload common classes
+  -norecentfile   don't reload last saved file
+  -command <arg>  command to perform on startup
+  -batch          don't start GUI
+  -locale <arg>   set the locale (e.g. 'en_GB')
+  -open <arg>     open given file on startup
+  -print <arg>    print given file on startup (and exit)
+
+You can also set java settings which influence the behaviour of ArgoUML:
+  -Xms250M -Xmx500M  [makes ArgoUML reserve more memory for large projects]]]>
+    </programlisting>
+    <programlisting lang="it"><![CDATA[
+Sintassi: [options] [project-file]
+Opzioni:
+  -help           visualizza le informazioni
+  -big            usa caratteri grandi
+  -huge           usa caratteri enormi
+  -nosplash       non visualizza il logo all'avvio
+  -norecentfile   non ricarica l'ultimo file salvato
+  -command <arg>  comandi da eseguire all'avvio
+  -batch          non viene caricata l'interfaccia grafica
+  -locale <arg>   per impostare le impostazioni internazionali (es. 'en_GB')
+  -open <arg>     aprire il file <arg> all'avvio
+  -print <arg>    stampa il file <arg> all'avvio (ed esce)
+
+E' inoltre possibile cambiare le impoostazioni di Java che influenzano i comportamenti di ArgoUML:
+  -Xms250M -Xmx500M  [fai questo se ArgoUML riserva maggiore quantità di memoria per grandi progetti]]]>
+    </programlisting>	
+	
+	<para lang="en"> A common problem is that the User Interface is shown in the wrong language. 
+	  Below is an easy way to switch back to the English UI. 
+	  Please beware: the language is in lowercase.
+	</para>
+	<para lang="de"> Häufig tritt das Problem auf, dass die 
+		Anwenderschnittstelle in der falschen Sprache angezeigt wird. Mit dem 
+		nachfolgenden Befehl können Sie schnell auf die englische 
+		Anwenderschnittstelle umschalten.
+	  	Bitte beachten Sie: Die Sprache wird in Kleinbuchstaben angegeben.
+	</para>
+    <para lang="es">
+      Un problema comun de la interfaz de usuario es que se muestre en un lenguaje erroneo.
+      Existe una forma facil de intercambiarse a una UI (Interfaz de usuario, del ingles User Interface)
+      <!-- comentario adicional no pertenece a una traduccion directa -->
+	  Por favor cuidado: el lenguaje esta en minusculas.
+    </para>
+ 	<para lang="it"> 
+	Un problema comune è che l'interfaccia utente viene visualizzato nella lingua sbagliata.
+    Qui di seguito è descritto un semplice modo per tornare alla interfaccia utente inglese.
+    Per favore fai attenzione: la lingua è in minuscolo.	
+	</para>
+    <para><command>java -jar argouml.jar -locale en</command>
+    </para>
+
+	<para lang="en"> ArgoUML may be run without UI, in batch mode. 
+	  Currently the possibilities are very limited. 
+	  Below is an example (everything on 1 line!): 
+	  It reads a "test.zargo" from my working directory, 
+	  gets the diagram named "A", 
+	  and writes a PNG graphical file for this diagram. 
+	  Without the "-batch", 
+	  ArgoUML would start up the UI after executing the commands. 
+	</para>
+	<para lang="de"> ArgoUML soll ohne Anwenderschnittstelle, im Batch-Modus 
+	  laufen. 
+	  Die aktuellen Möglichkeiten sind sehr begrenzt.
+	  Nachfolgend kommt ein Beispiel (alles in 1 Zeile!):
+	  Es liest "test.zargo" aus meinem Arbeitsverzeichnis,
+	  holt das Diagramm "A" und generiert eine PNG-Datei von 
+	  diesem Diagramm.
+	  Ohne "-batch" würde ArgoUML nach der Ausführung des Kommandos mit der 
+	  Anwenderschnittstelle (UI) starten.
+	</para>
+    <para lang="es">
+      ArgoUML puede ser ejecutado sin UI, en modo batch. <!-- batch no fue traducido -->
+	  Actualmente las posibilidades son muy limitadas.
+	  El siguiente es un ejemplo (¡todo en 1 linea!):
+	  Esto lee un "test.zargo" desde mu directorio de trabajo,
+	  obtiene un diagrama llamado "A",
+	  y escribe un archivo grafico de este diagrama.
+	  Sin el "-batch",
+	  ArgoUML debe iniciare la UI despues de ejecutar los comandos.
+    </para>  
+	<para lang="it"> 
+	 ArgoUML può essere eseguito senza interfaccia utente, in modalità batch.
+	 Attualmente le possibilità sono molto limitate.
+	 Di seguito viene riportato un esempio (tutto su 1 riga!):
+	 Esso legge "test.zargo" dalla mia directory di lavoro,
+	 ottiene il diagramma denominato "A",
+	 e scrive su un file PNG questo diagramma.
+     Senza l'opzione -batch, ArgoUML avvia l'interfaccia utente, 
+	 dopo l'esecuzione dei comandi.
+	</para> 
+    <para lang="en"><command>java -jar argouml.jar -batch -command "org.argouml.uml.ui.ActionOpenProject=c:\Documents and Settings\Michiel\My Documents\test.zargo" -command org.argouml.ui.cmd.ActionGotoDiagram=A -command "org.argouml.uml.ui.ActionSaveGraphics=c:\Documents and Settings\Michiel\My Documents\test.PNG"</command>
+    </para>
+    <para lang="de"><command>java -jar argouml.jar -batch -command "org.argouml.uml.ui.ActionOpenProject=c:\Dokumente und Einstellungen\Michiel\Eigene Dateien\test.zargo" -command org.argouml.ui.cmd.ActionGotoDiagram=A -command "org.argouml.uml.ui.ActionSaveGraphics=c:\Dokumente und Einstellungen\Michiel\Eigene Dateien\test.PNG"</command>
+    </para>
+    <para lang="es">
+      <command>java -jar argouml.jar -batch -command "org.argouml.uml.ui.ActionOpenProject=c:\Documents and Settings\Michiel\My Documents\test.zargo" -command org.argouml.ui.cmd.ActionGotoDiagram=A -command "org.argouml.uml.ui.ActionSaveGraphics=c:\Documents and Settings\Michiel\My Documents\test.PNG"</command>
+   	</para> 
+    <para lang="it"><command>java -jar argouml.jar -batch -command "org.argouml.uml.ui.ActionOpenProject=c:\Documents and Settings\Michiel\My Documents\test.zargo" -command org.argouml.ui.cmd.ActionGotoDiagram=A -command "org.argouml.uml.ui.ActionSaveGraphics=c:\Documents and Settings\Michiel\My Documents\test.PNG"</command>
+    </para>
+  </sect1>
+  
+  <sect1>
+    <title lang="en">Making .zargo-file clickable (on any Windows)</title>
+    <title lang="de">Die .zargo-Datei anklickbar machen (unter Windows)</title>
+	<title lang="it">Crea un file .zargo eseguibile (su qualsiasi Windows)</title>
+    <title lang="zh">使 .zargo文件双击打开 (仅仅Windows)</title>
+    
+    <para lang="en">The Windows installer for ArgoUML 
+    assigns the ".zargo" extension to the ArgoUML application, 
+    so that double or single clicking on a ArgoUML project file 
+    automatically starts ArgoUML. </para>
+    <para lang="de">
+    	Das Windows-Installationsprogramm für ArgoUML weist der Anwendung ArgoUML 
+    	die Erweiterung ".zargo"  zu, sodass ein Doppel- oder einfacher 
+    	Klick auf die ArgoUML-Projektdatei ArgoUML automatisch startet.
+    </para>
+    <para lang="it">
+	    Il setup di ArgoUML assegna l'estensione ".zargo" per l'applicazione ArgoUML,
+		in modo tale che cliccando una o due volte sul file di progetto di ArgoUML,
+		l'applicazione si avvia automaticamente
+	</para>
+    <para lang="en">However, if the installer is not used, 
+    but one of the other installation methods is used, 
+    then you may want to configure Windows manually for this.
+    In this case, follow the explanation below.</para>
+    <para lang="de">
+    	Wird das Installationsprogramm jedoch nicht verwendet und eine der 
+    	anderen Installationsmethoden genutzt, dann müssen Sie Windows hierfür 
+    	manuell konfigurieren. In diesem Fall folgen Sie den nachstehenden 
+    	Erläuterungen.
+    </para>
+    <para lang="it">
+    Tuttavia, se il programma di installazione non viene utilizzato,
+    ma uno degli altri metodi d'installazione è stato usato,
+	si consiglia di configurare manualmente Windows per l'installazione.
+    In questo caso, seguite le spiegazioni sotto riportate.	
+	
+	</para>
+	
+  <sect2>
+    <title lang="en">Making .zargo-file clickable (on Windows XP)</title>
+    <title lang="de">Die .zargo-Datei anklickbar machen (unter Windows XP)</title>
+    <title lang="es">Haciend el archivo .zargo clickable (sobre Windows XP)</title>
+	<title lang="it">Crea un file .zargo eseguibile (Windows XP)</title>
+    <title lang="zh">使 .zargo文件双击打开(在Windows XP上)</title>
+    <sect2info>
+      <authorgroup>
+        <author>
+          <firstname>Ewan</firstname>
+          <othername>R.</othername>
+          <surname>Grantham</surname>
+        </author>
+      </authorgroup>
+    </sect2info>
+    <warning lang="en">
+      <para lang="en">
+<!-- This is issue 4733 -->
+We have reports that this isn't working on Windows Vista.
+Please don't try it there - see the next chapter instead.
+</para>
+    </warning>
+    <warning lang="de">
+      <para lang="de">
+		<!-- This is issue 4733 -->
+		Wir haben Berichte, dass dies unter Windows Vista nicht funktioniert. 
+		Bitte versuchen Sie es nicht mit den nachfolgenden Anweisungen - siehe 
+		nächstes Kapitel.
+	  </para>
+    </warning>
+    <warning lang="es">
+      <para lang="es">
+        Windows Vista.
+      </para>
+    </warning>
+    <warning lang="it">
+      <para lang="it">
+<!-- This is issue 4733 -->
+Abbiamo delle segnalazioni che questo metodo non funziona con Windows Vista.
+Si prega di non provare questo e vedere il capitolo successivo
+</para>
+    </warning>
+
+	
+    <para lang="en">
+		This works only if you have installed using the binary distribution.
+	</para>
+    <para lang="de">
+		Dies funktioniert nur, wenn Sie die binäre Distribution installiert 
+		haben.    
+	</para>
+    <para lang="es">
+      Esto funciona solo si esta usando instalada la distribucion binaria.
+    </para>
+    <para lang="it">
+		Questo funziona solo se è stata installata la distribuzione binaria.
+	</para>
+	
+    <para lang="en">
+		First, find a Zargo file, and right-click on it.
+		You should get the normal Windows menu, including an Open or Open With 
+		option.
+		At this point, give a description for the file like "ArgoUML Model", 
+		and tell Windows to use Notepad to open the file.
+		That's not what you want to do ultimately, but it does get Windows to
+		accept the .zargo extension as representing a valid file type.
+	</para>
+    <para lang="de">
+		Zuerst suchen Sie eine Zargo-Datei und klicken mit der rechten Maustaste 
+		auf diese Datei. Jetzt sollte das normale Windowsmenü erscheinen, 
+		einschliesslich einer "Öffnen" oder "Öffnen mit"-Option.
+		Jetzt geben Sie eine Beschreibung für die Datei wie z.B. "ArgoUML Modell" 
+		ein und teilen Windows mit, diese Datei mit Notepad zu öffnen.
+		Das ist zwar nicht das, was Sie wollen, aber es zwingt Windows, die 
+		.zargo-Erweiterung als gültigen Dateityp zu akzeptieren.
+	</para>
+    <para lang="es">
+      Primero, encuentre un archivo Zargo,
+      y haga click con el boton derecho sobre el.
+      Deberia aparecer un menu normal de Windows,
+      incluyendo las opciones Abrir o Abrir con.
+      En este punto, entrege una descripcion
+      para el archivo asi como  "modelo ArgoUML",
+      y digale a Windows que use el Block de Notas (Notepad)
+      para abrir el archivo.
+      Esto no es lo que desea finalmente, pero le dice a Windows que
+      acepte la extension .zargo como representacion de
+      un tipo de archivo valido.
+    </para>
+    <para lang="it">
+		Per prima cosa, trovate un file Zargo, e fate clic col tasto destro del mouse su di esso.
+        Fate clic col il tasto sinistro sull'opzione del menù a tendina sun Apri o Apri con... .
+		A questo punto selezionate la voce "ArgoUML Model"e Windows aprirà il file con l'applicazione Blocco Note (notepad).
+        Questo è il modo di far accettare a Windows l'estensione .Zargo come file valido di sistema. 
+	</para>	
+
+    <para lang="en">
+		Now, open Windows Explorer and from the menu select View->Options 
+		(or on Windows XP: Tools->Folder Options...). 
+		You
+		should get a two (or more) tabbed dialog. Click the "File Types" dialog, and
+		then scroll through the list for the Description you gave - in the example
+		"ArgoUML Model". Click to select that file type, and then click the "Edit"
+		button.
+	</para>
+    <para lang="de">
+		Öffnen Sie jetzt den Windows Explorer und wählen Sie das Menü 
+		Ansicht->Optionen (oder unter Windows XP) 
+		Werkzeuge->Verzeichnisoptionen...) aus. Sie sollten jetzt einen Dialog 
+		mit zwei (oder mehreren) Registern sehen. Klicken Sie auf "Dateitypen" 
+		und scrollen dann durch die Liste nach der von Ihnen eingegebenen 
+		Beschreibung - in unserem Beispiel "ArgoUML Modell". Klicken Sie auf 
+		diesen Dateityp und dann auf die "Bearbeiten"-Schaltfläche.
+	</para>
+    <para lang="es">
+      Ahora, abra el Explorador de Windows y desde
+      el menu seleciones Ver->Opciones 
+      (o en Windows XP: Herramientas-> Opciones de carpeta...).
+      Debe obtener dos (o mas) dialogos tabulares.
+      Haga click en el dialogo "Tipos de Archivo", y
+      entonces haga scroll a traves de la lista hasta
+      la descripcion dada por Ud. - en el ejemplo
+      "modelo ArgoUML". Haga click para seleccionar el archivo,
+      y entonces haga click en 
+      el boton "Editar".
+    </para>
+    <para lang="it">
+		Ora, aprite Esplora Risorse e selezionare dal menu Visualizza-> Opzioni
+		(su Windows XP: Strumenti-> Opzioni cartella ...).
+		Dovrete vedere una schermata con due (o più) schede di dialogo. 
+		Fare clic sulla finestra di dialogo "File Types", e scorrete l'elenco selezionando la voce desiderata
+		- nell'esempio "ArgoUML Model". Fate clic per selezionare il tipo di file e poi clic su "Modifica".
+	</para>
+	
+    <para lang="en">
+		Now, click on the "Open" action and then the "Edit" button there. You will
+		then get a dialog that has a line for entering in the application action
+		which will have a line for using Notepad to open the file. Replace that line
+		with:
+<command lang="en">
+"C:\Program Files\Java\j2re1.6.0_05\bin\javaw.exe" -jar "c:\ArgoUML\argouml.jar" "%L"
+</command>
+	</para>
+    <para lang="de">
+		Nun klicken Sie auf "Öffnen" und dann auf die "Bearbeiten"-Schaltfläche. 
+		Es öffnet sich ein Dialogfenster mit einer Eingabezeile für den 
+		Applikationsaufruf. Dieser enthält aktuell den Eintrag zum Öffnen der 
+		Datei mit Hilfe von Notepad. Ersetzen Sie diese Zeile mit:    
+<command lang="de">
+"C:\Programme\Java\j2re1.6.0_05\bin\javaw.exe" -jar "c:\ArgoUML\argouml.jar" "%L"
+</command>
+	</para>
+    <para lang="es">
+      Ahora, haga click sobre la accion "Abrir" y
+      entonces presiones el boton "Editar".
+      Deberia obtener un dialogo que tiene una linea para ingresar
+      la accion de la aplicacion
+      la cual tendria una linea usando el Block de notas (Notepad)
+      para abrir el archivo.
+      Reemplace la linea con:
+      <command>
+"C:\Program Files\Java\j2re1.4.0_01\bin\javaw.exe" -jar "c:\ArgoUML\argouml.jar" "%L"
+</command>
+    </para>
+    <para lang="it">
+		Adesso fate clic su "Open" e poi su "Edit". Otterrete una finestra di dialogo che vi farà inserire
+		l'azione per usare BloccoNote. Sostituire la linea con:
+<command lang="it">
+"C:\Program Files\Java\j2re1.6.0_05\bin\javaw.exe" -jar "c:\ArgoUML\argouml.jar" "%L"
+</command>
+    </para>
+
+    <para lang="en">
+		Substitute your path to your <filename>javaw.exe</filename> and 
+		<filename>argouml.jar</filename> files if they are 
+		in a different location.
+		Click OK, then click OK, then click OK (three buttons on
+		three different levels of the dialog).
+	</para>
+    <para lang="de">
+		Ersetzen Sie den Pfad auf den Pfade Ihrer <filename>javaw.exe</filename> 
+		und <filename>argouml.jar</filename> Dateien, wenn Sie sich an anderer 
+		Stelle befinden.
+		Klicken Sie 3 mal auf OK (drei Schaltflächen auf drei unterschiedlichen 
+		Dialogebenen).
+	</para>
+    <para lang="es">
+      Subtituya su ruta (path) por su <filename>javaw.exe</filename> y
+      archivo  si estos estan en ubicaciones diferentes.
+      Haga click en OK, y haga click en OK, y haga click en OK (tres botones
+      de tres diferentes niveles de dialogo).
+    </para>
+    <para lang="it">
+		Sostituite il tuo percorso <filename>javaw.exe</filename> e 
+		<filename>argouml.jar</filename> i tuoi files se sono in una
+		posizione differete.
+		Cliccate su OK, poi su OK e ancora su OK.(Sono tre bottoni su 3 finestre di 
+		dialogo differenti).
+	</para>	
+
+	<para lang="en">
+		The %L in the above commandline is needed instead of %1 
+		because that is the way to
+		support filename extensions of more than 3 characters.
+	</para>
+	<para lang="de">
+		Der Parameter %L in der obigen Kommandozeile wird anstelle von %l 
+		benötigt, weil dies Dateierweiterungen von mehr als 3 Zeichen ermöglicht.
+	</para>
+    <para lang="es">
+      La %L en la linea de comando anterior es necesaria en lugar de %1
+      porque esta es la forma para
+      soportar extensiones de mas de tres caracteres.
+    </para>
+	<para lang="it">
+		L'%L nella riga di comando è necessario invece di 1%
+		perché questo è l'unico modo per far riconosce al sistema un file che più
+		di tre caratteri per estensione.
+	</para>  
+  </sect2>
+
+  <sect2>
+    <title lang="en">Making .zargo-file clickable (on Windows Vista)</title>
+    <title lang="de">Die .zargo-Datei anklickbar machen (unter Windows Vista)</title>
+    <title lang="es">Haciend el archivo .zargo clickable (sobre Windows Vista)</title>
+	<title lang="it">Crea un file .zargo eseguibile (su Windows Vista)</title>	
+    <title lang="zh">使 .zargo文件双击打开(在Windows Vista上)</title>
+ 
+    <sect2info>
+      <authorgroup>
+        <author>
+          <firstname>Allan</firstname>
+          <surname>Todd</surname>
+        </author>
+      </authorgroup>
+    </sect2info>
+
+    <para lang="en">1) Create a batch file "runargo.bat" 
+      in your ArgoUML directory which looks
+      something like this:
+      <command lang="en">
+        @echo off</command>
+      <command lang="en">
+        cd "C:\ArgoUML"</command>
+      <command lang="en">
+        start javaw -cp "argouml.jar" org.argouml.application.Main %1 /B</command>
+      replacing "C:\ArgoUML" as appropriate.
+    </para>
+    <para lang="de">
+      1) Erzeugen Sie eine Batch-Datei "runargo.bat" in Ihrem ArgoUML-
+      Verzeichnis, die wie folgt aussieht:
+      <command lang="de">
+        @echo off</command>
+      <command lang="de">
+        cd "C:\ArgoUML"</command>
+      <command lang="de">
+        start javaw -cp "argouml.jar" org.argouml.application.Main %1 /B</command>
+      Ersetzen Sie "C:\ArgoUML" mit dem entsprechenden Pfad.
+    </para>
+    <para lang="it">1) Create un file batch "runargo.bat" 
+      nalla cartella di ArgoUML directory con scritto così:
+      something like this:
+      <command lang="it">
+        @echo off</command>
+      <command lang="it">
+        cd "C:\ArgoUML"</command>
+      <command lang="it">
+        start javaw -cp "argouml.jar" org.argouml.application.Main %1 /B</command>
+        Sostituisci "C:\ArgoUML" con la cartella in cui è stato installato Argo. 
+	  </para>
+
+    <para lang="en">2) Associate your .zargo files with this batch file 
+      (just double-click a .zargo
+      file and follow the instructions).</para>
+    <para lang="de">
+      2) Verknüpfen Sie Ihre .zargo-Dateien mit dieser Batch-Datei (nur einen 
+      Doppelklick auf eine .zargo-Datei ausführen und den Anweisungen folgen).
+    </para>
+	<para lang="it"> 2) Associa il tuo file. Zargo con questo file batch
+      (Basta fare doppio clic sul file .Zargo e seguire le istruzioni). </para>	
+  </sect2>
+
+  </sect1>
+
+</chapter>
+
+<!-- Local stuff for Emacs - please do not delete
+
+Local Variables:
+mode: xml
+sgml-doctype: "quickguide.xml"
+sgml-parent-document: ("quickguide.xml" "chapter" nil)
+End:
+
+-->

@@ -1,0 +1,310 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- $Id: qstart-introduction.xml 321 2010-10-13 21:03:28Z linus $ -->
+<!--
+ *******************************************************************************
+ * Copyright (c) 2008-2010 Contributors - see below
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *    Linus Tolke
+ *******************************************************************************
+ *
+ * Some portions of this file was previously release using the BSD License:
+ *
+// Copyright (c) 1996-2008 The Regents of the University of California. All
+// Rights Reserved. Permission to use, copy, modify, and distribute this
+// software and its documentation without fee, and without a written
+// agreement is hereby granted, provided that the above copyright notice
+// and this paragraph appear in all copies.  This software program and
+// documentation are copyrighted by The Regents of the University of
+// California. The software program and documentation are supplied "AS
+// IS", without any accompanying services from The Regents. The Regents
+// does not warrant that the operation of the program will be
+// uninterrupted or error-free. The end-user understands that the program
+// was developed for research purposes and is advised not to rely
+// exclusively on the program for any reason.  IN NO EVENT SHALL THE
+// UNIVERSITY OF CALIFORNIA BE LIABLE TO ANY PARTY FOR DIRECT, INDIRECT,
+// SPECIAL, INCIDENTAL, OR CONSEQUENTIAL DAMAGES, INCLUDING LOST PROFITS,
+// ARISING OUT OF THE USE OF THIS SOFTWARE AND ITS DOCUMENTATION, EVEN IF
+// THE UNIVERSITY OF CALIFORNIA HAS BEEN ADVISED OF THE POSSIBILITY OF
+// SUCH DAMAGE. THE UNIVERSITY OF CALIFORNIA SPECIFICALLY DISCLAIMS ANY
+// WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
+// MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE. THE SOFTWARE
+// PROVIDED HEREUNDER IS ON AN "AS IS" BASIS, AND THE UNIVERSITY OF
+// CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
+// UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
+-->
+
+<chapter id="introduction">
+  <chapterinfo>
+		<!-- 
+			===========================================================
+		   		Authors 
+			===========================================================	
+		-->
+		<!-- Repeat <author> block (and optional <address> and <email> elements) as needed for each "main" author -->	
+		&author-kunle.odu;
+		&address-kunle.odu;
+  </chapterinfo>	
+  <title lang="en">Introduction</title>
+  <title lang="de">Einleitung</title>
+  <title lang="es">Introduccion</title>
+  <title lang="it">Introduzione</title>
+  <title lang="sv">Introduktion</title>
+  <title lang="zh">介绍</title>  
+	<!--
+		===========================================================
+			 Chapter "INTRODUCTION" section 
+		===========================================================
+	-->
+  <sect1>
+    <title lang="en">Welcome to &argo;</title>
+    <title lang="de">Willkommen bei &argo;</title>
+    <title lang="es">Bienvenido a ArgoUML</title>
+    <title lang="it">Benvenuti in &argo;</title>
+    <title lang="sv">Välkommen till ArgoUML</title>   
+    <title lang="zh">欢迎来到 &argo;</title>
+
+    <para lang="en">
+            &argo; is a powerful yet 
+            easy-to-use interactive, graphical software design environment that supports the design, 
+            development and documentation of object-oriented software applications.
+</para>
+    <para lang="de">
+            &argo; ist eine leicht anzuwendende, interaktive grafische Software-
+            Design-Umgebung, die das Design, die Entwicklung und die 
+            Dokumentation von objektorientieren Softwareanwendungen unterstützt.
+</para>
+    <para lang="es"> 
+ArgoUML es un poderoso ambiente interactivo facil de usar,
+de diseño grafico de software que soporta el diseño,
+desarrollo y documentacion de aplicaciones de software orientadas a objeto.
+</para>
+    <para lang="it">
+            &argo; è un ambiente software di design grafico, potente, facile da usare, interattivo, che supporta la progettazione,
+            lo sviluppo e la documentazione di applicazioni software object-oriented.
+</para>
+    <para lang="sv">
+ArgoUML är en kraftfull men lättanvänd interaktiv grafisk
+mjukvarudesignomgivning som stödjer design, utveckling och 
+dokumentation av objektorienterade mjukvaruapplikationer.
+</para>
+
+    <para lang="en">
+			If you are familiar with a family of software applications called Computer Aided Software 
+			Engineering (CASE) tools then you should find &argo; instantly familiar. 
+</para>
+    <para lang="de">
+			Wenn Sie mit der Familie von Softwareanwendungen vertraut sind, die 
+			Computer Aided Software Engineering (CASE) Tools genannt werden, 
+			sollten Sie mit &argo; sofort zurecht kommen.
+</para>
+    <para lang="es">
+Si esta familiarizado con el conjunto de herramientas software
+como las de Ingeniería de Software Asistida por Computador
+(CASE, de sus siglas en ingles de Computer Aided Software Engineering)
+entonces de bería encontrar ArgoUML bastante familiar.
+</para>
+    <para lang="it">
+			Se tu hai familiarità con applicazioni software chiamate Computer Aided Software 
+			Engineering (CASE) possono essere strumenti che potrebbero far diventare &argo; subito intuitivo.
+</para>
+    <para lang="sv">
+Om du är bekant med mjukvaruapplikationer som brukar kallas CASE-verktyg
+(verktyg för Datorstödd mjukvaruutveckling - Computer Aided Software Engineering)
+kommer du genast att finna dig tillrätta i ArgoUML.
+</para>
+
+    <para lang="en">
+			The users of &argo; are software designers
+			&amp; architects, software developers, 
+			business analysts, systems analysts and other professionals involved in the analysis, design and 
+			development of software applications.
+			Main features:
+			<itemizedlist>
+				<listitem>
+					<para lang="en">
+Open standards: XMI, SVG and PGML
+					</para>
+				</listitem>
+				<listitem>
+					<para lang="en">
+            100% Platform independent thanks to the exclusive use of Java
+					</para>
+				</listitem>
+				<listitem>
+					<para lang="en">
+            Open Source, which allows extending or customizing.
+					</para>
+				</listitem>
+				<listitem>
+					<para lang="en">
+            Cognitive features like:
+            reflection-in-action, opportunistic design, 
+            comprehension and problem solving
+					</para>
+				</listitem>
+			</itemizedlist>
+		</para>
+    <para lang="de">
+			Die Anwender von &argo; sind Software-Designer &amp; -Architekten, 
+			Software-Entwickler, Geschäftsprozess-Analytiker, System-Analytiker 
+			und andere in Analyse, Design und Entwicklung
+			von Softwareanwendungen involvierte Experten.
+			Haupteigenschaften:
+			<itemizedlist>
+				<listitem>
+					<para lang="de">
+						Offene Standards: XMI, SVG und PGML
+					</para>
+				</listitem>
+				<listitem>
+					<para lang="de">
+            			durch die ausschliessliche Nutzung von Java 100% 
+            			plattformunabhängig 
+					</para>
+				</listitem>
+				<listitem>
+					<para lang="de">
+            			Open Source, was Erweiterungen oder Anpassungen erlaubt.
+					</para>
+				</listitem>
+				<listitem>
+					<para lang="de">
+            			Kognitive Eigenschaften wie:
+            			Reflektion während der Aktionen, passendes Design, 
+            			Verständlichkeit und Problemlösung
+					</para>
+				</listitem>
+			</itemizedlist>
+		</para>
+
+    <para lang="es">
+Los usuarios de ArgoUML son diseñadores de software y arquitectos,
+desarrolladores de software, analistas de negocio,
+analistas de sistema y otros profesionales envueltos en el analisis,
+diseño y desarrollo de aplicaciones de software.
+Sus características principales son:
+        <itemizedlist>
+          <listitem>
+            <para>
+Estandares abiertos: XMI, SVG and PGML
+</para>
+          </listitem>
+          <listitem>
+            <para>
+100% Independiente de la plataforma gracias al uso exclusivo de Java
+</para>
+          </listitem>
+          <listitem>
+            <para>
+Fuente abierta, el cual permite su extension o personalizacion.            
+</para>
+          </listitem>
+          <listitem>
+            <para>
+Características cognitivas como:
+reflexion-en-accion,
+diseño oportunístico,
+comprension y solucion de problemas        
+</para>
+          </listitem>
+        </itemizedlist>
+</para>
+    <para lang="it">
+			Gli utenti di &argo; sono software designers
+			&amp; progettisti, sviluppatori, 
+			business analysts, systems analysts e altre professione neli campo dell'analisi, design e 
+			del svuluppo del software.
+			Principali caratteristiche:
+			<itemizedlist>
+				<listitem>
+					<para lang="it">
+Standard aperti: XMI, SVG e PGML
+					</para>
+				</listitem>
+				<listitem>
+					<para lang="it">
+            Piattaforma 100% indipendente grazie all'esclusivo uso di Java
+					</para>
+				</listitem>
+				<listitem>
+					<para lang="it">
+            Open Source, che permette l'ampliamento e la personalizzazione del codice
+					</para>
+				</listitem>
+				<listitem>
+					<para lang="it">
+            Caratteristiche cognitive come:
+            riflessione nel corso dell'azione, design opportunistico,
+            comprensione e soluzione dei problemi
+					</para>
+				</listitem>
+			</itemizedlist>
+		</para>
+  </sect1>
+
+	<!--
+		===========================================================
+			 Chapter section template - copy for each major "topic" 
+												  discussed in this chapter
+		===========================================================
+	-->
+	<sect1>
+		<title lang="en">About this guide...</title>
+		<title lang="de">Über diese Kurzanleitung...</title>
+      <title lang="es">Acerca de Esta Guia...</title>
+	  <title lang="it">Riguardo a questa guida...</title>
+		<title lang="zh">关于本入门...</title>
+		<para lang="en">
+			This guide - the &document-title;	- is provided to help you get up and running as quickly as 
+			possible with &argo;.
+			It provides step-by-step instructions 
+			for obtaining, installing and starting
+			&argo;, performing common tasks, and 
+			learning more about &argo;.
+If you need further details please look in the
+<ulink url="http://argouml-stats.tigris.org/documentation/defaulthtml/manual/">
+User Manual
+</ulink>.
+		</para>
+		<para lang="de">
+			Diese Kurzanleitung - &document-title-de;  - soll es Ihnen 
+			ermöglichen, schnellstmöglichst mit &argo; arbeiten zu können.
+			Sie enthält Schritt-für-Schritt-Anweisungen zum Installieren und 
+			Starten von &argo;, die Ausführung gemeinsamer Schritte und wie 
+			man mehr über &argo; lernt.	Wenn Sie weitergehende Details 
+			benötigen, sehen Sie bitte unter 
+<ulink url="http://argouml-stats.tigris.org/documentation/defaulthtml/manual/">Anwenderhandbuch
+</ulink> nach.
+		</para>
+      <para lang="es">
+Esta guía - the ArgoUML Quick Guide    -
+se provee para que pueda 
+obtener y ejecutar lo mas rapidamente posible ArgoUML.
+
+Provee instrucciones paso a paso para obtener, instalar y comenzar con ArgoUML,
+desarrollar tareas comunes, y aprender mas de ArgoUML.
+
+Si necesita mayor detalle por favor mire en el 
+<ulink url="http://argouml.tigris.org/documentation/defaulthtml/manual/">
+User Manual<!-- no fue traducido -->
+</ulink>.
+</para>
+		<para lang="it">
+			Questa guida - il &document-title;	- è stata crata per aiutarti ad usare &argo; 
+			nel modo più rapido possibile.
+			Essa contiene  le istruzioni per 
+			ottenere, installare e far partire
+			&argo;, eseguire le funzioni più comuni
+			e ottenere altre informazioni su &argo;.
+Se avete bisogno di ulteriori informazioni, cercate
+<ulink url="http://argouml-stats.tigris.org/documentation/defaulthtml/manual/">
+Manuale utente
+</ulink>
+        </para>
+	</sect1>
+</chapter>

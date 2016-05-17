@@ -1,0 +1,501 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- $Id: qstart-running.xml 368 2011-04-27 12:37:00Z BraunHarald $ -->
+<!--
+ *******************************************************************************
+ * Copyright (c) 2008 Contributors - see below
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *    Linus Tolke
+ *******************************************************************************
+ *
+ * Some portions of this file was previously release using the BSD License:
+ *
+// Copyright (c) 1996-2008 The Regents of the University of California. All
+// Rights Reserved. Permission to use, copy, modify, and distribute this
+// software and its documentation without fee, and without a written
+// agreement is hereby granted, provided that the above copyright notice
+// and this paragraph appear in all copies.  This software program and
+// documentation are copyrighted by The Regents of the University of
+// California. The software program and documentation are supplied "AS
+// IS", without any accompanying services from The Regents. The Regents
+// does not warrant that the operation of the program will be
+// uninterrupted or error-free. The end-user understands that the program
+// was developed for research purposes and is advised not to rely
+// exclusively on the program for any reason.  IN NO EVENT SHALL THE
+// UNIVERSITY OF CALIFORNIA BE LIABLE TO ANY PARTY FOR DIRECT, INDIRECT,
+// SPECIAL, INCIDENTAL, OR CONSEQUENTIAL DAMAGES, INCLUDING LOST PROFITS,
+// ARISING OUT OF THE USE OF THIS SOFTWARE AND ITS DOCUMENTATION, EVEN IF
+// THE UNIVERSITY OF CALIFORNIA HAS BEEN ADVISED OF THE POSSIBILITY OF
+// SUCH DAMAGE. THE UNIVERSITY OF CALIFORNIA SPECIFICALLY DISCLAIMS ANY
+// WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
+// MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE. THE SOFTWARE
+// PROVIDED HEREUNDER IS ON AN "AS IS" BASIS, AND THE UNIVERSITY OF
+// CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
+// UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
+-->
+
+
+<chapter id="running">
+	<title lang="en">ArgoUML Principles</title>
+	<title lang="de">ArgoUML Prinzipien</title>
+    <title lang="es">Principios de ArgoUML</title>
+	<title lang="it">Principi di ArgoUML</title>
+    <title lang="zh">ArgoUML的原则</title>
+	<para lang="en">
+    When ArgoUML starts, it shows an empty class diagram
+    on which you can add various objects. ArgoUML works according the following
+    principles:
+    </para>
+	<para lang="de">
+	Nach dem Start von ArgoUML wird ein leeres Klassendiagramm angezeigt, in 
+	das Sie die unterschiedlichsten Objekte hinzufügen können. ArgoUML 
+	arbeitet nach folgenden Prinzipien:
+    </para>
+    <para lang="es">
+      Cuando ArgoUML comienza, entonces se muestra un diagrama de clases vacio 
+      al cual puede añadir varios objetos.
+      ArgoUML trabaja de acuerdo a los siguientes principios:
+    </para>
+	<para lang="it">
+    Quando lanciate ArgoUML, esso mostra un class diagram vuoto
+    al quale si possono aggiungere diversi oggetti. ArgoUML lavora secondo
+	i seguenti principi:
+    </para>	
+	<para lang="zh">翻译为中文:
+    When ArgoUML starts, it shows an empty class diagram
+    on which you can add various objects. ArgoUML works according the following
+    principles:
+	</para>
+  <section>
+    <title lang="en">Project, Model and Diagram</title>
+    <title lang="de">Projekt, Modell und Diagramm</title>
+    <title lang="es">Proyecto, Modelo y Diagrama</title>
+	<title lang="it">Progetto, Modellazione e Diagramma</title>
+    <title lang="zh">项目、模型、图形</title>
+    <para lang="en">
+      The file operations save and open one 
+      <literal>project</literal> at a
+      time. One <literal>project</literal> is composed of a
+      <literal>model</literal> plus diagram information, 
+      i.e. everything you can edit within the ArgoUML window. 
+    </para>
+    <para lang="de">
+       Die Dateioperationen Speichern und Öffnen bearbeiten ein 	
+       <literal>Projekt</literal>. 
+       Ein <literal>Projekt</literal> besteht aus einem  
+       <literal>Modell</literal> plus Diagramm-Informationen. Zum 
+       Beispiel alles, was Sie innerhalb des ArgoUML-Fensters 
+       bearbeiten können.
+    </para>
+    <para lang="es">
+      Las operaciones de guardar y abrir manejan un 
+      <literal>proyecto</literal> a la vez.
+      Un <literal>proyecto</literal> corresponde a un 
+      <literal>modelo</literal> mas la informacion del diagrama
+      i.e. todas las cosas que puedes editar a traves de la ventana ArgoUML.
+    </para>
+    <para lang="it">
+      Le operazione da eseguire su un 
+      <literal>progetto</literal> al momento sono: Salva, Apri e Gestisci
+	  . Un <literal>progetto</literal> corrisponde a un
+      <literal>modello</literal> oltre alle informazioni sul diagramma, 
+      per esempio ogni volta che tu modifichi una finestra in ArgoUML. 
+    </para>	
+    <para lang="zh"> 未翻译的:
+      The file operations save and open handle one 
+      <literal>project</literal> at a
+      time. One <literal>project</literal> corresponds to a
+      <literal>model</literal> plus diagram information, 
+      i.e. everything you can edit within the ArgoUML window. 
+    </para>
+
+    <para lang="en">
+      The <literal>model</literal> may contain many
+      objects (ModelElements) which
+      form the complete UML description 
+      of the system you are describing.
+      All ModelElements might be present on a diagram, 
+      but this is not required. 
+      Hence, the <literal>model</literal> 
+      that is stored in ArgoUML is
+      independent of the contents of the diagrams. 
+      This may be explained by the possibility 
+      to generate programming code from the 
+      <literal>model</literal> - you 
+      do not need any diagrams for this.
+    </para>
+    <para lang="de">
+      Das <literal>Modell</literal> kann viele Objekte 
+      (Modellelemente) enthalten, welche die vollständige 
+      UML-Beschreibung des von Ihnen zu beschreibenden 
+      Systems bilden. Alle Modellelemente können in einem Diagramm 
+      dargestellt werden, aber dies ist nicht erforderlich.
+      Folglich ist das in ArgoUML gespeicherte 
+      <literal>Modell</literal> unabhängig vom Inhalt der 
+      Diagramme. Dadurch haben Sie die Möglichkeit, 
+      Programmcode vom <literal>Modell</literal> generieren 
+      zu können - Sie benötigen hierfür kein Diagramm.
+     </para>
+    <para lang="es">
+      El <literal>modelo</literal> puede contener muchos
+      objetos (ModelElements, elementos de modelo) los cuales
+      completan una descripcion UML de 
+      un sistema que esta describiendo.
+      Todos los ModelElements deben ser presentados en el diagrama,
+      pero esto no es requerido.
+      Por lo tanto, el <literal>modelo</literal> 
+      que es guardado en ArgoUML es independiente del contenido de los diagramas. 
+      Esto puede ser explicado por la posibilidad
+      para generar codigo de programa desde el 
+      <literal>modelo</literal> - no necesita 
+      ningun diagrama para esto.
+    </para>
+    <para lang="it">
+      Il <literal>modello</literal> possono contenere 
+      ogetti (ModelElements) che formanano la completa descrizione
+	  dell'UML che il sistema sta descrivendo
+      Tutti gli ModelElements potrebbero essere presenti su un diagramma, 
+      ma questo non è obbligatorio
+      Quindi, il <literal>modello</literal> 
+      salvato in ArgoUML è indipendente dal contenuto del diagramma.
+      Ciò può essere spiegato con la possibilità di generare 
+      codice di programmazione dal 
+      <literal>modello</literal> - tu non hai bisogno
+	  di diagrammi per questo
+    </para>
+	
+    <para lang="en">
+      An ArgoUML <literal>project</literal> also contains 
+      all diagram information, i.e.
+      the shapes (presentation) used 
+      to represent the various UML ModelElements, 
+      their location, color, etc. 
+      Some ModelElements appear on multiple diagrams, 
+      some on one or none.
+    </para>
+    <para lang="de">
+      Ein ArgoUML-<literal>Projekt</literal> enthält auch 
+      alle Diagramminformationen, z.B. die zur Darstellung der 
+      verschiedenen UML-Modellelemente benötigten Symbole 
+      (Präsentation), deren Positionen, Farben, etc.
+      Einige Modellelemente erscheinen in mehreren Diagrammen.
+    </para>
+    <para lang="es">
+      El <literal>proyecto</literal> ArgoUML tambien contiene
+      toda la informacion del diagrama, i.e. 
+      las figuras (presentacion) usadas
+      para representar varios UML  ModelElements, <!-- no taducido -->
+      su ubicacion, color, etc. 
+      Algunos ModelElements aparecen sobre multiples diagramas,
+      algunos solo en uno o ninguno.
+    </para>
+    <para lang="it">
+      Un <literal>progetto</literal> ArgoUML contiene anche tutte
+	  le informazioni del diagramma, vale a dire
+      le forme per rappresentare le varie UML ModelElements, 
+      la loro posizione, colore ecc..
+      Alcuni ModelElements appaiono su più diagrammi. alcuni in 
+	  uno altri in nessuno.
+    </para>
+
+    <para lang="en">
+      Hence, saving and opening projects 
+      retains all this information. 
+      There is a way to only save the 
+      <literal>model</literal> information
+      though, which is by the menu 
+      "File" -> "Export XMI...". 
+      This may be usefull e.g. 
+      when generating programming code 
+      with an external tool 
+      that understands XMI.
+    </para>
+    <para lang="de">
+      Daraus folgt, dass das Speichern und Öffnen von 
+      Projekten beinhaltet all diese Informationen.
+      Es gibt einen Weg, nur die Informationen des 
+      <literal>Modells</literal> zu speichern. Dies geschieht 
+      über das Menü "Datei" -> "Exportiere als XMI...".
+      Dies ist nützlich, wenn Sie den Programmcode 
+      mit einem externen Tool generieren, das XMI 
+      versteht.
+    </para>
+    <para lang="es">
+      Por lo tanto, los proyectos guadandolos y abriendolos
+      retienen toda esta informacion.
+      Esta es una forma para solo guardar la
+      informacion del <literal>modelo</literal>,
+      la cual es a traves del menu 
+      "Herramientas"->"Expoter como XMI...".
+      Esto puede ser util e.g.
+      cuando genera codigo programado 
+      con una herramienta externa
+      que entiende XMI.
+    </para>
+    <para lang="it">
+      Quindi, salvando e aprendo tutti i progetti,
+	  vengono conservare a tutte le informazioni.
+      C'è un solo modo per salvare le informazioni 
+      del <literal>modello</literal>. 
+      Dal menù Strumenti" -> "Esporta come XMI...". 
+      Questo può essere utile quando il codice 
+	  di programmazione viene generato da uno
+	  strumento esterno che usa XMI
+    </para>
+	</section>
+
+  <section>
+    <title lang="en">Objects</title>
+    <title lang="de">Objekte</title>
+    <title lang="es">Objetos</title>
+	<title lang="it">Oggetti</title>
+    <title lang="zh">对象</title>
+    <para lang="en">
+      Select objects by left-clicking on them.
+      The functionality of ArgoUML can be activated in the menu, 
+      in toolbars,
+      or in pop-up menus when right-clicking above an object.
+      Many of these functions work on the selected objects.
+    </para>
+    <para lang="de">
+      Sie wählen ein Objekt aus, indem Sie es mit der linken 
+      Maustaste anklicken.
+      Die Funktionlität von ArgoUML kann über das Menü der 
+      Symbolleisten oder über Popup-Menüs aktiviert werden, die 
+      durch Anklicken des Objektes mit Hilfe der rechten Maustaste 
+      erscheinen.
+      Viele dieser Funktionen bearbeiten die ausgewählten Objekte.
+    </para>
+    <para lang="es">
+      Selecciones objetos a traves de un click en
+      el booton izquierdo sobre ellos.
+      La funcionalidad de ArgoUML puede ser activada en el menu,
+      en las barras de herramientas, 
+      o en los menu pop-up cuando se presiona un click sobre
+      el boton derecho sobre un objeto.
+      Muchos de estas funciones trabajan sobre los objetos seleccionados
+    </para>
+    <para lang="it">
+	  Selezioniamo gli oggetti facendo clic su di essi.
+      La funzionalità di ArgoUML può essere attivata nel menu,
+      nella barre degli strumenti,
+      o nel menu pop-up facendo clic col tasto destro del mouse sopra un oggetto.
+      Molte di queste funzioni operano sugli oggetti selezionati.
+    </para>
+    <para lang="zh">未翻译的:
+      Select objects by left-clicking on them.
+      The functionality of ArgoUML can be activated in the menu, 
+      in toolbars,
+      or in pop-up menus when right-clicking above an object.
+      Many of these functions work on the selected objects.
+    </para>
+    <para lang="en">
+      All diagrams have toolbars at the top which are used 
+      to create objects on the diagram.
+    </para>
+    <para lang="de">
+      Alle Diagramme haben oben Symbolleisten mit deren Hilfe 
+      Objekte im Diagramm erzeugt werden können.
+    </para>
+    <para lang="es">
+      Todos los diagramas tienen barras de herramientas en
+      el tope las cuales son usadas
+      para crear objetos en el diagrama.
+    </para>
+    <para lang="it">
+      Tutti i diagrammi hanno una barra degli strumenti in alto che viene usata
+	  per creare oggetti sul diagramma.
+    </para>
+
+    <para lang="en">
+      Most objects can be added to a diagram and removed from a diagram without
+      deleting it from the <literal>model</literal>! 
+      Select an object on a diagram, and then the menu item 
+      "Edit" -> "Remove from Diagram" clears the object from the diagram, 
+      but the object remains intact in the model, 
+      which may be seen in the explorer, 
+      i.e. the tree structure at the left hand side.
+      Once removed, and item can be added back to the diagram 
+      (or any other diagram for that matter)
+      by selecting it in the explorer 
+      and selecting the item "Add to Diagram" 
+      in the right-click pop-up menu 
+      (then click in the diagram to place the item). 
+      Alternatively, you can drag objects 
+      from the explorer and drop them onto a diagram.
+    </para>
+    <para lang="de">
+      Die meisten Objekte können zu einem Diagramm hinzugefügt oder entfernt 
+      werden ohne diese aus dem <literal>Modell</literal> zu löschen!
+      Wenn Sie im Diagramm ein Objekt und dann den Menüeintrag 
+      "Bearbeiten" -> "Aus Diagramm entfernen" auswählen, wird das Objekt 
+      aus dem Diagramm entfernt, aber das Objekt verbleibt vollständig im 
+      Modell, was Sie auch im Explorer sehen können, z.B. in der Baumstruktur 
+      auf der linken Seite.
+      Nach dem Entfernen kann das Element erneut in das Diagramm ( oder in 
+      ein anderes Diagramm) eingefügt werden. Sie markieren es hierfür im 
+      Explorer und wählen über das Popup-Menü (Mausklick rechts) den Eintrag 
+      "Zum Diagramm hinzufügen" aus (dann klicken Sie in das Diagramm, um das Element zu platzieren). 
+      Alternativ dazu können Sie Objekte vom 
+      Explorer in das Diagramm ziehen und dort loslassen.
+    </para>
+    <para lang="es">
+      Muchos objetos pueden ser adicionados a un diagrama y
+      removidos des un diagrama ¡sin
+      borrarlo desde el <literal>modelo</literal>!
+      Seleccione un objeto desde el diagrama, y entonces desde el item de menu
+      "Editar"-> "Remover del diagrama" limpia el objeto desde el diagrama,
+      pero el objeto se conserva intacto en el modelo,
+      el cual puede ser visto en el explorador,
+      i.e. en la estructura de arbol al lado de la mano izquierda.
+      Una vez removido, el item puede volver a ser adicionado al diagrama 
+      (o a cualquier otro diagrama para ello)
+      por la seleccion a traves del explorador
+      y seleccionando el item "Adicionar a Diagrama"
+      en el menu pop-up al hacer click con el boton derecho.
+    </para>
+    <para lang="it">
+	  La maggior parte degli oggetti può essere aggiunta a un diagramma o rimosso da un diagramma senza
+      eliminare il <literal>modello</literal>! 
+      
+	  Selezioniamo un oggetto in un diagramma, e poi la voce di menu
+      "Modifica" -> "Rimuovi dal diagramma" cancella l'oggetto dal diagramma,
+      ma l'oggetto rimane intatto nel modello,
+      che può essere visto nel nella struttura ad albero a sinistra.
+      Una volta rimosso, e il l'oggetto può essere aggiunto successivamente al diagramma
+      (O in qualsiasi altro diagramma)
+      selezionando il file nella struttura ad albero e selezionando la voce "Aggiungi al diagramma"
+      nel menu del tasto destro pop-up.
+      In alternativa, è possibile trascinare gli oggetti
+      nell'albero e lasciare il clic del mouse su un oggetto diagramma.
+</para>
+	</section>
+
+	<section>
+		<title lang="en">Overview of the window</title>
+		<title lang="de">Überblick über das Fenster</title>
+		<title lang="es">Resumen de la Ventana</title>
+		<title lang="it">Panoramica sull' IDE</title>
+		<title lang="zh">窗口概览</title>
+		<para lang="en">
+      The top of the window contains a menu bar with commands available.
+      In the <literal>File</literal> menu you can store the project or 
+      open another project instead.
+    </para>
+		<para lang="de">
+	  		Im oberen Bereich enthält das Fenster eine Menüzeile mit den 
+	  		verfügbaren Kommandos. Im Menü <literal>Datei</literal> 
+	  		können Sie das Projekt speichern oder ein anderes Projekt 
+	  		öffnen.
+    	</para>
+    <para lang="es">
+      El tope de la ventabna contiene una barra de menus con los comandos disponibles.
+      En el menu <literal>Archivo</literal> puede guardar el proyecto o
+      abrir otro proyecto en lugar de eso.
+    </para>
+		<para lang="it">
+      La parte superiore della finestra contiene una barra dei menu con i comandi disponibili.
+      Il menù<literal> File </literal> consente di memorizzare il progetto o
+      aprire un altro progetto.
+    </para>
+
+		<para lang="en">
+      The upper left part of the ArgoUML window shows a tree model 
+      of diagrams and objects. 
+      This view can be adapted to your needs 
+      by filtering the objects that are shown, 
+      and the structure in which they are shown.
+    </para>
+		<para lang="de">
+		Der obere linke Teil des ArgoUML-Fensters zeigt ein Baummodell 
+		der Diagramme und Objekte an.
+		Diese Sicht kann an Ihre Bedürfnisse durch Filtern der dargestellten 
+		Objekte und deren angezeigter Struktur angepasst werden.
+	    </para>
+    <para lang="es">
+      La parte superior izquierda de la ventana de ArgoUML muestra un arbol 
+      de diagramas y objetos del modelo.
+      Esta vista puede se adaptada a sus necesidades
+      a traves de los filtros de los objetos que se estan mostrando,
+      y la estructura en la cual ellos estan siendo mostrados.
+    </para>
+		<para lang="it">
+      La parte superiore sinistra della finestra di ArgoUML mostra un modello ad albero
+      di diagrammi e oggetti.
+      Questa disposizione può essere adattata alle proprie esigenze
+      filtrando gli oggetti che vengono mostrati,
+      e la struttura in cui vengono visualizzati.		
+    </para>
+		<para lang="en">
+      The upper right part of ArgoUML shows the current diagram (one at a time).
+      You can drag and drop the objects in the diagrams,
+      and you can use the quick-links 
+      that appear when hovering over a selected object 
+      to create new objects connected to the
+      already present objects.
+    </para>
+		<para lang="de">
+		Der obere rechte Teil von ArgoUML zeigt das aktuelle Diagramm.
+		Sie können die Objekte in den Diagrammen hin- und herziehen und Sie 
+		können Quick-Links verwenden, die erscheinen, wenn Sie die Maus über 
+		das markierte Objekt bewegen, um neue Objekte zu erzeugen, welche die 
+		bereits vorhandenen Objekte verbinden.
+	    </para>
+    <para lang="es">
+      La parte superior derecha de ArgoUML muestra el diagrama actual (uno a la vez).
+      Puede arrastrar y soltar los objetos en los diagramas,
+      y puede usar los enlaces rapidos 
+      que aparecen cuando pasa por encima del objetos seleccionados
+      para crear nuevos objetos conectado a los objetos que ya estan presentes.
+    </para>
+	<para lang="it">
+      La parte superiore destra della ArgoUML mostra il diagramma usato attualmente (uno alla volta).
+      Puoi trascinare e rilasciare gli oggetti nei diagrammi,
+      e si può usare i "link veloci" che appaiono quando si passa sopra un oggetto selezionato
+      per creare nuovi oggetti collegati già ad oggetti presenti.
+    </para>
+		<para lang="en">
+      The lower right part contains various details of the currently selected 
+      object: You select the object in one of the upper
+      levels and choose what details you want to examine using the
+      tabs.
+    </para>
+		<para lang="de">
+		Der untere rechte Teil enthält verschiedene Details des aktuell 
+		markierten Objektes: Sie markieren das Objekt in einem der darüber 
+		befindlichen Ebenen und wählen über die Register aus, welche Details 
+		Sie überprüfen wollen.
+    </para>
+    <para lang="es">
+      La parte inferior derecha contienen varios detalles de el objeto
+      actualmente seleccionado: Selecciones el objeto en uno de sus niveles superiores
+      y escoja que detalles desea examinar usando los tabuladores.
+    </para>
+		<para lang="it">
+      La parte in basso a destra contiene i vari dettagli sull'oggetto selezionato:
+	  si seleziona l'oggetto in uno dei livelli superiori si e sceglie quali dati si desidera
+	  esaminare attraverso le schede.		
+    </para>
+	
+		<para lang="en">
+      The lower left part contains a list of all ToDo items for this
+      model.
+    </para>
+		<para lang="de">
+		Der untere linke Teil enthält eine Liste aller "Noch zu bearbeiten"-
+		Elemente dieses Modelles.
+    </para>
+    <para lang="es">
+      La parte inferior izquierda contiene una lista de items Todo (por hacer) para 
+      el modelo.
+    </para>
+	<para lang="it">
+      la parte inferiore a sinistra contiene una lista di tutte le cose da fare per quel modello.
+    </para>	
+	</section>
+
+</chapter>

@@ -1,0 +1,22 @@
+Manifest-Version: 2.0
+Class-Path: argouml.jar
+Created-By: 1.3.1 (Sun Microsystems Inc.)
+
+Name: org/argouml/language/csharp/importer/CSharpImport.class
+Extension-name: module.language.csharp.importer
+Specification-Title: ArgoUML Dynamic Load Module
+Specification-Version: 1.0.1
+Specification-Vendor: None
+Implementation-Vendor: None
+Implementation-Version: 0.9.5
+Implementation-Title: ArgoUML CSharp source import module
+
+Name: org/argouml/language/csharp/generator/GeneratorCSharp.class
+Extension-name: module.language.csharp.generator
+Specification-Title: ArgoUML Dynamic Load Module
+Specification-Version: 1.0.0
+Specification-Vendor: None
+Implementation-Vendor: None
+Implementation-Version: 1.0.0
+Implementation-Title: ArgoUML CSharp code generator module
+

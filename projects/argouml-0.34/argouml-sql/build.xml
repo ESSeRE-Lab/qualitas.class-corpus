@@ -1,0 +1,232 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- $Id: build.xml 232 2010-08-12 19:14:45Z linus $
+
+  Build file for the ArgoUML SQL plugin.
+
+For this file to work you need to have argouml either checked out alongside
+this directory and built using the 'package' target or downloaded a release
+and unpacked in a directory argouml/build alongside this one. Like this:
+
+argouml-module-sql/build.xml <- This file.
+argouml/build/argouml-model.jar
+argouml/build/log4j.jar
+etc.
+  -->
+
+<project basedir="." default="compile" name="ArgoUML SQL module">
+	<!-- =================================================================== -->
+	<!-- Initialization target                                               -->
+	<!-- =================================================================== -->
+	<target name="init">
+		<property name="build.dir" value="build" />
+		<property name="build.classes" value="${build.dir}/classes" />
+		<property name="module.src.dir" value="src" />
+		<property name="module.tests.src" value="tests" />
+		<property name="module.tests.reports" value="${build.dir}/tests" />
+		<property name="module.tests.html-reports" 
+				value="${module.tests.reports}/html" />
+		<property name="module.javadocs.dir" value="${build.dir}/javadocs" />
+
+		<property name="debug" value="yes" />
+		<property name="deprecation" value="yes" />
+		<property name="optimize" value="yes" />
+
+
+		<!-- Load ArgoUML properties, including the version -->
+		<!-- we really need an absolute path for argo.root.dir -->
+		<!-- if it is set in a property file before now, it must be absolute -->
+		<property name="argo.root.dir" value="${basedir}/../argouml" />
+		<property file="${override.build.properties}" />
+		<property file="${argo.src.dir}/default.properties" />
+
+		<property name="argo.build.dir" value="${argo.root.dir}/build" />
+
+		<property name="result.jar" value="argouml-sql.jar" />
+
+		<path id="compile.classpath">
+			<pathelement location="${argo.build.dir}/log4j.jar" />
+			<pathelement location="${argo.build.dir}/argouml-model.jar" />
+			<pathelement location="${argo.build.dir}/argouml.jar" />
+			<pathelement location="${argo.build.dir}/ocl-argo.jar" />
+		</path>
+
+		<path id="run.classpath">
+			<fileset dir="${argo.build.dir}" includes="*.jar" />
+		</path>
+		
+		<mkdir dir="${build.dir}" />
+
+		<copy file="${module.src.dir}/org/argouml/language/sql/domainmapping.xml" 
+				todir="${build.dir}"/>
+		<copy todir="${build.classes}">
+                  <fileset dir="${module.src.dir}" includes="**/*.xml **/*.xsd"/> 
+                </copy>
+	</target>
+
+	<!-- =================================================================== -->
+	<!-- Run from classes                                                    -->
+	<!-- =================================================================== -->
+	<target name="run" depends="install" description="Run with this module.">
+		<java classname="org.argouml.application.Main" fork="yes" 
+				taskname="argouml" jvmargs="-Xmx500M">
+			<sysproperty key="log4j.configuration" 
+					value="org/argouml/resource/error_console.lcf" />
+			<classpath>
+				<pathelement location="${build.dir}/${result.jar}" />
+				<path refid="run.classpath" />
+			</classpath>
+		</java>
+	</target>
+
+	<!-- =================================================================== -->
+	<!-- Compiles the source directory                                       -->
+	<!-- =================================================================== -->
+	<target name="compile" depends="init" description="Compile the sources.">
+		<!-- create directories -->
+		<mkdir dir="${build.classes}" />
+
+		<javac srcdir="src" destdir="${build.classes}" 
+				includes="org/argouml/**/*.java" debug="${debug}" 
+				deprecation="${deprecation}" optimize="${optimize}" 
+				source="1.5" target="1.5">
+			<classpath>
+				<path refid="compile.classpath" />
+			</classpath>
+		</javac>
+		<copy file="${module.src.dir}/manifest.mf" todir="${build.classes}" />
+		<copy todir="${build.classes}/org/argouml/i18n">
+			<fileset dir="${module.src.dir}/org/argouml/i18n" 
+					includes="*.properties" />
+		</copy>
+	</target>
+
+	<!-- =================================================================== -->
+	<!-- Creates the jar file                                                -->
+	<!-- =================================================================== -->
+	<target name="jar" depends="compile" 
+			description="Build the ${result.jar} file.">
+		<jar basedir="${build.classes}" includes="org/argouml/**" 
+				jarfile="${build.dir}/${result.jar}" 
+				manifest="${build.classes}/manifest.mf" />
+	</target>
+
+	<!-- =================================================================== -->
+	<!-- Install the jar file                                                -->
+	<!-- =================================================================== -->
+	<target name="install" depends="jar" 
+			description="Copy the ${result.jar} file to the ArgoUML directory.">
+		<copy todir="${argo.build.dir}/ext">
+			<fileset dir="${build.dir}" includes="${result.jar}" />
+		</copy>
+		<copy file="${module.src.dir}/org/argouml/language/sql/domainmapping.xml" 
+				todir="${argo.build.dir}/ext"/>
+	</target>
+
+	<!-- =================================================================== -->
+	<!-- Clean targets                                                       -->
+	<!-- =================================================================== -->
+	<target name="clean" depends="init" description="Clean out all built files.">
+		<delete dir="${build.dir}" quiet="true" />
+		<delete quiet="true">
+			<fileset dir="${build.dir}" includes="${result.jar}" />
+		</delete>
+	</target>
+
+	<!-- =================================================================== -->
+	<!-- Tests                                                               -->
+	<!-- =================================================================== -->
+	<target name="compile-tests" depends="compile" 
+			description="Compiles all tests.">
+		<javac srcdir="${module.tests.src}" destdir="${build.classes}" 
+				includes="org/argouml/**/*.java" debug="${debug}" 
+				deprecation="${deprecation}" optimize="${optimize}" 
+				source="1.5" target="1.5">
+			<classpath>
+				<path refid="compile.classpath" />
+				<pathelement location="${junit.jar.path}" />
+			</classpath>
+		</javac>
+	</target>
+
+	  <target name="ant.optional.init" depends="init">
+	    <path id="ant.optional.classpath">
+	      <pathelement location="${ant.home}/libopt/ant-junit.jar"/>
+	      <pathelement location="${junit.jar.path}"/>
+	      <pathelement location="${jdepend.jar.path}"/>
+	    </path>
+
+	    <taskdef classname="org.apache.tools.ant.taskdefs.optional.junit.JUnitTask" name="junit">
+	      <classpath>
+		 <path refid="ant.optional.classpath"/>
+	      </classpath>
+	    </taskdef>
+
+	    <taskdef classname="org.apache.tools.ant.taskdefs.optional.junit.XMLResultAggregator" name="junitreport">
+	      <classpath>
+		 <path refid="ant.optional.classpath"/>
+	      </classpath>
+	    </taskdef>
+	    
+	  </target>
+	  
+
+	<target name="run-tests" depends="compile-tests,ant.optional.init" 
+			description="Runs all tests.">
+		<mkdir dir="${module.tests.reports}"/>
+		<mkdir dir="${module.tests.html-reports}" />
+		
+	    <junit errorproperty="junit.failure" failureproperty="junit.failure" 
+	           fork="yes" haltonfailure="false"
+	           maxmemory="48M" printsummary="true">
+			<sysproperty key="log4j.configuration" 
+					value="org/argouml/resource/error_console.lcf" />
+			<classpath>
+				<pathelement location="${build.classes}" />
+				<path refid="compile.classpath" />
+			</classpath>
+
+			<formatter type="xml"/>
+	    	
+	    	<batchtest todir="${module.tests.reports}">
+				<fileset dir="${module.tests.src}">
+					<include name="org/argouml/language/sql/Test*.java"/>
+				</fileset>
+	    	</batchtest>
+
+		</junit>
+	    	<antcall target="junit-report-create" />
+	</target>
+
+	<target name="junit-report-create">
+		<junitreport todir="${module.tests.reports}">
+	    	<fileset dir="${module.tests.reports}">
+				<include name="TEST-*.xml"/>
+			</fileset>
+			<report format="frames" todir="${module.tests.html-reports}"/>
+		</junitreport>
+	</target>
+	
+	<!-- =================================================================== -->
+	<!-- Javadoc                                                             -->
+	<!-- =================================================================== -->
+	<target name="javadocs" depends="init">
+		<mkdir dir="${module.javadocs.dir}"/>
+
+	    <javadoc bottom="&lt;table width=&apos;100%&apos;&gt;&lt;tr&gt;&lt;td width=&apos;25%&apos; align=&apos;left&apos;&gt;ArgoUML &amp;copy; 1996-2006&lt;/td&gt;&lt;td width=&apos;25%&apos; align=&apos;center&apos;&gt;&lt;a href=&apos;http://argouml.tigris.org/&apos; target=&apos;_blank&apos;&gt;ArgoUML Homepage&lt;/a&gt;&lt;/td&gt;&lt;td width=&apos;25%&apos; align=&apos;center&apos;&gt;&lt;a href=&apos;http://argouml.tigris.org/dev.html&apos; target=&apos;_blank&apos;&gt;ArgoUML Developers' page&lt;/a&gt;&lt;/td&gt;&lt;td width=&apos;25%&apos; align=&apos;right&apos;&gt;&lt;a href=&apos;http://argouml.tigris.org/documentation/defaulthtml/cookbook/&apos; target=&apos;_blank&apos;&gt;ArgoUML Cookbook&lt;/a&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;"
+	             destdir="${module.javadocs.dir}"
+	             maxmemory="128M"
+	             packagenames="org.argouml.*"
+	             source="1.5"
+	             use="true"
+	             windowtitle="ArgoUML-SQL Javadoc for internal use">
+			<sourcepath>
+				<pathelement location="${module.src.dir}"/>
+			</sourcepath>
+	
+			<classpath>
+				<path refid="compile.classpath"/>
+			</classpath>	
+		</javadoc>
+	</target>
+
+</project>

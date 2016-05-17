@@ -1,0 +1,430 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- $Id: qstart-preface.xml 368 2011-04-27 12:37:00Z BraunHarald $ -->
+<!--
+ *******************************************************************************
+ * Copyright (c) 2009 Contributors - see below
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *    Linus Tolke
+ *******************************************************************************
+ *
+ * Some portions of this file was previously release using the BSD License:
+ *
+// Copyright (c) 1996-2008 The Regents of the University of California. All
+// Rights Reserved. Permission to use, copy, modify, and distribute this
+// software and its documentation without fee, and without a written
+// agreement is hereby granted, provided that the above copyright notice
+// and this paragraph appear in all copies.  This software program and
+// documentation are copyrighted by The Regents of the University of
+// California. The software program and documentation are supplied "AS
+// IS", without any accompanying services from The Regents. The Regents
+// does not warrant that the operation of the program will be
+// uninterrupted or error-free. The end-user understands that the program
+// was developed for research purposes and is advised not to rely
+// exclusively on the program for any reason.  IN NO EVENT SHALL THE
+// UNIVERSITY OF CALIFORNIA BE LIABLE TO ANY PARTY FOR DIRECT, INDIRECT,
+// SPECIAL, INCIDENTAL, OR CONSEQUENTIAL DAMAGES, INCLUDING LOST PROFITS,
+// ARISING OUT OF THE USE OF THIS SOFTWARE AND ITS DOCUMENTATION, EVEN IF
+// THE UNIVERSITY OF CALIFORNIA HAS BEEN ADVISED OF THE POSSIBILITY OF
+// SUCH DAMAGE. THE UNIVERSITY OF CALIFORNIA SPECIFICALLY DISCLAIMS ANY
+// WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
+// MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE. THE SOFTWARE
+// PROVIDED HEREUNDER IS ON AN "AS IS" BASIS, AND THE UNIVERSITY OF
+// CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
+// UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
+-->
+<preface>
+	<title lang="en">Preface</title>
+	<title lang="de">Vorwort</title>
+	<title lang="it">Prefazione</title>
+        <title lang="sv">Förord</title>
+	<title lang="en">前言</title>
+	<para lang="en">
+		1 April 2001
+	</para>
+	<para lang="de">
+		1. April 2001
+	</para>
+		<para lang="it">
+		1 Aprile 2001
+	</para>
+        <para lang="sv">
+                1:e april 2001
+        </para>
+	<para lang="zh">
+		2001-4-1
+	</para>
+	
+	<para lang="en">
+		In the last decade of the last millenium, object-oriented (OO) technology finally completed it's 
+		transformation from a laboratory curiousity in the 1960s to become <emphasis>the</emphasis> mainstream 
+		software development paradigm. It has been a long, tough journey - that nearly ended in obscurity - 
+		primarily because OO technology required a major shift in the thought processes of systems designers, 
+		developers and others involved in the software development lifecycle.
+	</para>
+	<para lang="de">
+		Im letzten Jahrzehnt des letzten Jahrhunderts schaffte die 
+		objektorientierte (OO) Technologie den Übergang von einer 
+		Laborkuriosität der 60er zum am häufigsten eingesetzten 
+		Softwareentwicklungsparadigma. Es war eine lange, schwierige Reise, 
+		die fast in der Dunkelheit endete. Hauptsächlich deswegen, weil die OO-
+		Technologie eine Änderung der Denkweise von den Systemdesignern, 
+		-entwicklern und anderen, in den Softwareentwicklungsprozess 
+		involvierten Personen erforderte.
+	</para>
+	<para lang="it">
+Nell'ultimo decennio dello scorso millennio, la tecnologia object-oriented (OO) ha finalmente completato	
+la sua trasformazione da una curiosità di laboratorio nel 1960 per diventare  <emphasis>il</emphasis>
+principale aradigma dello sviluppo software. E 'stato un viaggio lungo e difficile - che si è chiuso nell' oscurità -
+in primo luogo perché la tecnologia OO richiedeva una svolta importante nel pensiero dei progettisti di sistemi,
+gli sviluppatori e tutti gli altri soggetti coinvolti nel ciclo di vita di sviluppo software.
+		</para>	
+	<para lang="sv">
+		I förra årtusendets sista decennium,
+		gick objektorienterad teknologi (OO) från att vara
+		ett lustigt fenomen i 1960-talets laboratoriemiljö
+                till att bli den huvudsakliga mjukvaruutvecklingsparadigmen.
+                Det har varit en lång och svår resa -
+                och det var nära att det slutade i dunkel -
+                framförallt för att OO-teknologi kräver
+                en stor förändring
+                i tankeprocessen hos de som designar systemet,
+                utvecklarna, och 
+                andra inblandade i mjukvaruutvecklingens livscykel.
+	</para>
+
+	<para lang="en">
+		It wasn't until the introduction of OO-hybrid languages such as C++, Classic Ada and Object Pascal in  
+		the eighties that the mainstream was introduced to and, given the opportunity to experiment with OO technology. 
+		These languages combined support for OO programming with support for traditional procedural programming. 
+		The lack of support of procedural programming in pure OO languages had hindered the adoption of OO technology 
+		for many years. The journey that had begun with the introduction of <emphasis>objects</emphasis> in Simula in 
+		the 1960s was now complete. OO technology was now accessible to the mainstream...well, OO programming was at least.
+	</para>
+	<para lang="de">
+		Erst die Einführung von OO-Hybrid-Sprachen wie C++, klassisches Ada und 
+		Object Pascal in den Achtzigern löste diese Entwicklung aus und bot die 
+		Möglichkeit mit der OO-Technologie zu experimentieren. Diese Sprachen 
+		kombinierten die OO-Programmierung mit der Unterstützung für 
+		traditioniellen prozeduralen Programmierung. Das Fehlen der 
+		Unterstützung der prozeduralen Programmierung innerhalb der reinen 
+		OO-Sprachen verhinderte für viele Jahre die Anwendung der OO-Technologie. 
+		Die Reise begann mit der Einführung von <emphasis>Objekten</emphasis> 
+		in Simula in den 1960ern und ist nun abgeschlossen. Die OO-Technologie 
+		war nun für die Entwicklung verfügbar...
+		gut, die OO-Programmierung war das Mindeste.
+	</para>
+	<para lang="it">
+		Non è stato così fino all'introduzione di linguaggi OO-ibridi come il C + +, 
+		Classic Ada e Object Pascal avvenuta negli anni Ottanta 
+		quando questa tecnologia è  stata introdotta e data la possibilità di essere sperimenta.
+		Questi linguaggi mescolano il supporto per la programmazione OO con quello 
+		per la tradizionale programmazione procedurale. 
+		La mancanza della programmazione procedurale nei linguaggi OO aveva ostacolato 
+		l'adozione di tale tecnologia per molti anni. 
+		Il viaggio  iniziato con l'introduzione degli “oggetti” nel linguaggio di programmazione “Simula” nel 1960 
+		era ormai completato. La tecnologia OO era ora accessibile a tutti ... 
+		beh, la programmazione OO non è venuta meno!
+	</para>
+	<para lang="sv">
+                Det var inte förrän OO-blandspråken såsom 
+                C++, Klassisk Ada och Objekt Pascal,
+                började komma på 80-talet som det stora flertalet
+                fick kännedom och och möjlighet att experimentera
+                med OO-teknologing.
+                Dessa språk kombinerade stöd för OO-programmering med
+                stöd för traditionell procedurell programmering.
+                Avsaknaden av stöd för procedurell programmering i 
+                rena OO-språk hade i många år hindrat anammandet av
+                OO-teknologin.
+                Resan, som hade börjat med införandet av objekt i
+                Simula på 1960-talet, var nu slutförd.
+                OO-teknologin var tillgänglig för det stora flertalet,
+                i alla fall OO-programmering.
+	</para>
+
+	<para lang="en">
+		Simulation is the basic premise that underpins OO technology. An OO system is designed and implemented 
+		essentially as a simulation of the real world using software artifacts. This premise is as powerful 
+		as it is simple. By designing and building software 
+		systems in this manner, the same language and ideas 
+		can be used in the analysis, design and implementation of OO systems. This allowed a system to be designed 
+		and tested (or more correctly allowed a system to be simulated) without having to actually build the system first. 
+		This feature coupled with the ability to design systems at a very high level empowered experienced OO 
+		practitioners to design and successfully implement more complex systems than had previously been possible.
+	</para>
+	<para lang="de">
+		Die Simulation ist die grundlegene Prämisse, die der OO-Technologie 
+		zugrunde liegt. Ein OO-System wird als Simulation der realen Welt mit 
+		Hilfe von Softwarebausteinen entworfen und entwickelt. Diese Prämisse 
+		ist so leistungsfähig wie auch einfach. Durch diese Art Softwaresysteme 
+		zu designen und zu bauen, können die gleichen Sprachen und Ideen in der 
+		Analyse, dem Design und in der Implementierung des OO-Systems verwendet 
+		werden. Dies erlaubt es, ein System zu entwerfen und zu testen (oder 
+		korrekter: erlaubt es das System zu simulieren), ohne das System zuvor 
+		bauen zu müssen. Diese Eigenschaft, gekoppelt mit der Fähigkeit Systeme 
+		auf einer sehr hohen Ebene zu designen, versetzt erfahrene OO-Praktiker 
+		in die Lage, sehr viel komplexere Systeme als vorher zu designen und 
+		erfolgreich zu implementieren.
+        </para>
+	   <para lang="it">
+	    	La simulazione è la premessa di base che sostiene la tecnologia OO. 
+	    	Un sistema OO è stato progettato e attuato essenzialmente come una simulazione del mondo reale 
+	    	utilizzando artefatti software. Questa premessa è tanto potente quanto è semplice. 
+	    	Con la progettazione e realizzazione di sistemi software in questo modo, 
+	    	lo stesso linguaggio e le idee possono essere utilizzate nell'analisi, 
+	    	progettazione e realizzazione di sistemi OO. Ciò ha permesso ad un sistema di essere progettato e testato 
+	    	(o più correttamente avvalersi che sistema venga simulato) senza dover costruire effettivamente 
+	    	il primo sistema. Questa caratteristica unita alla capacità di progettare sistemi ad un livello molto elevato 
+	    	ha permesso ad  esperti professionisti OO di progettare e implementare con successo sistemi 
+	    	più complessa di quanto fosse precedentemente possibile.
+        </para>
+        <para lang="sv">
+                Simulering är den grundläggande förutsättningen för att
+                bygga upp OO-teknologin.
+                Ett OO-system designas och byggs upp i allt väsentligt
+                som en simulering av den riktiga världen med användandet
+                av mjukvaruartefakter.
+                Denna förutsättning är lika kraftfull som den är enkel.
+                Genom att designa och bygga mjukvarusystem på detta sätt,
+                kan man använda samma språk och idéer 
+                vid analysen, vid designen och vid implementationen av
+                ett OO-system.
+                Detta tillåter ett system att bli designat och testat,
+                eller korrektare simulerat, utan att man behöver 
+                bygga systemet först.
+                Denna möjlighet, parad med möjligheten att designa system
+                på en mycket hög nivå gav erfarna OO-användare styrkan
+                att designa och framgångsrikt implementera komplexare
+                system än vad som tidigare hade varit möjligt.
+	</para>
+
+	<para lang="en">
+		The availabilty of various OO methodologies and the eventual adoption of the Unified Modelling Language 
+		(UML) as the standard language for communicating OO concepts continued the advance of OO technology into 
+		the mainstream. The popularity of the object-based Visual Basic language and the parallel development and 
+		meteoric adoption of the fully object-oriented 
+		Java programming language was the final catalyst that fuelled 
+		the final stages of the rapid adoption of OO technologies by the mainstream.
+	</para>
+	<para lang="de">
+		Die Verfügbarkeit verschiedener OO-Methoden und die Aufnahme der Unified 
+		Modelling Language (UML) als Standardsprache für die Kommunikation von 
+		OO-Konzepten vertiefte den Vorteil der OO-Technologie. Die Popularität 
+		der objektbasierten Sprache Visual Basic und die parallele Entwicklung 
+		und das schnelle Aufkommen der vollständig objektorientierten Sprache 
+		Java war der endgültige Katalysator, der die abschliessenden Schritte 
+		für die rasante Übernahme der OO-Technologie in die 
+		Hauptentwicklungsrichtung vorantrieb.
+	</para>
+	<para lang="it">
+		La disponibilità di metodologie OO diverse e dell'eventuale adozione della Unified Modelling Language (UML), 
+		come linguaggio standard per comunicare i concetti OO consente di affermare la tecnologia OO come corrente principale. 
+		La popolarità del linguaggio object-based Visual Basic, lo sviluppo parallelo e l'adozione meteoriche 
+		di un linguaggio completamente orientato ad oggetti (Java) è stato il catalizzatore finale che ha alimentato 
+		la fase finale di una rapida adozione delle tecnologie OO come tendeza diffusa
+	</para>	
+        <para lang="sv">
+                Tillgängligheten av flera olika OO-metoder och
+                det slutgiltiga anammandet av Unified Modelling Language (UML) som 
+                det standardiserade språket för att kommunicera OO-koncept fortsatte
+                att införa OO-teknologin som norm.
+                Framgången för det objekt-baserade språket Visual Basic och den
+                samtidiga utvecklingen och blixt-snabba anammandet av 
+                det objekt-orienterade programspråket Java var katalysatorn som
+                behövdes för de sista stegen av anammandet av OO-teknologin som
+                norm.
+        </para>
+
+	<para lang="en">
+		ArgoUML was conceived as a tool and environment for use in the analysis and design of object-oriented software 
+		systems. In this sense it is similar to many of the commercial CASE tools that are sold as tools for modelling 
+		software systems. ArgoUML has a number of very important distictions from many of these tools:
+		<itemizedlist>
+			<listitem>
+				<para lang="en">
+					ArgoUML includes a number of features that support the cognitive needs object-oriented software 
+					designers and architects.
+				</para>
+			</listitem>
+			<listitem>
+				<para lang="en">
+					ArgoUML supports open standards extensively - UML, XMI, SVG, OCL and others. In this respect, 
+					ArgoUML is still ahead (even almost five years after it's initial introduction) of many commercial 
+					tools.
+				</para>
+			</listitem>
+			<listitem>
+				<para lang="en">
+					ArgoUML is a 100% Pure Java application. This allows ArgoUML to run on all platforms for which 
+					a reliable port of the Java2 platform is available.
+				</para>
+			</listitem>
+			<listitem>
+				<para lang="en">
+					ArgoUML is an open source product. The availability of the source ensures that a new 
+					generation of software designers and researchers will now have a proven framework from which they 
+					can drive the development and evolution of CASE tools technologies.
+				</para>
+			</listitem>
+		</itemizedlist>
+	</para>
+	<para lang="de">
+		ArgoUML ist als Tool und Umgebung für die Analyse und das Desgin 
+		objektorientierter Softwaresysteme gedacht. In diesem Sinne ist es 
+		vielen kommerziellen CASE-Tools ähnlich, die als Tools für die 
+		Modellierung von Softwaresystemen verkauft werden. ArgoUML weist aber 
+		eine Anzahl sehr wichtiger Unterschiede zu vielen dieser Tools auf:
+		<itemizedlist>
+			<listitem>
+				<para lang="de">
+					ArgoUML enthält eine Anzahl von Eigenschaften, die kognitive 
+					Bedürfnisse objektorientierter Software-Designern und 
+					Architekten unterstützen.
+				</para>
+			</listitem>
+			<listitem>
+				<para lang="de">
+					ArgoUML unterstützt sehr ausgeprägt offene Standards - UML, 
+					XMI, SVG, OCL und andere. In dieser Hinsicht ist ArgoUML 
+					sehr viel weiter (auch fünf Jahre nach seiner erstmaligen 
+					Einführung) als viele kommerzielle Tools.
+				</para>
+			</listitem>
+			<listitem>
+				<para lang="de">
+					ArgoUML ist eine 100%ige Javaanwendung. Damit kann ArgoUML 
+					auf allen Plattformen ausgeführt werden, auf denen der 
+					ausführbare Teil der Java2-Plattform verfügbar ist.
+				</para>
+			</listitem>
+			<listitem>
+				<para lang="de">
+					ArgoUML ist ein Open Source-Produkt. Die Verfügbarkeit des 
+					Quellcodes stellt sicher, dass eine neue Generation von 
+					Software-Designern und Forschern nun ein geprüftes Framework 
+					haben, von dem Sie die Entwicklung und Evolution der 
+					CASE-Tool-Technologie weiter vorantreiben können.
+				</para>
+			</listitem>
+		</itemizedlist>
+	</para>
+	<para lang="it">
+		ArgoUML è stato concepito come uno strumento e ambiente per l'analisi e 
+		la progettazione di sistemi software object-oriented. 
+		In questo senso esso è simile a molti dei tool commerciali “CASE” che vengono venduti 
+		come strumenti per la modellazione di sistemi software. 
+		ArgoUML ha una serie di funzioni molto importanti che si distinguono da molti di questi strumenti:
+		<itemizedlist>
+			<listitem>
+				<para lang="it">
+					ArgoUML include un numero di caratteristiche che supportano 
+					le esigenze conoscitive object-oriented di progettisti di software.
+				</para>
+			</listitem>
+			<listitem>
+				<para lang="it">
+					ArgoUML supporta gli standard aperti come UML, XMI, SVG, OCL e molti altri. 
+					A questo proposito, ArgoUML è all’avanguardia (di quasi 5 anni dalla sua intruduzione) 
+					rispetto a molti strumenti commerciali.
+				</para>
+			</listitem>
+			<listitem>
+				<para lang="it">
+					ArgoUML è applicazione Java 100%. 
+					Questo permette ad ArgoUML di funzionare su tutte le piattaforme 
+					per le quali un la virtual machine di Java2 è disponibile.
+				</para>
+			</listitem>
+			<listitem>
+				<para lang="it">
+					ArgoUML è un prodotto open source. 
+					La disponibilità del sorgente consente e assicura 
+					che una nuova generazione di progettisti di software e ricercatori 
+					hanno dimostrato che possono guidare lo sviluppo e l'evoluzione 
+					delle tecnologie di strumenti CASE.
+				</para>
+			</listitem>
+		</itemizedlist>
+	</para>	
+	<para lang="sv">
+	    ArgoUML skapades som ett verktyg för och en verktygsomgivning
+	    för att använda vid analys och design av objekt-orienterade
+	    mjukvarusystem.
+	    I detta avseende liknar det flera av de kommerciella 
+	    programvaruutvecklingsverktygen som säljs som verktyg för att 
+	    modellera mjukvarusystem.
+	    ArgoUML har några viktiga skillnader från många av dessa verktyg:
+		<itemizedlist>
+			<listitem>
+				<para lang="sv">
+				    ArgoUML har flera funktioner som stödjer de kognitiva behoven hos
+				    objektorienterade mjukvaruutvecklare och arkitekter.
+				</para>
+			</listitem>
+			<listitem>
+				<para lang="sv">
+				    ArgoUML arbetar uteslutande med öppna standarder - UML, XMI, SVG, OCL med flera.
+				    I detta avseende är ArgoUML fortfarande (fem år efteråt) långt före många kommerciella verktyg.
+				</para>
+			</listitem>
+			<listitem>
+				<para lang="sv">
+				    ArgoUML är till 100% utvecklat i Java.
+				    Detta gör att ArgoUML kör på alla plattformar där det finns en tillförlitlig
+				    portering av Java2.
+				</para>
+			</listitem>
+			<listitem>
+				<para lang="sv">
+				    ArgoUML är Open Source.
+				    Tillgängligheten till källkoden gör att nya mjukvaruutvecklare och forskare
+				    har ett fungerande ramverk som de kan använda för vidare utveckling av
+				    CASE-verktygstekniker.
+				</para>
+			</listitem>
+		</itemizedlist>
+	</para>
+
+	<para lang="en">
+		In creating the ArgoUML development tool and environment, Jason Robbins and the rest of his research team at 
+		UCL leveraged the benefits of UML as the most prevalent OO modelling language and Java as one of the most 
+		productive OO development platforms to produce a solid tool for OO systems design and further a testbed for
+		the evolution of OO CASE tools development and research.
+	</para>
+	<para lang="de">
+		Durch die Entwicklung des ArgoUML Entwicklungstools und Umgebung, 
+		vereinigte Jason Robbins und der Rest seines Forscherteams bei UCL die 
+		Vorteile von UML als bevorzugte OO-Modellierungssprache und Java als 
+		eine der produktivsten OO Entwicklungsplattformen, um ein solides 
+		Werkzeug für das OO-Design zu produzieren und darüber hinaus als 
+		Testumgebung für die Evolution der Entwicklung und Forschung von 
+		OO-CASE-Tools.
+	</para>
+	<para lang="it">
+		Nel creare lo strumento di sviluppo ArgoUML, 
+		Jason Robbins e il resto del suo gruppo di ricerca presso l’UCL 
+		hanno sfruttato i vantaggi di UML come la più diffusa di modellazione OO del linguaggio Java e 
+		come una delle piattaforme di sviluppo più produttive OO per produrre uno strumento solido 
+		per progettazione di sistemi OO e, come ulteriore banco di prova 
+		per l'evoluzione degli strumenti CASE OO di sviluppo e ricerca.
+	</para>	
+	<para lang="sv">
+	    Genom skapandet av utvecklingsverktyget och omgivningen ArgoUML har 
+	    Jason Robbins och resten av hans utvecklingsgrupp på UCL 
+	    utnyttjat den särställning som UML har som objekt-orienterat
+	    modelleringsspråk och Java såsom den mest framgångsrika 
+	    objekt-orienterade utvecklingsplattformen för att skapa ett stabilt
+	    verktyg för objekt-orienterad systemutveckling och
+	    att skapa förutsättningarna för utveckling av OO CASE-verktygt och 
+	    forskning.
+	</para>
+
+	<para>
+		Kunle Odutola
+	</para>
+</preface>

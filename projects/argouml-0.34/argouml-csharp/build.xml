@@ -1,0 +1,289 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- $Id: build.xml 278 2010-01-02 21:41:31Z tfmorris $
+
+  Build file for ArgoUML Csharp(C#) plugins.
+
+For this file to work you need to have argouml either checked out alongside
+this directory and built using the 'package' target or downloaded a release
+and unpacked in a directory argouml/build alongside this one. Like this:
+
+argouml-csharp/build.xml <- This file.
+argouml/build/argouml-model.jar
+argouml/build/log4j.jar
+etc.
+  -->
+
+<project basedir="." default="compile" name="ArgoUML Csharp module">
+  <!-- =================================================================== -->
+  <!-- Initialization target                                               -->
+  <!-- =================================================================== -->
+  <target name="init" depends="pde-init" >
+    <property name="build.dir" value="build"/>
+    <property name="build.classes" value="${build.dir}/classes"/>
+    <property name="module.src.dir" value="src" />
+
+    <property name="debug" value="yes"/>
+    <property name="deprecation" value="yes"/>
+    <property name="optimize" value="yes"/>
+
+    <!-- Load ArgoUML properties, including the version -->
+    <!-- we really need an absolute path for argo.root.dir -->
+    <!-- if it is set in a property file before now, it must be absolute -->
+    <property name="argo.root.dir" value="${basedir}/../argouml"/>
+    <property file="${override.build.properties}"/>
+    
+    <property name="argo.build.dir" value="${argo.root.dir}/build"/>
+
+    <property name="result.jar" value="argouml-csharp.jar"/>
+  
+    <path id="compile.classpath">
+      <pathelement location="${argo.build.dir}/argouml-model.jar"/>
+      <pathelement location="${argo.build.dir}/argouml.jar"/>
+    </path>
+    <path id="run.classpath">
+      <fileset dir="${argo.build.dir}" includes="*.jar"/>
+    </path>
+  </target>
+
+  <!-- =================================================================== -->
+  <!-- Run from classes                                                    -->
+  <!-- =================================================================== -->
+  <target name="run" depends="install"
+          description="Run with this module.">
+    <java classname="org.argouml.application.Main"
+          fork="yes"
+          taskname="argouml"
+     	  jvmargs="-Xmx500M">
+        <sysproperty key="log4j.configuration"
+                   value="org/argouml/resource/full.lcf"/>
+        <classpath>
+	  <pathelement location="${build.dir}/${result.jar}"/>
+	  <path refid="run.classpath"/>
+        </classpath>
+    </java>
+  </target>
+
+  <!-- =================================================================== -->
+  <!-- Compiles the source directory                                       -->
+  <!-- =================================================================== -->
+  <target name="compile"
+          depends="init"
+          description="Compile the sources.">
+    <!-- create directories -->
+    <mkdir dir="${build.dir}"/>
+    <mkdir dir="${build.classes}"/>
+
+    <javac srcdir="src" 
+           destdir="${build.classes}"
+	   includes="org/argouml/**/*.java"
+	   debug="${debug}"
+	   deprecation="${deprecation}"
+	   optimize="${optimize}"
+           source="1.5"
+           target="1.5"
+           includeAntRuntime="no">
+       <classpath>
+	      <path refid="compile.classpath"/>
+       </classpath>
+    </javac>
+    <copy file="src/manifest.mf" todir="${build.classes}"/>
+  </target>
+
+  <!-- =================================================================== -->
+  <!-- Creates the jar file                                                -->
+  <!-- =================================================================== -->
+  <target name="jar" depends="compile"
+          description="Build the ${result.jar} file.">
+    <jar basedir="${build.classes}"
+	 includes="org/argouml/**"
+	 jarfile="${build.dir}/${result.jar}"
+         manifest="${build.classes}/manifest.mf"/>
+  </target>
+
+  <!-- =================================================================== -->
+  <!-- Install the jar file                                                -->
+  <!-- =================================================================== -->
+  <target name="install" depends="jar"
+          description="Copy the ${result.jar} file to the ArgoUML directory.">
+    <copy todir="${argo.build.dir}/ext">
+      <fileset dir="${build.dir}" includes="${result.jar}"/>
+    </copy>
+  </target>
+
+  <!-- =================================================================== -->
+  <!-- Clean targets                                                       -->
+  <!-- =================================================================== -->
+  <target name="clean" depends="init"
+          description="Clean out all built files.">
+    <delete dir="${build.dir}" quiet="true"/>
+    <delete quiet="true">
+      <fileset dir="${build.dir}" includes="${result.jar}"/>
+    </delete>
+  </target>
+  
+  
+  <!-- =================================================================== -->
+  <!-- Generates the parser and lexer classes                              -->
+  <!-- This target was added as a template only during the upgrade of the  -->
+  <!-- build processes to show how a Csharp parser might be integrated     -->
+  <!-- =================================================================== -->
+  <target name="generateparser" depends="init" 
+          description="TEMPLATE ONLY - NON-functional - Generates the parser and lexer classes">
+    <uptodate property="parser.is.current"
+      targetfile="${module.src.dir}/org/argouml/language/charp/reveng/CSharpTokenTypes.txt">
+      <srcfiles dir="${module.src.dir}/org/argouml/language/csharp/">
+        <include name="CSharpParser.g"/>
+      </srcfiles>
+    </uptodate>
+    <antcall target="generateparser_internal"/>
+  </target>
+   
+  <target name="generateparser_internal" unless="parser.is.current" 
+          depends="init">
+    
+    <!-- These are the Csharp build steps from the Antlr distribution
+    <exec program="java.exe" commandline="-cp ${antlr.dir} antlr.Tool UnicodeLexerBase.g" failonerror="true"/>
+    <exec program="java.exe" commandline="-cp ${antlr.dir} antlr.Tool -glib UnicodeLexerBase.g CSharpLexerBase.g " failonerror="true"/>
+    <exec program="java.exe" commandline="-cp ${antlr.dir} antlr.Tool -glib UnicodeLexerBase.g;CSharpLexerBase.g  CSharpLexer.g                  " failonerror="true"/>
+    <exec program="java.exe" commandline="-cp ${antlr.dir} antlr.Tool -glib UnicodeLexerBase.g;CSharpLexerBase.g  CSharpPreprocessorLexer.g      " failonerror="true"/>
+    <exec program="java.exe" commandline="-cp ${antlr.dir} antlr.Tool -glib UnicodeLexerBase.g;CSharpLexerBase.g  CSharpPreprocessorHooverLexer.g" failonerror="true"/>
+    <exec program="java.exe" commandline="-cp ${antlr.dir} antlr.Tool CSharpParser.g" failonerror="true"/>
+    <exec program="java.exe" commandline="-cp ${antlr.dir} antlr.Tool CSharpPrettyPrinter.g" failonerror="true"/>
+    -->
+    
+    <java classname="antlr.Tool" fork="yes" failonerror="true">
+      <!-- For debugging the parser or lexer you may want to use the options 
+      -traceParser or / and -traceLexer. -->
+      <arg value="-o"/>
+      <arg file="${module.src.dir}/org/argouml/language/csharp/reveng"/>
+      <arg file="${module.src.dir}/org/argouml/language/csharp/reveng/UnicodeLexerBase.g"/>
+      <classpath>
+        <path refid="module.antlr-genparser.classpath"/>
+      </classpath>
+    </java>
+
+    <!-- Additional steps required here -->
+    <!-- or choose a different parser generator -->
+      
+  </target>
+  
+  <target name="cleanparser" depends="init">
+    <delete>
+    	<fileset dir="${module.src.dir}/org/argouml/language/csharp/reveng">
+        <include name="CSharpTokenTypes.txt"/> 
+        <include name="CSharpTokenTypes.java"/> 
+        <include name="CSharpParser.java"/> 
+        <include name="CSharpLexer.java"/> 
+      </fileset>
+    </delete> 
+  </target> 
+
+
+  <!-- =================================================================== -->
+  <!-- Eclipse PDE targets from here to end of file                        -->
+  <!-- =================================================================== -->
+  <!-- 
+    Required targets (called in this order) are:
+      build.jars
+      gather.bin.parts - must create and populate "${destination.temp.folder}/<Bundle-SymbolicName>_<Bundle-Version>
+      gather.logs
+    If p2.gathering = true in build.properties:
+      publish.bin.parts target replaces gather.bin.parts
+  -->
+  
+    <target name="pde-properties" if="eclipse.running">
+      <property name="build.compiler" value="org.eclipse.jdt.core.JDTCompilerAdapter" />
+    </target>
+  
+    <target name="pde-init" depends="pde-properties">
+
+      <property name="bundleId" value="org.argouml.module.csharp" />
+
+      <!-- This property is magic and will have its value substituted by PDE -->
+      <property name="version.suffix" value="0.28.0.200904210336"/>
+      <property name="bundleVersion" value="${version.suffix}" />
+
+      <!-- Compiler settings. -->
+      <condition property="dir_bootclasspath" value="${java.home}/../Classes">
+        <os family="mac" />
+      </condition>
+      <property name="dir_bootclasspath" value="${java.home}/lib" />
+      <path id="path_bootclasspath">
+        <fileset dir="${dir_bootclasspath}">
+          <include name="*.jar" />
+        </fileset>
+      </path>
+      <property name="bootclasspath" refid="path_bootclasspath" />
+      <property name="bundleBootClasspath" value="${bootclasspath}" />
+
+      <condition property="pluginTemp" value="${buildTempFolder}/plugins">
+        <isset property="buildTempFolder" />
+      </condition>
+      <property name="pluginTemp" value="${basedir}" />
+      <condition property="build.result.folder" value="${pluginTemp}/${bundleId}_${bundleVersion}">
+        <isset property="buildTempFolder" />
+      </condition>
+      <property name="build.result.folder" value="${basedir}" />
+      <property name="plugin.destination" value="${basedir}" />            
+      <condition property="p2.publish.parts" value="true">
+        <istrue value="${p2.gathering}"/>
+      </condition>
+    </target>
+
+  <target name="pde-clean" depends="pde-init">
+    <delete file="${plugin.destination}/${bundleId}_*.jar" />
+    <delete file="${plugin.destination}/${bundleId}_*.zip" />
+  </target>
+
+  <target name="build.jars" depends="jar" description="Compile classes and build nested jars for the plug-in: ${bundleId}.">
+    <mkdir dir="${build.result.folder}/@dot"/>
+    <copy todir="${build.result.folder}/@dot" failonerror="true" overwrite="false">
+      <fileset dir="${build.classes}" includes="org/argouml/**" excludes="*.txt,*.bat,*.xml,*.sh" />
+    </copy>
+  </target>
+
+  <target name="gather.bin.parts" depends="init" if="destination.temp.folder">
+    <mkdir dir="${destination.temp.folder}/${bundleId}_${bundleVersion}" />
+    <copy todir="${destination.temp.folder}/${bundleId}_${bundleVersion}" failonerror="true" overwrite="false">
+      <fileset dir="${build.result.folder}/@dot" includes="**"/>
+    </copy>
+    
+    <copy todir="${destination.temp.folder}/${bundleId}_${bundleVersion}" failonerror="true" overwrite="false">
+      <fileset dir="${basedir}">
+        <include name="META-INF/"/>
+        <include name="plugin.xml"/>
+        <include name="plugin.properties"/>
+      </fileset>
+    </copy>
+
+    <eclipse.versionReplacer path="${destination.temp.folder}/${bundleId}_${bundleVersion}" version="${bundleVersion}" />
+  </target>
+
+  <target name="publish.bin.parts" depends="init" if="p2.publish.parts">
+
+    <!-- First call old target to gather binaries -->
+    <antcall target="gather.bin.parts">
+      <param name="destination.temp.folder" value="${build.result.folder}"/>
+    </antcall>
+
+    <eclipse.versionReplacer path="${build.result.folder}" version="${bundleVersion}" />
+
+    <!-- Now use P2 publishing tools to publish to our build repository -->
+    <eclipse.gatherBundle
+      metadataRepository="${p2.build.repo}"
+      artifactRepository="${p2.build.repo}"
+      buildResultFolder="${build.result.folder}"
+      baseDirectory="${basedir}"
+    />
+  </target>
+
+  <target name="gather.logs" depends="init" if="destination.temp.folder">
+    <mkdir dir="${destination.temp.folder}/${bundleId}_${bundleVersion}"/>
+    <copy todir="${destination.temp.folder}/${bundleId}_${bundleVersion}" failonerror="false" overwrite="false">
+      <fileset dir="${build.dir}">
+        <include name="compile.log"/>  
+      </fileset>
+    </copy>
+  </target>
+  
+</project>
