@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF8"?>
+<!DOCTYPE C-JDBC PUBLIC "-//ObjectWeb//DTD C-JDBC 1.0//EN" "http://www.objectweb.org/c-jdbc/dtds/c-jdbc-2.0.2.dtd">
+
+<C-JDBC>
+  
+  <VirtualDatabase name="rubis" maxNbOfConnections="100" maxThreadIdleTime="5">
+
+    <Monitoring>
+      <SQLMonitoring defaultMonitoring="off">
+         <SQLMonitoringRule queryPattern="^select" caseSensitive="false" applyToSkeleton ="false" monitoring="on"/>
+      </SQLMonitoring>
+    </Monitoring>
+    
+    <AuthenticationManager>
+      <Admin>
+      	<User username="admin" password="c-jdbc"/>
+      </Admin> 
+      <VirtualUsers>
+        <VirtualLogin vLogin="user" vPassword="c-jdbc"/>
+      </VirtualUsers>
+    </AuthenticationManager>
+<!--
+    <DatabaseBackend name="node1" driver="org.postgresql.Driver" url="jdbc:postgresql://localhost/rubis">
+-->
+    <DatabaseBackend name="node1" driver="org.gjt.mm.mysql.Driver" url="jdbc:mysql://localhost/rubis" connectionTestStatement="SELECT 1">
+      <ConnectionManager vLogin="cecchet" rLogin="user" rPassword="">
+        <VariablePoolConnectionManager initPoolSize="5"/>
+<!--
+	<VariablePoolConnectionManager initPoolSize="5" minPoolSize="0" maxPoolSize="50" idleTimeout="60" waitTimeout="120"/>
+-->
+      </ConnectionManager>
+    </DatabaseBackend>
+
+    <RequestManager caseSensitiveParsing="false">
+      <RequestScheduler>
+         <SingleDBScheduler level="passThrough"/>
+      </RequestScheduler>
+
+      <RequestCache>
+         <MetadataCache/>
+         <ParsingCache/>
+         <ResultCache granularity="table">
+          <DefaultResultCacheRule>
+            <RelaxedCaching timeout="10" keepIfNotDirty="false"/>
+          </DefaultResultCacheRule>
+        </ResultCache>
+      </RequestCache>
+
+      <LoadBalancer>
+         <SingleDB/>
+      </LoadBalancer>
+
+      <RecoveryLog driver="org.objectweb.cjdbc.driver.Driver"
+        url="jdbc:cjdbc://localhost:25325/recovery" login="cecchet" password="">
+        <RecoveryLogTable/>
+        <CheckpointTable/>
+        <BackendTable/>
+        <DumpTable/>
+      </RecoveryLog>
+
+    </RequestManager>
+  </VirtualDatabase>
+
+</C-JDBC>

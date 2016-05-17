@@ -1,0 +1,5 @@
+#!/bin/sh
+
+exec /usr/local/bin/setuidgid cjdbc \
+	/usr/local/bin/multilog t n2 s2500000 \
+		/var/log/cjdbc

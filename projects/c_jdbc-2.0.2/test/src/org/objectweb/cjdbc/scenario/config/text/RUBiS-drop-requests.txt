@@ -1,0 +1,43 @@
+// -----------------------------------------------------------------------------------------------------------------------
+// DROP requests test
+//
+// The request must have the following format:
+// #begin
+// <DROP TABLE request>
+// #end
+// <isValid flag>: true if this request is valid
+//
+// If the request is valid:
+// <table to remove>
+//
+// If the request is not valid:
+// <error message>
+//
+// do not add empty line between the lines defining a test
+// line beginning by a // are ignored except in a test
+// -----------------------------------------------------------------------------------------------------------------------
+
+#begin
+DROP TABLE categories
+#end
+true
+categories
+
+#begin
+DROP TABLE 
+regions
+#end
+true
+regions
+
+#begin
+DROP TABLE users, items
+#end
+false
+Unknown table 'users, items' in this DROP statement 'drop table users, items'
+
+#begin
+DROP TABLE useers
+#end
+false
+Unknown table 'useers' in this DROP statement 'drop table useers'

@@ -1,0 +1,1180 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!--
+
+/*
+ * C-JDBC: Clustered JDBC.
+ * Copyright (C) 2002-2005 French National Institute For Research In Computer
+ * Science And Control (INRIA).
+ * Contact: c-jdbc@objectweb.org
+ * 
+ * This library is free software; you can redistribute it and/or modify it
+ * under the terms of the GNU Lesser General Public License as published by the
+ * Free Software Foundation; either version 2.1 of the License, or any later
+ * version.
+ * 
+ * This library is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+ * FITNESS FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License
+ * for more details.
+ * 
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with this library; if not, write to the Free Software Foundation,
+ * Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA.
+ *
+ * Initial developer(s): Emmanuel Cecchet.
+ * Contributor(s): Nicolas Modrzyk.
+ */
+
+ This is the XML DTD for C-JDBC controllers configuration files
+
+ Please use the following formal public identifier to identify it:
+
+ <!DOCTYPE C-JDBC PUBLIC "-//ObjectWeb//DTD C-JDBC x.y//EN"
+   "http://c-jdbc.objectweb.org/dtds/c-jdbc-x.y.dtd">
+
+ Where x.y is the C-JDBC release number.
+
+ Or if you want to use a local copy of the DTD:
+
+ <!DOCTYPE C-JDBC SYSTEM "file:///path/to/c-jdbc-x.y.dtd">
+
+ For example:
+
+ Unix platforms: 
+ <!DOCTYPE C-JDBC SYSTEM "file:///usr/local/c-jdbc/xml/c-jdbc-x.y.dtd">
+
+ Windows platforms: 
+ <!DOCTYPE C-JDBC SYSTEM "file://c:/c-jdbc/xml/c-jdbc-x.y.dtd">
+
+-->
+
+
+<!-- ******************
+      Virtual Database
+     ****************** -->
+
+<!ELEMENT C-JDBC (VirtualDatabase+)>
+
+<!--
+ A Virtual Database (vdb) is the database exposed to the user. 
+
+   name: A vdb defined by a name that is used in the JDBC URL
+   (jdbc:cjdbc://host::/VirtualDatabaseName)
+   maxNbOfConnections: maximum number of concurrent connections
+   accepted for this virtual database. Default is 0 (no limit)
+   poolThreads: if false, one thread is created for each connection
+   and dies when the connection closes. If set to true, threads are
+   reused to serve multiple connections. Default is true.
+   minNbOfThreads: minimum number of threads to keep in the pool (if
+   poolThreads is set to true), default is 0.
+   maxNbOfThreads: maximum number of threads in the pool (if
+   poolThreads is set to true), default is 0 (no limit).
+   maxThreadIdleTime: maximum time in seconds a thread can remain idle
+   before being removed from the pool. Default is 60s.
+   sqlDumpLength: maximum number of characters of a SQL statement to display in
+   traces and exception messages. 0 means no limit and the full statement is
+   inserted in the message (be careful especially if you are using large 
+   objects. Default is 40.
+   blobEncodingMethod: the method to use to store the blobs in a database
+   independent manner. "none" does not alter your data but this could not 
+   work with some database backends. "hexa" converts the blob data into a 
+   database agnostic (independent) form, but this requires existing data
+   to be converted to hexadecimal prior using this encoding. 
+
+ A VirtualDatabase contains :
+   - optional distribution rules to allow the virtual database to be shared
+     by C-JDBC controllers (horizontal scalability),
+   - optional monitoring to get runtime statistics,
+   - an Authentiation manager matches the virtual database and real
+   backends login/password,
+   - a set of real database backends,
+   - a request manager defines the behavior of the controller for this
+   VirtualDatabase.
+-->
+<!ELEMENT VirtualDatabase (Distribution?, Monitoring?, Backup?, AuthenticationManager, DatabaseBackend+, RequestManager)>
+<!ATTLIST VirtualDatabase
+    name               CDATA #REQUIRED
+    maxNbOfConnections CDATA "0"
+    poolThreads        (true | false) "true"
+    minNbOfThreads     CDATA "0"    
+    maxNbOfThreads     CDATA "0"    
+    maxThreadIdleTime  CDATA "60"
+    sqlDumpLength      CDATA "40"
+    blobEncodingMethod (none | hexa | escaped | base64) "none"
+>
+
+
+<!--
+ Specify virtual database distribution rules so that the vdb can be shared
+ by several C-JDBC controllers (known as horizontal scalability). 
+
+ - groupName: group name to be used by the JGroups communication layer. If no
+     name is provided, the virtual database name is used instead.
+ - macroClock: if a request contains a date macro that needs to be replaced,
+     this attribute defines how the current time is determined. If macroClock
+     is set to none, then each controller uses its local timestamp for all of its
+     backends. If macroClock is set to local, then the macros are replaced using
+     the local time before being sent to remote controllers. Note that in all
+     cases, it is preferable to have controllers synchronized using NTP or an 
+     equivalent mechanism.
+ - castTimeout: is the timeout to use when sending request to the group
+-->
+<!ELEMENT Distribution (GroupMember*)>
+<!ATTLIST Distribution
+    groupName   CDATA #IMPLIED
+    macroClock  (none | local) "local"
+    castTimeout CDATA "0"
+>
+
+
+<!--
+ Specify members of a Group for distributed virtual databases setups
+ (the ones with a Distribution element) 
+-->
+<!ELEMENT GroupMember EMPTY>
+<!ATTLIST GroupMember
+    dnsName    CDATA #REQUIRED 
+    enabled (yes | no) "yes"
+>
+
+
+<!-- **************
+       Monitoring
+     ************** -->
+
+<!ELEMENT Monitoring (SQLMonitoring*)>
+
+<!--
+ SQL Monitoring provides statistics (count, error, cache hits, timing) for
+ SQL queries. It is possible to define rules to turn monitoring on or off 
+ for specific query patterns.
+
+ defaultMonitoring: defines the default rule if a request should be monitored
+ (on) or not (off) if no specific rule matches the request.
+-->
+<!ELEMENT SQLMonitoring (SQLMonitoringRule*)>
+<!ATTLIST SQLMonitoring
+    defaultMonitoring (on | off) "on"
+>
+
+<!--
+ Defines a specific monitoring rule for all queries that match the given
+ pattern.
+
+ queryPattern: a regular expression understood by the Jakarta Regexp API.
+  For more information on Regexp format, go to http://jakarta.apache.org/regexp.
+ caseSensitive: true if the pattern matching must be case sensitive
+ applytoSkeleton: true if the pattern must apply to the query skeleton (found
+  in PrepareStatement), false if the instantiated query should be used.
+  Example: 
+    - skeleton: SELECT * FROM t WHERE x=?
+    - instantiated query: SELECT * FROM t WHERE x=12
+ monitoring: on to activate the monitoring for this rule, off to
+  disable it.
+
+ Examples: 
+ <SQLMonitoring queryPattern="^delete" monitorRequest="off"/> will turn 
+ monitoring off for all delete queries. 
+ <SQLMonitoring queryPattern="select * from users *" monitorRequest="on"/> 
+ will turn monitoring on for all select queries on the users table.
+ !Warning! This is different from:
+ <SQLMonitoring queryPattern="select \* from users *" monitorRequest="on"/> 
+ which turns monitoring on for the "select * from users ..." kind of queries.
+-->
+<!ELEMENT SQLMonitoringRule EMPTY>
+<!ATTLIST SQLMonitoringRule
+    queryPattern    CDATA #REQUIRED
+    caseSensitive   (true | false) "false"
+    applyToSkeleton (true | false) "false"
+    monitoring      (on | off) "on"
+>
+
+<!-- ******************
+          Backup
+     ****************** 
+-->
+<!--
+   The backup element defines a number of Backuper in charge of performing 
+   backup/restore operations on backends.
+-->
+<!ELEMENT Backup (Backuper+)>
+
+<!--
+ A Backuper is defined by a logical backuperName used by the administration 
+ console when performing a backup operation. The className specifies the 
+ implementation of the Backuper. Backuper specific options can be provided as
+ well (this can be the path to a properties files or a set of attributes).
+ Check your Backuper documentation for its specific options.
+-->
+<!ELEMENT Backuper EMPTY>
+<!ATTLIST Backuper
+    backuperName CDATA #REQUIRED
+    className    CDATA #REQUIRED
+    options      CDATA #IMPLIED
+>
+
+<!-- ************************
+      Authentication manager
+     ************************ -->
+
+<!ELEMENT AuthenticationManager (Admin+, VirtualUsers)>
+
+<!-- 
+ A list of administrator logins is used to access the management interface of a
+ virtual database and perform operations such as enabling/disabling
+ database backends, managing checkpoints, ...
+-->
+<!ELEMENT Admin (User+)>
+
+<!--
+ A user is defined by its username and its password
+-->
+<!ELEMENT User EMPTY>
+<!ATTLIST User
+    username CDATA #REQUIRED
+    password CDATA #REQUIRED
+>
+
+<!ELEMENT VirtualUsers (VirtualLogin+)>
+
+<!--
+ A virtual login is the login used by the client application through
+ the C-JDBC driver. 
+ A virtual login could be shared by multiple trusted login, 
+ used in a corporate environment.
+ Each backend must define a connection manager for each virtual login
+ defined here.
+-->
+<!ELEMENT VirtualLogin (TrustedLogin*)>
+<!ATTLIST VirtualLogin 
+    vLogin    CDATA #REQUIRED
+    vPassword CDATA #REQUIRED
+>
+
+<!-- 
+  To be defined
+-->
+<!ELEMENT TrustedLogin EMPTY>
+
+
+<!-- ******************
+      Database Backend
+     ****************** -->
+
+<!--
+ A Database Backend is uniquely identified by its name/driver/url
+
+   name: a logical name identifying this backend
+   driver: the database native JDBC driver class name
+   driverPath: name of the directory or jar file containing the driver files.
+    If driverPath is omitted, the driver must be in the drivers/ 
+    directory.
+   url: the url to connect to give to the driver to connect to the
+    database
+   connectionTestStatement: SQL statement to send on a connection
+    to check if the connection is still valid. This statement should
+    not update the database like "SELECT 1".
+ -->
+<!ELEMENT DatabaseBackend (DatabaseSchema?, RewritingRule*, ConnectionManager+)>
+<!ATTLIST DatabaseBackend 
+    name                    CDATA #REQUIRED
+    driver                  CDATA #REQUIRED
+    driverPath              CDATA #IMPLIED
+    url                     CDATA #REQUIRED
+    connectionTestStatement CDATA #REQUIRED  
+>
+
+<!-- ****************************
+      Database schema definition
+     **************************** -->
+<!--
+DatabaseSchema groups static and dynamic definitions for gathering,
+constructing and validating the in-memory schema used for load balacing
+and caching.
+ dynamicPrecision: 
+  - if set to something else than "static" will get information
+    from the backend to check validity of static schema at given level.
+    (table level will check for table names only, column level will check for
+    column names and so on ...). All, includes all information that can  be 
+    collected.
+  - if set to "static", will not check schemas and procedures and will rely
+    entirely on the statically defined schema.
+ gatherSystemTables: 
+    true if system tables and views should be retrieved, false otherwise 
+    (default). 
+ schemaName :
+    if no schemaName is specified all objects visible to the user are gathered,
+    otherwise only the objects belonging to the specified schema are used. 
+-->
+<!ELEMENT DatabaseSchema (DatabaseStaticSchema?)>
+<!ATTLIST DatabaseSchema
+    dynamicPrecision   (static | table | column | procedures | all) "column"
+    gatherSystemTables (true | false) "false"
+    schemaName         CDATA #IMPLIED
+>
+
+<!--
+ A static DatabaseSchema can be defined to override the schema
+ that can be automatically gathered by the controller. 
+ However, the schema must remain compatible with the 
+ schema gathered from the backend.
+-->
+<!ELEMENT DatabaseStaticSchema (DatabaseProcedure*,DatabaseTable+)>
+
+<!ELEMENT DatabaseProcedure (DatabaseProcedureParameter*)>
+<!ATTLIST DatabaseProcedure 
+     name       CDATA #REQUIRED
+     returnType (resultUnknown | noResult | returnsResult) "resultUnknown"
+>
+
+<!ELEMENT DatabaseProcedureParameter EMPTY>
+<!ATTLIST DatabaseProcedureParameter 
+     name      CDATA #REQUIRED
+     paramType (in | out | inout | return | result | unknown) #REQUIRED
+     nullable  (noNulls | nullable | nullableUnknown) "nullableUnknown"
+>
+ 
+<!ELEMENT DatabaseTable (DatabaseColumn+)>
+<!ATTLIST DatabaseTable 
+    tableName   CDATA #REQUIRED
+    nbOfColumns CDATA #REQUIRED
+>
+
+<!--
+ isUnique should be set to true if the column has a UNIQUE constraint.
+ This is the case for primary keys (composed primary keys are not yet
+ supported). This affects only cache behavior and select statements
+ parsing.
+-->
+<!ELEMENT DatabaseColumn EMPTY>
+<!ATTLIST DatabaseColumn 
+    columnName CDATA #REQUIRED
+    isUnique   (true | false) "false"
+>
+
+
+<!-- ****************
+      Rewriting Rule
+     **************** -->
+
+<!--
+ A Rewriting Rule defines how a query matching a given pattern should be
+ rewritten. 
+
+   queryPattern: SQL query pattern to match
+   rewrite: rewritten SQL query
+   matchingType: 
+     + simple: means that the first occurrence of queryPattern in the request 
+       will be replaced by the string specified in rewrite.
+     + pattern: uses a pattern based match/replace. A pattern uses '?x' where
+       x is a logical number assigned to the pattern. Example:
+       "select ?1 from ?2 where x=?3".
+   caseSensitive: true if matching must be case sensitive
+   stopOnMatch: rules are applied in the order they are defined. If one
+    rule matches and stopOnMatch is set to true, next rules are ignored.
+    If stopOnMatch is set to false, if another rule matches the rewritten
+    query, the query will be rewritten again.
+    
+ Examples:
+ <RewritingRule queryPattern="from user" rewrite="from &quot;user;&quot;" 
+    matchingType="simple"/>
+ will rewrite the query 'select * from user where x=y' as 
+ 'select * from "user" where x=y'.
+ 
+ <RewritingRule queryPattern="select * from t where x=?1" 
+    rewrite="select x from y where y=?1" matchingType="pattern"/>
+ will rewrite the query 'select * from t where x=435' to 
+  'select x from y where y=435'
+ 
+ <RewritingRule queryPattern="?1 LIMIT ?2,?3" rewrite="?1 LIMIT ?3,?2" 
+    matchingType="pattern"/>
+ will rewrite the query 'select * from t limit 10,20' to 
+  'select * from t limit 20,10'
+ 
+ -->
+<!ELEMENT RewritingRule EMPTY>
+<!ATTLIST RewritingRule 
+    queryPattern  CDATA #REQUIRED
+    rewrite       CDATA #REQUIRED
+    matchingType  (simple | pattern | replaceAll) "simple"
+    caseSensitive (true | false) "false"
+    stopOnMatch   (true | false) "false"
+>
+
+
+<!-- *********************
+      Connection Managers
+     ********************* -->
+
+<!--
+ One Connection Manager must be defined for each virtual login the
+ backend belongs to. The user/password combination defined in the
+ RealLogin element for this vLogin/Backend is used to create the
+ Connection Manager.
+-->
+<!ELEMENT ConnectionManager (SimpleConnectionManager | FailFastPoolConnectionManager | RandomWaitPoolConnectionManager | VariablePoolConnectionManager)>
+<!ATTLIST ConnectionManager 
+    vLogin CDATA #REQUIRED
+    rLogin CDATA #REQUIRED
+    rPassword CDATA #REQUIRED
+    urlParameters CDATA #IMPLIED
+>
+
+<!--
+ SimpleConnectionManager is a basic Connection Manager that opens a
+ new connection on each request and closes it at the end. It could be
+ useful if the underlying driver already implements connection pooling
+ for example.
+-->
+<!ELEMENT SimpleConnectionManager EMPTY>
+
+<!--
+ FailFastPoolConnectionManager offers connection pooling and fail fast
+ when the pool is empty.
+
+   poolSize is the size of the pool.
+
+ All connections are initialized at startup time and if the pool size
+ is too large it is adjusted to the largest number of connections
+ available.
+ Once the pool is empty, null is returned instead of a
+ connection. Therefore incoming requests will fail until at least one
+ connection is freed. No system overload should occur with this
+ connection manager, but if the pool size is too small, many requests
+ will fail.
+-->
+<!ELEMENT FailFastPoolConnectionManager EMPTY>
+<!ATTLIST FailFastPoolConnectionManager
+    poolSize CDATA #REQUIRED
+>
+
+<!--
+ RandomWaitPoolConnectionManager provides connection pooling and wait
+ when the pool is empty.
+
+   poolSize is the size of the pool.
+   timeout is the maximum time to wait for a connection in seconds (0
+   is default and means no timeout: wait until one connection is
+   freed).
+
+ All connections are initialized at startup time and if the pool size
+ is too large it is adjusted to the largest number of connections
+ available.
+
+ Once the pool is empty, the requests wait until a connection is freed
+ or the specified timeout has elapsed. The FIFO order of connection
+ request is not ensured by this connection manager.
+-->
+<!ELEMENT RandomWaitPoolConnectionManager EMPTY>
+<!ATTLIST RandomWaitPoolConnectionManager
+    poolSize CDATA #REQUIRED
+    timeout  CDATA #IMPLIED
+>
+
+<!--
+ VariablePoolConnectionManager provides connection pooling with a
+ dynamically adjustable pool size.
+
+   initPoolSize is the initial pool size to be intialized at startup.
+   minPoolSize is the minimum pool size (default is equal to the
+   initPoolSize).
+   maxPoolSize is the maximum pool size (0 is the default and means no
+   limit).
+   idleTimeout is the time in seconds a connection can stay idle
+   before being released (removed from the pool). Default is 0 (no
+   timeout) which means that once allocated, connections are never
+   released.
+   waitTimeout is the maximum time in seconds to wait for a connection
+   in seconds (0 is default and means no timeout: wait until one
+   connection is freed).
+-->
+<!ELEMENT VariablePoolConnectionManager EMPTY>
+<!ATTLIST VariablePoolConnectionManager
+    initPoolSize CDATA #REQUIRED
+    minPoolSize  CDATA #IMPLIED
+    maxPoolSize  CDATA #IMPLIED
+    idleTimeout  CDATA #IMPLIED
+    waitTimeout  CDATA #IMPLIED
+>
+
+
+<!-- *****************
+      Request Manager
+     ***************** -->
+
+<!--
+ The Request Manager is composed of a scheduler, an optional cache, a
+ load balancer and an optional recovery log.
+
+ The request parsing can be forced to be case sensitive (default is not
+ case sensitive). A case sensitive parsing requires the table and column
+ name to match exactly the case used by the database. When case sensitive
+ is set to false table names are systematically converted to lowercase.
+ A timeout in seconds can be defined for begin/commit/rollback operations.
+ If no value is given, the default timeout is set to 60 seconds. 
+ Warning! 0 means no timeout and wait forever until completion.
+-->
+<!ELEMENT RequestManager (RequestScheduler, RequestCache?, LoadBalancer, RecoveryLog?)>
+<!ATTLIST RequestManager
+    caseSensitiveParsing (true | false) "false"
+    beginTimeout         CDATA "60"
+    commitTimeout        CDATA "60"
+    rollbackTimeout      CDATA "60"
+>
+
+
+<!-- *********************
+      SQL Macros Handling
+     ********************* -->
+
+<!-- 
+ C-JDBC can interpret and replace on-the-fly macros with a value computed by
+ the controller (the RequestManager in fact). This prevents different backends
+ to generate different values when interpreting the macros which could result
+ in data inconsitencies.
+ The supported macros are the following:
+ - rand: RAND() can be replaced with an int, long, float or double value.
+ - all the date macros (now, currentDate, currentTime, timeOfDay and 
+ currentTimestamp) can be replaced by one of the following:
+   + off: do not replace the macro
+   + date: java.sql.Date.toString() build from current time at controller
+           (example: 2001-02-17)
+   + time: java.sql.Time.toString() build from current time at controller 
+           (example: 19:07:32).
+   + timestamp: java.sql.Timestamp.toString() build from current time at 
+                controller (example: 2001-02-17 19:07:32-05).
+ -  The timeResolution attribute defines the timer precision to use when 
+ rewriting a query that contains a date macro. Default is 0 millisecond which
+ is the highest precision. A value of 1000 corresponds to a 1 second precision,
+ 60000 to a 1 minute precision and so on.
+-->
+<!ELEMENT MacroHandling EMPTY>
+<!ATTLIST MacroHandling
+    rand             (off | int | long | float | double) "float"
+    now              (off | date | time | timestamp) "timestamp"
+    currentDate      (off | date ) "date"
+    currentTime      (off | date | time | timestamp) "time"
+    timeOfDay        (off | date | time | timestamp) "timestamp"
+    currentTimestamp (off | date | time | timestamp) "timestamp"
+    timeResolution   CDATA "0"
+>
+
+
+<!-- ********************
+      Request Schedulers
+     ******************** -->
+
+<!--
+  Here is a brief definition of the meaning of the scheduler levels: 
+  + passThrough: queries are just assigned a unique idnetifier and forwarded as
+     is to the load balancer letting each database perform the scheduling. The
+     load balancer will just ensure that the writes are sent in the same order
+     to all backends.
+  + query: the query level scheduler is the most basic scheduler that ignores
+     transactions and schedule requests as they come. Reads can execute 
+     concurrently but a write blocks every other request execution until it 
+     completes. This scheduling might lead to database deadlocks under moderate
+     load. Only use this scheduler if the requests are already scheduled
+     upfront by the application.
+  + optimisticTransaction: this is an optimistic transactional level scheduler
+    that takes care of scheduling transactions in an optimistic way (writes on 
+    different tables can occur in parallel). An optimistic scheduler does not 
+    provide deadlock detection to rollback transactions that are deadlocking, 
+    but lets the database resolve the deadlocks and rollback the appropriate 
+    transactions.
+  + pessimisticTransaction<: this is a pessimistic transactional level
+     scheduler that schedules transactions in a safe way (without possible 
+     deadlocks) but providing less parallelism for writes compared to 
+     optimistic scheduling (this is only sensitive on write heavy workloads). 
+     This is the safest scheduler and it is recommended for most configurations.
+  -->
+<!ELEMENT RequestScheduler (SingleDBScheduler | RAIDb-0Scheduler | RAIDb-1Scheduler | RAIDb-2Scheduler)>
+
+<!ELEMENT SingleDBScheduler EMPTY>
+<!ATTLIST SingleDBScheduler 
+    level (passThrough | pessimisticTransaction) #REQUIRED
+>
+
+<!ELEMENT RAIDb-0Scheduler EMPTY>
+<!ATTLIST RAIDb-0Scheduler 
+    level (passThrough | pessimisticTransaction) #REQUIRED
+>
+
+<!ELEMENT RAIDb-1Scheduler EMPTY>
+<!ATTLIST RAIDb-1Scheduler
+    level (passThrough | query | optimisticQuery | optimisticTransaction | pessimisticTransaction) #REQUIRED
+>
+
+<!ELEMENT RAIDb-2Scheduler EMPTY>
+<!ATTLIST RAIDb-2Scheduler
+    level (passThrough | query | pessimisticTransaction) #REQUIRED
+>
+
+
+<!-- ****************
+      Request Caches
+     **************** -->
+
+<!--
+  A Request Cache can be composed of different caches that differ in the type
+  of data they cache:
+  MetadataCache: this cache improves the ResultSet creation time by keeping
+   the various field information with their metadata. It is strongly encouraged
+   to use this cache that reduces both cpu and memory usage.
+  ParsingCache: allows to parse a request only once for all its executions.
+   This reduces the cpu load on the controller.
+  ResultCache: this cache keeps the results associated to a given request.
+   Cache entries can be invalidated according to various policies. This cache
+   reduces the load on the database backends.
+  -->
+<!ELEMENT RequestCache (MetadataCache?, ParsingCache?, ResultCache?)>
+
+<!--
+  The MetadataCache caches ResultSet metadata and fields meta information 
+  associated to a query execution so that each time a query is executed, 
+  we don't have to gather all metadata from the underlying driver and we 
+  can build C-JDBC ResultSet much more efficiently both in terms of speed
+  and memory usage.
+  Note that if you use PreparedStatements, the query skeleton is used for
+  matching the cache instead of the instanciated query.
+  Example: SELECT * FROM t WHERE x=? hits on the same cache entry for all
+  queries of this form for any value of x.
+  
+  maxNbOfMetadata: maximum number of metadata entries to keep in the cache
+   (default is 10000 and 0 means unlimited)
+  maxNbOfField: maximum number of field entries to keep in the cache 
+   (0 means unlimited and is the default setting)
+  -->
+<!ELEMENT MetadataCache EMPTY>
+<!ATTLIST MetadataCache
+    maxNbOfMetadata CDATA "10000"
+    maxNbOfField    CDATA "0"
+>
+
+<!--
+ Parsing requests is a resource consuming process. The ParsingCache caches
+ the result of the parsing processing so that a request is only parsed once
+ for all its executions. If you are using PreparedStatements, the ParsingCache
+ can store the query skeleton meaning that the cached parsing will match any
+ instances of the skeleton.
+ Example: SELECT * FROM t WHERE x=? will be parsed only once and will match all
+ queries of this form for any value of x.
+ 
+ Request parsing can be done sequentially when needed (backgroundParsing set to
+ false which is the default value) or forced to be performed in background by a 
+ separate thread (it means a new thread is created for each request that need 
+ to be parsed).
+  
+ maxNbOfEntries: Defines the maximum number of entries to keep in the cache.
+  The cache uses a LRU (Least Recently Used) replacing policy meaning that 
+  the oldest entries from the cache are removed when it is full. Default is
+  0 and means no limit on cache size.
+  -->
+<!ELEMENT ParsingCache EMPTY>
+<!ATTLIST ParsingCache
+    backgroundParsing (true | false) "false"
+    maxNbOfEntries    CDATA "5000"       
+>
+
+<!--
+ The ResultCache caches results of queries. A query and its ResultSet
+ are stored in the cache so that if the sames query is executed, the
+ ResultSet stored in the cache is returned.
+
+ ResultCacheRule elements define the cache coherency and policy. Default 
+ cache behavior is eager consistency for all queries (ResultSet returned by the
+ cache are always coherent and up-to-date). See below (ResultCacheRule 
+ element) to relax the cache consistency to achieve better performance.
+ 
+ Cache granularities defines the invalidation policy for write queries:
+ - database: flushes the cache on every write and does not require request
+  parsing. This is the default cache mode.
+ - table:  provides table-based invalidations. Database schema handling and
+  request parsing is necessary for this granularity.
+ - column: provides column-based invalidations. Database schema handling and
+  request parsing is necessary for this granularity.
+ - columnUnique can optimize requests that select a unique row selected 
+  using a primary key. Database schema handling and request parsing is
+  necessary for this granularity.
+ 
+ maxNbOfEntries: Defines the maximum number of entries to keep in the cache.
+  The cache uses a LRU (Least Recently Used) replacing policy meaning that 
+  the oldest entries from the cache are removed when it is full. Default is
+  0 and means no limit on cache size.
+ pendingTimeout: If two exact same requests are to be executed, only one is 
+  executed and the second one waits until the completion of the first one (this
+  is the default pendingTimeout value which is 0). To prevent the second request
+  to wait forever, a pendingTimeout value in seconds can be defined for the 
+  waiting request. If the timeout expires the request is executed in parallel of
+  the first one.
+-->
+<!ELEMENT ResultCache (DefaultResultCacheRule?, ResultCacheRule*)>
+<!ATTLIST ResultCache 
+    granularity    (database | table | column | columnUnique) "database"
+    maxNbOfEntries CDATA "100000"
+    pendingTimeout CDATA "0"
+>
+
+<!-- 
+ Define a new cache rule based on a query pattern. 
+ 
+ queryPattern: a regular expression to match according to Jakarta Regexp
+   (see http://jakarta.apache.org/regexp for more information).
+ caseSensitive: true if the pattern matching must be case sensitive
+ applytoSkeleton: true if the pattern must apply to the query skeleton (found
+  in PrepareStatement), false if the instantiated query should be used.
+  Example: 
+    - skeleton: SELECT * FROM t WHERE x=?
+    - instantiated query: SELECT * FROM t WHERE x=12
+ monitoring: on to activate the monitoring for this rule, off to
+  disable it.
+ timestampResolution: If a query contains a NOW() macro, it is replaced with
+  the current date on the controller. timestampResolution indicates the 
+  resolution (in millisecond) to use when replacing NOW() with the current date.
+  If the resolution is below 1 second (value <1000ms), the request is never
+  kept in the cache because there is almost no chance that the same request 
+  will come with the same timestamp. Note that this timestamp is for the cache
+  only and you can use a greater resolution for the load balancer (see below).
+  Example: If timestampResolution is set to 60000, every execution of a query
+  like SELECT * FROM x WHERE date=NOW() will be replaced with the same value
+  for 1 minute (i.e. SELECT * FROM x WHERE date="2012-11-15 08:03:00.000")
+  and therefore the cache entry may be hit for 1 minute.
+
+ To define a default rule declare a ResultCacheRule with pattern 'default'.
+ example: 
+    <ResultCacheRule queryPattern="default">
+      <NoCaching/>
+    </ResultCacheRule>
+    
+    or
+    
+    <ResultCacheRule queryPattern="select ? from b where id=?" caseSensitive="false">
+      <RelaxedCaching timeOut="600" keepIfNotDirty="true"/>
+    </ResultCacheRule>
+    
+ If no default rule is provided, the following rule is assumed:
+    <ResultCacheRule queryPattern="default" timestampResolution="1000">
+      <EagerCaching/>
+    </ResultCacheRule>
+ 
+-->
+<!ELEMENT DefaultResultCacheRule (NoCaching | EagerCaching | RelaxedCaching)>
+<!ATTLIST DefaultResultCacheRule
+    timestampResolution CDATA "1000"
+>
+
+<!ELEMENT ResultCacheRule (NoCaching | EagerCaching | RelaxedCaching)>
+<!ATTLIST ResultCacheRule
+    queryPattern        CDATA #REQUIRED
+    caseSensitive       (true | false) "false"
+    applyToSkeleton     (true | false) "false"
+    timestampResolution CDATA "1000"
+>
+
+<!-- 
+  A cache action is associated with a pattern match.
+  - NoCaching means we do not put the match in the cache
+  - EagerCaching means that all entries in the cache are always coherent
+     and any update query (insert,delete,update,...) will automatically 
+     invalidate the corresponding entry in the cache. This is the default
+     cache mode. Since C-JDBC 1.1, it is possible to enforce a timeout on
+     valid entries to prevent unused cache entrie to stay in the cache until
+     they are evicted by the LRU policy. Default timeout is set to 10 minutes
+     (600 seconds).
+  - RelaxedCaching means we set a timeOut value for this entry, and
+     when expired we keep in the cache if no write has modified the 
+     corresponding result, we wait for the same amount of time again.
+     
+     RelaxedCaching may provide stale data. The timeout defines the 
+     maximum staleness of a cache entry. It means that the cache may 
+     return an entry that is out of date.
+     timeout: is a value in seconds and 0 means no timeout (always in the cache)
+     keepIfNotDirty: if true see above, if false, the entry is removed from the 
+     cache after the timeout has expired even if the entry was not affected by
+     a write
+-->
+<!ELEMENT NoCaching EMPTY>
+<!ELEMENT EagerCaching EMPTY>
+<!ATTLIST EagerCaching 
+     timeout        CDATA "1"
+>
+<!ELEMENT RelaxedCaching EMPTY>
+<!ATTLIST RelaxedCaching 
+     timeout        CDATA "60"
+     keepIfNotDirty (true | false) "true"
+>
+
+
+<!-- ****************
+      Load Balancers
+     **************** -->
+
+<!ELEMENT LoadBalancer (SingleDB | ParallelDB | RAIDb-0 | RAIDb-1 | RAIDb-1ec | RAIDb-2 | RAIDb-2ec)>
+
+<!-- 
+ No RAIDb: Just a single database backend 
+-->
+<!ELEMENT SingleDB EMPTY>
+
+<!-- 
+ ParallelDB: Simple load balancing on a parallel database such as
+   Oracle Parallel Server or Middle-R.
+   
+ This load balancer must be used with a SingleDB scheduler. 
+-->
+<!ELEMENT ParallelDB (ParallelDB-RoundRobin | ParallelDB-LeastPendingRequestsFirst)>
+
+<!ELEMENT ParallelDB-RoundRobin EMPTY>
+<!ELEMENT ParallelDB-LeastPendingRequestsFirst EMPTY>
+
+
+<!-- 
+ RAIDb-0: full partitioning 
+
+ If CreateTable is omitted, new table creation will use a round-robin
+ algorithm on all backends.
+-->
+<!ELEMENT RAIDb-0 (MacroHandling?,CreateTable*)>
+
+
+<!-- 
+ RAIDb-1: full mirroring 
+    
+ If WaitForCompletion is omitted, the default behaviour is to return
+ the result as soon as one backend has completed.
+ If MacroHandling is omitted, a default MacroHandling element is added.
+-->
+<!ELEMENT RAIDb-1 (WaitForCompletion?, MacroHandling?, (RAIDb-1-RoundRobin | RAIDb-1-WeightedRoundRobin | RAIDb-1-LeastPendingRequestsFirst))>
+
+<!ELEMENT RAIDb-1-RoundRobin EMPTY>
+<!ELEMENT RAIDb-1-WeightedRoundRobin (BackendWeight*)>
+<!ELEMENT RAIDb-1-LeastPendingRequestsFirst EMPTY>
+
+
+<!-- 
+ RAIDb-1ec: full mirroring with error checking
+    
+ Error checking here means that read requests will be sent to several
+ nodes and results will be compared to detect byzantine failures (see
+ Error cheking policy below).
+  
+ If WaitForCompletion is omitted, the default behaviour is to return
+ the result as soon as one backend has completed (on writes).
+ If MacroHandling is omitted, a default MacroHandling element is added.
+ nbOfConcurrentReads represents the number of read than can occur in
+ parallel.
+ Note that nbOfConcurrentReads threads will be created per backend.
+-->
+<!ELEMENT RAIDb-1ec (WaitForCompletion?, MacroHandling?, ErrorChecking, (RAIDb-1ec-RoundRobin | RAIDb-1ec-WeightedRoundRobin))>
+<!ATTLIST RAIDb-1ec 
+    nbOfConcurrentReads CDATA #REQUIRED
+>
+
+<!ELEMENT RAIDb-1ec-RoundRobin EMPTY>
+<!ELEMENT RAIDb-1ec-WeightedRoundRobin (BackendWeight*)>
+
+
+<!--
+ RAIDb-2: distributed mirroring 
+
+ If CreateTable is omitted, new table creation will affect all backends.
+ If WaitForCompletion is omitted, the default behaviour is to return
+ the result as soon as one backend has completed.
+ If MacroHandling is omitted, a default MacroHandling element is added.
+-->
+<!ELEMENT RAIDb-2 (CreateTable*, WaitForCompletion?, MacroHandling?, (RAIDb-2-RoundRobin | RAIDb-2-WeightedRoundRobin | RAIDb-2-LeastPendingRequestsFirst))>
+
+<!ELEMENT RAIDb-2-RoundRobin EMPTY>
+<!ELEMENT RAIDb-2-WeightedRoundRobin (BackendWeight*)>
+<!ELEMENT RAIDb-2-LeastPendingRequestsFirst EMPTY>
+
+
+<!-- 
+ RAIDb-2ec: distributed mirroring with error checking
+    
+ Error checking here means that read requests will be sent to several
+ nodes and results will be compared to detect byzantine failures (see
+ Error cheking policy below).
+  
+ If WaitForCompletion is omitted, the default behaviour is to return
+ the result as soon as one backend has completed (on writes).
+ If MacroHandling is omitted, a default MacroHandling element is added.
+ nbOfConcurrentReads represents the number of read than can occur in
+ parallel.
+ Note that nbOfConcurrentReads threads will be created per backend.
+-->
+<!ELEMENT RAIDb-2ec (CreateTable*, WaitForCompletion?, MacroHandling?, ErrorChecking, (RAIDb-2ec-RoundRobin | RAIDb-2ec-WeightedRoundRobin))>
+<!ATTLIST RAIDb-2ec 
+    nbOfConcurrentReads CDATA #REQUIRED
+>
+
+<!ELEMENT RAIDb-2ec-RoundRobin EMPTY>
+<!ELEMENT RAIDb-2ec-WeightedRoundRobin (BackendWeight*)>
+
+
+<!--
+ Policy to adopt when waiting for the completion of a request. Policy
+ works as follows:
+
+   - first: return the result as soon as one node has completed.
+   - majority: return the result as soon as a majority of nodes
+   (n/2+1) has completed.
+   - all: wait for all nodes to complete.
+-->
+<!ELEMENT WaitForCompletion EMPTY>
+<!ATTLIST WaitForCompletion 
+    policy (first | majority | all) "first"
+>
+
+
+<!-- 
+ Error checking policy (for RAIDb-1ec and RAIDb2-ec). Error checking
+ is used to detect byzantine failures of nodes. It means detecting
+ when a node sends funny results in a non- deterministic way. Error
+ checking allows read queries to be sent to more than one database,
+ and the results are compared. A majority of nodes must agree on the
+ result that will be sent to the client. Error checking policies are
+ defined as follows:
+
+   - random: numberOfNodes backends are picked up randomly; the read
+   request is sent to these backends and results are compared.
+   - roundRobin: numberOfNodes backends are picked up using a
+   Round-Robin algorithm ; the read request is send to these backends
+   and results are compared.
+   - all: the request is sent to ALL nodes (numberOfNodes is ignored)
+   and the results compared.
+
+ numberOfNodes must be greater or equal to 3.
+-->
+<!ELEMENT ErrorChecking EMPTY>
+<!ATTLIST ErrorChecking 
+    policy        (random | roundRobin | all) #REQUIRED
+    numberOfNodes CDATA #REQUIRED
+>
+
+
+<!--
+
+ Policy to adopt when creating a new table. This policy is based on
+ the given list of BackendName nodes (which might be a subset of the
+ complete set of backends). If the backend list is omitted, then all
+ enabled backends are taken at decision time. numberOfNodes represent
+ the number of backends to pickup from the BackendName list to apply
+ the policy (it must be set to 1 for RAIDb-0 load balancers and can
+ never be greater than the number of nodes declared in the BackendName
+ list). If tableName is omitted, it is considered as a default policy
+ to be used for all create table statements that don't have a specific
+ rule. Else tableName specifies a name pattern to which this policy
+ applies.
+
+ Policy works as follows:
+   - random: numberOfNodes backends are picked up randomly from the
+   BackendName list and the table is created on these nodes.
+   - roundRobin: numberOfNodes backends are picked up from the
+   BackendName list using a Round-Robin algorithm and the table is
+   created on these nodes.
+   - all: the table is created on ALL nodes in the BackendName list
+   (numberOfNodes is ignored).
+-->
+<!ELEMENT CreateTable (BackendName*)>
+<!ATTLIST CreateTable 
+    tableName     CDATA #IMPLIED
+    policy        (random | roundRobin | all) #REQUIRED
+    numberOfNodes CDATA #REQUIRED
+>
+
+<!--
+ BackendName simply identifies a backend by its logical name 
+-->
+<!ELEMENT BackendName EMPTY>
+<!ATTLIST BackendName
+    name   CDATA #REQUIRED
+>
+
+
+<!--
+ BackendWeight defines the weight of a backend for weighted
+ round-robin algorithms
+
+   name: the logical name of the backend
+   weight: the weight expressed as an integer
+-->
+<!ELEMENT BackendWeight EMPTY>
+<!ATTLIST BackendWeight
+    name   CDATA #REQUIRED
+    weight CDATA #REQUIRED
+>
+
+<!-- **************
+      Recovery Log
+     ************** -->
+
+<!--
+ The C-JDBC Recovery Log stores write queries and transactions between logical
+ checkpoints defined by the user. The log is stored in a database accessible
+ through JDBC.
+
+ As the RecoveryLog stores the recovery information in a database. To access
+ this database, you must provide the driver class to load (driver), the driver
+ jar file or directory where the class files can be found (if driverPath is 
+ omitted, it is assumed that the driver is in the drivers/ directory), 
+ the JDBC url to access the database as well as a valid login/password.
+ A timeout in seconds can be defined for the sql requests. If no
+ value is given, the default timeout is set to 60 seconds. Warning! 0
+ means no timeout and wait forever until completion.
+ recoveryBatchSize is used to speedup the recovery process and allow several
+ queries to be accumulated into a batch on the recovering backend. Increasing
+ this value beyond a certain limit will not increase performance and will
+ consume a significant amount of memory. Default is 10 and minimum is 1.
+ The recovery information is stored in 4 tables defined in the 
+ RecoveryLogTable, CheckpointTable, BackendLogTable and DumpTable elements.
+-->
+  
+<!ELEMENT RecoveryLog (RecoveryLogTable, CheckpointTable, BackendTable, DumpTable)>
+<!ATTLIST RecoveryLog 
+    driver            CDATA #REQUIRED
+    driverPath        CDATA #IMPLIED
+    url               CDATA #REQUIRED
+    login             CDATA #REQUIRED
+    password          CDATA #REQUIRED
+    requestTimeout    CDATA "60"
+    recoveryBatchSize CDATA "10"
+>
+
+<!--
+  RecoveryLogTable defines how the JDBCRecoveryLog log table is created. The log
+  table stores a unique request id (id), the virtual login (vlogin)to use to
+  execute the sql statement (sql) in the given transaction (transactionId).
+  The statement used by the JDBCRecoveryLog to create the log table uses the 
+  RecoveryLogTable attributes as follows:
+  createTable tableName (
+    id             idColumnType,
+    vlogin         vloginColumnType,
+    sqlColumnName  sqlColumnType,
+    transaction_id transactionIdColumnType
+    extraStatementDefinition)
+  If all default values are used, the log table is created using the following
+  statement:
+  CREATE TABLE logtable (
+    id             BIGINT NOT NULL UNIQUE, 
+    vlogin         TEXT NOT NULL, 
+    sql            TEXT NOT NULL, 
+    transaction_id BIGINT NOT NULL
+    )
+-->
+<!ELEMENT RecoveryLogTable EMPTY>
+<!ATTLIST RecoveryLogTable 
+    createTable              CDATA "CREATE TABLE"
+    tableName                CDATA "logtable"  
+    idColumnType             CDATA "BIGINT NOT NULL UNIQUE"
+    vloginColumnType         CDATA "TEXT NOT NULL"
+    sqlColumnName            CDATA "sql"
+    sqlColumnType            CDATA "TEXT NOT NULL"
+    transactionIdColumnType  CDATA "BIGINT NOT NULL"
+    extraStatementDefinition CDATA ""
+>
+
+<!--
+ The CheckpointTable stores the checkpoint name and the corresponding index in
+ the recovery log table. 
+  
+  The statement used by the JDBCRecoveryLog to create the checkpoint table uses
+  the CheckpointTable attributes as follows:
+  createTable tableName (
+    name       checkpointNameColumnType,
+    request_id requestIdColumnType
+    extraStatementDefinition)
+  If all default values are used, the log table is created using the following
+  statement:
+  CREATE TABLE checkpointtable (
+    name       TEXT NOT NULL,
+    request_id BIGINT,
+    PRIMARY KEY(name))
+-->
+<!ELEMENT CheckpointTable EMPTY>
+<!ATTLIST CheckpointTable 
+    createTable              CDATA "CREATE TABLE"
+    tableName                CDATA "checkpointtable"
+    checkpointNameColumnType CDATA "TEXT NOT NULL"
+    requestIdColumnType      CDATA "BIGINT"
+    extraStatementDefinition CDATA ",PRIMARY KEY (name)"
+>
+
+
+<!--
+  BackendLogTable stores the states of the different backends of a virtual 
+  database. 
+  
+  It stores the name of the backend, the database it belongs to and the last
+  known checkpoint of a backend when the backend is disabled, and the state 
+  the backend was in when the database was last shutdown.
+  If all default values are used, the log table is created using the following
+  statement:
+  CREATE TABLE backendtable (
+    database_name   TEXT NOT NULL,
+    backend_name    TEXT NOT NULL,
+    backend_state   INTEGER,
+    checkpoint_name TEXT NOT NULL
+    )
+-->
+<!ELEMENT BackendTable EMPTY>
+<!ATTLIST BackendTable 
+    createTable                  CDATA "CREATE TABLE"
+    tableName                    CDATA "backendtable"  
+    databaseNameColumnType       CDATA "TEXT NOT NULL"
+    backendNameColumnType        CDATA "TEXT NOT NULL"
+    backendStateColumnType       CDATA "INTEGER"
+    checkpointNameColumnType     CDATA "TEXT NOT NULL"
+    extraStatementDefinition     CDATA ""
+>
+
+
+<!--
+ The DumpTable stores the dump names and associated meta-data such as the
+ corresponding checkpoint name. 
+  
+  The statement used by the JDBCRecoveryLog to create the dump table uses
+  the DumpTable attributes as follows:
+  createTable tableName (
+    dump_name        dumpNameColumnType,
+    dump_date        dumpDateColumnType,
+    dump_path        dumpPathColumnType,
+    dump_format      dumpTypeColumnType,
+    checkpoint_name  checkpointNameColumnType,
+    backend_name     backendNameColumnType,
+    tablesColumnName tablesColumnType
+    extraStatementDefinition)
+  dump_name is the dump logical name, dump_date the date at which the backup
+  was started, dump_path the path where the dump can be found, dump_format an
+  implementation specific text form that specifies the method used for the 
+  dump, checkpoint_name is the name of the checkpoint associated to this dump,
+  tables is the list of tables that are contained in this dump (* means all 
+  tables).
+  
+  If all default values are used, the log table is created using the following
+  statement:
+  CREATE TABLE DumpTable (
+    dump_name       TEXT NOT NULL,
+    dump_date       DATE,
+    dump_path       TEXT NOT NULL,
+    dump_format     TEXT NOT NULL,
+    checkpoint_name TEXT NOT NULL,
+    backend_name    TEXT NOT NULL,
+    tables          TEXT NOT NULL
+    )
+-->
+<!ELEMENT DumpTable EMPTY>
+<!ATTLIST DumpTable
+    createTable              CDATA "CREATE TABLE"
+    tableName                CDATA "dumptable"
+    dumpNameColumnType       CDATA "TEXT NOT NULL"
+    dumpDateColumnType       CDATA "TEXT NOT NULL"
+    dumpPathColumnType       CDATA "TEXT NOT NULL"
+    dumpFormatColumnType     CDATA "TEXT NOT NULL"
+    checkpointNameColumnType CDATA "TEXT NOT NULL"  
+    backendNameColumnType    CDATA "TEXT NOT NULL"
+    tablesColumnName         CDATA "tables"
+    tablesColumnType         CDATA "TEXT NOT NULL"
+    extraStatementDefinition CDATA ""
+>

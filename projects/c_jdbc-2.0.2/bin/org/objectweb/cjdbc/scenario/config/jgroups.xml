@@ -1,0 +1,164 @@
+<protocol-stack name="Default protocol stack" version="1.0.0">
+	<description>JavaGroups Default Protocol Stack</description>
+	<protocol>
+		<protocol-name>UDP Protocol</protocol-name>
+		<description>Sends and receives messages on UDP sockets</description>
+		<class-name>org.jgroups.protocols.UDP</class-name>
+		<protocol-params>
+			<protocol-param name="mcast_addr"          value="228.8.8.7"/>
+
+			<!-- binding to localhost wants ''# ip route add 228.0.0.0/8 dev lo'' -->
+			<protocol-param name="bind_addr"  	   value="127.0.0.1"/>
+
+			<protocol-param name="mcast_port"          value="45566"/>
+			<protocol-param name="ucast_send_buf_size" value="32000"/>
+			<protocol-param name="ucast_recv_buf_size" value="64000"/>
+			<protocol-param name="mcast_send_buf_size" value="32000"/>
+			<protocol-param name="mcast_recv_buf_size" value="64000"/>
+			<protocol-param name="use_packet_handler"  value="true"/>
+			<protocol-param name="loopback"            value="true"/>
+			<protocol-param name="ip_ttl"              value="32"/>
+		</protocol-params>
+	</protocol>
+    <protocol>
+        <protocol-name>Auto Configuration</protocol-name>
+        <description>Senses the network properties and allows other protocols to configure themselves automatically</description>
+        <class-name>org.jgroups.protocols.AUTOCONF</class-name>
+        <protocol-params>
+        </protocol-params>
+    </protocol>
+	<protocol>
+		<protocol-name>Ping Protocol</protocol-name>
+		<description>Find the initial membership</description>
+		<class-name>org.jgroups.protocols.PING</class-name>
+		<protocol-params>
+			<protocol-param name="timeout" value="200"/>
+			<protocol-param name="num_initial_members" value="2"/>
+		</protocol-params>
+	</protocol>
+	<protocol>
+		<protocol-name>Merge Protocol</protocol-name>
+		<description>Periodically tries to detect subgroups and emits MERGE events in that case</description>
+		<class-name>org.jgroups.protocols.MERGE2</class-name>
+		<protocol-params>
+			<protocol-param name="min_interval" value="100"/>
+			<protocol-param name="max_interval" value="200"/>
+		</protocol-params>
+	</protocol>
+	<protocol>
+		<protocol-name>Failure Detection Socket</protocol-name>
+		<description>Failure detection based on sockets</description>
+		<class-name>org.jgroups.protocols.FD</class-name>
+		<protocol-params>
+			<protocol-param name="timeout"   value="50"/>
+			<protocol-param name="max_tries" value="1"/>
+			<protocol-param name="shun"      value="true"/>
+		</protocol-params>
+	</protocol>
+    <protocol>
+        <protocol-name>Stable protocol</protocol-name>
+        <description>Distributed message garbage collection protocol. Deletes messages seen by all group members</description>
+        <class-name>org.jgroups.protocols.STABLE</class-name>
+        <protocol-params>
+            <!-- max_msgs: the max number of msgs to wait for between two consecutive gossipings. -->
+            <protocol-param name="max_msgs" value="100"/>
+            <!-- max_wait_time: the max time to wait for between two consecutive gossipings. -->
+            <protocol-param name="max_wait_time" value="1000"/>
+            <!-- highest_seqnos_timeout: time to wait to receive from NAKACK the array of highest deliverable seqnos -->
+            <protocol-param name="highest_seqnos_timeout" value="400"/>
+        </protocol-params>
+    </protocol>
+	<protocol>
+		<protocol-name>Verify Suspect</protocol-name>
+		<description>Double-checks that a suspected member is really dead</description>
+		<class-name>org.jgroups.protocols.VERIFY_SUSPECT</class-name>
+		<protocol-params>
+			<protocol-param name="timeout" value="200"/>
+		</protocol-params>
+	</protocol>
+	<protocol>
+		<protocol-name>Reliable mcast message transission</protocol-name>
+		<description>Uses a negative acknowledgement protocol for retransmissions</description>
+		<class-name>org.jgroups.protocols.NAKACK</class-name>
+		<protocol-params>
+			<protocol-param name="retransmit_timeout" value="300"/>
+			<protocol-param name="rebroadcast_timeout" value="100"/>
+		</protocol-params>
+	</protocol>
+	<protocol>
+		<protocol-name>Unicast Protocol</protocol-name>
+		<description>Provides lossless transmission of unicast message (similar to TCP)</description>
+		<class-name>org.jgroups.protocols.UNICAST</class-name>
+		<protocol-params>
+			<protocol-param name="timeout" value="300,600"/>
+		</protocol-params>
+	</protocol>
+    <protocol>
+        <protocol-name>FlowControl Protocol</protocol-name>
+        <description>Provides multicast or unicast flow control</description>
+        <class-name>org.jgroups.protocols.FC</class-name>
+        <protocol-params>
+            <protocol-param name="max_credits" value="2000000"/>
+            <protocol-param name="min_credits" value="52000"/>
+            <!--<protocol-param name="direct_blocking" value="true"/>-->
+            <protocol-param name="down_thread" value="false"/>
+        </protocol-params>
+    </protocol>
+	<protocol>
+		<protocol-name>Fragmentation Protocol</protocol-name>
+		<description>Divides up larger message into smaller pieces</description>
+		<class-name>org.jgroups.protocols.FRAG</class-name>
+		<protocol-params>
+			<protocol-param name="frag_size" value="8192"/>
+			<protocol-param name="down_thread" value="false"/>
+			<protocol-param name="up_thread" value="true"/>
+		</protocol-params>
+	</protocol>
+	<protocol>
+		<protocol-name>FLUSH Protocol</protocol-name>
+		<description>Flushes pending messages out of the system before installing a new view</description>
+		<class-name>org.jgroups.protocols.FLUSH</class-name>
+	</protocol>
+	<protocol>
+		<protocol-name>Group Membership Protocol</protocol-name>
+		<description>Maintains the member ship view</description>
+		<class-name>org.jgroups.protocols.GMS</class-name>
+		<protocol-params>
+			<!-- time to wait for JOIN -->
+			<protocol-param name="join_timeout" value="100"/>
+			<!-- time to wait between JOINs -->
+			<protocol-param name="join_retry_timeout" value="100"/>
+			<!-- should the GMS local address be printed on the console -->
+			<protocol-param name="print_local_addr" value="false"/>
+			<!-- time to wait for VIEW_CHANGE -->
+			<protocol-param name="view_change_timeout" value="100"/>
+			<!-- time to wait until coord responds to LEAVE req. -->
+			<protocol-param name="leave_timeout" value="100"/>
+			<!-- time to wait until FLUSH completes (0=forever) -->
+			<protocol-param name="flush_timeout" value="100"/>
+			<!-- bcast unstable msgs (recvd from FLUSH) -->
+			<protocol-param name="rebroadcast_unstable_msgs" value="true"/>
+			<!-- time to wait until REBROADCAST_MSGS completes -->
+			<protocol-param name="rebroadcast_timeout" value="100"/>
+			<!-- allow initial mbr to become coord or not -->
+			<protocol-param name="disable_initial_coord" value="false"/>
+		</protocol-params>
+	</protocol>
+	<protocol>
+		<protocol-name>VIEW_ENFORCER</protocol-name>
+		<description>Discards message from a prior view</description>
+		<class-name>org.jgroups.protocols.VIEW_ENFORCER</class-name>
+	</protocol>
+	<protocol>
+		<protocol-name>TOTAL_TOKEN</protocol-name>
+		<description>Total ordering layer using a message sequencer</description>
+		<class-name>org.jgroups.protocols.TOTAL</class-name>
+	</protocol>
+	<protocol>
+		<protocol-name>QUEUE</protocol-name>
+		<description>Queues messages sent during a FLUSH (they will be sent in a future view)</description>
+		<class-name>org.jgroups.protocols.QUEUE</class-name>
+	</protocol>
+</protocol-stack>
+	
+

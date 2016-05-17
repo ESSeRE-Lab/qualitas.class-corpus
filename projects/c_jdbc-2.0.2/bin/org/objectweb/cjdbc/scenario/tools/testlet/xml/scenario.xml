@@ -1,0 +1,45 @@
+<!-- Scenario Xml Template -->
+<scenario>
+	<!-- 
+		Prepare Configuration of the scenario 
+	-->
+	<configuration>
+		<!-- 
+				Starts the backends, can specify the types here 
+        -->
+		<database name="localhost" data="database-raidb1.template" port="9001" 
+			type="hsqldb"/>
+		<database name="localhost2" data="database-raidb1.template" port="9002" 
+			type="hsqldb"/>
+		<!-- 
+			Could be multiple controllers here.
+			If no ids are given to the components, 
+			default ids are given depending on the port used
+		-->
+		<controller port="25322">
+			<!-- 
+				Starts the virtual database here 
+			-->
+			<virtualdatabase data="hsqldb-raidb1.xml"/>
+		</controller>
+	</configuration>
+	
+	<!-- 
+		Start the scenario with a ClobTestLet and given parameters 
+    -->
+	<testlet class="ClobTestLet">
+		<param name="TableName" value="clobTable"/>
+		<param name="updatedColumnValue" value="I am a CLOB"/>
+	</testlet>
+	
+	<!-- 
+		Simluate a fault during the execution of the let, after given time, 
+		or random if nothing is specified 
+	-->
+	<testlet class="ClobTestLet">
+		<fault name="localhost"/>
+		<param name="TableName" value="clobTable"/>
+		<param name="updatedColumnValue" value="I am a CLOB"/>
+	</testlet>
+	
+</scenario>

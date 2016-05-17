@@ -1,0 +1,93 @@
+<html><head><META http-equiv="Content-Type" content="text/html; charset=ISO-8859-1"><title>3.&nbsp;Installation</title><meta content="DocBook XSL Stylesheets V1.65.1" name="generator"><link rel="home" href="index.html" title="C-JDBC User's Guide"><link rel="up" href="index.html" title="C-JDBC User's Guide"><link rel="previous" href="ar01s02.html" title="2.&nbsp;Getting the Sofware"><link rel="next" href="ar01s04.html" title="4.&nbsp;C-JDBC Driver"></head><body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF"><div class="navheader"><table summary="Navigation header" width="100%"><tr><th align="center" colspan="3">3.&nbsp;Installation</th></tr><tr><td align="left" width="20%"><a accesskey="p" href="ar01s02.html"><img src="../../images/prev.gif" alt="Prev"></a>&nbsp;</td><th align="center" width="60%">&nbsp;</th><td align="right" width="20%">&nbsp;<a accesskey="n" href="ar01s04.html"><img src="../../images/next.gif" alt="Next"></a></td></tr></table><hr></div><div class="section" lang="en"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="installation"></a>3.&nbsp;Installation</h2></div></div><div></div></div><div class="section" lang="en"><div class="titlepage"><div><div><h3 class="title"><a name="cjdbc_controller"></a>3.1.&nbsp;C-JDBC Controller</h3></div></div><div></div></div><div class="section" lang="en"><div class="titlepage"><div><div><h4 class="title"><a name="using_java_graphical_installer"></a>3.1.1.&nbsp;Using the Java graphical installer</h4></div></div><div></div></div><p>The easiest way to install C-JDBC is to use the Java graphical 
+          installer. A Java Virtual Machine is of course needed in this 
+          case.</p><div class="itemizedlist"><ul type="disc"><li><p>Unix users can simply launch the installation program by 
+              typing:</p><pre class="programlisting"> 
+              bash&gt; java -jar c-jdbc-x.y.bin-installer.jar 
+            </pre></li><li><p>Windows users can use the same command or just double-clik on 
+              the JAR installation file if your JRE has been properly 
+              installed.</p></li></ul></div></div><div class="section" lang="en"><div class="titlepage"><div><div><h4 class="title"><a name="using_binary_distribution"></a>3.1.2.&nbsp;Using the binary distribution</h4></div></div><div></div></div><p>If you want to use the other distribution formats (for example if 
+          you have not installed a JVM or if you can not launch a graphical 
+          application), you have to uncompress the downloaded file in the 
+          directory of your choice, and then set the 
+          <tt class="literal">CJDBC_HOME</tt> environment variable.</p><div class="note" style="margin-left: 0.5in; margin-right: 0.5in;"><table border="0" summary="Note"><tr><td valign="top" align="center" rowspan="2" width="25"><img alt="[Note]" src="../../images/note.gif"></td><th align="left">Note</th></tr><tr><td valign="top" align="left" colspan="2"><p>If you are using the Java installer, you do not need to set any 
+            environment variable since the installer customizes the scripts 
+            with the installation path.</p></td></tr></table></div><p>To set the <tt class="literal">CJDBC_HOME</tt> environment variable, 
+          you can proceed as follows:</p><div class="itemizedlist"><ul type="disc"><li><p>Unix users can proceed as follows:</p><pre class="programlisting"> 
+bash&gt; mkdir -p /usr/local/c-jdbc
+bash&gt; cd /usr/local/c-jdbc
+bash&gt; tar xfz /path-to-c-jdbc-bin-dist/c-jdbc-x.y-bin.tar.gz
+bash&gt; export CJDBC_HOME=/usr/local/c-jdbc
+            </pre><div class="note" style="margin-left: 0.5in; margin-right: 0.5in;"><table border="0" summary="Note"><tr><td valign="top" align="center" rowspan="2" width="25"><img alt="[Note]" src="../../images/note.gif"></td><th align="left">Note</th></tr><tr><td valign="top" align="left" colspan="2"><p>In this example, we assume you install C-JDBC in the 
+                <tt class="filename">/usr/local/c-jdbc</tt> 
+                directory.</p></td></tr></table></div><p>You can modify your shell configuration file 
+              (<tt class="filename">.bashrc</tt>, <tt class="filename">.cshrc</tt>, ...) 
+              to set the environment variable permanently.</p></li><li><p>Windows users have to use an utility such as <a href="http://www.winzip.com/" target="_top">WinZip</a> to extract the files 
+              from the archive. Then, to set the <tt class="literal">CJDB_HOME</tt> 
+              variable, do the following according to your Windows 
+              version:</p><div class="itemizedlist"><ul type="circle"><li><p><span class="emphasis"><em>Windows 95 or 98</em></span>: you must insert 
+                  the following line in the <tt class="filename">AUTOEXEC.BAT</tt> 
+                  file:</p><pre class="programlisting">set CJDBC_HOME="C:\Program Files\C-JDBC"</pre></li><li><p><span class="emphasis"><em>Windows Me</em></span>: go to the &ldquo;<span class="quote">Start 
+                  Menu</span>&rdquo;, then choose &ldquo;<span class="quote">Programs</span>&rdquo;, 
+                  &ldquo;<span class="quote">Accessories</span>&rdquo;, &ldquo;<span class="quote">System Tools</span>&rdquo; and 
+                  &ldquo;<span class="quote">System Information</span>&rdquo;. A window titled 
+                  &ldquo;<span class="quote">Microsoft Help and Support</span>&rdquo; should appear. 
+                  Select the &ldquo;<span class="quote">Tools</span>&rdquo; menu, and choose the 
+                  &ldquo;<span class="quote">System Configuration Utility</span>&rdquo;. Go to the 
+                  &ldquo;<span class="quote">Environment</span>&rdquo; and click on the 
+                  &ldquo;<span class="quote">New</span>&rdquo; button. Enter 
+                  <tt class="literal">CJDBC_HOME</tt> in the &ldquo;<span class="quote">Variable 
+                  Name</span>&rdquo; field and <tt class="filename">"C:\Program Files\C-JDBC"</tt> in 
+                  &ldquo;<span class="quote">Variable Value</span>&rdquo;. Once you have changed and 
+                  saved the value, you will be prompted for reboot.</p></li><li><p><span class="emphasis"><em>Windows NT</em></span>: go to the &ldquo;<span class="quote">Start 
+                  Menu</span>&rdquo;, then choose &ldquo;<span class="quote">Settings</span>&rdquo;, 
+                  &ldquo;<span class="quote">Control Panel</span>&rdquo; and select 
+                  &ldquo;<span class="quote">System</span>&rdquo;. Select the &ldquo;<span class="quote">Environment</span>&rdquo; 
+                  tab and click on the &ldquo;<span class="quote">New</span>&rdquo; button. Enter 
+                  <tt class="literal">CJDBC_HOME</tt> in the &ldquo;<span class="quote">Variable 
+                  Name</span>&rdquo; field and <tt class="filename">"C:\Program Files\C-JDBC"</tt> in 
+                  &ldquo;<span class="quote">Variable Value</span>&rdquo;.</p></li><li><p><span class="emphasis"><em>Windows 2000</em></span>: go to the &ldquo;<span class="quote">Start 
+                  Menu</span>&rdquo;, then choose &ldquo;<span class="quote">Settings</span>&rdquo;, 
+                  &ldquo;<span class="quote">Control Panel</span>&rdquo; and select 
+                  &ldquo;<span class="quote">System</span>&rdquo;. Select the &ldquo;<span class="quote">Advanced</span>&rdquo; tab 
+                  and click on the &ldquo;<span class="quote">New</span>&rdquo; button. Enter 
+                  <tt class="literal">CJDBC_HOME</tt> in the &ldquo;<span class="quote">Variable 
+                  Name</span>&rdquo; field and <tt class="filename">"C:\Program Files\C-JDBC"</tt> in 
+                  &ldquo;<span class="quote">Variable Value</span>&rdquo;.</p></li><li><p><span class="emphasis"><em>Windows XP</em></span>: go to the &ldquo;<span class="quote">Start 
+                  Menu</span>&rdquo;, then double click on &ldquo;<span class="quote">System</span>&rdquo;. In 
+                  the &ldquo;<span class="quote">System Control Panel</span>&rdquo; select the 
+                  &ldquo;<span class="quote">Advanced</span>&rdquo; tab and push the <tt class="literal">Environment 
+                  Variables</tt> button. Click on the &ldquo;<span class="quote">New</span>&rdquo; 
+                  button for &ldquo;<span class="quote">System Variables</span>&rdquo;. Enter 
+                  <tt class="literal">CJDBC_HOME</tt> in the &ldquo;<span class="quote">Variable 
+                  Name</span>&rdquo; field and <tt class="filename">"C:\Program Files\C-JDBC"</tt> in 
+                  &ldquo;<span class="quote">Variable Value</span>&rdquo;.</p></li></ul></div><div class="note" style="margin-left: 0.5in; margin-right: 0.5in;"><table border="0" summary="Note"><tr><td valign="top" align="center" rowspan="2" width="25"><img alt="[Note]" src="../../images/note.gif"></td><th align="left">Note</th></tr><tr><td valign="top" align="left" colspan="2"><p>In this example, we assume you install C-JDBC in the 
+                <tt class="filename">C:\Program Files\C-JDBC</tt> 
+                directory.</p></td></tr></table></div><div class="note" style="margin-left: 0.5in; margin-right: 0.5in;"><table border="0" summary="Note"><tr><td valign="top" align="center" rowspan="2" width="25"><img alt="[Note]" src="../../images/note.gif"></td><th align="left">Note</th></tr><tr><td valign="top" align="left" colspan="2"><p>Do not forget the quotes in the CJDBC_HOME environment 
+                variable definition else the starting scripts will fail with 
+                paths including spaces.</p></td></tr></table></div></li></ul></div></div></div><div class="section" lang="en"><div class="titlepage"><div><div><h3 class="title"><a name="cjdbc_driver"></a>3.2.&nbsp;C-JDBC Driver</h3></div></div><div></div></div><p>Once you have installed the C-JDBC controller, you will find the 
+        driver JAR file in the <tt class="filename">drivers/</tt> 
+        directory of the controller installation location.</p><p>To install the C-JDBC driver, you just have to add the <tt class="filename">c-jdbc-driver.jar</tt> file to the client 
+        application classpath. This driver replaces the database native driver 
+        in the client application. The database native driver will be used by 
+        the C-JDBC controller to access your database. Therefore, the C-JDBC 
+        driver and controller can be seen as a proxy between your application 
+        and your database native driver.</p></div><div class="section" lang="en"><div class="titlepage"><div><div><h3 class="title"><a name="raidb1_out_of_the_box"></a>3.3.&nbsp;C-JDBC out of the box</h3></div></div><div></div></div><p>Since version 1.0b13, you have access to a RAIDb-1 configuration of 
+        HyperSonic SQL databases, just by launching the 
+        <span><b class="command">demo-raidb1.sh</b></span> or <span><b class="command">demo-raidb1.bat</b></span> 
+        file from the <tt class="filename">demo</tt> directory in 
+        your C-JDBC installation.</p><p>This is especially useful if you are new to clustering, or new to 
+        C-JDBC. The setup used is as follows: </p><div class="itemizedlist"><ul type="disc"><li><p>2 HyperSonic SQL databases are started on two different ports 
+            (9001 and 9002)</p></li><li><p>An extra HyperSonic SQL database is started on port 9003 to be 
+            used as the recovery log database</p></li><li><p>The C-JDBC controller is configured to load automatically a 
+            virtual database containing those two HyperSonic SQL backends. The 
+            controller startup configuration file is found in 
+            <tt class="filename">CJDBC_HOME/config/controller/controller-raidb1.xml</tt> 
+            and the virtual database configuration file is 
+            <tt class="filename">CJDBC_HOME/config/virtualdatabase/hsqldb-raidb1.xml</tt>.</p></li><li><p>Once the RAIDb-1 configuration is loaded, you can connect to 
+            C-JDBC using Squirrel, a graphical SQL console bundled with C-JDBC. 
+            You can start Squirrel by using <span><b class="command">squirrel.sh</b></span> 
+            or <span><b class="command">squirrel.bat</b></span>.</p></li></ul></div><p>Squirrel shows the C-JDBC driver and HSQL database driver, and 
+        links to databases. You can click on them to view the different data. 
+        The login to use for C-JDBC is <tt class="literal">user</tt> with an empty 
+        password. The login for both HSQL databases is <tt class="literal">test</tt> 
+        with an empty password.</p></div></div><div class="navfooter"><hr><table summary="Navigation footer" width="100%"><tr><td align="left" width="40%"><a accesskey="p" href="ar01s02.html"><img src="../../images/prev.gif" alt="Prev"></a>&nbsp;</td><td align="center" width="20%"><a accesskey="u" href="index.html"><img src="../../images/up.gif" alt="Up"></a></td><td align="right" width="40%">&nbsp;<a accesskey="n" href="ar01s04.html"><img src="../../images/next.gif" alt="Next"></a></td></tr><tr><td valign="top" align="left" width="40%">2.&nbsp;Getting the Sofware&nbsp;</td><td align="center" width="20%"><a accesskey="h" href="index.html"><img src="../../images/home.gif" alt="Home"></a></td><td valign="top" align="right" width="40%">&nbsp;4.&nbsp;C-JDBC Driver</td></tr></table></div></body></html>

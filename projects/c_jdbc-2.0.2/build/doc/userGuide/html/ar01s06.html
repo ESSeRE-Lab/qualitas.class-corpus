@@ -1,0 +1,448 @@
+<html><head><META http-equiv="Content-Type" content="text/html; charset=ISO-8859-1"><title>6.&nbsp;C-JDBC controller</title><meta content="DocBook XSL Stylesheets V1.65.1" name="generator"><link rel="home" href="index.html" title="C-JDBC User's Guide"><link rel="up" href="index.html" title="C-JDBC User's Guide"><link rel="previous" href="ar01s05.html" title="5.&nbsp;Configuring C-JDBC with 3rd party software"><link rel="next" href="ar01s07.html" title="7.&nbsp;Administration console"></head><body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF"><div class="navheader"><table summary="Navigation header" width="100%"><tr><th align="center" colspan="3">6.&nbsp;C-JDBC controller</th></tr><tr><td align="left" width="20%"><a accesskey="p" href="ar01s05.html"><img src="../../images/prev.gif" alt="Prev"></a>&nbsp;</td><th align="center" width="60%">&nbsp;</th><td align="right" width="20%">&nbsp;<a accesskey="n" href="ar01s07.html"><img src="../../images/next.gif" alt="Next"></a></td></tr></table><hr></div><div class="section" lang="en"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="c_jdbc_controller"></a>6.&nbsp;C-JDBC controller</h2></div></div><div></div></div><div class="section" lang="en"><div class="titlepage"><div><div><h3 class="title"><a name="design_overview"></a>6.1.&nbsp;Design Overview</h3></div></div><div></div></div><p>The C-JDBC controller is made of several components as shown in 
+        <a href="ar01s06.html#fig_controller_overview" title="Figure&nbsp;2.&nbsp;C-JDBC controller design overview">Figure&nbsp;2, &ldquo;C-JDBC controller design overview&rdquo;</a>. The controller hosts 
+        <span class="emphasis"><em>virtual databases</em></span>. A <span class="emphasis"><em>virtual 
+        database</em></span> gives the illusion of a single database to the 
+        user. It exports the same database name and login/password as those 
+        used in the client application. Therefore the client application can 
+        run unmodified with C-JDBC.</p><p>When the client application connects to the database using an URL 
+        like <tt class="literal">jdbc:cjdbc://host:25322/myDB</tt>, the C-JDBC driver 
+        tries to connect to a C-JDBC controller running on port 
+        <tt class="literal">25322</tt> on node <tt class="literal">host</tt>. Once the 
+        connection is established the login and password are sent with the 
+        <tt class="literal">myDB</tt> database name to be checked by the 
+        controller.</p><p>A virtual database contains the following components:</p><div class="itemizedlist"><ul type="disc"><li><p><span class="emphasis"><em>authentication manager</em></span>: it matches the 
+            virtual database login/password (provided by the application to the 
+            C-JDBC driver) with the real login/password to use on each backend. 
+            The authentication manager is only involved at connection 
+            establishment time.</p></li><li><p><span class="emphasis"><em>backup manager</em></span>: manages a list of generic or
+            database specific Backupers that are in charge of performing database dump and
+            restore operation. Backupers should also take careof transferring dumps from
+            one controller to another.</p></li><li><p><span class="emphasis"><em>request manager</em></span>: it handles the requests 
+            coming from a connection with a C-JDBC driver. It is composed of 
+            several components:</p><div class="itemizedlist"><ul type="circle"><li><p><span class="emphasis"><em>scheduler</em></span>: it is responsible for 
+                scheduling the requests. Each RAIDb level has its own 
+                scheduler.</p></li><li><p><span class="emphasis"><em>request caches</em></span>: these are optional 
+                components that can cache query parsing, the result set and 
+                result metadata of queries.</p></li><li><p><span class="emphasis"><em>load balancer</em></span>: it balances the load on 
+                the underlying backends according to the chosen RAIDb level 
+                configuration.</p></li><li><p><span class="emphasis"><em>recovery log</em></span>: it handles checkpoints 
+                and allows backends to dynamically recover from a failure or to 
+                be dynamically added to a running cluster.</p></li></ul></div></li><li><p><span class="emphasis"><em>database backend</em></span>: it represents the real 
+            database backend running the RDBMS engine. A <span class="emphasis"><em>connection 
+            manager</em></span> mainly provides connection pooling on top of the 
+            database JDBC native driver.</p></li></ul></div><div class="figure"><a name="fig_controller_overview"></a><p class="title"><b>Figure&nbsp;2.&nbsp;C-JDBC controller design overview</b></p><div class="mediaobject" align="center"><img src="images/c-jdbc_controller.gif" align="middle" alt="C-JDBC controller design overview"></div></div><p>Each virtual database and its components are configured using an 
+        XML configuration file that is sent from the administration console to 
+        the C-JDBC controller.
+      </p><div class="note" style="margin-left: 0.5in; margin-right: 0.5in;"><table border="0" summary="Note"><tr><td valign="top" align="center" rowspan="2" width="25"><img alt="[Note]" src="../../images/note.gif"></td><th align="left">Note</th></tr><tr><td valign="top" align="left" colspan="2"><p>A <a href="http://c-jdbc.objectweb.org/current/doc/RR-C-JDBC.pdf" target="_top">
+        research report details RAIDb and C-JDBC implementation</a>. Other
+        documents and presentations about C-JDBC can be found in the 
+        <a href="http://c-jdbc.objectweb.org/doc" target="_top">documentation section of 
+          the web site</a>.
+        </p></td></tr></table></div></div><div class="section" lang="en"><div class="titlepage"><div><div><h3 class="title"><a name="starting_controller"></a>6.2.&nbsp;Starting the Controller</h3></div></div><div></div></div><p>The <tt class="filename">bin</tt> directory of the 
+        C-JDBC distribution contains the scripts to start the controller. Unix 
+        users must start the controller with <span><b class="command">controller.sh</b></span> 
+        whereas Windows users will use <span><b class="command">controller.bat</b></span>. 
+        </p><p>Since C-JDBC Controller version 1.0b11, the controller start is 
+        tuned via a configuration file, called 
+        <tt class="filename">controller.xml</tt>, included under the <tt class="filename">config/controller</tt> directory of your C-JDBC 
+        installation. A simple configuration file looks like this:</p><p>A standard C-JDBC Controller configuration file looks like this:</p><pre class="programlisting">
+&lt;?xml version="1.0" encoding="ISO-8859-1" ?&gt;
+&lt;!DOCTYPE C-JDBC-CONTROLLER PUBLIC "-//ObjectWeb//DTD C-JDBC-CONTROLLER 2.0.2//EN"  "http://c-jdbc.objectweb.org/dtds/c-jdbc-controller-2.0.2.dtd"&gt;
+&lt;C-JDBC-CONTROLLER&gt;
+	&lt;Controller port="25322"&gt;
+    &lt;Report hideSensitiveData="true" generateOnFatal="true"/&gt;
+    &lt;JmxSettings&gt;
+      &lt;RmiJmxAdaptor/&gt;
+    &lt;/JmxSettings&gt;
+  &lt;/Controller&gt;
+&lt;/C-JDBC-CONTROLLER&gt;
+      </pre><p>You can specify at startup a different file than 
+        <tt class="filename">config/controller/controller.xml</tt>. This is useful if you have 
+        to startup many identical controllers from the network. You can then 
+        use the command <span><b class="command">controller.sh -f filename</b></span> on Unix 
+        machines or <span><b class="command">controller.bat -f filename</b></span> on 
+        windows.</p><p>For more information you can refer to the 
+          controller-configuration.xml example in the example directory of 
+          c-jdbc.</p><p>Next section describes how to write a controller configuration file.
+     </p></div><div class="section" lang="en"><div class="titlepage"><div><div><h3 class="title"><a name="writing_the_controller_config_file"></a>6.3.&nbsp;Writing the controller configuration file</h3></div></div><div></div></div><p>The controller is entirely configurable via an xml file, by default 
+      it is <tt class="filename">controller.xml</tt> located in the <tt class="filename">config/controller</tt> of the C-JDBC installation. This 
+      section details how to write such a file. </p><div class="section" lang="en"><div class="titlepage"><div><div><h4 class="title"><a name="dtd_controller_parameters"></a>6.3.1.&nbsp;Controller Parameters</h4></div></div><div></div></div><p>The root element of the controller configuration is defined as follows
+    </p><pre class="programlisting">
+&lt;!ELEMENT Controller (Internationalization?, Report?, JmxSettings?, 
+                                    VirtualDatabase*, SecuritySettings?)&gt;
+&lt;!ATTLIST Controller
+  port             CDATA "25322"
+  ipAddress        CDATA "127.0.0.1"
+  backlogSize      CDATA "10"
+&gt;
+    </pre><p>All sub-elements of Controller are defined in the next sections. Here
+      is a brief overview of each of them:</p><div class="itemizedlist"><ul type="disc"><li><p><tt class="literal">Internationalization</tt>: defines the language
+      	  setting for C-JDBC console and error messages.</p></li><li><p><tt class="literal">Report</tt>: if this option is enabled, C-JDBC can
+          automatically generate a report on fatal errors or shutdown. If you
+          experience any problem with C-JDBC, you can directly send the report
+          on the mailing list to get a quick diagnostic of what happened.</p></li><li><p><tt class="literal">JmxSettings</tt>: JMX is the technology used for 
+          management and monitoring in C-JDBC. These functionalities can be 
+          accessed through HTTP with an internet browser or through the RMI 
+          connector used by the C-JDBC console.</p></li><li><p><tt class="literal">VirtualDatabase</tt>: Defines a virtual database to 
+          load automatically at controller startup given a reference to its 
+          configuration file.</p></li><li><p><tt class="literal">SecuritySettings</tt>: Allows to filter accesses to 
+          a controller based on access lists.</p></li></ul></div><p>The attributes of a Controller element are defined as follows:</p><div class="itemizedlist"><ul type="disc"><li><p><tt class="literal">port</tt>: the port number on which clients (C-JDBC 
+          drivers) will connect. The default port number is 
+          <span class="emphasis"><em>25322</em></span>.</p><div class="note" style="margin-left: 0.5in; margin-right: 0.5in;"><table border="0" summary="Note"><tr><td valign="top" align="center" rowspan="2" width="25"><img alt="[Note]" src="../../images/note.gif"></td><th align="left">Note</th></tr><tr><td valign="top" align="left" colspan="2"><p>A port number below 1024 will require running the controller 
+            with privileged rights (root user under Unix).</p></td></tr></table></div></li><li><p><tt class="literal">ipAddress</tt>: This can be defined to bind a 
+          specific IP address in case of a host with multiple IP addresses. 
+          This can be ignored if there is only one IP address available and 
+          will be replaced by <tt class="literal">127.0.0.1</tt>.</p></li><li><p><tt class="literal">backlogSize</tt>: the server socket backlog size 
+          (number of connections that can wait in the accept queue before the 
+          system returns "connection refused" to the client). Default is 10. 
+          Tune this value according to your operating system, but the default 
+          value should be fine for most settings.</p></li></ul></div><p>If your machine has multiple network adapters, you can for the
+        C-JDBC Controller to bind a specific IP address like this:</p><pre class="programlisting">
+&lt;?xml version="1.0" encoding="ISO-8859-1" ?&gt;
+&lt;!DOCTYPE C-JDBC-CONTROLLER PUBLIC "-//ObjectWeb//DTD C-JDBC-CONTROLLER 2.0.2//EN"  "http://c-jdbc.objectweb.org/dtds/c-jdbc-controller-2.0.2.dtd"&gt;
+&lt;C-JDBC-CONTROLLER&gt;
+	&lt;Controller port="25322" ipAddress="192.168.0.1"&gt;
+		&lt;JmxSettings enabled="false"/&gt;
+	&lt;/Controller&gt;
+&lt;/C-JDBC-CONTROLLER&gt;
+    </pre></div><div class="section" lang="en"><div class="titlepage"><div><div><h4 class="title"><a name="dtd_controller_internationalization"></a>6.3.2.&nbsp;Internationalization</h4></div></div><div></div></div><p>You can use this element to override the default locale retrieved by 
+      java. English is the only language looked at at the moment.</p><pre class="programlisting">
+    &lt;!ELEMENT Internationalization EMPTY&gt;
+    &lt;!ATTLIST Internationalization language (en|fr|it|jp) "en"&gt;
+    </pre></div><div class="section" lang="en"><div class="titlepage"><div><div><h4 class="title"><a name="dtd_controller_report"></a>6.3.3.&nbsp;Report</h4></div></div><div></div></div><p>A report can be define in case you want to get a trace of what 
+      happened during the execution of the controller. If this element is 
+      included in the <tt class="filename">controller.xml</tt> report is enabled and 
+      will output a report, under certain conditions, in a file named 
+      <tt class="filename">c-jdbc.report</tt>.</p><pre class="programlisting">
+&lt;!ELEMENT Report EMPTY&gt;
+&lt;!ATTLIST Report
+     hideSensitiveData  (true|false) "true"
+     generateOnShutdown (true|false) "true"
+     generateOnFatal    (true|false) "true"
+     enableFileLogging  (true|false) "true"
+     reportLocation     CDATA        #IMPLIED
+&gt;
+    </pre><div class="itemizedlist"><ul type="disc"><li><p><tt class="literal">hideSensitiveData</tt>: will replace passwords with 
+          '*****'.</p></li><li><p><tt class="literal">generateOnShutdown</tt>: tells the controller to 
+          generate a report when it has received a shutdown command.</p></li><li><p><tt class="literal">generateOnFatal</tt>: tells the controller to 
+          generate a report when it cannot recover from an error. </p></li><li><p><tt class="literal">enableFileLogging</tt>: logs all the console output 
+          into a file and include this file into the report.</p></li><li><p><tt class="literal">reportLocation</tt>: specify the path where to 
+          create the report, default is
+	  <tt class="filename"><tt class="literal">CJDBC_HOME</tt>/log</tt> directory.</p></li></ul></div></div><div class="section" lang="en"><div class="titlepage"><div><div><h4 class="title"><a name="dtd_controller_jmx"></a>6.3.4.&nbsp;JMX</h4></div></div><div></div></div><p>JMX is used to remotely administrate the controller. You can use the 
+      bundled C-JDBC console or use your own code to access JMX MBeans via the 
+      protocol adaptor. C-JDBC proposes both the RMI and HTTP adaptors of the 
+      <a href="http://mx4j.sourceforge.net/" target="_top">MX4J</a> JMX server. You 
+      can override the default port numbers for each adaptor if they conflict 
+      with another application that is already using them (i.e. another C-JDBC 
+      controller on the same machine).</p><pre class="programlisting">
+    &lt;!ELEMENT JmxSettings (HttpJmxAdaptor?, RmiJmxAdaptor?)&gt;
+    &lt;!ELEMENT HttpJmxAdaptor EMPTY&gt;
+    &lt;!ATTLIST HttpJmxAdaptor
+      port CDATA "8090"
+    &gt;
+
+     &lt;!ELEMENT RmiJmxAdaptor (SSL?)&gt;
+     &lt;!ATTLIST RmiJmxAdaptor
+       port         CDATA        "1090"
+       username     CDATA        #IMPLIED
+       password     CDATA        #IMPLIED
+     &gt;
+
+
+     &lt;!ELEMENT SSL EMPTY&gt;
+     &lt;!ATTLIST SSL
+       keyStore			CDATA        #REQUIRED
+       keyStorePassword		CDATA        #REQUIRED
+       keyStoreKeyPassword	CDATA        #IMPLIED
+       isClientAuthNeeded	(true|false) "false"
+       trustStore		CDATA        #IMPLIED
+       trustStorePassword	CDATA        #IMPLIED
+     &gt;
+     </pre><p>Configure ssl for encryption and/or authentication.</p><div class="itemizedlist"><ul type="disc"><li><p><tt class="literal">keyStore</tt>: The file where the keys are stored
+          </p></li><li><p><tt class="literal">keyStorePassword</tt>: the password to the keyStore
+          </p></li><li><p><tt class="literal">keyStoreKeyPassword</tt>: the password to the key, if none is specified the same password as for the store is used
+          </p></li><li><p><tt class="literal">isClientAuthNeeded</tt>: if set to false ssl is used for encryption, the server is only accepting trusted clients (the client certificate has to be in the trusted store)
+          </p></li><li><p><tt class="literal">trustStore</tt>: the file where the trusted certificates are stored, if none is specified the same store as for the key is used
+          </p></li><li><p><tt class="literal">trustStorePassword</tt>: the password to the trustStore, if none is specified the same password as for the keyStore is used</p></li></ul></div><p>You have to enable the RMI adaptor if you want to use the C-JDBC 
+        console to administrate the controller remotely. To enable the RMI JMX 
+        adaptor, use this setting:</p><pre class="programlisting">
+     &lt;JmxSettings&gt;
+     	 &lt;RmiJmxAdaptor/&gt;
+		 &lt;/JmxSettings&gt;
+     </pre></div><div class="section" lang="en"><div class="titlepage"><div><div><h4 class="title"><a name="dtd_controller_database"></a>6.3.5.&nbsp;Virtual Database</h4></div></div><div></div></div><p>This element specifies virtual databases to load at controller 
+        startup.</p><pre class="programlisting">
+&lt;!ELEMENT VirtualDatabase EMPTY&gt;
+&lt;!ATTLIST VirtualDatabase 
+    configFile          CDATA #REQUIRED
+    virtualDatabaseName CDATA #REQUIRED
+    autoEnableBackends  (true | false | force) "true"
+    checkpointName      CDATA ""
+&gt;
+      </pre><div class="itemizedlist"><ul type="disc"><li><p><tt class="literal">configFile</tt>: The path to the virtual database 
+            configuration file. See <a href="ar01s11.html" title="11.&nbsp;Virtual database configuration">Section&nbsp;11, &ldquo;Virtual database configuration&rdquo;</a> to 
+            learn how to write a virtual database configuration file.</p></li><li><p><tt class="literal">virtualDatabaseName</tt>: The name of the virtual 
+            database since the configuration file can contain multiple virtual 
+            database definitions.</p></li><li><p><tt class="literal">autoEnableBackends</tt>: set to true by default 
+            to reenable backends from their last known state as stored during 
+            last shutdown. If backends where not properly shutdown, nothing 
+            will happen. You can specify false to let the backends in disabled 
+            state at startup. The force option should only be used if you know 
+            exactly what you are doing and override backend status by providing 
+            a new checkpoint. <span class="emphasis"><em>Warning!</em></span> Use this setting 
+            carefully as it might break your database consistency if you do not 
+            provide a valid checkpoint.Force is considered the same as true if 
+            no recovery log has been defined.</p></li><li><p><tt class="literal">checkpointName</tt>: the checkpoint name to use with 
+            the recovery log to enable backend from a known coherent state. If 
+            the checkpoint is omitted, the last known checkpoint is used.</p></li></ul></div><p>Example:</p><pre class="programlisting">
+&lt;VirtualDatabase configFile="/databases/MySQLDb.xml" virtualDatabaseName="rubis" autoEnableBackends="true"/&gt;
+      </pre><p>This will enable a virtual database named <tt class="literal">rubis</tt> 
+        taken from a configuration file named 
+        <tt class="filename">/databases/MySQLDb.xml</tt> and will enable all 
+        backends of the database from the last known checkpoint.</p></div><div class="section" lang="en"><div class="titlepage"><div><div><h4 class="title"><a name="dtd_controller_security"></a>6.3.6.&nbsp;Security</h4></div></div><div></div></div><p>Security settings define the policy to adopt for some 
+        functionalities that may compromise the security of the controller. 
+        These settings depends on your environment and can be relaxed if you 
+        are running in a secure network. The less security settings you have, 
+        the faster the controller will run. A SecuritySettings element is 
+        defined as follows:</p><pre class="programlisting">
+      &lt;!ELEMENT SecuritySettings (Jar?, Shutdown?, Accept?, Block?)&gt;
+      &lt;!ATTLIST SecuritySettings
+        defaultConnect (true|false) "true"
+      &gt;
+      </pre><p><tt class="literal">defaultConnect</tt>: is used to allow (true) or 
+        refuse (false) connections to the controller. This default setting can 
+        be then be tuned with access lists defined in <tt class="literal">Accept</tt> 
+        and <tt class="literal">Block</tt> elements (see below).</p><p>Additional database drivers can be uploaded dynamically to the 
+        controller. As the controller has no way to check if this is a real 
+        JDBC driver or some malicious code hidden a JDBC driver interface, you 
+        have to be very careful if you enable this option and anybody can 
+        connect from anywhere to your controller.</p><pre class="programlisting">
+&lt;!ELEMENT Jar EMPTY&gt;
+&lt;!ATTLIST Jar
+	allowAdditionalDriver (true|false) "true"
+&gt;
+      </pre><p>The Shutdown element defines how the controller can be
+      terminated - in order to shutdown the controller properly, we
+      have to use the console. Specify if the controller should
+      consider shutdown command received by one or the other, and if
+      this command can only be received from localhost or not. A
+      default configuration would be: </p><pre class="programlisting">
+&lt;Shutdown&gt;
+  &lt;Client allow="true" onlyLocalhost="true"/&gt;
+  &lt;Console allow="true" onlyLocalhost="true"/&gt;
+&lt;/Shutdown&gt;
+      </pre><p>This prevents unwanted and unauthorized shutdown calls from remote 
+        hosts. Only somebody logged locally on the machine can request a 
+        shutdown of the controller. Here is the full description for details: 
+        </p><pre class="programlisting">
+&lt;!ELEMENT Shutdown (Client?,Console?)&gt;
+
+&lt;!ELEMENT Client EMPTY&gt;
+&lt;!ATTLIST Client
+    allow         (true|false) "true"
+    onlyLocalhost (true|false) "true"
+&gt;
+&lt;!ELEMENT Console EMPTY&gt;
+&lt;!ATTLIST Console
+    allow (true|false) "true"
+    onlyLocalhost (true|false) "true"
+&gt;
+      </pre><p>You can control who can connect to the controller by setting access 
+        lists based on IP addresses to accept or block. 
+        <tt class="literal">defaultConnect</tt> is set in 
+        <tt class="literal">SecuritySettings</tt> defined above. Default is to accept 
+        all connections if no security manager is enabled.</p><pre class="programlisting">
+&lt;!ELEMENT Accept (Hostname|IpAddress|IpRange)*&gt;
+&lt;!ELEMENT Block (Hostname|IpAddress|IpRange)*&gt;
+
+&lt;!ELEMENT Hostname EMPTY&gt;
+&lt;!ATTLIST Hostname 
+     value CDATA #REQUIRED
+&gt;
+      </pre><p>IpAddress value is an IPv4 address (ex:192.168.1.12):</p><pre class="programlisting">
+&lt;!ELEMENT IpAddress EMPTY&gt;
+&lt;!ATTLIST IpAddress  
+     value CDATA #REQUIRED
+&gt;
+      </pre><p>IpRange value is based on IPv4 addresses and has the following 
+        form: 192.168.1.*.</p><pre class="programlisting">
+&lt;!ELEMENT IpRange EMPTY&gt;
+&lt;!ATTLIST IpRange  
+     value CDATA #REQUIRED
+&gt;
+      </pre><p>Here is a full security configuration example:</p><pre class="programlisting">
+&lt;SecuritySettings defaultConnect="false"&gt;
+  &lt;Jar allowAdditionalDriver="true"/&gt;
+  &lt;Shutdown&gt;
+    &lt;Client allow="true" onlyLocalhost="true"/&gt;
+    &lt;Console allow="false"/&gt;
+  &lt;/Shutdown&gt;
+  &lt;Accept&gt;
+    &lt;IpRange value="192.168.*.*"/&gt;
+  &lt;/Accept&gt;
+&lt;/SecuritySettings&gt;
+      </pre><p>This setting accepts driver connections only from machines having 
+        an IP address starting with 192.168, allows loading of additional 
+        drivers via the console, refuses shutdown from the console, but allows 
+        it from the local machine.</p></div></div><div class="section" lang="en"><div class="titlepage"><div><div><h3 class="title"><a name="configuring_the_log"></a>6.4.&nbsp;Configuring the Log</h3></div></div><div></div></div><p>C-JDBC uses the <a href="http://jakarta.apache.org/log4j/" target="_top">Log4j</a> logging framework. 
+        The <tt class="filename">log4j.properties</tt> configuration file is located 
+        in the <tt class="filename">/c-jdbc/config</tt> directory 
+        of your installation. Here is a brief description of the loggers 
+        available in the configuration file:</p><div class="itemizedlist"><ul type="disc"><li><p><tt class="literal">log4j.logger.org.objectweb.cjdbc.core.controller</tt>: 
+            Controller related activities mainly for bootstrap and virtual 
+            database adding/removal operations.</p></li><li><p>
+            <tt class="literal">log4j.logger.org.objectweb.cjdbc.controller.xml.Handler</tt>: 
+            XML configuration file parsing and handling.</p></li><li><p>
+            <tt class="literal">log4j.logger.org.objectweb.cjdbc.controller.VirtualDatabase</tt>: 
+            Virtual database related operations. A specific 
+            <tt class="literal">log4j.logger.org.objectweb.cjdbc.controller.VirtualDatabase.virtualDatabaseName</tt> 
+            logger is automatically created for each virtual database. This 
+            allows to tune different logging levels for each virtual 
+            database.</p></li><li><p>
+            <tt class="literal">log4j.logger.org.objectweb.cjdbc.controller.VirtualDatabase.request</tt>: 
+            Log the incoming requests and transactions in files that can be 
+            replayed by the Request Player tool provided with C-JDBC.</p></li><li><p>
+            <tt class="literal">log4j.logger.org.objectweb.cjdbc.controller.distributedvirtualdatabase.request</tt>
+            : Log distributed request execution when using horizontal scalability (a.k.a.
+            controller replication).</p></li><li><p>
+            <tt class="literal">log4j.logger.org.objectweb.cjdbc.controller.backup</tt>
+            : Log backup manager and backuper related activities from dump/restore
+            operations.</p></li><li><p>
+            <tt class="literal">log4j.logger.org.objectweb.cjdbc.controller.VirtualDatabaseServerThread</tt>: 
+            The server thread accepts client connections and manages the worker 
+            threads.</p></li><li><p>
+            <tt class="literal">log4j.logger.org.objectweb.cjdbc.controller.VirtualDatabaseWorkerThread</tt>: 
+            Each worker thread handle a session with a client C-JDBC 
+            driver.</p></li><li><p>
+            <tt class="literal">log4j.logger.org.objectweb.cjdbc.controller.RequestManager</tt>: 
+            Log the request flows between the different Request Manager 
+            components (scheduler, cache, load balancer, recovery log).</p></li><li><p>
+            <tt class="literal">log4j.logger.org.objectweb.cjdbc.controller.scheduler</tt>: 
+            Log the request ordering and synchronization performed by the 
+            scheduler.</p></li><li><p>
+            <tt class="literal">log4j.logger.org.objectweb.cjdbc.controller.cache</tt>: 
+            SQL Query cache related activities.</p></li><li><p>
+            <tt class="literal">log4j.logger.org.objectweb.cjdbc.controller.loadbalancer</tt>: 
+            Log how requests are balanced on the backends.</p></li><li><p>
+            <tt class="literal">log4j.logger.org.objectweb.cjdbc.controller.connection</tt>: 
+            Connection pooling related information.</p></li><li><p>
+            <tt class="literal">log4j.logger.org.objectweb.cjdbc.controller.recoverylog</tt>: 
+            C-JDBC Recovery Log information.</p></li><li><p>
+            <tt class="literal">log4j.logger.org.objectweb.cjdbc.controller.console.jmx</tt>: 
+            JMX management system logging.</p></li><li><p><tt class="literal">log4j.logger.org.objectweb.tribe.channels</tt>: 
+            Tribe low level group communication channel.</p></li><li><p><tt class="literal">log4j.logger.org.objectweb.tribe.gms</tt>: Tribe 
+            Group Membership Service (GMS).</p></li><li><p><tt class="literal">log4j.logger.org.objectweb.tribe.discovery</tt>: 
+            Tribe Discovery Service (used by GMS).</p></li><li><p>
+            <tt class="literal">og4j.logger.org.objectweb.tribe.blocks.multicastadapter</tt>: 
+            Tribe Multicast Dispatcher building block for application level 
+            message handling.</p></li></ul></div></div><div class="section" lang="en"><div class="titlepage"><div><div><h3 class="title"><a name="recovery_log"></a>6.5.&nbsp;Recovery Log</h3></div></div><div></div></div><p>When you want to add a database to your cluster, you do not want to stop the system,
+        replicate the current database state to the new database (that may take a long while)
+        and then restart the system. The Recovery Log helps you in the process of dynamically
+        adding a new backend (or recovering a previously failed backend) without stopping
+        the system.</p><p>The Recovery Log records the write operations and transactions that are
+        performed by the C-JDBC controller between checkpoints. A checkpoint is just a
+        logical index in the log that reflect the recovery log state at a given time. As of
+        C-JDBC 2.0, checkpoints are automatically managed by the controller and are
+        generated when needed on behalf of the administrator when a backend is disabled or
+        enter a backup phase. When re-enabling the backend, the Recovery Log replays all
+        write queries and transactions that the backend missed during the time it was offline
+        and it comes back to the enabled state once it is synchronized with the other
+        nodes.</p><div class="note" style="margin-left: 0.5in; margin-right: 0.5in;"><table border="0" summary="Note"><tr><td valign="top" align="center" rowspan="2" width="25"><img alt="[Note]" src="../../images/note.gif"></td><th align="left">Note</th></tr><tr><td valign="top" align="left" colspan="2"><p>Since version 2.0, the backup infrastructure has completely changed and is
+          based on Backupers. We provide a generic Backuper based on <a href="http://octopus.enhydra.org/" target="_top">Enhydra Octopus</a> to copy,
+          backup and restore content of backends through JDBC. Even if Octopus is supposed to
+          handle most common databases, it might fail for some specific databases or data
+          types. In that case, we strongly recommend to use or implement a database specific
+          Backuper.</p></td></tr></table></div><div class="section" lang="en"><div class="titlepage"><div><div><h4 class="title"><a name="N10784"></a>6.5.1.&nbsp;A practical example</h4></div></div><div></div></div><p>Your Web site is running with a single database and you want to use C-JDBC with
+          three nodes using full replication (RAIDb-1). You have two new backends ready to be
+          installed. You can start the C-JDBC console and connect to the controller. Start
+          the administration module by connecting to the virtual database. Type:
+          <span><b class="command">backup
+          &lt;backend name&gt; &lt;dump name&gt; &lt;backuper name&gt; &lt;path to
+          backup directory&gt;</b></span>. If you want to use Octopus you will use a command
+          line like <span><b class="command">backup node1 dump1 Octopus /var/backups</b></span>. During
+          the backup, the update requests are logged in the recovery log, so no update is lost.
+          If the backend was in the enabled state when backup was initiated, it will
+          automatically replay the recovery log to resynchronize itself and return to the
+          enabled state.</p><p>To restore the dump on another backend, just type <span><b class="command">restore
+          &lt;newbackend&gt;
+          &lt;dumpname&gt;</b></span> and the appropriate backuper (Octopus in our
+          previous example) will be used to restore the dump. After restoring the dump, you
+          can enable the backend at any time so that the recovery log replays all the missing
+          requests since the dump was taken.</p><p>Here is the set of commands to use in the C-JDBC console if node1 
+          is your existing backend and you want to dynamically add node2 and 
+          node3:</p><pre class="programlisting">
+backup node1 initial_dump Octopus /var/backups
+restore node2 initial_dump
+restore node3 initial_dump
+enable node2
+enable node3
+        </pre><div class="note" style="margin-left: 0.5in; margin-right: 0.5in;"><table border="0" summary="Note"><tr><td valign="top" align="center" rowspan="2" width="25"><img alt="[Note]" src="../../images/note.gif"></td><th align="left">Note</th></tr><tr><td valign="top" align="left" colspan="2"><p>Note that these steps can be automated by scriptin the console.</p></td></tr></table></div><p>If a node crashes, use the administration console to restore the dump on the
+          node using the restore command. Once the dump is restored, re-enable the backend
+          from the stored checkpoint and the Recovery Log will automatically replay all the
+          write queries to rebuild a consistent database state on the node.</p><p>To prevent the recovery log from being too large, you can periodically perform
+          backup operations. This will also lower the recovery time since the part of the log
+          to replay will be smaller. You can delete older dumps and logs if you do not need them
+          anymore.</p></div><div class="section" lang="en"><div class="titlepage"><div><div><h4 class="title"><a name="understanding_checkpoints"></a>6.5.2.&nbsp;Understanding checkpoints</h4></div></div><div></div></div><p>A checkpoint is a reference used by the recovery log to replay missing
+          requests. If a backend is disabled from the console for maintenance, the
+          controller will automatically create a checkpoint (prior to v2.0, the checkpoint
+          name had to be provided manually through the console). Once the backend is enabled
+          again, the controller retrieves its last known checkpoint from the recovery log
+          and replays all the requests that the disabled backend missed since it was
+          disabled. A checkpoint is nothing more than a reference in time. </p></div><div class="section" lang="en"><div class="titlepage"><div><div><h4 class="title"><a name="N107A9"></a>6.5.3.&nbsp;A fault tolerant Recovery Log</h4></div></div><div></div></div><p>As the C-JDBC recovery log can be stored in a database providing 
+          a JDBC driver, it is possible to make the recovery log fault tolerant 
+          by redirecting it to a C-JDBC controller (even self) that will 
+          distribute and replicate the log content on several backends.</p><p>The JDBC Recovery Log configuration is detailed in <a href="ar01s11.html#dtd_recoverylog" title="11.6.5.&nbsp;Recovery Log">Section&nbsp;11.6.5, &ldquo;Recovery Log&rdquo;</a>.</p></div></div><div class="section" lang="en"><div class="titlepage"><div><div><h3 class="title"><a name="controller_replication"></a>6.6.&nbsp;Controller replication</h3></div></div><div></div></div><p>To prevent the C-JDBC controller from being a single point of 
+        failure, C-JDBC provides controller replication also called horizontal 
+        scalability. A virtual database can be replicated in several 
+        controllers that can be added dynamically at runtime. Controllers use 
+        the JGroups group communication middleware to synchronize updates in a 
+        distributed way. The JGroups stack configuration is found in 
+        <tt class="filename">config/jgroups.xml</tt> and should not be altered 
+        unless you specifically know what you are doing. Keep in mind that 
+        total order reliable multicast is needed to ensure proper 
+        synchonization of the controllers. More information about JGroups can 
+        be found on <a href="http://www.jgroups.org" target="_top">the JGroups web 
+        site</a>. Note that JGroups requires proper network settings, here 
+        are a few guidelines:</p><div class="itemizedlist"><ul type="disc"><li><p>a default route must be defined (check with /sbin/route under Linux) for the
+            network adapter which is bound by JGroups (usually eth0). If such route does not
+            exist, either the group communication initialization will block or
+            controllers will not be able to see each other even on the local host. If you don't
+            have any default entry in your routing table you can use a command like
+            '/sbin/route add default eth0' to define this default route. </p></li><li><p> issues have been reported with DHCP that can either block (under Windows) or
+            just fail to properly set a default route and leads to the issue reported above. We
+            strongly discourage the use of DHCP, you should use fixed IP addresses instead.
+            </p></li><li><p> name resolution should be properly set so that the IP address/machine name
+            matching works both ways. Often improper /etc/hosts or DNS configuration leads
+            to group communication initialization problems. In particular, under Linux,
+            the IP address associated to the name returned by the 'hostname' command must not
+            resolve to 127.0.0.1 else controllers will not see each other.</p></li></ul></div><p>In order for a virtual database to be replicated, you must define a 
+				<tt class="literal">Distribution</tt> element in the virtual database 
+				configuration file (see <a href="ar01s11.html#distribution" title="11.2.1.&nbsp;Distribution">Section&nbsp;11.2.1, &ldquo;Distribution&rdquo;</a>). There are 
+				several constraints for different controllers to replicate a virtual 
+				database:</p><div class="itemizedlist"><ul type="disc"><li><p>give the list of all controllers that you plan to use for 
+            replication of your virtual database in the C-JDBC driver URL. Even 
+            if all controllers are not online at all times, the driver will 
+            automatically detect the alive controllers: 
+            jdbc:cjdbc://node1,node2,node3,node4/myDB</p></li><li><p>the virtual database must have the same name and use the same 
+						groupName (in the Distribution element).</p></li><li><p>each controller must have its own set of backends and no 
+						backends should be shared between controllers (C-JDBC checks the 
+						database URLs, having different backend names is not 
+						sufficient).</p></li><li><p>each controller must have its own recovery log, recovery logs 
+            cannot be shared. It is possible for a controller not to have a 
+            recovery log but this controller will have no recovery 
+            capabilities.</p></li><li><p>the authentication managers must support the same logins.</p></li><li><p>schedulers and load balancers must implement the same RAIDb 
+						configuration.</p></li><li><p>database schemas (if defined) must be compatible according to 
+						the RAIDb level you are using.</p></li></ul></div><div class="note" style="margin-left: 0.5in; margin-right: 0.5in;"><table border="0" summary="Note"><tr><td valign="top" align="center" rowspan="2" width="25"><img alt="[Note]" src="../../images/note.gif"></td><th align="left">Note</th></tr><tr><td valign="top" align="left" colspan="2"><p>As backends cannot be shared between controllers, it is not 
+          possible to use a SingleDB load balancer with controller replication. 
+          If each controller only has a single database backend attached to it, 
+          then you must use a RAIDb-1 configuration since in fact you have 2 
+          replicated backends in the cluster.</p></td></tr></table></div><p>Several configuration file examples are available in the <tt class="filename">doc/examples/HorizontalScalability</tt> 
+				directory of your C-JDBC distribution.</p><div class="note" style="margin-left: 0.5in; margin-right: 0.5in;"><table border="0" summary="Note"><tr><td valign="top" align="center" rowspan="2" width="25"><img alt="[Note]" src="../../images/note.gif"></td><th align="left">Note</th></tr><tr><td valign="top" align="left" colspan="2"><p>You can find more information in the document titled "C-JDBC 
+          Horizontal Scalability - A controller replication user guide" 
+          available from the C-JDBC web site.</p></td></tr></table></div></div><div class="section" lang="en"><div class="titlepage"><div><div><h3 class="title"><a name="current_controller_limitations"></a>6.7.&nbsp;Current Limitations</h3></div></div><div></div></div><p>The C-JDBC controller in its 2.0.2 release has the following 
+			limitations:</p><div class="itemizedlist"><ul type="disc"><li><p>GRANT/REVOKE commands will be sent to the database engines but 
+          this will not add or remove users from the virtual database 
+          authentication manager.</p></li><li><p>network partition/reconciliation is not supported,</p></li><li><p>distributed joins are not supported which means that you 
+					must ensure that every query can be executed by at least a 
+					single backend,</p></li><li><p><tt class="literal">RAIDb-1ec</tt> and 
+					<tt class="literal">RAIDb-2ec</tt> levels are not 
+					supported,</p></li></ul></div></div></div><div class="navfooter"><hr><table summary="Navigation footer" width="100%"><tr><td align="left" width="40%"><a accesskey="p" href="ar01s05.html"><img src="../../images/prev.gif" alt="Prev"></a>&nbsp;</td><td align="center" width="20%"><a accesskey="u" href="index.html"><img src="../../images/up.gif" alt="Up"></a></td><td align="right" width="40%">&nbsp;<a accesskey="n" href="ar01s07.html"><img src="../../images/next.gif" alt="Next"></a></td></tr><tr><td valign="top" align="left" width="40%">5.&nbsp;Configuring C-JDBC with 3rd party software&nbsp;</td><td align="center" width="20%"><a accesskey="h" href="index.html"><img src="../../images/home.gif" alt="Home"></a></td><td valign="top" align="right" width="40%">&nbsp;7.&nbsp;Administration console</td></tr></table></div></body></html>

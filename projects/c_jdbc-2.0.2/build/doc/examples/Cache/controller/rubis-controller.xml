@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<!DOCTYPE C-JDBC-CONTROLLER PUBLIC "-//ObjectWeb//DTD C-JDBC-CONTROLLER 2.0.2//EN"  "http://c-jdbc.objectweb.org/dtds/c-jdbc-controller-2.0.2.dtd">
+<C-JDBC-CONTROLLER>
+	<Controller port="25322">
+		<VirtualDatabase virtualDatabaseName="rubis" autoEnableBackends="true" configFile="rubis-noinvalidate.xml"/>
+		<!--
+		<VirtualDatabase virtualDatabaseName="rubis" autoEnableBackends="true" configFile="rubis-cache-column.xml"/>
+		<VirtualDatabase virtualDatabaseName="rubis" autoEnableBackends="true" configFile="rubis-cache-column-unique.xml"/>
+		<VirtualDatabase virtualDatabaseName="rubis" autoEnableBackends="true" configFile="rubis-cache-database.xml"/>
+		<VirtualDatabase virtualDatabaseName="rubis" autoEnableBackends="true" configFile="rubis-cache-table.xml"/>
+		<VirtualDatabase virtualDatabaseName="rubis" autoEnableBackends="true" configFile="rubis-nocache.xml"/>
+		-->
+	</Controller>
+</C-JDBC-CONTROLLER>

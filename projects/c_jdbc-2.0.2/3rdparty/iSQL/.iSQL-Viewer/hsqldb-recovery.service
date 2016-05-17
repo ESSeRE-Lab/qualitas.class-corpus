@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8" standalone='yes' ?>
+<isql-service secure="false" name="hsqldb-recovery" >
+        <authorization user="TEST" password=""/>
+        <config driver="org.hsqldb.jdbcDriver" url="jdbc:hsqldb:hsql://localhost:9003" >
+        </config>
+</isql-service>

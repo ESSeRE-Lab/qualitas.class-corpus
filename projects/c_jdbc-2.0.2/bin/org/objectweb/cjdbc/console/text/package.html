@@ -1,0 +1,37 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+</head>
+<body>
+<h1>C-JDBC text console</h1>
+
+<h2>List of consoles</h2>
+
+<ul>
+  <li>{@link org.objectweb.cjdbc.console.text.module.ControllerConsole controller console}</li>
+  <li>{@link org.objectweb.cjdbc.console.text.module.VirtualDatabaseAdmin VirtualDataBase admin console}</li>
+  <li>{@link org.objectweb.cjdbc.console.text.module.VirtualDatabaseConsole VirtualDataBase console}</li>
+  <li>{@link org.objectweb.cjdbc.console.text.module.MonitorConsole monitor console}</li>
+</ul>
+
+<h3>Design</h3>
+<h4>Modules</h4>
+<p>in the code, a console (e.g. controller console, monitor console) is represented by a module.</p>
+<ul>
+  <li>the main module is {@link org.objectweb.cjdbc.console.text.module.ControllerConsole}</li>
+  <li>each module is represented by a subtype of {@link org.objectweb.cjdbc.console.text.module.AbstractConsoleModule}</li>
+  <li>each module has a list of commands set in its {@link org.objectweb.cjdbc.console.text.module.AbstractConsoleModule#loadCommands()} method</li> 
+</ul>
+
+<h4>Commands</h4>
+
+<p>The commands follow the Command Pattern.</p>
+<ul>
+  <li>each command is represented by a subtype of {@link org.objectweb.cjdbc.console.text.commands.ConsoleCommand}</li>
+  <li>each command has a {@link org.objectweb.cjdbc.console.text.commands.ConsoleCommand#parse(String)} method which represents the command to execute</li>
+  <li>most of the command are mapped to a command on C-JDBC through MBeans</li>
+  <li>calls to JMX are handled by JMX proxies through {@link org.objectweb.cjdbc.console.jmx.RmiJmxClient}</li>
+</ul>
+
+</body>
+</html>

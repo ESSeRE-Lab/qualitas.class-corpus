@@ -1,0 +1,132 @@
+// -----------------------------------------------------------------------------------------------------------------------
+// UPDATE requests test
+//
+// The requests must have the following format:
+// #begin
+// <UPDATE request>
+// #end
+// <isValid flag>: true if this request is valid
+//
+// If the request is valid:
+// <table concerned by the request>
+// <columns concerned by the request>
+// <isUnique flag>: true if this query only concerns a single row
+// <updated values>: can only be provided if isUnique is true
+// <updated pk>: can only be provided if isUnique is true
+//
+// If the request is not valid:
+// <error message>
+//
+// do not add empty line between the lines defining a test
+// line beginning by a // are ignored except in a test
+// -----------------------------------------------------------------------------------------------------------------------
+
+#begin
+update categories set name="business, office & industrial" where id=3
+#end
+true
+categories
+name
+true
+name=business, office & industrial
+3
+
+#begin
+update categories set name="business, office & industrial",id=12 where id=3
+#end
+true
+categories
+name
+true
+id=12,name=business, office & industrial
+3
+
+#begin
+UPDATE items SET max_bid=?,nb_of_bids=? WHERE id=?
+#end
+true
+items
+max_bid nb_of_bids
+true
+max_bid=?,nb_of_bids=?
+?
+
+#begin
+UPDATE items SET nb_of_bids=?, id=?
+#end
+true
+items
+id nb_of_bids
+false
+null
+null
+
+#begin
+UPDATE items SET end_date=?, quantity=? WHERE id=?
+#end
+true
+items
+end_date quantity
+true
+end_date=?,quantity=?
+?
+
+#begin
+UPDATE items SET quantity=? WHERE id=?
+#end
+true
+items
+quantity
+true
+quantity=?
+?
+
+#begin
+UPDATE users SET rating=? WHERE id=?
+#end
+true
+users
+rating
+true
+rating=?
+?
+
+#begin
+UPDATE items SET end_date=? WHERE id=?
+#end
+true
+items
+end_date
+true
+end_date=?
+?
+
+#begin
+UPDATE USERS SET firstname='great1241543',lastname='user1241543' WHERE id=3
+#end
+true
+users
+firstname lastname
+true
+firstname=great1241543,lastname=user1241543
+3
+
+#begin
+UPDATE ids SET category=20, region=62, users=1001859, item=533723, comment=533426, bid=5060576, buyNow=1882 WHERE id=0
+#end
+true
+ids
+category region users item comment bid buyNow
+true
+bid=5060576,buyNow=1882,category=20,comment=533426,item=533723,region=62,users=1001859
+0
+
+#begin
+UPDATE users SET firstname='great1241543', lastname='user1241543', nickname='user1241543', password='password1241543', email='great1241543.user1241543@rubis.com', rating=0, balance=0.0, creation_date='2003-1-31 8:58:53', region=56 WHERE id=1001859
+#end
+true
+users
+firstname lastname nickname password email rating balance creation_date region
+true
+balance=0.0,creation_date=2003-1-31 8:58:53,email=great1241543.user1241543@rubis.com,firstname=great1241543,lastname=user1241543,nickname=user1241543,password=password1241543,rating=0,region=56
+1001859

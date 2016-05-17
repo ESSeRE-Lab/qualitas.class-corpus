@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF8"?>
+<!DOCTYPE C-JDBC PUBLIC "-//ObjectWeb//DTD C-JDBC 2.0.2//EN" "http://c-jdbc.objectweb.org/dtds/c-jdbc-2.0.2.dtd">
+
+<C-JDBC>
+
+  <VirtualDatabase name="xpetstore">
+
+    <Monitoring>
+      <SQLMonitoring defaultMonitoring="off">
+         <SQLMonitoringRule queryPattern="^select" caseSensitive="false" applyToSkeleton ="false" monitoring="on"/>
+      </SQLMonitoring>
+    </Monitoring>
+
+    <Backup>
+      <Backuper backuperName="Octopus" className="org.objectweb.cjdbc.controller.backup.OctopusBackuper" options="zip=true"/>
+    </Backup>
+    
+    <AuthenticationManager>
+      <Admin>
+       	<User username="admin" password=""/>
+      </Admin> 
+      <VirtualUsers>
+        <VirtualLogin vLogin="xpetuser" vPassword="secret"/>
+      </VirtualUsers>
+    </AuthenticationManager>
+
+    <DatabaseBackend name="derby1" driver="org.objectweb.cjdbc.driver.Driver"
+      url="jdbc:cjdbc://localhost:25323/xpetstore"
+      connectionTestStatement="values 1">
+      <ConnectionManager vLogin="xpetuser" rLogin="xpetuser" rPassword="secret">
+        <VariablePoolConnectionManager initPoolSize="10" minPoolSize="5"
+          maxPoolSize="50" idleTimeout="30" waitTimeout="10"/>
+      </ConnectionManager>
+    </DatabaseBackend>
+
+    <DatabaseBackend name="derby2" driver="org.objectweb.cjdbc.driver.Driver"
+      url="jdbc:cjdbc://localhost:25324/xpetstore"
+      connectionTestStatement="values 1">
+      <ConnectionManager vLogin="xpetuser" rLogin="xpetuser" rPassword="secret">
+        <VariablePoolConnectionManager initPoolSize="10" minPoolSize="5"
+          maxPoolSize="50" idleTimeout="30" waitTimeout="10"/>
+      </ConnectionManager>
+    </DatabaseBackend>
+
+    <RequestManager>
+      <RequestScheduler>
+         <RAIDb-1Scheduler level="passThrough"/>
+      </RequestScheduler>
+
+      <RequestCache>
+         <MetadataCache/>
+         <ParsingCache/>		 
+<!--       <ResultCache granularity="table"/> -->
+      </RequestCache>
+
+      <LoadBalancer>
+         <RAIDb-1>
+            <WaitForCompletion policy="first"/>
+            <RAIDb-1-RoundRobin/>
+         </RAIDb-1>
+      </LoadBalancer>
+
+      <RecoveryLog driver="org.apache.derby.jdbc.EmbeddedDriver"
+        url="jdbc:derby:c:/tmp/derbyRecovery;create=true" login="TEST"
+        password="">
+        <RecoveryLogTable tableName="RECOVERY" idColumnType="BIGINT NOT NULL"
+          vloginColumnType="VARCHAR(8192) NOT NULL" sqlColumnName="sqlStmt"
+          sqlColumnType="VARCHAR(8192) NOT NULL"
+          extraStatementDefinition=",PRIMARY KEY (id)"/>
+        <CheckpointTable tableName="CHECKPOINT"
+          checkpointNameColumnType="VARCHAR(8192) NOT NULL"/>
+        <BackendTable tableName="BACKEND"
+          databaseNameColumnType="VARCHAR(8192) NOT NULL"
+          backendNameColumnType="VARCHAR(8192) NOT NULL"
+          checkpointNameColumnType="VARCHAR(8192) NOT NULL"/>
+        <DumpTable tableName="DUMP" dumpNameColumnType="VARCHAR(8192) NOT NULL"
+          dumpDateColumnType="VARCHAR(8192) NOT NULL"
+          dumpPathColumnType="VARCHAR(8192) NOT NULL"
+          dumpFormatColumnType="VARCHAR(8192) NOT NULL"
+          checkpointNameColumnType="VARCHAR(8192) NOT NULL"
+          backendNameColumnType="VARCHAR(8192) NOT NULL"
+          tablesColumnType="VARCHAR(8192) NOT NULL"/>
+      </RecoveryLog>
+    </RequestManager>
+
+  </VirtualDatabase>
+
+</C-JDBC>

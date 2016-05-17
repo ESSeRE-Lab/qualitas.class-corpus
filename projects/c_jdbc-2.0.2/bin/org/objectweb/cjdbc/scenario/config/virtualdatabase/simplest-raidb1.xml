@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF8"?>
+<!DOCTYPE C-JDBC PUBLIC "-//ObjectWeb//DTD C-JDBC @VERSION@//EN" "http://c-jdbc.objectweb.org/dtds/c-jdbc-@VERSION@.dtd">
+
+<C-JDBC>
+  <VirtualDatabase name="myDB">
+	
+    <AuthenticationManager>
+      <Admin><User username="admin" password=""/></Admin> 
+      <VirtualUsers><VirtualLogin vLogin="user" vPassword=""/></VirtualUsers>
+    </AuthenticationManager>
+
+    <DatabaseBackend name="localhost" driver="org.hsqldb.jdbcDriver" url="jdbc:hsqldb:hsql://localhost:9001" connectionTestStatement="call now()">
+      <ConnectionManager vLogin="user" rLogin="TEST" rPassword=""><SimpleConnectionManager/></ConnectionManager>
+    </DatabaseBackend>
+
+    <DatabaseBackend name="localhost2" driver="org.hsqldb.jdbcDriver" url="jdbc:hsqldb:hsql://localhost:9002" connectionTestStatement="call now()">
+      <ConnectionManager vLogin="user" rLogin="TEST" rPassword=""><SimpleConnectionManager/></ConnectionManager>
+    </DatabaseBackend>
+
+    <RequestManager>
+      <RequestScheduler><RAIDb-1Scheduler level="passThrough"/></RequestScheduler>
+      <LoadBalancer><RAIDb-1><RAIDb-1-RoundRobin/></RAIDb-1></LoadBalancer>
+    </RequestManager>
+  </VirtualDatabase>
+</C-JDBC>

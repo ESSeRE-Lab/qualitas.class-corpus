@@ -1,0 +1,55 @@
+// -----------------------------------------------------------------------------------------------------------------------
+// INSERT requests test
+//
+// The requests must have the following format:
+// #begin
+// <INSERT request>
+// #end
+// <isValid flag>: true if this request is valid
+//
+// If the request is valid:
+// <table concerned by the request>
+// <columns concerned by the request>
+//
+// If the request is not valid:
+// <error message>
+//
+// do not add empty line between the lines defining a test
+// line beginning by a // are ignored except in a test
+// -----------------------------------------------------------------------------------------------------------------------
+
+#begin
+INSERT INTO items VALUES (NULL,...)
+#end
+true
+items
+id name description initial_price quantity reserve_price buy_now nb_of_bids max_bid start_date end_date seller category
+
+
+#begin
+INSERT INTO users VALUES (NULL, ...)
+#end
+true
+users
+id firstname lastname nickname password email rating balance creation_date region
+
+#begin
+INSERT INTO bids VALUES (NULL, ...)
+#end
+true
+bids
+id user_id item_id qty bid max_bid date
+
+#begin
+INSERT INTO buy_now VALUES (NULL, ...)
+#end
+true
+buy_now
+id buyer_id item_id qty date
+
+#begin
+INSERT INTO comments VALUES (NULL, ...)
+#end
+true
+comments
+id from_user_id to_user_id item_id rating date comment

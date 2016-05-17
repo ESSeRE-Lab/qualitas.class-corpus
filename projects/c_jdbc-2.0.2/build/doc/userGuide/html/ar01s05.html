@@ -1,0 +1,80 @@
+<html><head><META http-equiv="Content-Type" content="text/html; charset=ISO-8859-1"><title>5.&nbsp;Configuring C-JDBC with 3rd party software</title><meta content="DocBook XSL Stylesheets V1.65.1" name="generator"><link rel="home" href="index.html" title="C-JDBC User's Guide"><link rel="up" href="index.html" title="C-JDBC User's Guide"><link rel="previous" href="ar01s04.html" title="4.&nbsp;C-JDBC Driver"><link rel="next" href="ar01s06.html" title="6.&nbsp;C-JDBC controller"></head><body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF"><div class="navheader"><table summary="Navigation header" width="100%"><tr><th align="center" colspan="3">5.&nbsp;Configuring C-JDBC with 3rd party software</th></tr><tr><td align="left" width="20%"><a accesskey="p" href="ar01s04.html"><img src="../../images/prev.gif" alt="Prev"></a>&nbsp;</td><th align="center" width="60%">&nbsp;</th><td align="right" width="20%">&nbsp;<a accesskey="n" href="ar01s06.html"><img src="../../images/next.gif" alt="Next"></a></td></tr></table><hr></div><div class="section" lang="en"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="configuring-cjdbc_with_3rd_party_software"></a>5.&nbsp;Configuring C-JDBC with 3rd party software</h2></div></div><div></div></div><div class="section" lang="en"><div class="titlepage"><div><div><h3 class="title"><a name="forenotes"></a>5.1.&nbsp;Forenotes on configuring C-JDBC with your application</h3></div></div><div></div></div><p>If the application you are using C-JDBC with requires a mapper, the best thing to do
+      is to configure the mapping to be that of C-JDBC's underlying databases. For example, if
+      you were using JBoss with PostgreSQL , then using C-JDBC on top of the PostgreSQL
+      backends with JBoss would imply to still use the mapping for PostgreSQL while plugging
+      the application server to C-JDBC (using C-JDBC's driver and C-JDBC's url). </p></div><div class="section" lang="en"><div class="titlepage"><div><div><h3 class="title"><a name="configuring_cjdbc_with_tomcat"></a>5.2.&nbsp;Configuring C-JDBC with Jakarta Tomcat</h3></div></div><div></div></div><p>Copy the <tt class="filename">c-jdbc-driver.jar</tt> file to the 
+        <tt class="filename">lib</tt> directory of your web 
+        application (for example: <tt class="filename">$TOMCAT_HOME/webapps/mywebapp/WEB-INF/lib</tt>).</p><p>There are many ways to obtain connections from a Tomcat 
+        application. Just ensure that you are using 
+        <tt class="literal">org.objectweb.cjdbc.driver.Driver</tt> as the driver 
+        class name and that the JDBC URL is a C-JDBC URL (see <a href="ar01s04.html#cjdbc_jdbc_url" title="4.3.&nbsp;C-JDBC JDBC URL">Section&nbsp;4.3, &ldquo;C-JDBC JDBC URL&rdquo;</a>).</p></div><div class="section" lang="en"><div class="titlepage"><div><div><h3 class="title"><a name="configuring_cjdbc_with_jonas"></a>5.3.&nbsp;Configuring C-JDBC with JOnAS</h3></div></div><div></div></div><p>The <tt class="filename">c-jdbc-driver.jar</tt> file must be found in 
+        the JOnAS CLASSPATH.</p><p>Here is an example of a <tt class="filename">cjdbc.properties</tt> file 
+        to store in JONAS 3.x <tt class="filename">conf</tt> 
+        directory (use the <tt class="filename">config</tt> 
+        directory for JOnAS 2.x):</p><pre class="programlisting"> 
+        ###################### C-JDBC DataSource configuration example # 
+        datasource.name      jdbc_1 
+        datasource.url       jdbc:cjdbc://someMachine/someDatabase 
+        datasource.classname org.objectweb.cjdbc.driver.Driver 
+        datasource.username  your-username 
+        datasource.password  your-password 
+      </pre></div><div class="section" lang="en"><div class="titlepage"><div><div><h3 class="title"><a name="configuring_cjdbc_with_jboss"></a>5.4.&nbsp;Configuring C-JDBC with JBoss</h3></div></div><div></div></div><p>Copy the <tt class="filename">c-jdbc-driver.jar</tt> file to <tt class="filename">$JBOSS_DIST/server/default/lib</tt> for JBoss 
+        3.x or to <tt class="filename">$JBOSS_DIST/jboss/lib/ext</tt> for JBoss 
+        2.x.</p><p>Here is an example of a datasource configuration file to be used 
+        with JBoss:</p><pre class="programlisting"> 
+        &lt;?xml version="1.0" encoding="UTF-8"?&gt; 
+        &lt;!-- ===================================================================== --&gt; 
+        &lt;!--                                                                       --&gt; 
+        &lt;!-- JBoss Server Configuration                                            --&gt;
+        &lt;!--                                                                       --&gt; 
+        &lt;!-- ===================================================================== --&gt; 
+
+        &lt;!-- ===================================================================== --&gt; 
+        &lt;!-- Datasource config for C-JDBC                                          --&gt;
+        &lt;!-- ===================================================================== --&gt; 
+        &lt;datasources&gt; 
+          &lt;local-tx-datasource&gt; 
+            &lt;jndi-name&gt;cjdbc-DS&lt;/jndi-name&gt; 
+            &lt;connection-url&gt;jdbc:cjdbc://localhost:25322/lscluster&lt;/connection-url&gt; 
+            &lt;driver-class&gt;org.objectweb.cjdbc.driver.Driver&lt;/driver-class&gt; 
+            &lt;user-name&gt;user&lt;/user-name&gt; 
+            &lt;password&gt;tagada&lt;/password&gt; 
+          &lt;/local-tx-datasource&gt; 
+        &lt;/datasources&gt; 
+      </pre></div><div class="section" lang="en"><div class="titlepage"><div><div><h3 class="title"><a name="configuring_cjdbc_with_weblogic"></a>5.5.&nbsp;Configuring C-JDBC with BEA Weblogic Server 7.x/8.x</h3></div></div><div></div></div><p>Place the <tt class="filename">c-jdbc-driver.jar</tt> file in the 
+        classpath of the Weblogic Server.</p><p>Here is an example of a connection pool configuration for use with 
+        Weblogic:</p><pre class="programlisting">
+    &lt;JDBCConnectionPool 
+        DriverName="org.objectweb.cjdbc.driver.Driver"
+        InitialCapacity="1"  MaxCapacity="15" 
+        Name="cjdbcPool" Properties="user=username;password=password" 
+        ShrinkingEnabled="true" SupportsLocalTransaction="true" 
+        Targets="wlservername" URL="jdbc:cjdbc://192.168.0.1/vdb" 
+        XAPreparedStatementCacheSize="0"/&gt;
+      </pre><p>Next, create the required <tt class="literal">TXDataSources</tt>:</p><pre class="programlisting">
+        &lt;JDBCTxDataSource EnableTwoPhaseCommit="true" 
+          JNDIName="cjdbc-DS" Name="C-JDBC TX Data Source" 
+          PoolName="cjdbcPool" RowPrefetchEnabled="true" Targets="wlservername"/&gt;
+      </pre></div><div class="section" lang="en"><div class="titlepage"><div><div><h3 class="title"><a name="configuring_cjdbc_with_hibernate"></a>5.6.&nbsp;Configuring C-JDBC with Hibernate</h3></div></div><div></div></div><p>C-JDBC just has to be defined as any JDBC driver in Hibernate, 
+        leaving the syntax set to the proper database. Here is a configuration 
+        example to use Hibernate with a C-JDBC cluster made of Sybase 
+        backends:</p><pre class="programlisting">
+## C-JDBC
+hibernate.dialect                 net.sf.hibernate.dialect.SybaseDialect
+hibernate.connection.driver_class org.objectweb.cjdbc.driver.Driver
+hibernate.connection.username     user
+hibernate.connection.password     pass
+hibernate.connection.url          jdbc:cjdbc://localhost:25322/test        
+      </pre></div><div class="section" lang="en"><div class="titlepage"><div><div><h3 class="title"><a name="using_sequence_with_hibernate"></a>5.7.&nbsp;Using sequences with Hibernate, C-JDBC and PostgreSQL</h3></div></div><div></div></div><p>Our Hibernate dialect is as follows:</p><pre class="programlisting"> 
+        import net.sf.hibernate.dialect.PostgreSQLDialect; 
+        public class CJDBCPostgreSQLDialect extends PostgreSQLDialect 
+        { 
+          public String getSequenceNextValString(String sequenceName) 
+          { 
+            return "{call nextval('"+sequenceName+"')}"; 
+          } 
+        } 
+      </pre><p> We simply extend the default PostgreSQL Dialect and override the 
+        getSequenceNextValString() method and tell it to use "{call ..." so 
+        that all the sequences in the cluster get incremented. </p><p> We then changed our Hibernate conf file to user to our custom 
+        dialect instead of net.sf.hibernate.dialect.PostgreSQLDialect. </p></div></div><div class="navfooter"><hr><table summary="Navigation footer" width="100%"><tr><td align="left" width="40%"><a accesskey="p" href="ar01s04.html"><img src="../../images/prev.gif" alt="Prev"></a>&nbsp;</td><td align="center" width="20%"><a accesskey="u" href="index.html"><img src="../../images/up.gif" alt="Up"></a></td><td align="right" width="40%">&nbsp;<a accesskey="n" href="ar01s06.html"><img src="../../images/next.gif" alt="Next"></a></td></tr><tr><td valign="top" align="left" width="40%">4.&nbsp;C-JDBC Driver&nbsp;</td><td align="center" width="20%"><a accesskey="h" href="index.html"><img src="../../images/home.gif" alt="Home"></a></td><td valign="top" align="right" width="40%">&nbsp;6.&nbsp;C-JDBC controller</td></tr></table></div></body></html>

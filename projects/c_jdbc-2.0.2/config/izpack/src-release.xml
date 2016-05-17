@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="iso-8859-1" standalone="yes" ?>
+
+<!-- IzPack install file for the binary C-JDBC distribution -->
+<installation version="1.0">
+
+  <!-- Info section -->
+  <info>
+    <appname>C-JDBC Source Distribution</appname>
+    <appversion>@VERSION@</appversion>
+    <authors>
+      <author name="Emmanuel Cecchet" email="emmanuel.cecchet@emicnetworks.com"/>
+      <author name="Nicolas Modrzyk" email="nicolas.modrzyk@inrialpes.fr"/>
+    </authors>
+    <url>http://c-jdbc.objectweb.org/</url>
+  </info>
+
+  <!-- GUI preferences indication -->
+  <guiprefs width="800" height="480" resizable="yes"/>
+  
+  <!-- Locale section -->
+  <locale>
+    <langpack iso3="eng"/>
+  </locale>
+
+  <!-- Resources section -->
+  <resources>
+    <res id="LicencePanel.licence" src="doc/LICENSE.txt"/>
+    <res id="Installer.image" src="doc/images/logo_small.png"/>
+    <res id="TargetPanel.dir.unix" src="build/IzPack/TargetPanel.dir.unix.src"/>
+    <res id="TargetPanel.dir.windows" src="build/IzPack/TargetPanel.dir.windows.src"/>
+  </resources>
+  
+  <!-- Panels section -->
+  <panels>
+    <panel classname="HelloPanel"/>
+    <panel classname="LicencePanel"/>
+    <panel classname="TargetPanel"/> 
+    <panel classname="PacksPanel"/>
+    <panel classname="InstallPanel"/>
+    <panel classname="FinishPanel"/>
+  </panels>
+  
+  <!-- Packs section -->
+  <packs>
+    <!-- Base pack -->
+    <pack name="Base" required="yes">
+      <description>C-JDBC source distribution base files.</description>
+
+      <file src="build/dist/src/3rdparty" targetdir="$INSTALL_PATH"/>
+      <file src="build/dist/src/bin" targetdir="$INSTALL_PATH"/>
+      <file src="build/dist/src/config" targetdir="$INSTALL_PATH"/>
+      <file src="build/dist/src/doc" targetdir="$INSTALL_PATH"/>
+      <file src="build/dist/src/lib" targetdir="$INSTALL_PATH"/>
+      <file src="build/dist/src/src" targetdir="$INSTALL_PATH"/>
+      <file src="build/dist/src/test" targetdir="$INSTALL_PATH"/>
+      <file src="build/dist/src/xml" targetdir="$INSTALL_PATH"/>
+      <file src="build/dist/src/build.properties" targetdir="$INSTALL_PATH"/>
+      <file src="build/dist/src/build.xml" targetdir="$INSTALL_PATH"/>
+      <file src="build/dist/src/README.txt" targetdir="$INSTALL_PATH"/>
+    </pack>
+
+    <!-- Docs pack -->
+    <pack name="Docs" required="no">
+      <description>C-JDBC compiled documentation (User's and Developer's Guides, Javadoc).</description>
+
+      <file src="build/dist/src/build/doc" targetdir="$INSTALL_PATH/build"/>
+    </pack>
+  </packs>
+
+</installation>

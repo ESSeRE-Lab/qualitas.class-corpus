@@ -1,0 +1,1119 @@
+<html><head><META http-equiv="Content-Type" content="text/html; charset=ISO-8859-1"><title>11.&nbsp;Virtual database configuration</title><meta content="DocBook XSL Stylesheets V1.65.1" name="generator"><link rel="home" href="index.html" title="C-JDBC User's Guide"><link rel="up" href="index.html" title="C-JDBC User's Guide"><link rel="previous" href="ar01s10.html" title="10.&nbsp;RAIDb Basics"><link rel="next" href="ar01s12.html" title="12.&nbsp;Request Player"></head><body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF"><div class="navheader"><table summary="Navigation header" width="100%"><tr><th align="center" colspan="3">11.&nbsp;Virtual database configuration</th></tr><tr><td align="left" width="20%"><a accesskey="p" href="ar01s10.html"><img src="../../images/prev.gif" alt="Prev"></a>&nbsp;</td><th align="center" width="60%">&nbsp;</th><td align="right" width="20%">&nbsp;<a accesskey="n" href="ar01s12.html"><img src="../../images/next.gif" alt="Next"></a></td></tr></table><hr></div><div class="section" lang="en"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="configuration"></a>11.&nbsp;Virtual database configuration</h2></div></div><div></div></div><div class="section" lang="en"><div class="titlepage"><div><div><h3 class="title"><a name="writing_a_virtual_database_configuration_file"></a>11.1.&nbsp;Writing a Virtual Database Configuration File</h3></div></div><div></div></div><p>The C-JDBC controller configuration file must conform to the C-JDBC 
+        DTD that can be found in the <tt class="filename">xml</tt> 
+        directory of the C-JDBC distribution. The DTD is extensively documented 
+        and the most up-to-date information will be found in the 
+        <tt class="filename">xml/c-jdbc-x.y.dtd</tt> file. Several configuration 
+        file examples are available in the <tt class="filename">doc/examples</tt> directory.</p><p>Here is an example of how a minimal C-JDBC configuration file 
+        should look like:</p><pre class="programlisting">
+&lt;?xml version="1.0" encoding="UTF8"?&gt;
+
+&lt;!DOCTYPE C-JDBC PUBLIC "-//ObjectWeb//DTD C-JDBC 1.0//EN"
+                        "http://www.objectweb.org/c-jdbc/dtds/c-jdbc-2.0.2.dtd"&gt;
+
+&lt;C-JDBC&gt; &lt;VirtualDatabase name="vdbName"&gt;
+&lt;AuthenticationManager&gt; ...  &lt;/AuthenticationManager&gt;
+
+    &lt;DatabaseBackend name="node1" driver="com.myDriver.class"
+                     url="jdbc:protocol://host/myDB" connectionTestStatement="select 1"&gt;
+       ...
+    &lt;/DatabaseBackend&gt;
+
+    &lt;RequestManager&gt;
+      &lt;RequestScheduler&gt;
+         ...
+      &lt;/RequestScheduler&gt;
+
+      &lt;LoadBalancer&gt;
+         ...
+      &lt;/LoadBalancer&gt;
+    &lt;/RequestManager&gt;
+  &lt;/VirtualDatabase&gt;
+&lt;/C-JDBC&gt;
+      </pre><p>The next sections describes the different elements composing an XML 
+        configuration file.</p></div><div class="section" lang="en"><div class="titlepage"><div><div><h3 class="title"><a name="dtd_virtualdatabase"></a>11.2.&nbsp;Virtual Database</h3></div></div><div></div></div><p>A virtual database element is defined as follows:</p><pre class="programlisting">
+&lt;!ELEMENT VirtualDatabase (Distribution?, Monitoring?, Backup?,AuthenticationManager, DatabaseBackend+, RequestManager)&gt;     
+&lt;!ATTLIST VirtualDatabase 
+       name               CDATA #REQUIRED
+       maxNbOfConnections CDATA #IMPLIED
+       poolThreads        (true | false) "true"
+       minNbOfThreads     CDATA #IMPLIED
+       maxNbOfThreads     CDATA #IMPLIED
+       maxThreadIdleTime  CDATA #IMPLIED
+       sqlDumpLength      CDATA "40"
+&gt;
+      </pre><p>A virtual database is the database exposed to the user. It 
+        contains:</p><div class="itemizedlist"><ul type="disc"><li><p>a set of real database backends,</p></li><li><p>an authentication manager that matches the virtual database and 
+            real backends login/password,</p></li><li><p>a request manager that defines the behavior of the controller 
+            for this virtual database,</p></li></ul></div><p>Here is a brief description of each virtual database 
+        attribute:</p><div class="itemizedlist"><ul type="disc"><li><p><tt class="literal">name</tt>: name of the virtual database to be 
+            used in the JDBC URL 
+            (<tt class="literal">jdbc:cjdbc://host/<tt class="option">VirtualDatabaseName</tt></tt>).</p></li><li><p><tt class="literal">maxNbOfConnections</tt>: maximum number of 
+            concurrent connections accepted for this virtual database. The 
+            controller stops accepting client connections when 
+            <tt class="literal">maxNbOfConnections</tt> concurrent connections are 
+            running. Default is 0 (no limit).</p></li><li><p><tt class="literal">poolThreads</tt>: if <tt class="literal">false</tt>, 
+            one thread is created for each connection and dies when the 
+            connection closes. If set to <tt class="literal">true</tt>, threads are 
+            created on-demand and kept in a pool to be reused to serve multiple 
+            connections. Default is <tt class="literal">true</tt>.</p></li><li><p><tt class="literal">minNbOfThreads</tt>: minimum number of threads to 
+            keep in the pool (if <tt class="literal">poolThreads</tt> is set to 
+            <tt class="literal">true</tt>). Default is 0.</p></li><li><p><tt class="literal">maxNbOfThreads</tt>: maximum number of threads in 
+            the pool (if <tt class="literal">poolThreads</tt> is set to 
+            <tt class="literal">true</tt>). Default is 0 (no limit).</p></li><li><p><tt class="literal">maxThreadIdleTime</tt>: maximum time in seconds a 
+            thread can remain idle before being removed from the pool. Default 
+            is 60 seconds (a thread that has not serve any request in the past 
+            60 seconds will be killed).</p></li><li><p><tt class="literal">sqlDumpLength</tt>: maximum number of characters of a SQL statement to display in
+   traces and exception messages. 0 means no limit and the full statement is
+   inserted in the message (be careful especially if you are using large 
+   objects. Default is 40.</p></li></ul></div><div class="section" lang="en"><div class="titlepage"><div><div><h4 class="title"><a name="distribution"></a>11.2.1.&nbsp;Distribution</h4></div></div><div></div></div><p>A Distribution element defines the virtual database distribution 
+        rules so that the virtual database can be shared by several C-JDBC 
+        controllers (feature called horizontal scalability). A Distribution 
+        element is defined as follows:</p><div class="itemizedlist"><ul type="disc"><li><p><tt class="literal">groupName</tt>: group name to be used by the JGroups communication layer. If no
+     name is provided, the virtual database name is used instead.</p></li><li><p><tt class="literal">macroClock</tt>: if a request contains a date macro that needs to be replaced,
+     this attribute defines how the current time is determined. If macroClock
+	 is set to none, then each controller uses its local timestamp for all of its
+	 backends. If macroClock is set to local, then the macros are replaced using
+	 the local time before being sent to remote controllers. Note that in all
+	 cases, it is preferable to have controllers synchronized using NTP or an 
+	 equivalent mechanism.</p></li><li><p><tt class="literal">castTimeout</tt>: is the timeout to use when sending request to the group.</p></li></ul></div><pre class="programlisting">
+&lt;!ELEMENT Distribution&gt;
+&lt;!ATTLIST Distribution
+    groupName  CDATA #IMPLIED
+	macroClock (none | local) "local"
+	castTimeout CDATA "0"
+&gt;
+      </pre><p><tt class="literal">groupName</tt> defines the group name to be used by 
+        the JGroups communication layer. If no name is provided, the virtual 
+        database name is used as the default group name.
+      </p><div class="note" style="margin-left: 0.5in; margin-right: 0.5in;"><table border="0" summary="Note"><tr><td valign="top" align="center" rowspan="2" width="25"><img alt="[Note]" src="../../images/note.gif"></td><th align="left">Note</th></tr><tr><td valign="top" align="left" colspan="2"><p>The JGroups stack configuration is defined in 
+          <tt class="filename">config/jgroups.xml</tt>. Refer to the JGroups
+          documentation if you want to alter the JGroups configuration.
+        </p></td></tr></table></div><div class="note" style="margin-left: 0.5in; margin-right: 0.5in;"><table border="0" summary="Note"><tr><td valign="top" align="center" rowspan="2" width="25"><img alt="[Note]" src="../../images/note.gif"></td><th align="left">Note</th></tr><tr><td valign="top" align="left" colspan="2"><p>When a controller fails, all backends attached to it are 
+          automatically disabled. A full recovery process is then needed for 
+          these nodes. To learn more about this issue, read the <a href="http://c-jdbc.objectweb.org/current/doc/C-JDBC_horizontal_scalability.pdf" target="_top"> 
+          horizontal scalability design document</a>.</p></td></tr></table></div></div><div class="section" lang="en"><div class="titlepage"><div><div><h4 class="title"><a name="dtd_sql_monitoring"></a>11.2.2.&nbsp;Monitoring</h4></div></div><div></div></div><div class="note" style="margin-left: 0.5in; margin-right: 0.5in;"><table border="0" summary="Note"><tr><td valign="top" align="center" rowspan="2" width="25"><img alt="[Note]" src="../../images/note.gif"></td><th align="left">Note</th></tr><tr><td valign="top" align="left" colspan="2"><p>CAREFUL! Monitoring can possibly lead to a memory leak and should only be used on a short period of time
+		There is also a JMX method on the VirtualDatabaseMBean to set this on and off while online:	
+		</p><pre class="programlisting">
+			void setMonitoringToActive(boolean active) throws VirtualDatabaseException;
+		</pre></td></tr></table></div><p>Monitoring provides a generic section for different monitoring 
+      modules. At the moment, only &ldquo;<span class="quote">SQLMonitoring</span>&rdquo; is provided. 
+      </p><pre class="programlisting">
+&lt;!ELEMENT Monitoring (SQLMonitoring*)&gt;
+
+&lt;!ELEMENT SQLMonitoring (SQLMonitoringRule*)&gt;
+&lt;!ATTLIST SQLMonitoring
+    defaultMonitoring (on | off) "on"
+&gt;
+    </pre><p>SQL Monitoring provides statistics (count, error, cache hits, 
+      timing) for SQL queries. It is possible to define rules to turn 
+      monitoring on or off for specific query patterns.</p><p><tt class="literal">defaultMonitoring</tt>: defines the default rule if a 
+      request should be monitored (on) or not (off) if no specific rule matches 
+      the request. </p><pre class="programlisting">
+&lt;!ELEMENT SQLMonitoringRule EMPTY&gt;
+&lt;!ATTLIST SQLMonitoringRule
+    queryPattern    CDATA #REQUIRED
+    caseSensitive   (true | false) "false"
+    applyToSkeleton (true | false) "false"
+    monitoring      (on | off) "on"
+&gt;
+    </pre><p>A SQLMonitoringRule Defines a specific monitoring rule for all 
+      queries that match the given pattern.</p><div class="itemizedlist"><ul type="disc"><li><p><tt class="literal">queryPattern</tt>: a regular expression understood 
+          by the Jakarta Regexp API. For more information on Regexp format, go 
+          to <a href="http://jakarta.apache.org/regexp" target="_top">Jakarta Regexp web 
+          site</a>.</p></li><li><p><tt class="literal">caseSensitive</tt>: true if the pattern matching 
+          must be case sensitive.</p></li><li><p><tt class="literal">applytoSkeleton</tt>: true if the pattern must 
+          apply to the query skeleton (found in PrepareStatement), false if the 
+          instantiated query should be used. Example: - 
+          <span class="emphasis"><em>skeleton</em></span>: <tt class="literal">SELECT * FROM t WHERE 
+          x=?</tt> - <span class="emphasis"><em>instantiated query</em></span>: 
+          <tt class="literal">SELECT * FROM t WHERE x=12</tt> </p></li><li><p><tt class="literal">monitoring</tt>: on to activate the monitoring for 
+          this rule, off to disable it.</p></li></ul></div><p>Examples: </p><div class="itemizedlist"><ul type="disc"><li><p><tt class="literal">&lt;SQLMonitoring queryPattern="^delete" 
+          monitorRequest="off"/&gt;</tt> will turn monitoring off for all 
+          delete queries. </p></li><li><p><tt class="literal">&lt;SQLMonitoring queryPattern="select * from users *" 
+          monitorRequest="on"/&gt;</tt> will turn monitoring on for all 
+          select queries on the users table. </p><div class="note" style="margin-left: 0.5in; margin-right: 0.5in;"><table border="0" summary="Note"><tr><td valign="top" align="center" rowspan="2" width="25"><img alt="[Note]" src="../../images/note.gif"></td><th align="left">Note</th></tr><tr><td valign="top" align="left" colspan="2"><p><span class="emphasis"><em>!Warning!</em></span> This is different from 
+            <tt class="literal">&lt;SQLMonitoring queryPattern="select \* from users *" 
+            monitorRequest="on"/&gt;</tt> which turns monitoring on for the 
+            "select * from users ..." kind of queries. </p></td></tr></table></div></li></ul></div></div></div><div class="section" lang="en"><div class="titlepage"><div><div><h3 class="title"><a name="dtd_backupmanager"></a>11.3.&nbsp;Backup Manager</h3></div></div><div></div></div><p>A Backup Manager defines a number of Backuper in charge of performing
+        backup/restore operations on backends. This element is defined as follows:</p><pre class="programlisting">
+&lt;!ELEMENT Backup (Backuper+)&gt;
+
+&lt;!ELEMENT Backuper EMPTY&gt;
+&lt;!ATTLIST Backuper
+    backuperName CDATA #REQUIRED
+    className    CDATA #REQUIRED
+    options      CDATA #IMPLIED
+&gt;
+      </pre><p> A Backuper is defined by a logical backuperName used by the administration console
+      when performing a backup operation. The className specifies the implementation of the
+      Backuper. Backuper specific options can be provided as well (this can be the path to a
+      properties files or a set of attributes). Check your Backuper documentation for its
+      specific options. </p><p>Here is an example to use the Octopus Backuper for a virtual database:</p><pre class="programlisting">
+&lt;Backup&gt;
+  &lt;Backuper backuperName="Octopus" className="org.objectweb.cjdbc.controller.backup.OctopusBackuper"/&gt;
+&lt;/Backup&gt;      
+    </pre><div class="note" style="margin-left: 0.5in; margin-right: 0.5in;"><table border="0" summary="Note"><tr><td valign="top" align="center" rowspan="2" width="25"><img alt="[Note]" src="../../images/note.gif"></td><th align="left">Note</th></tr><tr><td valign="top" align="left" colspan="2"><p>Octopus does not have access to the C-JDBC classloader for drivers and therefore
+        it needs database drivers to be accessible from the controller classpath. A good
+        solution is to unjar the drivers in the drivers/ directory of C-JDBC.</p><p>Octopus dumps are by default stored in a compressed .zip format.</p></td></tr></table></div></div><div class="section" lang="en"><div class="titlepage"><div><div><h3 class="title"><a name="dtd_authenticationmanager"></a>11.4.&nbsp;Authentication Manager</h3></div></div><div></div></div><p>An authentication manager element is defined as follows:</p><pre class="programlisting">
+&lt;!ELEMENT AuthenticationManager (Admin+, VirtualUsers)&gt;
+
+&lt;!ELEMENT Admin (User+)&gt;
+
+&lt;!ELEMENT User EMPTY&gt;
+&lt;!ATTLIST User
+    username CDATA #REQUIRED
+    password CDATA #REQUIRED
+&gt;
+
+&lt;!ELEMENT VirtualUsers (VirtualLogin+)&gt;
+
+&lt;!ELEMENT VirtualLogin (TrustedLogin*)&gt;
+&lt;!ATTLIST VirtualLogin 
+    vLogin    CDATA #REQUIRED
+    vPassword CDATA #REQUIRED
+&gt;
+&lt;!ELEMENT TrustedLogin EMPTY&gt;
+      </pre><p>An authentication manager defines:</p><div class="orderedlist"><ol type="1"><li><p>an administrator login to be used by the console to access the 
+            virtual database administration menu (see <a href="ar01s07.html#administrator_menu" title="7.5.&nbsp;Administrator Menu">Section&nbsp;7.5, &ldquo;Administrator Menu&rdquo;</a>) that allows enabling the 
+            backends,</p></li><li><p>"virtual logins" that are used by the client application and 
+            that are mapped to "real logins" for each backend.</p></li><li><p>"trusted logins" will be used in the future to allow reusing other form of authentication from
+	  within C-JDBC.</p></li></ol></div><p>Here is an example of an authentication manager definition:</p><pre class="programlisting">
+    &lt;AuthenticationManager&gt;
+      &lt;Admin&gt;
+      	&lt;User username="admin" password="adminPwd"/&gt;
+      &lt;/Admin&gt; 
+      &lt;VirtualUsers&gt;
+        &lt;VirtualLogin vLogin="user1" vPassword="userPwd1"/&gt;
+        &lt;VirtualLogin vLogin="user2" vPassword=""/&gt;
+      &lt;/VirtualUsers&gt;
+    &lt;/AuthenticationManager&gt;
+      </pre><p>In this example, the virtual database has one administrator. The admin can use
+        the login/password "admin/adminPwd" to log in the console.</p><p>Two virtual logins are defined: <tt class="literal">user1</tt> and 
+        <tt class="literal">user2</tt> with <tt class="literal">userPwd1</tt> and no password, 
+        respectively. These logins are those used by the client application and 
+        given to the C-JDBC driver.</p><p>The connection manager to use with each of the virtual has to be defined
+        in the DatabaseBackend section. Each DatabaseBackend has to define a pool
+        connection manager for each of the virtual user specified here.
+      </p></div><div class="section" lang="en"><div class="titlepage"><div><div><h3 class="title"><a name="dtd_databasebackend"></a>11.5.&nbsp;Database Backend</h3></div></div><div></div></div><p>Each database backend must be given a unique name (it is a logical 
+        name but it is convenient to use the same name as the real machine 
+        name). The database schema is automatically gathered from the backend 
+        when it is added to the virtual database. However, you can specify a 
+        static database schema (refer to <a href="ar01s11.html#dtd_databaseschema" title="11.5.2.&nbsp;Database Schema Definition">Section&nbsp;11.5.2, &ldquo;Database Schema Definition&rdquo;</a>) 
+        to be used instead. Finally, a specific connection manager (see <a href="ar01s11.html#dtd_connectionmanager" title="11.5.3.&nbsp;Connection Manager">Section&nbsp;11.5.3, &ldquo;Connection Manager&rdquo;</a>) defines the connection pooling 
+        strategy for each virtual login on each backend.</p><p>A database backend element is defined as follows:</p><pre class="programlisting">
+&lt;!ELEMENT DatabaseBackend (DatabaseSchema?, RewritingRule*, ConnectionManager+)&gt;
+&lt;!ATTLIST DatabaseBackend 
+    name                    CDATA #REQUIRED
+    driver                  CDATA #REQUIRED
+    driverPath              CDATA #IMPLIED
+    url                     CDATA #REQUIRED
+    connectionTestStatement CDATA #REQUIRED  
+&gt;
+      </pre><p>Here is a brief description of database backend attributes:</p><div class="itemizedlist"><ul type="disc"><li><p><tt class="literal">name</tt>: the unique logical name identifying 
+            this backend.</p></li><li><p><tt class="literal">driver</tt>: the database native JDBC driver 
+            class name.</p></li><li><p><tt class="literal">driverPath</tt>: name of the directory or jar 
+            file containing the native driver files. If driverPath is omitted, 
+            the driver must be in the <tt class="filename">drivers/</tt> directory. If several driver 
+            jar files are in the same directory, the first jar file containing 
+            the class name specified in the <tt class="literal">driver</tt> attribute 
+            is used. Note that drivers are loaded in separate classloaders 
+            which allows you to use different versions of the same driver on 
+            different backends just by specifying the right jar file.</p></li><li><p><tt class="literal">url</tt>: the JDBC URL to connect to this 
+            database backend.</p></li><li><p><tt class="literal">connectionTestStatement</tt>: SQL statement to 
+            send on a connection to check if the connection is still valid. 
+            This is used when C-JDBC suspects a connection to be broken after 
+            the failure of a request. This statement should not update the 
+            database because if the connection is still valid the database 
+            state should remain the same. Here are the settings for the most 
+            popular databases:</p><div class="itemizedlist"><ul type="circle"><li><p>for MySQL use <span><b class="command">select 1</b></span></p></li><li><p>for PostgreSQL use <span><b class="command">select now()</b></span>.</p></li><li><p>for Apache Derby use <span><b class="command">values 1</b></span>.</p></li><li><p>for HSQL use <span><b class="command">call now()</b></span>.</p></li><li><p>for SAP DB (MySQL MaxDB) use <span><b class="command">select count(*) from 
+                versions</b></span>.</p></li><li><p>for Oracle use <span><b class="command">select * from dual</b></span>.</p></li><li><p>for Firebird use <span><b class="command">select * from 
+                rdb$types</b></span>.</p></li><li><p>for InstantDB use <span><b class="command">set date format 
+                "yyyy/mm/dd"</b></span>.</p></li><li><p>for Interbase use <span><b class="command">select * from 
+                rdb$types</b></span>.</p></li><li><p>for Microsoft SQL server 2000 <span><b class="command">select 
+                1</b></span>.</p></li></ul></div></li></ul></div><p>Here is a complete example of a database backend element including 
+        its connection manager definition:</p><pre class="programlisting">
+&lt;DatabaseBackend name="node1" driver="org.gjt.mm.mysql.Driver"
+      url="jdbc:mysql://node1.objectweb.org/rubis" connectionTestStatement="select 1"&gt;
+  &lt;ConnectionManager vLogin="user1" rLogin="ruser1" rPassword="rpass1"&gt;
+    &lt;SimpleConnectionManager/&gt;
+  &lt;/ConnectionManager&gt;
+  &lt;ConnectionManager vLogin="user2" rLogin="ruser1" rPassword="rpass1"&gt;
+    &lt;VariablePoolConnectionManager initPoolSize="10" 
+                                   minPoolSize="5"
+                                   maxPoolSize="100"/&gt;
+  &lt;/ConnectionManager&gt;
+&lt;/DatabaseBackend&gt;
+      </pre><div class="section" lang="en"><div class="titlepage"><div><div><h4 class="title"><a name="dtd_rewriting_rules"></a>11.5.1.&nbsp;Rewriting requests on backends</h4></div></div><div></div></div><p>If your cluster is made of database engines from different vendors, 
+      client requests might not be understood by all database backends. If your 
+      application was written for PostgreSQL and you want to add MySQL 
+      backends, some request might have to be adapted to execute correctly on 
+      MySQL. You can specify rules to rewrite queries on the fly on a specific
+      backend. A RewritingRule element defines how a query matching a given pattern 
+      should be rewritten.</p><pre class="programlisting">
+&lt;!ELEMENT RewritingRule EMPTY&gt;
+&lt;!ATTLIST RewritingRule 
+    queryPattern  CDATA #REQUIRED
+    rewrite       CDATA #REQUIRED
+    matchingType  (simple | pattern) "simple"
+    caseSensitive (true | false) "false"
+    stopOnMatch   (true | false) "false"
+&gt;
+    </pre><div class="itemizedlist"><ul type="disc"><li><p><tt class="literal">queryPattern</tt>: SQL query pattern 
+      to match.</p></li><li><p><tt class="literal">rewrite</tt>: rewritten SQL query.</p></li><li><p><tt class="literal">matchingType</tt>: <tt class="option">simple</tt>: means 
+          that the first occurrence of queryPattern in the request will be 
+          replaced by the string specified in rewrite. 
+          <tt class="option">pattern</tt>: uses a pattern based match/replace. A 
+          pattern uses <tt class="literal">?x</tt> where x is a logical number 
+          assigned to the pattern. Example: <tt class="literal">select ?1 from ?2 where 
+          x=?3</tt>.</p></li><li><p><tt class="literal">caseSensitive</tt>: true if matching must be case 
+          sensitive.</p></li><li><p><tt class="literal">stopOnMatch</tt>: rules are applied in the order they are 
+      defined. If one rule matches and stopOnMatch is set to true, next rules 
+      are ignored. If stopOnMatch is set to false, if another rule matches the 
+      rewritten query, the query will be rewritten again.</p></li></ul></div><p>Examples: </p><pre class="programlisting">
+ &lt;RewritingRule queryPattern="from user" rewrite="from "user;"" 
+    matchingType="simple"/&gt;</pre><p>will rewrite the query <tt class="literal">select * from user where x=y</tt> as 
+ <tt class="literal">select * from "user" where x=y</tt>.
+    </p><pre class="programlisting">
+ &lt;RewritingRule queryPattern="select * from t where x=?1" 
+    rewrite="select x from y where y=?1" matchingType="pattern"/&gt;</pre><p>will rewrite the query <tt class="literal">select * from t where x=435</tt> to 
+  <tt class="literal">select x from y where y=435</tt>
+    </p><pre class="programlisting">
+ &lt;RewritingRule queryPattern="?1 LIMIT ?2,?3" rewrite="?1 LIMIT ?3,?2" 
+    matchingType="pattern"/&gt;</pre><p>will rewrite the query <tt class="literal">select * from t limit 
+      10,20</tt> to <tt class="literal">select * from t limit 20,10</tt></p></div><div class="section" lang="en"><div class="titlepage"><div><div><h4 class="title"><a name="dtd_databaseschema"></a>11.5.2.&nbsp;Database Schema Definition</h4></div></div><div></div></div><p>DatabaseSchema groups static and dynamic definitions for 
+        gathering, constructing and validating the in-memory schema used for 
+        load balacing and caching.</p><p>A Database schema is defined as follow</p><pre class="programlisting">
+&lt;!ELEMENT DatabaseSchema (DatabaseStaticSchema?)&gt;
+&lt;!ATTLIST DatabaseSchema
+ dynamicPrecision (static|table|column|procedures|all) "all"
+ gatherSystemTables (true | false) "false"
+ schemaName CDATA #IMPLIED
+&gt;
+       </pre><div class="itemizedlist"><ul type="disc"><li><p><tt class="literal">dynamicSchemaPrecision</tt>: if set to 
+            <tt class="option">static</tt>, the controller will not check schemas and 
+            stored procedures, it will entirely rely on the statically defined 
+            schema. If set to something else than "static" it will get 
+            information from the backend to check validity of static schema at 
+            given level. <tt class="option">table</tt> level will check for table 
+            names only, <tt class="option">column</tt> level will check for column 
+            names, <tt class="option">procedures</tt> will gather all executable 
+            stored procedures. All, includes all information that can be 
+            collected.</p></li><li><p><tt class="literal">gatherSystemTables</tt>: true if system tables 
+           and views should be retrieved, false otherwise  (default).</p></li><li><p><tt class="literal">schemaName</tt>: if no schemaName is specified all 
+           objects visible to the user are gathered, otherwise only the objects 
+           belonging to the specified schema are used. </p></li></ul></div><div class="note" style="margin-left: 0.5in; margin-right: 0.5in;"><table border="0" summary="Note"><tr><td valign="top" align="center" rowspan="2" width="25"><img alt="[Note]" src="../../images/note.gif"></td><th align="left">Note</th></tr><tr><td valign="top" align="left" colspan="2"><p>Default option for constructing the schema is to collect all 
+          information, even if a static schema is defined especially for 
+          checking validity of input. This can be really slow if the database 
+          has quite a number of stored procedures defined. </p></td></tr></table></div><p>A static database schema can be defined to override the schema 
+      automatically gathered by the controller. However, the schema must 
+      remain compatible with the schema gathered from the backend.</p><p>A database schema element is defined as follows:</p><pre class="programlisting">
+&lt;!ELEMENT DatabaseStaticSchema (DatabaseProcedure*,DatabaseTable+)&gt;
+
+&lt;!ELEMENT DatabaseProcedure (DatabaseProcedureParameter*)&gt;
+&lt;!ATTLIST DatabaseProcedure 
+     name       CDATA #REQUIRED
+     returnType (resultUnknown | noResult | returnsResult) "resultUnknown"
+&gt;
+
+&lt;!ELEMENT DatabaseTable (DatabaseColumn+)&gt;
+&lt;!ATTLIST DatabaseTable 
+    tableName   CDATA #REQUIRED
+    nbOfColumns CDATA #REQUIRED
+&gt;
+
+&lt;!ELEMENT DatabaseColumn EMPTY&gt;
+&lt;!ATTLIST DatabaseColumn 
+    columnName CDATA #REQUIRED
+    isUnique   (true | false) "false"
+&gt;
+      </pre><p>The <tt class="literal">isUnique</tt> attribute should be set to 
+        <tt class="literal">true</tt> if the column has a <tt class="literal">UNIQUE</tt> 
+        constraint. This is the case for primary keys (composed primary keys 
+        are not yet supported). This affects only cache behavior and select 
+        statements parsing.</p><p>Here is an example of a database schema definition:</p><pre class="programlisting">
+&lt;DatabaseStaticSchema&gt;
+   &lt;DatabaseTable tableName="users" nbOfColumns="10"&gt;
+      &lt;DatabaseColumn columnName="id" isUnique="true"/&gt;
+      &lt;DatabaseColumn columnName="firstname" isUnique="false"/&gt;
+      &lt;DatabaseColumn columnName="lastname" isUnique="false"/&gt;
+      &lt;DatabaseColumn columnName="nickname" isUnique="false"/&gt;
+      &lt;DatabaseColumn columnName="password" isUnique="false"/&gt;
+      &lt;DatabaseColumn columnName="email" isUnique="false"/&gt;
+      &lt;DatabaseColumn columnName="rating" isUnique="false"/&gt;
+      &lt;DatabaseColumn columnName="balance" isUnique="false"/&gt;
+      &lt;DatabaseColumn columnName="creation_date" isUnique="false"/&gt;
+      &lt;DatabaseColumn columnName="region" isUnique="false"/&gt;
+   &lt;/DatabaseTable&gt;
+
+   &lt;DatabaseTable tableName="regions" nbOfColumns="2"&gt;
+     &lt;DatabaseColumn columnName="id" isUnique="true"/&gt;
+     &lt;DatabaseColumn columnName="name" isUnique="false"/&gt;
+   &lt;/DatabaseTable&gt;
+&lt;/DatabaseStaticSchema&gt;
+      </pre></div><div class="section" lang="en"><div class="titlepage"><div><div><h4 class="title"><a name="dtd_connectionmanager"></a>11.5.3.&nbsp;Connection Manager</h4></div></div><div></div></div><p>One connection manager must be defined for each virtual login the 
+        backend belongs to. The user/password combination defined in the 
+        <tt class="literal">RealLogin</tt> element for this vLogin/Backend is used to 
+        create the connection manager. An example of a connection manager 
+        definition is available in <a href="ar01s11.html#dtd_databasebackend" title="11.5.&nbsp;Database Backend">Section&nbsp;11.5, &ldquo;Database Backend&rdquo;</a>.</p><p>C-JDBC offers several connection managers that are described 
+        hereafter:</p><div class="itemizedlist"><ul type="disc"><li><p><tt class="literal">SimpleConnectionManager</tt>: basic connection 
+            manager that opens a new connection on each request and closes it 
+            at the end. It is useful if the underlying driver already 
+            implements connection pooling for example.</p></li><li><p><tt class="literal">FailFastPoolConnectionManager</tt>: offers 
+            connection pooling and fails fast when the pool is empty. 
+            <tt class="literal">poolSize</tt> is the size of the pool.</p><p>All connections are initialized at startup time and if the pool 
+            size is too large it is adjusted to the largest number of 
+            connections available. Once the pool is empty, 
+            <tt class="literal">null</tt> is returned instead of a connection. 
+            Therefore incoming requests will fail until at least one connection 
+            is freed. No system overload should occur with this connection 
+            manager, but if the pool size is too small, many requests will 
+            fail.</p></li><li><p><tt class="literal">RandomWaitPoolConnectionManager</tt>: provides 
+            connection pooling and wait when the pool is empty until a 
+            connection is freed. This connection manager accepts the following 
+            attributes:</p><div class="itemizedlist"><ul type="circle"><li><p><tt class="literal">poolSize</tt>: this is the size of the 
+                pool.</p></li><li><p><tt class="literal">timeout</tt>: this is the maximum time in 
+                seconds to wait for a connection to be freed. Default is 0 and 
+                means no timeout, that is to say that we wait until one 
+                connection is freed.</p></li></ul></div><p>All connections are initialized at startup time and if the pool 
+            size is too large it is adjusted to the largest number of 
+            connections available. Once the pool is empty, the requests wait 
+            until a connection is freed or the specified timeout has elapsed. 
+            The FIFO<sup>[<a href="#ftn.N10F5C" name="N10F5C">3</a>]</sup> order 
+            of connection request is not ensured by this connection manager 
+            since it relies on the Java wait/notify mechanism.</p></li><li><p><tt class="literal">VariablePoolConnectionManager</tt>: provides 
+            connection pooling with a dynamically adjustable pool size. This 
+            connection manager accepts the following attributes:</p><div class="itemizedlist"><ul type="circle"><li><p><tt class="literal">initPoolSize</tt>: initial pool size to be 
+                intialized at startup.</p></li><li><p><tt class="literal">minPoolSize</tt>: minimum number of 
+                connections to keep in the pool. Default is equal to 
+                <tt class="literal">initPoolSize</tt>.</p></li><li><p><tt class="literal">maxPoolSize</tt>: maximum number of 
+                connections in this pool. Default is 0 and means no 
+                limit.</p></li><li><p><tt class="literal">idleTimeout</tt>: time in seconds a 
+                connection can stay idle before being released (removed from 
+                the pool). Default is 0 and means that once allocated, 
+                connections are never released.</p></li><li><p><tt class="literal">waitTimeout</tt>: this is the maximum time in 
+                seconds to wait for a connection to be freed. Default is 0 and 
+                means no timeout, that is to say that we wait until one 
+                connection is freed.</p></li></ul></div></li></ul></div><p>The connection manager element complete definition is as 
+        follows:</p><pre class="programlisting">
+&lt;!ELEMENT ConnectionManager (SimpleConnectionManager |
+                             FailFastPoolConnectionManager |
+                             RandomWaitPoolConnectionManager |
+                             VariablePoolConnectionManager)&gt;
+&lt;!ATTLIST ConnectionManager 
+    Login CDATA #REQUIRED
+&gt;
+
+&lt;!ELEMENT SimpleConnectionManager EMPTY&gt;
+
+&lt;!ELEMENT FailFastPoolConnectionManager EMPTY&gt;
+&lt;!ATTLIST FailFastPoolConnectionManager
+    poolSize CDATA #REQUIRED
+&gt;
+
+&lt;!ELEMENT RandomWaitPoolConnectionManager EMPTY&gt;
+&lt;!ATTLIST RandomWaitPoolConnectionManager
+    poolSize CDATA #REQUIRED
+    timeout  CDATA #IMPLIED
+&gt;
+
+&lt;!ELEMENT VariablePoolConnectionManager EMPTY&gt;
+&lt;!ATTLIST VariablePoolConnectionManager
+    initPoolSize CDATA #REQUIRED
+    minPoolSize  CDATA #IMPLIED
+    maxPoolSize  CDATA #IMPLIED
+    idleTimeout  CDATA #IMPLIED
+    waitTimeout  CDATA #IMPLIED
+&gt;
+      </pre></div></div><div class="section" lang="en"><div class="titlepage"><div><div><h3 class="title"><a name="dtd_requestmanager"></a>11.6.&nbsp;Request Manager</h3></div></div><div></div></div><p>The request manager is composed of a scheduler (see <a href="ar01s11.html#dtd_requestscheduler" title="11.6.2.&nbsp;Request Scheduler">Section&nbsp;11.6.2, &ldquo;Request Scheduler&rdquo;</a>), an optional query cache (see <a href="ar01s11.html#dtd_requestcache" title="11.6.3.&nbsp;Request Cache">Section&nbsp;11.6.3, &ldquo;Request Cache&rdquo;</a>), a load balancer (see <a href="ar01s11.html#dtd_loadbalancer" title="11.6.4.&nbsp;Load Balancer">Section&nbsp;11.6.4, &ldquo;Load Balancer&rdquo;</a>) and an optional recovery log (see <a href="ar01s11.html#dtd_recoverylog" title="11.6.5.&nbsp;Recovery Log">Section&nbsp;11.6.5, &ldquo;Recovery Log&rdquo;</a>).</p><p>If requests need to be parsed, it can be done sequentially when 
+        needed (<tt class="literal">backgroundParsing</tt> is set to 
+        <tt class="literal">false</tt> which is the default value) or forced to be 
+        performed in background by a separate thread (it means a new thread is 
+        created for each request that need to be parsed).</p><p>Parsing is by default case insensitive 
+        (<tt class="literal">caseSensitiveParsing</tt> is set to 
+        <tt class="literal">false</tt>) which means that table and column names will 
+        be matched to the database schema without checking the case. If you 
+        want to enforce the parsing to be case sensitive and reject queries 
+        that do not use the same case for table and column names as the ones 
+        fetched from the database, set <tt class="literal">caseSensitiveParsing</tt> 
+        to <tt class="literal">true</tt>.</p><p>A timeout in seconds can be defined for begin/commit/rollback 
+        operations. If no value is given, the default timeout is set to 60 
+        seconds. Warning! A value of 0 means no timeout and waits forever until 
+        completion.</p><p>The request manager element definition is as follows:</p><pre class="programlisting">
+&lt;!ELEMENT RequestManager (RequestScheduler, RequestCache?, LoadBalancer, RecoveryLog?)&gt;
+&lt;!ATTLIST RequestManager
+    backgroundParsing    (true | false) #IMPLIED
+    caseSensitiveParsing (true | false) #IMPLIED
+    beginTimeout      CDATA #IMPLIED
+    commitTimeout     CDATA #IMPLIED
+    rollbackTimeout   CDATA #IMPLIED
+&gt;
+      </pre><div class="section" lang="en"><div class="titlepage"><div><div><h4 class="title"><a name="dtd_macrohandler"></a>11.6.1.&nbsp;Macros Handler</h4></div></div><div></div></div><p> C-JDBC can interpret and replace on-the-fly macros with a value 
+          computed by the controller (the RequestManager in fact). This 
+          prevents different backends to generate different values when 
+          interpreting the macros which could result in data inconsitencies. 
+          The supported macros are the following: </p><div class="itemizedlist"><ul type="disc"><li><p><tt class="literal">rand</tt>: RAND() can be replaced with an int, long, float or 
+              double value.</p></li></ul></div><p>all the date macros (now, currentDate, currentTime, timeOfDay 
+              and currentTimestamp) can be replaced by one of the following: 
+        </p><div class="itemizedlist"><ul type="disc"><li><p><tt class="literal">off</tt>: do not replace the macro</p><p><tt class="literal">date</tt>: java.sql.Date.toString() build from current time at 
+              controller (example: 2001-02-17)</p><p><tt class="literal">time</tt>: java.sql.Time.toString() build from current time at 
+              controller (example: 19:07:32).</p><p><tt class="literal">timestamp</tt>: java.sql.Timestamp.toString() build from current 
+              time at controller (example: 2001-02-17 19:07:32-05).</p></li><li><p><tt class="literal">timeResolution</tt>:defines the timer precision to 
+              use when rewriting a query that contains a date macro. Default is 
+              0 millisecond which is the highest precision. A value of 1000 
+              corresponds to a 1 second precision, 60000 to a 1 minute 
+              precision and so on. </p></li></ul></div><p>The MacroHandling element definition is as follows:</p><pre class="programlisting"> 
+&lt;!ELEMENT MacroHandling EMPTY&gt; 
+&lt;!ATTLIST MacroHandling 
+        rand (off | int | long | float | double) "float" 
+        now  (off | date | time | timestamp) "timestamp" 
+        currentDate (off | date | time | timestamp) "date" 
+        currentTime (off | date | time | timestamp) "time" 
+        timeOfDay (off | date | time | timestamp) "timestamp" 
+        currentTimestamp (off | date | time | timestamp) "timestamp" 
+        timeResolution CDATA "0" 
+&gt; 
+         </pre><div class="note" style="margin-left: 0.5in; margin-right: 0.5in;"><table border="0" summary="Note"><tr><td valign="top" align="center" rowspan="2" width="25"><img alt="[Note]" src="../../images/note.gif"></td><th align="left">Note</th></tr><tr><td valign="top" align="left" colspan="2"><p>A default Macrohandling element is instanciated and used if nothing is
+	specified in the configuration file.</p></td></tr></table></div></div><div class="section" lang="en"><div class="titlepage"><div><div><h4 class="title"><a name="dtd_requestscheduler"></a>11.6.2.&nbsp;Request Scheduler</h4></div></div><div></div></div><p>The request scheduler is responsible for scheduling the requests 
+          and ensuring a serializable execution order. Different schedulers are 
+          provided for each RAIDb level (see <a href="ar01s10.html" title="10.&nbsp;RAIDb Basics">Section&nbsp;10, &ldquo;RAIDb Basics&rdquo;</a>). 
+          Optimized schedulers are also provided for use with a single database 
+          backend (SingleDB configuration).</p><p>The request scheduler element definition is as follows:</p><pre class="programlisting">
+&lt;!ELEMENT RequestScheduler (SingleDBScheduler | RAIDb-0Scheduler |
+                            RAIDb-1Scheduler | RAIDb-2Scheduler)&gt;
+
+&lt;!ELEMENT SingleDBScheduler EMPTY&gt;
+&lt;!ATTLIST SingleDBScheduler
+    level (passThrough | pessimisticTransaction) #REQUIRED
+&gt;
+
+&lt;!ELEMENT RAIDb-0Scheduler EMPTY&gt;
+&lt;!ATTLIST RAIDb-0Scheduler 
+    level (passThrough | pessimisticTransaction) #REQUIRED
+&gt;
+
+&lt;!ELEMENT RAIDb-1Scheduler EMPTY&gt;
+&lt;!ATTLIST RAIDb-1Scheduler
+    level (passThrough | query | optimisticQuery | optimisticTransaction |
+           pessimisticTransaction) #REQUIRED
+&gt;
+
+&lt;!ELEMENT RAIDb-2Scheduler EMPTY&gt;
+&lt;!ATTLIST RAIDb-2Scheduler
+    level (passThrough | query | pessimisticTransaction) #REQUIRED
+&gt;
+	</pre><p>Here is a brief definition of the meaning of each 
+          scheduler:</p><div class="itemizedlist"><ul type="disc"><li><p><tt class="literal">passThrough</tt>: queries are just assigned a 
+              unique idnetifier and forwarded as is to the load balancer 
+              letting each database perform the scheduling and the locking. 
+              Therefore you will obtain the locking granularity provided by 
+              the database which should be row-level locking. The load balancer
+              will just ensure that the writes are sent in the same order to 
+              all backends.</p><p><tt class="literal">query</tt>: the query level scheduler is the 
+              most basic scheduler that ignores transactions and schedule 
+              requests as they come. Reads can execute concurrently but a write 
+              blocks every other request execution until it completes. This 
+              scheduling might lead to database deadlocks under moderate load. 
+              Only use this scheduler if the requests are already scheduled 
+              upfront by the application.</p></li><li><p><tt class="literal">optimisticTransaction</tt>: this is an 
+              optimistic transactional level scheduler that takes care of 
+              scheduling transactions in an optimistic way (writes on different 
+              tables can occur in parallel). An optimistic scheduler does not 
+              provide deadlock detection to rollback transactions that are 
+              deadlocking, but lets the database resolve the deadlocks and 
+              rollback the appropriate transactions.</p></li><li><p><tt class="literal">pessimisticTransaction</tt>: this is a 
+              pessimistic transactional level scheduler that schedules 
+              transactions in a safe way (without possible deadlocks) but 
+              providing less parallelism for writes compared to optimistic 
+              scheduling (this is only sensitive on write heavy workloads). 
+              This is the safest scheduler and it is recommended for most 
+              configurations.</p></li></ul></div></div><div class="section" lang="en"><div class="titlepage"><div><div><h4 class="title"><a name="dtd_requestcache"></a>11.6.3.&nbsp;Request Cache</h4></div></div><div></div></div><p>A Request Cache can be composed of different caches that differ 
+          in the type of data they cache:</p><div class="itemizedlist"><ul type="disc"><li><p><tt class="literal">MetadataCache:</tt> this cache improves the 
+                ResultSet creation time by keeping the various field 
+                information with their metadata. It is strongly encouraged to 
+                use this cache that reduces both cpu and memory usage.</p></li><li><p><tt class="literal">ParsingCache:</tt> allows to parse a request 
+                only once for all its executions. This reduces the cpu load on 
+                the controller.</p></li><li><p><tt class="literal">ResultCache:</tt> this cache keeps the 
+                results associated to a given request. Cache entries can be 
+                invalidated according to various policies. This cache reduces 
+                the load on the database backends.</p></li></ul></div><p>A RequestCache element is defined as follows:</p><pre class="programlisting">
+&lt;!ELEMENT RequestCache (MetadataCache?, ParsingCache?, ResultCache?)&gt;
+        </pre><div class="section" lang="en"><div class="titlepage"><div><div><h5 class="title"><a name="dtd_metadatacache"></a>11.6.3.1.&nbsp;Metadata Cache</h5></div></div><div></div></div><p>The MetadataCache caches ResultSet metadata and fields meta 
+            information associated to a query execution so that each time a 
+            query is executed, we don't have to gather all metadata from the 
+            underlying driver and we can build C-JDBC ResultSet much more 
+            efficiently both in terms of speed and memory usage. Note that if 
+            you use PreparedStatements, the query skeleton is used for matching 
+            the cache instead of the instanciated query.</p><p> Example: <tt class="literal">SELECT * FROM t WHERE x=?</tt> hits on 
+            the same cache entry for all queries of this form for any value of 
+            x.</p><p>A MetadataCache element is defined as follows:</p><pre class="programlisting">
+&lt;!ELEMENT MetadataCache EMPTY&gt;
+&lt;!ATTLIST MetadataCache
+    maxNbOfMetadata CDATA "10000"
+    maxNbOfField    CDATA "0"
+&gt;            
+          </pre><p><tt class="literal">maxNbOfMetadata:</tt> maximum number of metadata 
+            entries to keep in the cache (default is 10000 and 0 means 
+            unlimited)</p><p><tt class="literal">maxNbOfField:</tt> maximum number of field 
+            entries to keep in the cache (0 means unlimited and is the default 
+            setting).</p></div><div class="section" lang="en"><div class="titlepage"><div><div><h5 class="title"><a name="dtd_parsingcache"></a>11.6.3.2.&nbsp;Parsing Cache</h5></div></div><div></div></div><p>Parsing requests is a resource consuming process. The 
+            ParsingCache caches the result of the parsing processing so that a 
+            request is only parsed once for all its executions. If you are 
+            using PreparedStatements, the ParsingCache can store the query 
+            skeleton meaning that the cached parsing will match any instances 
+            of the skeleton. </p><p> Example: <tt class="literal">SELECT * FROM t WHERE x=?</tt> will be 
+            parsed only once for any value of x.</p><p>A MetadataCache element is defined as follows:</p><pre class="programlisting">
+&lt;!ELEMENT ParsingCache EMPTY&gt;
+&lt;!ATTLIST ParsingCache
+    backgroundParsing (true | false) "false"
+    maxNbOfEntries    CDATA "5000"       
+&gt;            
+          </pre><p> Request parsing can be done sequentially when needed 
+            (backgroundParsing set to false which is the default value) or 
+            forced to be performed in background by a separate thread (it means 
+            a new thread is created for each request that need to be 
+            parsed).</p><p> <tt class="literal">maxNbOfEntries:</tt> Defines the maximum number 
+            of entries to keep in the cache. The cache uses a LRU (Least 
+            Recently Used) replacing policy meaning that the oldest entries 
+            from the cache are removed when it is full. Default is 0 and means 
+            no limit on cache size. </p></div><div class="section" lang="en"><div class="titlepage"><div><div><h5 class="title"><a name="dtd_resultcache"></a>11.6.3.3.&nbsp;Result Cache</h5></div></div><div></div></div><p>The ResultCache caches results of queries. A query and its 
+            ResultSet are stored in the cache so that if the sames query is 
+            executed, the ResultSet stored in the cache is returned.</p><p>ResultCacheRule elements define the cache coherency and 
+            policy. Default cache behavior is eager consistency for all queries 
+            (ResultSet returned by the cache are always coherent and 
+            up-to-date). See below (ResultCacheRule element) to relax the cache 
+            consistency to achieve better performance.
+			 Note that ResultSet caching is disabled if no result cache element 
+			 is found in the configuration file</p><p>If two exact same requests are to be executed at the same 
+            time, only one is executed and the second one waits until the 
+            completion of the first one (this is the default 
+            <tt class="literal">pendingTimeout</tt> value which is 0). To prevent the 
+            second request from waiting forever, a 
+            <tt class="literal">pendingTimeout</tt> value in seconds can be defined 
+            for the waiting request. If the timeout expires, the request is 
+            executed in parallel with the first one.</p><p>A result cache element is described as follows:</p><pre class="programlisting">
+&lt;!ELEMENT ResultCache (DefaultResultCacheRule?, ResultCacheRule*)&gt;
+&lt;!ATTLIST ResultCache 
+    granularity   (database | table | column | columnUnique) "database"
+    maxNbOfEntries CDATA "100000"
+    pendingTimeout CDATA "0"
+&gt;
+        </pre><p>The result cache 
+          <tt class="literal">granularity</tt> defines how entries are removed from 
+          the cache. <tt class="literal">database</tt> flush the whole cache on every 
+          write access. This is the default cache setting. 
+          <tt class="literal">table</tt> and <tt class="literal">column</tt> provide 
+          table-based and column-based invalidations, respectively. 
+          <tt class="literal">columnUnique</tt> can optimize requests that select a 
+          unique primary key (useful with EJB entity beans). </p><p>You can specify the maximum number of entries (default is 100000) 
+            to limit the cache size. This is obviously not as efficient as 
+            setting a cache size, but in the latter case we would have to spend 
+            a lot of time computing size of result sets from queries (Java does 
+            not provide a sizeof operator!). We offer size display in bytes 
+            when viewing the cache from the console though.</p><p>Finer grain tuning of the cache is based on 
+          rules matching query pattern. A queryPattern are regular expressions 
+          to match according to Jakarta Regexp (see <a href="http://jakarta.apache.org/regexp" target="_top">their web site</a> for 
+          more information). A default cache rule defines the policy if no 
+          other rule matches:</p><pre class="programlisting">
+	&lt;!ELEMENT DefaultResultCacheRule (NoCaching | EagerCaching | RelaxedCaching)&gt;
+	&lt;!ATTLIST DefaultResultCacheRule
+	    timestampResolution CDATA "1000"
+	&gt;
+	
+	&lt;!ELEMENT ResultCacheRule (NoCaching | EagerCaching | RelaxedCaching)&gt;
+	&lt;!ATTLIST ResultCacheRule
+	    queryPattern        CDATA #REQUIRED
+	    caseSensitive       (true | false) "false"
+	    applyToSkeleton     (true | false) "false"
+	    timestampResolution CDATA "1000"
+	&gt;
+        </pre><div class="itemizedlist"><ul type="disc"><li><p><tt class="literal">queryPattern</tt>: the regular expression to 
+              match.</p></li><li><p><tt class="literal">caseSensitive</tt>: true if the pattern matching must 
+          be case sensitive</p></li><li><p><tt class="literal">applytoSkeleton</tt>: true if the pattern must 
+              apply to the query skeleton (found in PrepareStatement), false if 
+              the instantiated query should be used. Example: skeleton is 
+              <tt class="literal">SELECT * FROM t WHERE x=?</tt> and instantiated 
+              query is <tt class="literal">SELECT * FROM t WHERE x=12</tt>.</p></li><li><p><tt class="literal">timestampResolution</tt>: If a query contains a 
+              NOW() macro, it is replaced with the current date on the 
+              controller. timestampResolution indicates the resolution (in 
+              milliseconds) to use when replacing NOW() with the current date. 
+              If the resolution is below 1 second (value &lt;1000ms), the 
+              request is never kept in the cache because there is almost no 
+              chance that the same request will come with the same timestamp. 
+              Note that this timestamp is for the cache only and you can use a 
+              greater resolution for the load balancer (see below).</p></li></ul></div><div class="note" style="margin-left: 0.5in; margin-right: 0.5in;"><table border="0" summary="Note"><tr><td valign="top" align="center" rowspan="2" width="25"><img alt="[Note]" src="../../images/note.gif"></td><th align="left">Note</th></tr><tr><td valign="top" align="left" colspan="2"><p>If timestampResolution is set to 60000, every execution of a 
+            query like <tt class="literal">SELECT * FROM x WHERE date=NOW()</tt> will 
+            be replaced with the same value for 1 minute (i.e. <tt class="literal">SELECT 
+            * FROM x WHERE date="2012-11-15 08:03:00.000"</tt>) and 
+            therefore the cache entry may be hit for 1 minute. </p></td></tr></table></div><p>To define a default rule that disable caching use:</p><pre class="programlisting">
+&lt;DefaultResultCacheRule&gt;
+  &lt;NoCaching/&gt;
+&lt;/DefaultResultCacheRule&gt;
+	</pre><p>If no default rule is provided, the following default rule is 
+          assumed:</p><pre class="programlisting">
+&lt;ResultCacheRule queryPattern="default" timestampResolution="1000"&gt;
+  &lt;EagerCaching/&gt;
+&lt;/ResultCacheRule&gt;
+	</pre><p>Each cache rule can have a different caching behavior. The 
+          available behavior are the following:</p><pre class="programlisting">
+&lt;!ELEMENT NoCaching EMPTY&gt;
+&lt;!ELEMENT EagerCaching EMPTY&gt;
+&lt;!ELEMENT RelaxedCaching EMPTY&gt;
+&lt;!ATTLIST RelaxedCaching 
+     timeout        CDATA "60"
+     keepIfNotDirty (true | false) "true"
+&gt;
+	</pre><div class="itemizedlist"><ul type="disc"><li><p><tt class="literal">NoCaching</tt> means we do not put the match in the cache</p></li><li><p><tt class="literal">EagerCaching</tt> means that all entries in the 
+              cache are always coherent and any update query 
+              (insert,delete,update,...) will automatically invalidate the 
+              corresponding entry in the cache. This was the previous cache 
+              behavior for all queries</p></li><li><p><tt class="literal">RelaxedCaching</tt> means that a 
+              <tt class="option">timeout</tt> is set for this entry and the entry is 
+              kept in the cache until the timeout expires. When the timeout 
+              expires, if no write has modified the corresponding result and 
+              <tt class="option">keepIfNotDirty</tt> is set to true, the entry is kept 
+              in the cache and the timeout is rearmed (reset) with its initial 
+              value.</p></li></ul></div><div class="note" style="margin-left: 0.5in; margin-right: 0.5in;"><table border="0" summary="Note"><tr><td valign="top" align="center" rowspan="2" width="25"><img alt="[Note]" src="../../images/note.gif"></td><th align="left">Note</th></tr><tr><td valign="top" align="left" colspan="2"><p>RelaxedCaching may provide stale data. The timeout defines the 
+            maximum staleness of a cache entry. It means that the cache may 
+            return an entry that is out of date.</p></td></tr></table></div><p>Here is a cache rule example:</p><pre class="programlisting">
+&lt;ResultCacheRule queryPattern="select ? from b where id=?" applyToSkeleton="true"&gt;
+  &lt;RelaxedCaching timeOut="6000" keepIfNotDirty="true"/&gt;
+&lt;/ResultCacheRule&gt;
+	</pre></div></div><div class="section" lang="en"><div class="titlepage"><div><div><h4 class="title"><a name="dtd_loadbalancer"></a>11.6.4.&nbsp;Load Balancer</h4></div></div><div></div></div><p>The load balancer defines the way requests will be distributed 
+          among the backends according to a RAIDb level (see <a href="ar01s10.html" title="10.&nbsp;RAIDb Basics">Section&nbsp;10, &ldquo;RAIDb Basics&rdquo;</a>). The following load balancers are 
+          available:</p><div class="itemizedlist"><ul type="disc"><li><p><tt class="literal">SingleDB</tt>: load balancer for a single 
+                database backend instance. This is only available if you use a 
+                single controller.</p></li><li><p><tt class="literal">ParallelDB</tt>: load balancer to use with a 
+              parallel database such as Oracle Parallel Server or Middle-R. 
+              Both read and write are load balanced on the backends, letting 
+              the parallel database replicating writes.</p></li><li><p><tt class="literal">RAIDb-0</tt>: full database partitioning (no 
+              table can be replicated) with an optional policy specifying where 
+              new tables are created.</p></li><li><p><tt class="literal">RAIDb-1</tt>: full database mirroring (all 
+              tables are replicated everywhere) with an optional policy 
+              specifying how distributed queries (writes/commit/rollback) 
+              completion is handled (when the first, a majority or all backends 
+              complete).</p></li><li><p><tt class="literal">RAIDb-1ec</tt>: full database mirroring (like 
+              RAIDb-1) with error checking for byzantine failure 
+              detection.</p></li><li><p><tt class="literal">RAIDb-2</tt>: partial replication (each table 
+              must be at least replicated once) with optional policies for new 
+              table creation (like RAIDb-0) and distributed queries completion 
+              (like RAIDb-1).</p></li><li><p><tt class="literal">RAIDb-2ec</tt>: partial replication (like 
+              RAIDb-2) with error checking for byzantine failure 
+              detection.</p></li></ul></div><p>The load balancer element definition is as follows:</p><pre class="programlisting">
+&lt;!ELEMENT LoadBalancer (SingleDB | ParallelDB | RAIDb-0 | RAIDb-1 | RAIDb-1ec | RAIDb-2 | RAIDb-2ec)&gt;
+	</pre><div class="section" lang="en"><div class="titlepage"><div><div><h5 class="title"><a name="dtd_loadbalancer_SingleDB"></a>11.6.4.1.&nbsp;<tt class="literal">SingleDB</tt> load balancer</h5></div></div><div></div></div><p>The <tt class="literal">SingleDB</tt> load balancer does not need any 
+            specific parameter. The definition of the 
+            <tt class="literal">SingleDB</tt> element is as follows:</p><pre class="programlisting"> &lt;!ELEMENT SingleDB EMPTY&gt; </pre></div><div class="section" lang="en"><div class="titlepage"><div><div><h5 class="title"><a name="dtd_loadbalancer_ParallelDB"></a>11.6.4.2.&nbsp;<tt class="literal">ParallelDB</tt> load balancer</h5></div></div><div></div></div><p>The <tt class="literal">ParallelDB</tt> load balancer must be used 
+            with a SingleDB request scheduler. This load balancer provides two 
+            implementations: <tt class="literal">ParallelDB-RoundRobin</tt> and 
+            <tt class="literal">ParallelDB-LeastPendingRequestsFirst</tt> providing 
+            round robin and least pending request first load balancing 
+            policies, respectively. ParallelDB load balancers are designed to 
+            provide load balancing and failover on top of parallel databases 
+            such as Oracle Parallel Server or Middle-R. It means that read and 
+            write requuest are just sent to one alive backends, the parallel 
+            database being responsible for maintaining the consistency between 
+            the backends. The definition of the <tt class="literal">ParallelDB</tt> 
+            element is as follows:</p><pre class="programlisting">
+&lt;!ELEMENT ParallelDB (ParallelDB-RoundRobin | ParallelDB-LeastPendingRequestsFirst)&gt;
+
+&lt;!ELEMENT ParallelDB-RoundRobin EMPTY&gt;
+&lt;!ELEMENT ParallelDB-LeastPendingRequestsFirst EMPTY&gt;
+          </pre><p>No specific settings are required for these load balancers.
+            They do not require request parsing which means that requests are
+            just forwarded as is to the backends (rewriting rules are still
+            applied but no automatic transformation is performed).</p></div><div class="section" lang="en"><div class="titlepage"><div><div><h5 class="title"><a name="dtd_loadbalancer_RAIDb0"></a>11.6.4.3.&nbsp;<tt class="literal">RAIDb-0</tt> load balancer</h5></div></div><div></div></div><p>The <tt class="literal">RAIDb-0</tt> load balancer accepts a policy 
+            to specify where new tables are created. The definition of the 
+            <tt class="literal">RAIDb-0</tt> element is as follows:</p><pre class="programlisting">
+&lt;!ELEMENT RAIDb-0 (MacroHandling?,CreateTable*)&gt;
+
+&lt;!ELEMENT CreateTable (BackendName*)&gt;
+&lt;!ATTLIST CreateTable 
+    tableName     CDATA #IMPLIED
+    policy        (random | roundRobin | all) #REQUIRED
+    numberOfNodes CDATA #REQUIRED
+&gt;
+    
+&lt;!-- BackendName simply identifies a backend by its logical name --&gt;
+&lt;!ELEMENT BackendName EMPTY&gt;
+&lt;!ATTLIST BackendName
+    name CDATA #REQUIRED
+&gt;
+</pre><p>If <tt class="literal">MacroHandling</tt> is omitted, a default MacroHandling element 
+	  is added.</p><p><tt class="literal">CreateTable</tt> defines the policy to adopt when 
+            creating a new table. This policy is based on the given list of 
+            <tt class="literal">BackendName</tt> nodes (which might be a subset of 
+            the complete set of backends). If the backend list is omitted, then 
+            all enabled backends are taken at decision time. The attributes 
+            have the following meaning:</p><div class="itemizedlist"><ul type="disc"><li><p><tt class="literal">numberOfNodes</tt> represents the number of 
+                backends to pickup from the <tt class="literal">BackendName</tt> list 
+                to apply the policy (it must be set to 1 for 
+                <tt class="literal">RAIDb-0</tt> load balancers and can never be 
+                greater than the number of nodes declared in the 
+                <tt class="literal">BackendName</tt> list).</p></li><li><p><tt class="literal">policy</tt> works as follows:</p><div class="itemizedlist"><ul type="circle"><li><p><tt class="literal">random</tt>: 
+                    <tt class="literal">numberOfNodes</tt> backends are picked up 
+                    randomly from the <tt class="literal">BackendName</tt> list and 
+                    the table is created on these nodes.</p></li><li><p><tt class="literal">roundRobin</tt>: 
+                    <tt class="literal">numberOfNodes</tt> backends are picked up 
+                    from the <tt class="literal">BackendName</tt> list using a 
+                    round-robin algorithm and the table is created on these 
+                    nodes.</p></li><li><p><tt class="literal">all</tt>: the table is created on 
+                    <span class="emphasis"><em>all</em></span> nodes in the 
+                    <tt class="literal">BackendName</tt> list 
+                    (<tt class="literal">numberOfNodes</tt> is ignored).</p></li></ul></div></li></ul></div><p>Here is an example of a <tt class="literal">RAIDb-0</tt> controller 
+            with three nodes where new tables are created randomly on the first 
+            two nodes:</p><pre class="programlisting">
+...
+&lt;DatabaseBackend name="node1" ...
+&lt;DatabaseBackend name="node2" ...
+&lt;DatabaseBackend name="node3" ...
+...
+
+&lt;LoadBalancer&gt;
+  &lt;RAIDb-0&gt;
+    &lt;CreateTable policy="random" numberOfNodes="1"&gt;
+      &lt;BackendName name="node1" /&gt;
+      &lt;BackendName name="node2" /&gt;
+    &lt;/CreateTable&gt;
+  &lt;/RAIDb-0&gt;
+&lt;/LoadBalancer&gt;
+	  </pre></div><div class="section" lang="en"><div class="titlepage"><div><div><h5 class="title"><a name="dtd_loadbalancer_RAIDb1"></a>11.6.4.4.&nbsp;<tt class="literal">RAIDb-1:full mirroring </tt> load balancer</h5></div></div><div></div></div><p>A RAIDb-1 load balancer is defined as follows:</p><pre class="programlisting">
+&lt;!ELEMENT RAIDb-1 (WaitForCompletion?, MacroHandling?, (RAIDb-1-RoundRobin | 
+           RAIDb-1-WeightedRoundRobin | RAIDb-1-LeastPendingRequestsFirst))&gt;
+
+&lt;!ELEMENT RAIDb-1-RoundRobin EMPTY&gt;
+&lt;!ELEMENT RAIDb-1-WeightedRoundRobin (BackendWeight)&gt;
+&lt;!ELEMENT RAIDb-1-LeastPendingRequestsFirst EMPTY&gt;
+
+&lt;!ELEMENT WaitForCompletion EMPTY&gt;
+&lt;!ATTLIST WaitForCompletion
+    policy (first | majority | all) "first"
+&gt;
+
+&lt;!ELEMENT BackendWeight EMPTY&gt;
+&lt;!ATTLIST BackendWeight
+    name   CDATA #REQUIRED
+    weight CDATA #REQUIRED
+&gt;
+	  </pre><p>If <tt class="literal">WaitForCompletion</tt> is omitted, the 
+            default behaviour is to return the result as soon as one backend 
+            has completed.</p><p>If MacroHandling is omitted, a default MacroHandling element is added.</p><p>The <tt class="literal">RAIDb-1</tt> load balancer accepts a policy 
+            to specify distributed queries completion. Several load balancing 
+            policies are proposed:</p><div class="itemizedlist"><ul type="disc"><li><p><tt class="literal">RoundRobin</tt>: simple round-robin load 
+                balancing. The first request is sent to the first node, the 
+                second request to the second node, etc... Once a request has 
+                been sent to the last backend, the next request is sent to the 
+                first backend and so on.</p></li><li><p><tt class="literal">WeightedRoundRobin</tt>: same as round-robin 
+                but a weight is associated to each backend. A backend that has 
+                a weight of 2 will get two times more requests than a backend 
+                with a backend with a weight of 1.</p></li><li><p><tt class="literal">LeastPendingRequestsFirst</tt>: the request 
+                is sent to the backend that has the least pending requests to 
+                execute (that can be considered as the shortest pending request 
+                queue).</p></li></ul></div><p>The definition of the <tt class="literal">RAIDb-1</tt> element is as 
+            follows:</p><p><tt class="literal">WaitForCompletion</tt> defines the policy to 
+            adopt when waiting for the completion of a request. Policy works as 
+            follows:</p><div class="itemizedlist"><ul type="disc"><li><p><tt class="literal">first</tt>: returns the result as soon as one 
+                node has completed.</p></li><li><p><tt class="literal">majority</tt>: returns the result as soon as 
+                a majority of nodes (n/2+1) has completed.</p></li><li><p><tt class="literal">all</tt>: waits for all nodes to complete 
+                before returning the result to the client.</p></li></ul></div></div><div class="section" lang="en"><div class="titlepage"><div><div><h5 class="title"><a name="dtd_loadbalancer_RAIDb1ec"></a>11.6.4.5.&nbsp;<tt class="literal">RAIDb-1ec</tt> load balancer</h5></div></div><div></div></div><p>The RAIDb-1 with error checking must provide an error checking 
+            policy (defined below). The optional 
+            <tt class="literal">WaitForCompletion</tt> policy only concern write 
+            requests (<tt class="literal">INSERT</tt>, <tt class="literal">DELETE</tt>, 
+            <tt class="literal">UPDATE</tt>, commit, ...).</p><div class="note" style="margin-left: 0.5in; margin-right: 0.5in;"><table border="0" summary="Note"><tr><td valign="top" align="center" rowspan="2" width="25"><img alt="[Note]" src="../../images/note.gif"></td><th align="left">Note</th></tr><tr><td valign="top" align="left" colspan="2"><p><tt class="literal">RAIDb-1ec</tt> is not operational in C-JDBC 
+              v1.0alpha.</p></td></tr></table></div><p>The definition of the <tt class="literal">RAIDb-1ec</tt> element is 
+            as follows:</p><pre class="programlisting">
+&lt;!ELEMENT RAIDb-1ec (WaitForCompletion?, ErrorChecking, (RAIDb-1ec-RoundRobin | 
+                     RAIDb-1ec-WeightedRoundRobin))&gt;
+&lt;!ATTLIST RAIDb-1ec
+    nbOfConcurrentReads CDATA #REQUIRED
+&gt;
+
+&lt;!ELEMENT RAIDb-1ec-RoundRobin EMPTY&gt;
+&lt;!ELEMENT RAIDb-1ec-WeightedRoundRobin (BackendWeight)&gt;
+
+&lt;!ELEMENT ErrorChecking EMPTY&gt;
+&lt;!ATTLIST ErrorChecking 
+    policy        (random | roundRobin | all) #REQUIRED
+    numberOfNodes CDATA #REQUIRED
+&gt;
+	  </pre><p>Error checking policy (for RAIDb-1ec and RAIDb2-ec). Error 
+            checking is used to detect byzantine failures of nodes. It means 
+            detecting when a node sends funny results in a non-deterministic 
+            way. Error checking allows read queries to be sent to more than one 
+            database, and the results are compared. A majority of nodes must 
+            agree on the result that will be sent to the client. Error checking 
+            policies are defined as follows:</p><div class="itemizedlist"><ul type="disc"><li><p><tt class="literal">random</tt>: <tt class="literal">numberOfNodes</tt> 
+                backends are picked up randomly; the read request is sent to 
+                these backends and results are compared.</p></li><li><p><tt class="literal">roundRobin</tt>: 
+                <tt class="literal">numberOfNodes</tt> backends are picked up using a 
+                round-robin algorithm ; the read request is send to these 
+                backends and results are compared.</p></li><li><p><tt class="literal">all</tt>: the request is sent to 
+                <span class="emphasis"><em>all</em></span> nodes 
+                (<tt class="literal">numberOfNodes</tt> is ignored) and the results 
+                compared.</p></li></ul></div><p><tt class="literal">numberOfNodes</tt> must be greater or equal to 
+            3.</p></div><div class="section" lang="en"><div class="titlepage"><div><div><h5 class="title"><a name="dtd_loadbalancer_RAIDb2"></a>11.6.4.6.&nbsp;<tt class="literal">RAIDb-2 : distributed mirroring</tt> load balancer</h5></div></div><div></div></div><p>The definition of the <tt class="literal">RAIDb-2</tt> element is as 
+            follows:</p><pre class="programlisting">
+&lt;!ELEMENT RAIDb-2 (CreateTable*, WaitForCompletion?, MacroHandling?, (RAIDb-2-RoundRobin | 
+ RAIDb-2-WeightedRoundRobin | RAIDb-2-LeastPendingRequestsFirst))&gt;
+
+
+&lt;!ELEMENT RAIDb-2-RoundRobin EMPTY&gt;
+&lt;!ELEMENT RAIDb-2-WeightedRoundRobin (BackendWeight)&gt;
+&lt;!ELEMENT RAIDb-2-LeastPendingRequestsFirst EMPTY&gt;
+	  </pre><p>If MacroHandling is omitted, a default MacroHandling element is added.</p><p>The <tt class="literal">RAIDb-2</tt> load balancer accepts a policy 
+            to specify where new tables are created and how distributed queries 
+            completion should be handled. Several load balancing policies are 
+            proposed:</p><div class="itemizedlist"><ul type="disc"><li><p><tt class="literal">RoundRobin</tt>: simple round-robin load 
+                balancing. The first request is sent to the first node, the 
+                second request to the second node, etc... Once a request has 
+                been sent to the last backend, the next request is sent to the 
+                first backend and so on.</p></li><li><p><tt class="literal">WeightedRoundRobin</tt>: same as round-robin 
+                but a weight is associated to each backend. A backend that has 
+                a weight of 2 will get two times more requests than a backend 
+                with a backend with a weight of 1.</p></li><li><p><tt class="literal">LeastPendingRequestsFirst</tt>: the request 
+                is sent to the backend that has the least pending requests to 
+                execute (that can be considered as the shortest pending request 
+                queue).</p></li></ul></div><p>The <tt class="literal">CreateTable</tt> element definition is 
+            defined in <a href="ar01s11.html#dtd_loadbalancer_RAIDb0" title="11.6.4.3.&nbsp;RAIDb-0 load balancer">Section&nbsp;11.6.4.3, &ldquo;RAIDb-0 load balancer&rdquo;</a>.</p><p>The <tt class="literal">WaitForCompletion</tt> element definition is 
+            defined in <a href="ar01s11.html#dtd_loadbalancer_RAIDb1" title="11.6.4.4.&nbsp;RAIDb-1:full mirroring  load balancer">Section&nbsp;11.6.4.4, &ldquo;RAIDb-1:full mirroring  load balancer&rdquo;</a>.</p></div><div class="section" lang="en"><div class="titlepage"><div><div><h5 class="title"><a name="dtd_loadbalancer_RAIDb2ec"></a>11.6.4.7.&nbsp;<tt class="literal">RAIDb-2ec</tt> load balancer</h5></div></div><div></div></div><p>The RAIDb-2 with error checking must provide an error checking 
+            policy as in <tt class="literal">RAIDb-1ec</tt> (see <a href="ar01s11.html#dtd_loadbalancer_RAIDb1ec" title="11.6.4.5.&nbsp;RAIDb-1ec load balancer">Section&nbsp;11.6.4.5, &ldquo;RAIDb-1ec load balancer&rdquo;</a>). The other elements are 
+            similar to those defined for <tt class="literal">RAIDb-2</tt> controller 
+            (see <a href="ar01s11.html#dtd_loadbalancer_RAIDb2" title="11.6.4.6.&nbsp;RAIDb-2 : distributed mirroring load balancer">Section&nbsp;11.6.4.6, &ldquo;RAIDb-2 : distributed mirroring load balancer&rdquo;</a>).</p><div class="note" style="margin-left: 0.5in; margin-right: 0.5in;"><table border="0" summary="Note"><tr><td valign="top" align="center" rowspan="2" width="25"><img alt="[Note]" src="../../images/note.gif"></td><th align="left">Note</th></tr><tr><td valign="top" align="left" colspan="2"><p><tt class="literal">RAIDb-2ec</tt> is not operational in C-JDBC 
+              v1.0alpha.</p></td></tr></table></div><p>The definition of the <tt class="literal">RAIDb-2ec</tt> element is 
+            as follows:</p><pre class="programlisting">
+&lt;!ELEMENT RAIDb-2ec (CreateTable*, WaitForCompletion?, ErrorChecking,
+                     (RAIDb-2ec-RoundRobin | RAIDb-2ec-WeightedRoundRobin))&gt;
+&lt;!ATTLIST RAIDb-2ec 
+    nbOfConcurrentReads CDATA #REQUIRED
+&gt;
+
+&lt;!ELEMENT RAIDb-2ec-RoundRobin EMPTY&gt;
+&lt;!ELEMENT RAIDb-2ec-WeightedRoundRobin (BackendWeight)&gt;
+	  </pre></div></div><div class="section" lang="en"><div class="titlepage"><div><div><h4 class="title"><a name="dtd_recoverylog"></a>11.6.5.&nbsp;Recovery Log</h4></div></div><div></div></div><p>The C-JDBC Recovery Log stores write queries and transactions 
+          between logical checkpoints defined by the user. The log can be 
+          only be stored in a database (or cluster of databases) using a 
+          <tt class="literal">JDBCRecoveryLog</tt> element.</p><p>The definition of a <tt class="literal">RecoveryLog</tt> element is as 
+          follows:</p><pre class="programlisting">
+&lt;!ELEMENT RecoveryLog (JDBCRecoveryLog)&gt;
+	</pre><div class="section" lang="en"><div class="titlepage"><div><div><h5 class="title"><a name="dtd_jdbcrecoverylog"></a>11.6.5.1.&nbsp;JDBCRecoverylog</h5></div></div><div></div></div><p>The JDBCRecoveryLog stores the recovery information in a database. To
+            access this database, you must provide the driver class name to load (driver), an
+            optional jar file or directory where to find the class to load (driverPath), the
+            JDBC url to access the database as well as a valid login/password.</p><p>A timeout in seconds can be defined for the sql requests. If no value is given,
+            the default timeout is set to 60 seconds. Warning! 0 means no timeout and wait
+            forever until completion.</p><p> recoveryBatchSize is used to speedup the recovery process and allow
+            several queries to be accumulated into a batch on the recovering backend.
+            Increasing this value beyond a certain limit will not increase performance and
+            will consume a significant amount of memory. Default is 10 and minimum is 1.
+            </p><p>The recovery information is stored in 3 tables defined in the
+            RecoveryLogTable, CheckpointTable and BackendLogTable elements.</p><p>The definition of a <tt class="literal">JDBCRecoveryLog</tt> element is as
+            follows:</p><pre class="programlisting">
+&lt;!ELEMENT JDBCRecoveryLog (RecoveryLogTable, CheckpointTable, BackendTable)&gt;
+
+&lt;!ATTLIST JDBCRecoveryLog 
+    driver            CDATA #REQUIRED
+    driverPath        CDATA #IMPLIED
+    url               CDATA #REQUIRED
+    login             CDATA #REQUIRED
+    password          CDATA #REQUIRED
+    requestTimeout    CDATA "60"
+    recoveryBatchSize CDATA "10"
+&gt;
+&lt;!ELEMENT RecoveryLogTable EMPTY&gt;
+&lt;!ATTLIST RecoveryLogTable 
+    createTable              CDATA "CREATE TABLE"
+    tableName                CDATA "logtable"  
+    idColumnType             CDATA "BIGINT NOT NULL UNIQUE"
+    vloginColumnType         CDATA "VARCHAR(20) NOT NULL"
+    sqlColumnName            CDATA "sql"
+    sqlColumnType            CDATA "TEXT NOT NULL"
+    transactionIdColumnType  CDATA "BIGINT NOT NULL"
+    extraStatementDefinition CDATA ""
+&gt;
+
+&lt;!ELEMENT CheckpointTable EMPTY&gt;
+&lt;!ATTLIST CheckpointTable 
+    createTable              CDATA "CREATE TABLE"
+    tableName                CDATA "checkpointtable"
+    checkpointNameColumnType CDATA "VARCHAR(127) NOT NULL"
+    requestIdColumnType      CDATA "BIGINT"
+    extraStatementDefinition CDATA ",PRIMARY KEY (name)"
+&gt;
+
+&lt;!ELEMENT BackendTable EMPTY&gt;
+&lt;!ATTLIST BackendTable 
+    createTable                  CDATA "CREATE TABLE"
+    tableName                    CDATA "backendtable"  
+    databaseNameColumnType       CDATA "VARCHAR(50) NOT NULL"
+    backendNameColumnType        CDATA "VARCHAR(50) NOT NULL"
+    backendStateColumnType       CDATA "INTEGER"
+    checkpointNameColumnType     CDATA "VARCHAR(127) NOT NULL"  
+    extraStatementDefinition     CDATA ""
+&gt;
+
+&lt;!ELEMENT DumpTable EMPTY&gt;
+&lt;!ATTLIST DumpTable
+    createTable              CDATA "CREATE TABLE"
+    tableName                CDATA "dumptable"
+    dumpNameColumnType       CDATA "TEXT NOT NULL"
+    dumpDateColumnType       CDATA "TEXT NOT NULL"
+    dumpPathColumnType       CDATA "TEXT NOT NULL"
+    dumpFormatColumnType     CDATA "TEXT NOT NULL"
+    checkpointNameColumnType CDATA "TEXT NOT NULL"  
+    backendNameColumnType    CDATA "TEXT NOT NULL"
+    tablesColumnType         CDATA "TEXT NOT NULL"
+    extraStatementDefinition CDATA ""
+&gt;
+	  </pre><p>The <tt class="literal">JDBCRecoveryLog</tt> element requires the following
+            attributes:</p><div class="itemizedlist"><ul type="disc"><li><p><tt class="option">driver</tt>: the driver class name</p></li><li><p><tt class="option">url</tt>: the JDBC URL to access the database</p></li><li><p><tt class="option">login</tt>: the user login to connect to the
+                database</p></li><li><p><tt class="option">password</tt>: the user password to connect to the
+                database</p></li><li><p><tt class="option">requestTimeout</tt>: optional timeout request in
+                second that will be used to replay the log queries. Default timeout is 60
+                seconds and 0 means no timeout (wait forever until a request
+                complete).</p></li><li><p><tt class="option">recoveryBatchSize</tt>: used to speedup the recovery
+                process and allow several queries to be accumulated into a batch on the
+                recovering backend. Increasing this value beyond a certain limit will not
+                increase performance and will consume a significant amount of memory.
+                Default is 10 and minimum is 1. </p></li></ul></div><p>The <tt class="literal">RecoveryLogTable</tt> defines how the
+            JDBCRecoveryLog log table is created. The log table name
+            (<tt class="option">tableName</tt>) must conform to the syntax of a database table
+            name. The log table stores a unique request id (<tt class="option">id</tt>), the
+            virtual login (<tt class="option">vlogin</tt>)to use to execute the sql statement
+            (<tt class="option">sql</tt>) in the given transaction
+            (<tt class="option">transactionId</tt>). The statement used by the
+            JDBCRecoveryLog to create the log table uses the RecoveryLogTable attributes
+            as follows:</p><pre class="programlisting">
+  CREATE TABLE <tt class="option">tableName</tt> (
+    id             <tt class="option">idColumnType</tt>,
+    vlogin         <tt class="option">vloginColumnType</tt>,
+    sql            <tt class="option">sqlColumnType</tt>,
+    transaction_id <tt class="option">transactionIdColumnType</tt>
+    <tt class="option">extraStatementDefinition</tt>)
+    	</pre><p>If all default values are used, the log table is created using the following
+            statement:</p><pre class="programlisting">
+  CREATE TABLE logTable (
+    id             INTEGER NOT NULL UNIQUE, 
+    vlogin         VARCHAR (20) NOT NULL, 
+    sql            TEXT NOT NULL, 
+    transaction_id INTEGER NOT NULL
+    )
+    	</pre><p>The <tt class="literal">CheckpointTable</tt> stores the checkpoint name and
+            the corresponding index in the recovery log table. The statement used by the
+            JDBCRecoveryLog to create the checkpoint table uses the CheckpointTable
+            attributes as follows:</p><pre class="programlisting">
+  CREATE TABLE <tt class="option">tableName</tt> (
+    name       <tt class="option">checkpointNameColumnType</tt>,
+    request_id <tt class="option">requestIdColumnType</tt>
+    <tt class="option">extraStatementDefinition</tt>)
+	  </pre><p>If all default values are used, the log table is created using the following
+            statement:</p><pre class="programlisting">
+  CREATE TABLE checkpointTable (
+    name       VARCHAR (20) NOT NULL,
+    request_id INTEGER,
+    PRIMARY KEY(name))
+    	</pre><p> The <tt class="literal">BackendLogTable</tt> stores the states of the
+            different backends of a virtual database. It stores the name of the backend, the
+            database it belongs to and the last known checkpoint of a backend when the backend
+            is disabled, and the state the backend was in when the database was last shutdown.
+            If all default values are used, the log table is created using the following
+            statement: </p><pre class="programlisting">
+  CREATE TABLE backendTable (
+    databaseName VARCHAR(50) NOT NULL,
+    backendName  VARCHAR(50) NOT NULL,
+    backendState INTEGER,
+    checkpointName VARCHAR(50) NOT NULL
+    )
+  </pre><p>Here is an example on how to define a JDBCRecoveryLog to work with a HSQL
+            database:</p><pre class="programlisting">
+&lt;RecoveryLog&gt;
+   &lt;JDBCRecoveryLog driver="org.hsqldb.jdbcDriver" url="jdbc:hsqldb:hsql://localhost" login="sa" password=""&gt;
+      &lt;RecoveryLogTable 
+         tableName="recovery"
+         idColumnType="INTEGER NOT NULL" 
+         sqlColumnType="VARCHAR NOT NULL" 
+        extraStatementDefinition=",PRIMARY KEY (id)"/&gt;
+      &lt;CheckpointTable tableName="checkpoint"/&gt;
+	  &lt;BackendLogTable tableName="backendTable"/&gt;
+   &lt;/JDBCRecoveryLog&gt;
+&lt;/RecoveryLog&gt;
+          </pre><p> The <tt class="literal">DumpTable</tt> stores the dump names and associated
+            meta-data such as the corresponding checkpoint name. The statement used by the
+            JDBCRecoveryLog to create the dump table uses the DumpTable attributes as
+            follows:</p><pre class="programlisting">
+  createTable tableName (
+    dump_name       dumpNameColumnType,
+    dump_date       dumpDateColumnType,
+    dump_path       dumpPathColumnType,
+    dump_format     dumpTypeColumnType,
+    checkpoint_name checkpointNameColumnType,
+    backend_name    backendNameColumnType,
+    tables          tablesColumnType
+    extraStatementDefinition)
+            </pre><p> dump_name is the dump logical name, dump_date the date at which the backup
+            was started, dump_path the path where the dump can be found, dump_format an
+            implementation specific text form that specifies the method used for the dump,
+            checkpoint_name is the name of the checkpoint associated to this dump, tables is
+            the list of tables that are contained in this dump (* means all tables). If all
+            default values are used, the log table is created using the following statement:</p><pre class="programlisting">
+  CREATE TABLE DumpTable (
+    dump_name       TEXT NOT NULL,
+    dump_date       DATE,
+    dump_path       TEXT NOT NULL,
+    dump_format     TEXT NOT NULL,
+    checkpoint_name TEXT NOT NULL,
+    backend_name    TEXT NOT NULL,
+    tables          TEXT NOT NULL
+    )            
+          </pre></div></div></div><div class="section" lang="en"><div class="titlepage"><div><div><h3 class="title"><a name="ssl_configuration"></a>11.7.&nbsp;SSL Configuration</h3></div></div><div></div></div><p>
+    	SSL may be used for encryption as well as authentication for all connections to cjdbc.
+    	</p><p>
+        SSL support for c-jdbc is based on the Java Secure Socket Extension (JSSE). JSSE has been integrated into the Java 2 SDK, Standard Edition, v 1.4. For java 1.3 it can be installed as an optional package. (available at http://java.sun.com/products/jsse/)
+    	</p><div class="section" lang="en"><div class="titlepage"><div><div><h4 class="title"><a name="ssl_controller"></a>11.7.1.&nbsp;Controller</h4></div></div><div></div></div><p>
+           On the controller side ssl can be configured for all jmx connections and the virtual database accessed via the cjdbc driver with the xml element SSL in the controller configuration :
+     	   </p><pre class="programlisting">
+              &lt;!ELEMENT SSL EMPTY&gt;
+              &lt;!ATTLIST SSL
+                  keyStore              CDATA        #IMPLIED
+                  keyStorePassword      CDATA        #IMPLIED
+                  keyStoreKeyPassword   CDATA        #IMPLIED
+                  isClientAuthNeeded    (true|false) "false"
+                  trustStore            CDATA        #IMPLIED
+                  trustStorePassword    CDATA        #IMPLIED
+              &gt;
+            </pre><div class="itemizedlist"><ul type="disc"><li><p>keyStore: The file where the keys are stored</p></li><li><p>keyStorePassword: the password to the keyStore</p></li><li><p>keyStoreKeyPassword: the password to the private key, if none is specified the same password as for the store is used</p></li><li><p>isClientAuthNeeded: if set to false ssl is used for encryption only, it true set to true then the server is only accepting trusted clients (the client certificate has to be in the trusted store)</p></li><li><p>trustStore: the file where the trusted certificates are stored, if none is specified the same store as for the key is used</p></li><li><p>trustStorePassword: the password to the trustStore, if none is specified the same password as for the keyStore is used</p></li></ul></div></div><div class="section" lang="en"><div class="titlepage"><div><div><h4 class="title"><a name="ssl_console_clients"></a>11.7.2.&nbsp;Console / Jmx Clients</h4></div></div><div></div></div><p>
+              The console and other jmx clients are configured with the use of java properties :
+    	    </p><div class="itemizedlist"><ul type="disc"><li><p>javax.net.ssl.keyStore</p></li><li><p>javax.net.ssl.keyStorePassword</p></li><li><p>javax.net.ssl.trustStore</p></li><li><p>javax.net.ssl.trustStorePassword</p></li></ul></div><p>
+              Example :
+              -Djavax.net.ssl.trustStore=client.keystore -Djavax.net.ssl.trustStorePassword=clientpassword
+    	    </p></div><div class="section" lang="en"><div class="titlepage"><div><div><h4 class="title"><a name="ssl_driver"></a>11.7.3.&nbsp;Driver</h4></div></div><div></div></div><p>
+              SSL on the driver side is configured with java properties 
+    	    </p><div class="itemizedlist"><ul type="disc"><li><p>cjdbc.ssl.enabled=true</p></li><li><p>javax.net.ssl.keyStore</p></li><li><p>javax.net.ssl.keyStorePassword</p></li><li><p>javax.net.ssl.trustStore</p></li><li><p>javax.net.ssl.trustStorePassword</p></li></ul></div><p>
+              Example :
+              -Djavax.net.ssl.trustStore=client.keystore -Djavax.net.ssl.trustStorePassword=clientpassword
+    	    </p></div><div class="section" lang="en"><div class="titlepage"><div><div><h4 class="title"><a name="ssl_certficates"></a>11.7.4.&nbsp;Certificates (public and private keys)</h4></div></div><div></div></div><p>
+              You may create your certificates with the keytool (part of jsse)
+    	    </p><div class="orderedlist"><ol type="1"><li><p>
+                	Create a self-signed server and a self-signed client key each in its own keystore</p><pre class="programlisting">
+$&gt; keytool -genkey -v -keyalg RSA -keystore server.keystore -dname "CN=Server, OU=Bar, O=Foo, L=Some, ST=Where, C=UN"
+$&gt; keytool -genkey -v -keyalg RSA -keystore client.keystore -dname "CN=Client, OU=Bar, O=Foo, L=Some, ST=Where, C=UN"
+                   </pre></li><li><p>
+                	Export the server's and the client's public keys from their respective keystores</p><pre class="programlisting">
+$&gt; keytool -export -rfc -keystore server.keystore -alias mykey -file server.public-key
+$&gt; keytool -export -rfc -keystore client.keystore -alias mykey -file client.public-key
+                   </pre></li><li><p>
+                	Import the client's public key to the server's keystore, and vice-versa:</p><pre class="programlisting">
+$&gt; keytool -import -alias client -keystore server.keystore -file client.public-key
+$&gt; keytool -import -alias server -keystore client.keystore -file server.public-key
+                   </pre></li></ol></div></div></div><div class="section" lang="en"><div class="titlepage"><div><div><h3 class="title"><a name="configuration_examples"></a>11.8.&nbsp;Configuration Examples</h3></div></div><div></div></div><p>Configuration files examples are available in the C-JDBC 
+        distribution in the <tt class="filename">/c-jdbc/doc/examples</tt> directory.</p><p>Here is a brief overview of each example content:</p><div class="itemizedlist"><ul type="disc"><li><p><tt class="filename">Cache</tt>: gives various configuration examples on
+            how to use the cache.</p></li><li><p><tt class="filename">Derby</tt> : contains examples for the Apache Derby
+            database including the ones used in the ApacheCon demos.</p></li><li><p><tt class="filename">HorizontalScalbility</tt> : provides configuration
+            files to create a distributed virtual database on 2 controllers. One file should
+            be loaded on each of the two controllers.</p></li><li><p><tt class="filename">LinuxService</tt> and <tt class="filename">SuSE</tt> :
+            contains examples to run C-JDBC controller as a Linux service.</p></li><li><p><tt class="filename">SingleDB</tt>: a C-JDBC configuration with a unique
+            MySQL backend.</p></li><li><p><tt class="filename">RAIDb-0</tt>: C-JDBC configuration examples for
+            RAIDb-0.</p><div class="itemizedlist"><ul type="circle"><li><p><tt class="filename">RAIDb-0.xml</tt>: a simple 2 nodes RAIDb-0
+                configuration.</p></li><li><p><tt class="filename">RAIDb-0-schema.xml</tt>: a 2 nodes RAIDb-0
+                configuration using a static database schema definition matching the
+                RUBiS benchmark database schema.</p></li></ul></div></li><li><p><tt class="filename">RAIDb-1</tt>: contains various RAIDb-1 configuration
+            examples.</p></li><li><p><tt class="filename">RAIDb-2</tt>: contains various RAIDb-2 configuration
+            examples.</p></li><li><p><tt class="filename">RecoveryLog</tt>: gives an example of a fault tolerant
+            recovery log.</p></li></ul></div></div><div class="footnotes"><br><hr align="left" width="100"><div class="footnote"><p><sup>[<a href="#N10F5C" name="ftn.N10F5C">3</a>] </sup>First In First Out.</p></div></div></div><div class="navfooter"><hr><table summary="Navigation footer" width="100%"><tr><td align="left" width="40%"><a accesskey="p" href="ar01s10.html"><img src="../../images/prev.gif" alt="Prev"></a>&nbsp;</td><td align="center" width="20%"><a accesskey="u" href="index.html"><img src="../../images/up.gif" alt="Up"></a></td><td align="right" width="40%">&nbsp;<a accesskey="n" href="ar01s12.html"><img src="../../images/next.gif" alt="Next"></a></td></tr><tr><td valign="top" align="left" width="40%">10.&nbsp;RAIDb Basics&nbsp;</td><td align="center" width="20%"><a accesskey="h" href="index.html"><img src="../../images/home.gif" alt="Home"></a></td><td valign="top" align="right" width="40%">&nbsp;12.&nbsp;Request Player</td></tr></table></div></body></html>

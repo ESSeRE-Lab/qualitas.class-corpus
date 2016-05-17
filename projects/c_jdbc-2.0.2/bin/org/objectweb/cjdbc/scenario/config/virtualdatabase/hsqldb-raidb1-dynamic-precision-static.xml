@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF8"?>
+<!DOCTYPE C-JDBC PUBLIC "-//ObjectWeb//DTD C-JDBC @VERSION@//EN" "http://c-jdbc.objectweb.org/dtds/c-jdbc-@VERSION@.dtd">
+
+<C-JDBC>
+
+  <VirtualDatabase name="myDB" blobEncodingMethod="hexa">
+
+       <AuthenticationManager>
+      <Admin>
+      	<User username="admin" password=""/>
+      </Admin> 
+      <VirtualUsers>
+        <VirtualLogin vLogin="user" vPassword=""/>
+      </VirtualUsers>
+    </AuthenticationManager>
+
+    <DatabaseBackend name="localhost" driver="org.hsqldb.jdbcDriver" url="jdbc:hsqldb:hsql://localhost:9001" connectionTestStatement="call now()">
+      <DatabaseSchema dynamicPrecision="static">
+        <DatabaseStaticSchema>
+          <DatabaseTable tableName="ADDRESS" nbOfColumns="5">
+            <DatabaseColumn columnName="ID" isUnique="true"></DatabaseColumn>
+            <DatabaseColumn columnName="FIRSTNAME"></DatabaseColumn>
+            <DatabaseColumn columnName="LASTNAME"></DatabaseColumn>
+            <DatabaseColumn columnName="STREET"></DatabaseColumn>
+            <DatabaseColumn columnName="CITY"></DatabaseColumn>
+          </DatabaseTable>
+          <DatabaseTable tableName="PRODUCT" nbOfColumns="3">
+            <DatabaseColumn columnName="ID" isUnique="true"></DatabaseColumn>
+            <DatabaseColumn columnName="NAME"></DatabaseColumn>
+            <DatabaseColumn columnName="COST"></DatabaseColumn>
+          </DatabaseTable>
+          <DatabaseTable tableName="DOCUMENT" nbOfColumns="3">
+            <DatabaseColumn columnName="ID" isUnique="true"></DatabaseColumn>
+            <DatabaseColumn columnName="ADRESSEID"></DatabaseColumn>
+            <DatabaseColumn columnName="TOTAL"></DatabaseColumn>
+          </DatabaseTable>
+          <DatabaseTable tableName="PPOSITION" nbOfColumns="5">
+            <DatabaseColumn columnName="DOCUMENTID"></DatabaseColumn>
+            <DatabaseColumn columnName="PPOSITION"></DatabaseColumn>
+            <DatabaseColumn columnName="PRODUCTID"></DatabaseColumn>
+            <DatabaseColumn columnName="QUANTITY"></DatabaseColumn>
+            <DatabaseColumn columnName="PRICE"></DatabaseColumn>
+          </DatabaseTable>
+          <DatabaseTable tableName="BLOB" nbOfColumns="2">
+            <DatabaseColumn columnName="ID"></DatabaseColumn>
+            <DatabaseColumn columnName="BLOB"></DatabaseColumn>
+          </DatabaseTable>
+        </DatabaseStaticSchema>
+      </DatabaseSchema>
+      <ConnectionManager vLogin="user" rLogin="TEST" rPassword="">
+        <VariablePoolConnectionManager initPoolSize="10" minPoolSize="5" maxPoolSize="50" idleTimeout="30" waitTimeout="10"/>
+      </ConnectionManager>
+    </DatabaseBackend>
+
+    <DatabaseBackend name="localhost2" driver="org.hsqldb.jdbcDriver" url="jdbc:hsqldb:hsql://localhost:9002" connectionTestStatement="call now()">
+      <DatabaseSchema/>
+      <ConnectionManager vLogin="user" rLogin="TEST" rPassword="">
+        <VariablePoolConnectionManager initPoolSize="10" minPoolSize="5" maxPoolSize="50" idleTimeout="30" waitTimeout="10"/>
+      </ConnectionManager>
+    </DatabaseBackend>
+
+    <RequestManager>
+      <RequestScheduler>
+         <RAIDb-1Scheduler level="pessimisticTransaction"/>
+      </RequestScheduler>
+
+      <LoadBalancer>
+         <RAIDb-1>
+            <WaitForCompletion policy="first"/>
+            <RAIDb-1-LeastPendingRequestsFirst/>
+         </RAIDb-1>
+      </LoadBalancer>
+    </RequestManager>
+
+  </VirtualDatabase>
+
+</C-JDBC>

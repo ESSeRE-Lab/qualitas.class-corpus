@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Generated from scenario.xml by XMLBuddy -->
+<!ELEMENT configuration (controller+)>
+<!ELEMENT controller (virtualdatabase+)>
+<!ATTLIST controller port NMTOKEN #REQUIRED>
+<!ELEMENT database EMPTY>
+<!ATTLIST database
+	data NMTOKEN #REQUIRED
+	name NMTOKEN #REQUIRED
+	port NMTOKEN #REQUIRED
+	type NMTOKEN #REQUIRED
+>
+<!ELEMENT fault EMPTY>
+<!ATTLIST fault name NMTOKEN #REQUIRED>
+<!ELEMENT param EMPTY>
+<!ATTLIST param
+	name NMTOKEN #REQUIRED
+	value CDATA #REQUIRED
+>
+<!ELEMENT scenario (configuration,testlet+)>
+<!ELEMENT testlet (fault|param)*>
+<!ATTLIST testlet class NMTOKEN #REQUIRED>
+<!ELEMENT virtualdatabase (database+)>
+<!ATTLIST virtualdatabase data NMTOKEN #REQUIRED>

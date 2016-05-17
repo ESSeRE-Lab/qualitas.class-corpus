@@ -1,0 +1,614 @@
+<?xml version="1.0" encoding="UTF8"?>
+<!DOCTYPE C-JDBC PUBLIC "-//ObjectWeb//DTD C-JDBC @VERSION@//EN" "http://c-jdbc.objectweb.org/dtds/c-jdbc-@VERSION@.dtd">
+
+<C-JDBC>
+  
+  <VirtualDatabase name="tpcw">
+    <AuthenticationManager>
+      <Admin>
+        <User username="admin" password="c-jdbc"/>
+      </Admin>
+      <VirtualUsers>
+        <VirtualLogin vLogin="cecchet" vPassword=""/>
+      </VirtualUsers>
+    </AuthenticationManager>
+    
+    <DatabaseBackend name="sci10" driver="org.gjt.mm.mysql.Driver" url="jdbc:mysql://sci10/small_tpcw" connectionTestStatement="select 1">
+      <DatabaseSchema dynamicPrecision="static">
+        <DatabaseStaticSchema>
+          <DatabaseTable tableName="item" nbOfColumns="22">
+            <DatabaseColumn columnName="I_ID" isUnique="true"/>
+            <DatabaseColumn columnName="I_TITLE" isUnique="false"/>
+            <DatabaseColumn columnName="I_A_ID" isUnique="false"/>
+            <DatabaseColumn columnName="I_PUB_DATE" isUnique="false"/>
+            <DatabaseColumn columnName="I_PUBLISHER" isUnique="false"/>
+            <DatabaseColumn columnName="I_SUBJECT" isUnique="false"/>
+            <DatabaseColumn columnName="I_DESC" isUnique="false"/>
+            <DatabaseColumn columnName="I_RELATED1" isUnique="false"/>
+            <DatabaseColumn columnName="I_RELATED2" isUnique="false"/>
+            <DatabaseColumn columnName="I_RELATED3" isUnique="false"/>
+            <DatabaseColumn columnName="I_RELATED4" isUnique="false"/>
+            <DatabaseColumn columnName="I_RELATED5" isUnique="false"/>
+            <DatabaseColumn columnName="I_THUMBNAIL" isUnique="false"/>
+            <DatabaseColumn columnName="I_IMAGE" isUnique="false"/>
+            <DatabaseColumn columnName="I_SRP" isUnique="false"/>
+            <DatabaseColumn columnName="I_COST" isUnique="false"/>
+            <DatabaseColumn columnName="I_AVAIL" isUnique="false"/>
+            <DatabaseColumn columnName="I_STOCK" isUnique="false"/>
+            <DatabaseColumn columnName="I_ISBN" isUnique="false"/>
+            <DatabaseColumn columnName="I_PAGE" isUnique="false"/>
+            <DatabaseColumn columnName="I_BACKING" isUnique="false"/>
+            <DatabaseColumn columnName="I_DIMENSIONS" isUnique="false"/>
+          </DatabaseTable>
+          <DatabaseTable tableName="author" nbOfColumns="6">
+            <DatabaseColumn columnName="A_ID" isUnique="true"/>
+            <DatabaseColumn columnName="A_FNAME" isUnique="false"/>
+            <DatabaseColumn columnName="A_LNAME" isUnique="false"/>
+            <DatabaseColumn columnName="A_MNAME" isUnique="false"/>
+            <DatabaseColumn columnName="A_DOB" isUnique="false"/>
+            <DatabaseColumn columnName="A_BIO" isUnique="false"/>
+          </DatabaseTable>
+          <DatabaseTable tableName="order_line" nbOfColumns="6">
+            <DatabaseColumn columnName="OL_ID" isUnique="true"/>
+            <DatabaseColumn columnName="OL_O_ID" isUnique="true"/>
+            <DatabaseColumn columnName="OL_I_ID" isUnique="false"/>
+            <DatabaseColumn columnName="OL_QTY" isUnique="false"/>
+            <DatabaseColumn columnName="OL_DISCOUNT" isUnique="false"/>
+            <DatabaseColumn columnName="OL_COMMENTS" isUnique="false"/>
+          </DatabaseTable>
+          <DatabaseTable tableName="orders" nbOfColumns="11">
+            <DatabaseColumn columnName="O_ID" isUnique="true"/>
+            <DatabaseColumn columnName="O_C_ID" isUnique="false"/>
+            <DatabaseColumn columnName="O_DATE" isUnique="false"/>
+            <DatabaseColumn columnName="O_SUB_TOTAL" isUnique="false"/>
+            <DatabaseColumn columnName="O_TAX" isUnique="false"/>
+            <DatabaseColumn columnName="O_TOTAL" isUnique="false"/>
+            <DatabaseColumn columnName="O_SHIP_TYPE" isUnique="false"/>
+            <DatabaseColumn columnName="O_SHIP_DATE" isUnique="false"/>
+            <DatabaseColumn columnName="O_BILL_ADDR_ID" isUnique="false"/>
+            <DatabaseColumn columnName="O_SHIP_ADDR_ID" isUnique="false"/>
+            <DatabaseColumn columnName="O_STATUS" isUnique="false"/>
+          </DatabaseTable>
+          <DatabaseTable tableName="customer" nbOfColumns="17">
+            <DatabaseColumn columnName="C_ID" isUnique="true"/>
+            <DatabaseColumn columnName="C_UNAME" isUnique="false"/>
+            <DatabaseColumn columnName="C_PASSWD" isUnique="false"/>
+            <DatabaseColumn columnName="C_FNAME" isUnique="false"/>
+            <DatabaseColumn columnName="C_LNAME" isUnique="false"/>
+            <DatabaseColumn columnName="C_ADDR_ID" isUnique="false"/>
+            <DatabaseColumn columnName="C_PHONE" isUnique="false"/>
+            <DatabaseColumn columnName="C_EMAIL" isUnique="false"/>
+            <DatabaseColumn columnName="C_SINCE" isUnique="false"/>
+            <DatabaseColumn columnName="C_LAST_LOGIN" isUnique="false"/>
+            <DatabaseColumn columnName="C_LOGIN" isUnique="false"/>
+            <DatabaseColumn columnName="C_EXPIRATION" isUnique="false"/>
+            <DatabaseColumn columnName="C_DISCOUNT" isUnique="false"/>
+            <DatabaseColumn columnName="C_BALANCE" isUnique="false"/>
+            <DatabaseColumn columnName="C_YTD_PMT" isUnique="false"/>
+            <DatabaseColumn columnName="C_BIRTHDATE" isUnique="false"/>
+            <DatabaseColumn columnName="C_DATA" isUnique="false"/>
+          </DatabaseTable>
+          <DatabaseTable tableName="address" nbOfColumns="7">
+            <DatabaseColumn columnName="ADDR_ID" isUnique="true"/>
+            <DatabaseColumn columnName="ADDR_STREET1" isUnique="false"/>
+            <DatabaseColumn columnName="ADDR_STREET2" isUnique="false"/>
+            <DatabaseColumn columnName="ADDR_CITY" isUnique="false"/>
+            <DatabaseColumn columnName="ADDR_STATE" isUnique="false"/>
+            <DatabaseColumn columnName="ADDR_ZIP" isUnique="false"/>
+            <DatabaseColumn columnName="ADDR_CO_ID" isUnique="false"/>
+          </DatabaseTable>
+          <DatabaseTable tableName="country" nbOfColumns="4">
+            <DatabaseColumn columnName="CO_ID" isUnique="true"/>
+            <DatabaseColumn columnName="CO_NAME" isUnique="false"/>
+            <DatabaseColumn columnName="CO_EXCHANGE" isUnique="false"/>
+            <DatabaseColumn columnName="CO_CURRENCY" isUnique="false"/>
+          </DatabaseTable>
+          <DatabaseTable tableName="cc_xacts" nbOfColumns="9">
+            <DatabaseColumn columnName="CX_O_ID" isUnique="true"/>
+            <DatabaseColumn columnName="CX_TYPE" isUnique="false"/>
+            <DatabaseColumn columnName="CX_NUM" isUnique="false"/>
+            <DatabaseColumn columnName="CX_NAME" isUnique="false"/>
+            <DatabaseColumn columnName="CX_EXPIRY" isUnique="false"/>
+            <DatabaseColumn columnName="CX_AUTH_ID" isUnique="false"/>
+            <DatabaseColumn columnName="CX_XACT_AMT" isUnique="false"/>
+            <DatabaseColumn columnName="CX_XACT_DATE" isUnique="false"/>
+            <DatabaseColumn columnName="CX_CO_ID" isUnique="false"/>
+          </DatabaseTable>
+        </DatabaseStaticSchema>
+      </DatabaseSchema>
+      <ConnectionManager vLogin="cecchet" rLogin="cecchet" rPassword="">
+        <VariablePoolConnectionManager initPoolSize="40"/>
+      </ConnectionManager>
+    </DatabaseBackend>
+    
+    <DatabaseBackend name="sci13" driver="org.gjt.mm.mysql.Driver" url="jdbc:mysql://sci13/small_tpcw" connectionTestStatement="select 1">
+      <DatabaseSchema dynamicPrecision="static">
+        <DatabaseStaticSchema>
+          <DatabaseTable tableName="item" nbOfColumns="22">
+            <DatabaseColumn columnName="I_ID" isUnique="true"/>
+            <DatabaseColumn columnName="I_TITLE" isUnique="false"/>
+            <DatabaseColumn columnName="I_A_ID" isUnique="false"/>
+            <DatabaseColumn columnName="I_PUB_DATE" isUnique="false"/>
+            <DatabaseColumn columnName="I_PUBLISHER" isUnique="false"/>
+            <DatabaseColumn columnName="I_SUBJECT" isUnique="false"/>
+            <DatabaseColumn columnName="I_DESC" isUnique="false"/>
+            <DatabaseColumn columnName="I_RELATED1" isUnique="false"/>
+            <DatabaseColumn columnName="I_RELATED2" isUnique="false"/>
+            <DatabaseColumn columnName="I_RELATED3" isUnique="false"/>
+            <DatabaseColumn columnName="I_RELATED4" isUnique="false"/>
+            <DatabaseColumn columnName="I_RELATED5" isUnique="false"/>
+            <DatabaseColumn columnName="I_THUMBNAIL" isUnique="false"/>
+            <DatabaseColumn columnName="I_IMAGE" isUnique="false"/>
+            <DatabaseColumn columnName="I_SRP" isUnique="false"/>
+            <DatabaseColumn columnName="I_COST" isUnique="false"/>
+            <DatabaseColumn columnName="I_AVAIL" isUnique="false"/>
+            <DatabaseColumn columnName="I_STOCK" isUnique="false"/>
+            <DatabaseColumn columnName="I_ISBN" isUnique="false"/>
+            <DatabaseColumn columnName="I_PAGE" isUnique="false"/>
+            <DatabaseColumn columnName="I_BACKING" isUnique="false"/>
+            <DatabaseColumn columnName="I_DIMENSIONS" isUnique="false"/>
+          </DatabaseTable>
+          <DatabaseTable tableName="author" nbOfColumns="6">
+            <DatabaseColumn columnName="A_ID" isUnique="true"/>
+            <DatabaseColumn columnName="A_FNAME" isUnique="false"/>
+            <DatabaseColumn columnName="A_LNAME" isUnique="false"/>
+            <DatabaseColumn columnName="A_MNAME" isUnique="false"/>
+            <DatabaseColumn columnName="A_DOB" isUnique="false"/>
+            <DatabaseColumn columnName="A_BIO" isUnique="false"/>
+          </DatabaseTable>
+          <DatabaseTable tableName="shopping_cart" nbOfColumns="2">
+            <DatabaseColumn columnName="SC_ID" isUnique="true"/>
+            <DatabaseColumn columnName="SC_TIME" isUnique="false"/>
+          </DatabaseTable>
+          <DatabaseTable tableName="shopping_cart_line" nbOfColumns="3">
+            <DatabaseColumn columnName="SCL_SC_ID" isUnique="true"/>
+            <DatabaseColumn columnName="SCL_QTY" isUnique="false"/>
+            <DatabaseColumn columnName="SCL_I_ID" isUnique="true"/>
+          </DatabaseTable>
+          <DatabaseTable tableName="customer" nbOfColumns="17">
+            <DatabaseColumn columnName="C_ID" isUnique="true"/>
+            <DatabaseColumn columnName="C_UNAME" isUnique="false"/>
+            <DatabaseColumn columnName="C_PASSWD" isUnique="false"/>
+            <DatabaseColumn columnName="C_FNAME" isUnique="false"/>
+            <DatabaseColumn columnName="C_LNAME" isUnique="false"/>
+            <DatabaseColumn columnName="C_ADDR_ID" isUnique="false"/>
+            <DatabaseColumn columnName="C_PHONE" isUnique="false"/>
+            <DatabaseColumn columnName="C_EMAIL" isUnique="false"/>
+            <DatabaseColumn columnName="C_SINCE" isUnique="false"/>
+            <DatabaseColumn columnName="C_LAST_LOGIN" isUnique="false"/>
+            <DatabaseColumn columnName="C_LOGIN" isUnique="false"/>
+            <DatabaseColumn columnName="C_EXPIRATION" isUnique="false"/>
+            <DatabaseColumn columnName="C_DISCOUNT" isUnique="false"/>
+            <DatabaseColumn columnName="C_BALANCE" isUnique="false"/>
+            <DatabaseColumn columnName="C_YTD_PMT" isUnique="false"/>
+            <DatabaseColumn columnName="C_BIRTHDATE" isUnique="false"/>
+            <DatabaseColumn columnName="C_DATA" isUnique="false"/>
+          </DatabaseTable>
+          <DatabaseTable tableName="address" nbOfColumns="7">
+            <DatabaseColumn columnName="ADDR_ID" isUnique="true"/>
+            <DatabaseColumn columnName="ADDR_STREET1" isUnique="false"/>
+            <DatabaseColumn columnName="ADDR_STREET2" isUnique="false"/>
+            <DatabaseColumn columnName="ADDR_CITY" isUnique="false"/>
+            <DatabaseColumn columnName="ADDR_STATE" isUnique="false"/>
+            <DatabaseColumn columnName="ADDR_ZIP" isUnique="false"/>
+            <DatabaseColumn columnName="ADDR_CO_ID" isUnique="false"/>
+          </DatabaseTable>
+          <DatabaseTable tableName="country" nbOfColumns="4">
+            <DatabaseColumn columnName="CO_ID" isUnique="true"/>
+            <DatabaseColumn columnName="CO_NAME" isUnique="false"/>
+            <DatabaseColumn columnName="CO_EXCHANGE" isUnique="false"/>
+            <DatabaseColumn columnName="CO_CURRENCY" isUnique="false"/>
+          </DatabaseTable>
+        </DatabaseStaticSchema>
+      </DatabaseSchema>
+      <ConnectionManager vLogin="cecchet" rLogin="cecchet" rPassword="">
+        <VariablePoolConnectionManager initPoolSize="40"/>
+      </ConnectionManager>
+    </DatabaseBackend>
+    
+    <DatabaseBackend name="sci11" driver="org.gjt.mm.mysql.Driver" url="jdbc:mysql://sci11/small_tpcw" connectionTestStatement="select 1">
+      <DatabaseSchema dynamicPrecision="static">
+        <DatabaseStaticSchema>
+          <DatabaseTable tableName="item" nbOfColumns="22">
+            <DatabaseColumn columnName="I_ID" isUnique="true"/>
+            <DatabaseColumn columnName="I_TITLE" isUnique="false"/>
+            <DatabaseColumn columnName="I_A_ID" isUnique="false"/>
+            <DatabaseColumn columnName="I_PUB_DATE" isUnique="false"/>
+            <DatabaseColumn columnName="I_PUBLISHER" isUnique="false"/>
+            <DatabaseColumn columnName="I_SUBJECT" isUnique="false"/>
+            <DatabaseColumn columnName="I_DESC" isUnique="false"/>
+            <DatabaseColumn columnName="I_RELATED1" isUnique="false"/>
+            <DatabaseColumn columnName="I_RELATED2" isUnique="false"/>
+            <DatabaseColumn columnName="I_RELATED3" isUnique="false"/>
+            <DatabaseColumn columnName="I_RELATED4" isUnique="false"/>
+            <DatabaseColumn columnName="I_RELATED5" isUnique="false"/>
+            <DatabaseColumn columnName="I_THUMBNAIL" isUnique="false"/>
+            <DatabaseColumn columnName="I_IMAGE" isUnique="false"/>
+            <DatabaseColumn columnName="I_SRP" isUnique="false"/>
+            <DatabaseColumn columnName="I_COST" isUnique="false"/>
+            <DatabaseColumn columnName="I_AVAIL" isUnique="false"/>
+            <DatabaseColumn columnName="I_STOCK" isUnique="false"/>
+            <DatabaseColumn columnName="I_ISBN" isUnique="false"/>
+            <DatabaseColumn columnName="I_PAGE" isUnique="false"/>
+            <DatabaseColumn columnName="I_BACKING" isUnique="false"/>
+            <DatabaseColumn columnName="I_DIMENSIONS" isUnique="false"/>
+          </DatabaseTable>
+          <DatabaseTable tableName="author" nbOfColumns="6">
+            <DatabaseColumn columnName="A_ID" isUnique="true"/>
+            <DatabaseColumn columnName="A_FNAME" isUnique="false"/>
+            <DatabaseColumn columnName="A_LNAME" isUnique="false"/>
+            <DatabaseColumn columnName="A_MNAME" isUnique="false"/>
+            <DatabaseColumn columnName="A_DOB" isUnique="false"/>
+            <DatabaseColumn columnName="A_BIO" isUnique="false"/>
+          </DatabaseTable>
+          <DatabaseTable tableName="order_line" nbOfColumns="6">
+            <DatabaseColumn columnName="OL_ID" isUnique="true"/>
+            <DatabaseColumn columnName="OL_O_ID" isUnique="true"/>
+            <DatabaseColumn columnName="OL_I_ID" isUnique="false"/>
+            <DatabaseColumn columnName="OL_QTY" isUnique="false"/>
+            <DatabaseColumn columnName="OL_DISCOUNT" isUnique="false"/>
+            <DatabaseColumn columnName="OL_COMMENTS" isUnique="false"/>
+          </DatabaseTable>
+          <DatabaseTable tableName="orders" nbOfColumns="11">
+            <DatabaseColumn columnName="O_ID" isUnique="true"/>
+            <DatabaseColumn columnName="O_C_ID" isUnique="false"/>
+            <DatabaseColumn columnName="O_DATE" isUnique="false"/>
+            <DatabaseColumn columnName="O_SUB_TOTAL" isUnique="false"/>
+            <DatabaseColumn columnName="O_TAX" isUnique="false"/>
+            <DatabaseColumn columnName="O_TOTAL" isUnique="false"/>
+            <DatabaseColumn columnName="O_SHIP_TYPE" isUnique="false"/>
+            <DatabaseColumn columnName="O_SHIP_DATE" isUnique="false"/>
+            <DatabaseColumn columnName="O_BILL_ADDR_ID" isUnique="false"/>
+            <DatabaseColumn columnName="O_SHIP_ADDR_ID" isUnique="false"/>
+            <DatabaseColumn columnName="O_STATUS" isUnique="false"/>
+          </DatabaseTable>
+          <DatabaseTable tableName="customer" nbOfColumns="17">
+            <DatabaseColumn columnName="C_ID" isUnique="true"/>
+            <DatabaseColumn columnName="C_UNAME" isUnique="false"/>
+            <DatabaseColumn columnName="C_PASSWD" isUnique="false"/>
+            <DatabaseColumn columnName="C_FNAME" isUnique="false"/>
+            <DatabaseColumn columnName="C_LNAME" isUnique="false"/>
+            <DatabaseColumn columnName="C_ADDR_ID" isUnique="false"/>
+            <DatabaseColumn columnName="C_PHONE" isUnique="false"/>
+            <DatabaseColumn columnName="C_EMAIL" isUnique="false"/>
+            <DatabaseColumn columnName="C_SINCE" isUnique="false"/>
+            <DatabaseColumn columnName="C_LAST_LOGIN" isUnique="false"/>
+            <DatabaseColumn columnName="C_LOGIN" isUnique="false"/>
+            <DatabaseColumn columnName="C_EXPIRATION" isUnique="false"/>
+            <DatabaseColumn columnName="C_DISCOUNT" isUnique="false"/>
+            <DatabaseColumn columnName="C_BALANCE" isUnique="false"/>
+            <DatabaseColumn columnName="C_YTD_PMT" isUnique="false"/>
+            <DatabaseColumn columnName="C_BIRTHDATE" isUnique="false"/>
+            <DatabaseColumn columnName="C_DATA" isUnique="false"/>
+          </DatabaseTable>
+          <DatabaseTable tableName="address" nbOfColumns="7">
+            <DatabaseColumn columnName="ADDR_ID" isUnique="true"/>
+            <DatabaseColumn columnName="ADDR_STREET1" isUnique="false"/>
+            <DatabaseColumn columnName="ADDR_STREET2" isUnique="false"/>
+            <DatabaseColumn columnName="ADDR_CITY" isUnique="false"/>
+            <DatabaseColumn columnName="ADDR_STATE" isUnique="false"/>
+            <DatabaseColumn columnName="ADDR_ZIP" isUnique="false"/>
+            <DatabaseColumn columnName="ADDR_CO_ID" isUnique="false"/>
+          </DatabaseTable>
+          <DatabaseTable tableName="country" nbOfColumns="4">
+            <DatabaseColumn columnName="CO_ID" isUnique="true"/>
+            <DatabaseColumn columnName="CO_NAME" isUnique="false"/>
+            <DatabaseColumn columnName="CO_EXCHANGE" isUnique="false"/>
+            <DatabaseColumn columnName="CO_CURRENCY" isUnique="false"/>
+          </DatabaseTable>
+          <DatabaseTable tableName="cc_xacts" nbOfColumns="9">
+            <DatabaseColumn columnName="CX_O_ID" isUnique="true"/>
+            <DatabaseColumn columnName="CX_TYPE" isUnique="false"/>
+            <DatabaseColumn columnName="CX_NUM" isUnique="false"/>
+            <DatabaseColumn columnName="CX_NAME" isUnique="false"/>
+            <DatabaseColumn columnName="CX_EXPIRY" isUnique="false"/>
+            <DatabaseColumn columnName="CX_AUTH_ID" isUnique="false"/>
+            <DatabaseColumn columnName="CX_XACT_AMT" isUnique="false"/>
+            <DatabaseColumn columnName="CX_XACT_DATE" isUnique="false"/>
+            <DatabaseColumn columnName="CX_CO_ID" isUnique="false"/>
+          </DatabaseTable>
+        </DatabaseStaticSchema>
+      </DatabaseSchema>
+      <ConnectionManager vLogin="cecchet" rLogin="cecchet" rPassword="">
+        <VariablePoolConnectionManager initPoolSize="40"/>
+      </ConnectionManager>
+    </DatabaseBackend>
+    
+    <DatabaseBackend name="sci15" driver="org.gjt.mm.mysql.Driver" url="jdbc:mysql://sci15/small_tpcw" connectionTestStatement="select 1">
+      <DatabaseSchema dynamicPrecision="static">
+        <DatabaseStaticSchema>
+          <DatabaseTable tableName="item" nbOfColumns="22">
+            <DatabaseColumn columnName="I_ID" isUnique="true"/>
+            <DatabaseColumn columnName="I_TITLE" isUnique="false"/>
+            <DatabaseColumn columnName="I_A_ID" isUnique="false"/>
+            <DatabaseColumn columnName="I_PUB_DATE" isUnique="false"/>
+            <DatabaseColumn columnName="I_PUBLISHER" isUnique="false"/>
+            <DatabaseColumn columnName="I_SUBJECT" isUnique="false"/>
+            <DatabaseColumn columnName="I_DESC" isUnique="false"/>
+            <DatabaseColumn columnName="I_RELATED1" isUnique="false"/>
+            <DatabaseColumn columnName="I_RELATED2" isUnique="false"/>
+            <DatabaseColumn columnName="I_RELATED3" isUnique="false"/>
+            <DatabaseColumn columnName="I_RELATED4" isUnique="false"/>
+            <DatabaseColumn columnName="I_RELATED5" isUnique="false"/>
+            <DatabaseColumn columnName="I_THUMBNAIL" isUnique="false"/>
+            <DatabaseColumn columnName="I_IMAGE" isUnique="false"/>
+            <DatabaseColumn columnName="I_SRP" isUnique="false"/>
+            <DatabaseColumn columnName="I_COST" isUnique="false"/>
+            <DatabaseColumn columnName="I_AVAIL" isUnique="false"/>
+            <DatabaseColumn columnName="I_STOCK" isUnique="false"/>
+            <DatabaseColumn columnName="I_ISBN" isUnique="false"/>
+            <DatabaseColumn columnName="I_PAGE" isUnique="false"/>
+            <DatabaseColumn columnName="I_BACKING" isUnique="false"/>
+            <DatabaseColumn columnName="I_DIMENSIONS" isUnique="false"/>
+          </DatabaseTable>
+          <DatabaseTable tableName="author" nbOfColumns="6">
+            <DatabaseColumn columnName="A_ID" isUnique="true"/>
+            <DatabaseColumn columnName="A_FNAME" isUnique="false"/>
+            <DatabaseColumn columnName="A_LNAME" isUnique="false"/>
+            <DatabaseColumn columnName="A_MNAME" isUnique="false"/>
+            <DatabaseColumn columnName="A_DOB" isUnique="false"/>
+            <DatabaseColumn columnName="A_BIO" isUnique="false"/>
+          </DatabaseTable>
+          <DatabaseTable tableName="shopping_cart" nbOfColumns="2">
+            <DatabaseColumn columnName="SC_ID" isUnique="true"/>
+            <DatabaseColumn columnName="SC_TIME" isUnique="false"/>
+          </DatabaseTable>
+          <DatabaseTable tableName="shopping_cart_line" nbOfColumns="3">
+            <DatabaseColumn columnName="SCL_SC_ID" isUnique="true"/>
+            <DatabaseColumn columnName="SCL_QTY" isUnique="false"/>
+            <DatabaseColumn columnName="SCL_I_ID" isUnique="true"/>
+          </DatabaseTable>
+          <DatabaseTable tableName="customer" nbOfColumns="17">
+            <DatabaseColumn columnName="C_ID" isUnique="true"/>
+            <DatabaseColumn columnName="C_UNAME" isUnique="false"/>
+            <DatabaseColumn columnName="C_PASSWD" isUnique="false"/>
+            <DatabaseColumn columnName="C_FNAME" isUnique="false"/>
+            <DatabaseColumn columnName="C_LNAME" isUnique="false"/>
+            <DatabaseColumn columnName="C_ADDR_ID" isUnique="false"/>
+            <DatabaseColumn columnName="C_PHONE" isUnique="false"/>
+            <DatabaseColumn columnName="C_EMAIL" isUnique="false"/>
+            <DatabaseColumn columnName="C_SINCE" isUnique="false"/>
+            <DatabaseColumn columnName="C_LAST_LOGIN" isUnique="false"/>
+            <DatabaseColumn columnName="C_LOGIN" isUnique="false"/>
+            <DatabaseColumn columnName="C_EXPIRATION" isUnique="false"/>
+            <DatabaseColumn columnName="C_DISCOUNT" isUnique="false"/>
+            <DatabaseColumn columnName="C_BALANCE" isUnique="false"/>
+            <DatabaseColumn columnName="C_YTD_PMT" isUnique="false"/>
+            <DatabaseColumn columnName="C_BIRTHDATE" isUnique="false"/>
+            <DatabaseColumn columnName="C_DATA" isUnique="false"/>
+          </DatabaseTable>
+          <DatabaseTable tableName="address" nbOfColumns="7">
+            <DatabaseColumn columnName="ADDR_ID" isUnique="true"/>
+            <DatabaseColumn columnName="ADDR_STREET1" isUnique="false"/>
+            <DatabaseColumn columnName="ADDR_STREET2" isUnique="false"/>
+            <DatabaseColumn columnName="ADDR_CITY" isUnique="false"/>
+            <DatabaseColumn columnName="ADDR_STATE" isUnique="false"/>
+            <DatabaseColumn columnName="ADDR_ZIP" isUnique="false"/>
+            <DatabaseColumn columnName="ADDR_CO_ID" isUnique="false"/>
+          </DatabaseTable>
+          <DatabaseTable tableName="country" nbOfColumns="4">
+            <DatabaseColumn columnName="CO_ID" isUnique="true"/>
+            <DatabaseColumn columnName="CO_NAME" isUnique="false"/>
+            <DatabaseColumn columnName="CO_EXCHANGE" isUnique="false"/>
+            <DatabaseColumn columnName="CO_CURRENCY" isUnique="false"/>
+          </DatabaseTable>
+        </DatabaseStaticSchema>
+      </DatabaseSchema>
+      <ConnectionManager vLogin="cecchet" rLogin="cecchet" rPassword="">
+        <VariablePoolConnectionManager initPoolSize="40"/>
+      </ConnectionManager>
+    </DatabaseBackend>
+    
+    <DatabaseBackend name="sci12" driver="org.gjt.mm.mysql.Driver" url="jdbc:mysql://sci12/small_tpcw" connectionTestStatement="select 1">
+      <DatabaseSchema dynamicPrecision="static">
+        <DatabaseStaticSchema>
+          <DatabaseTable tableName="item" nbOfColumns="22">
+            <DatabaseColumn columnName="I_ID" isUnique="true"/>
+            <DatabaseColumn columnName="I_TITLE" isUnique="false"/>
+            <DatabaseColumn columnName="I_A_ID" isUnique="false"/>
+            <DatabaseColumn columnName="I_PUB_DATE" isUnique="false"/>
+            <DatabaseColumn columnName="I_PUBLISHER" isUnique="false"/>
+            <DatabaseColumn columnName="I_SUBJECT" isUnique="false"/>
+            <DatabaseColumn columnName="I_DESC" isUnique="false"/>
+            <DatabaseColumn columnName="I_RELATED1" isUnique="false"/>
+            <DatabaseColumn columnName="I_RELATED2" isUnique="false"/>
+            <DatabaseColumn columnName="I_RELATED3" isUnique="false"/>
+            <DatabaseColumn columnName="I_RELATED4" isUnique="false"/>
+            <DatabaseColumn columnName="I_RELATED5" isUnique="false"/>
+            <DatabaseColumn columnName="I_THUMBNAIL" isUnique="false"/>
+            <DatabaseColumn columnName="I_IMAGE" isUnique="false"/>
+            <DatabaseColumn columnName="I_SRP" isUnique="false"/>
+            <DatabaseColumn columnName="I_COST" isUnique="false"/>
+            <DatabaseColumn columnName="I_AVAIL" isUnique="false"/>
+            <DatabaseColumn columnName="I_STOCK" isUnique="false"/>
+            <DatabaseColumn columnName="I_ISBN" isUnique="false"/>
+            <DatabaseColumn columnName="I_PAGE" isUnique="false"/>
+            <DatabaseColumn columnName="I_BACKING" isUnique="false"/>
+            <DatabaseColumn columnName="I_DIMENSIONS" isUnique="false"/>
+          </DatabaseTable>
+          <DatabaseTable tableName="author" nbOfColumns="6">
+            <DatabaseColumn columnName="A_ID" isUnique="true"/>
+            <DatabaseColumn columnName="A_FNAME" isUnique="false"/>
+            <DatabaseColumn columnName="A_LNAME" isUnique="false"/>
+            <DatabaseColumn columnName="A_MNAME" isUnique="false"/>
+            <DatabaseColumn columnName="A_DOB" isUnique="false"/>
+            <DatabaseColumn columnName="A_BIO" isUnique="false"/>
+          </DatabaseTable>
+          <DatabaseTable tableName="order_line" nbOfColumns="6">
+            <DatabaseColumn columnName="OL_ID" isUnique="true"/>
+            <DatabaseColumn columnName="OL_O_ID" isUnique="true"/>
+            <DatabaseColumn columnName="OL_I_ID" isUnique="false"/>
+            <DatabaseColumn columnName="OL_QTY" isUnique="false"/>
+            <DatabaseColumn columnName="OL_DISCOUNT" isUnique="false"/>
+            <DatabaseColumn columnName="OL_COMMENTS" isUnique="false"/>
+          </DatabaseTable>
+          <DatabaseTable tableName="orders" nbOfColumns="11">
+            <DatabaseColumn columnName="O_ID" isUnique="true"/>
+            <DatabaseColumn columnName="O_C_ID" isUnique="false"/>
+            <DatabaseColumn columnName="O_DATE" isUnique="false"/>
+            <DatabaseColumn columnName="O_SUB_TOTAL" isUnique="false"/>
+            <DatabaseColumn columnName="O_TAX" isUnique="false"/>
+            <DatabaseColumn columnName="O_TOTAL" isUnique="false"/>
+            <DatabaseColumn columnName="O_SHIP_TYPE" isUnique="false"/>
+            <DatabaseColumn columnName="O_SHIP_DATE" isUnique="false"/>
+            <DatabaseColumn columnName="O_BILL_ADDR_ID" isUnique="false"/>
+            <DatabaseColumn columnName="O_SHIP_ADDR_ID" isUnique="false"/>
+            <DatabaseColumn columnName="O_STATUS" isUnique="false"/>
+          </DatabaseTable>
+          <DatabaseTable tableName="customer" nbOfColumns="17">
+            <DatabaseColumn columnName="C_ID" isUnique="true"/>
+            <DatabaseColumn columnName="C_UNAME" isUnique="false"/>
+            <DatabaseColumn columnName="C_PASSWD" isUnique="false"/>
+            <DatabaseColumn columnName="C_FNAME" isUnique="false"/>
+            <DatabaseColumn columnName="C_LNAME" isUnique="false"/>
+            <DatabaseColumn columnName="C_ADDR_ID" isUnique="false"/>
+            <DatabaseColumn columnName="C_PHONE" isUnique="false"/>
+            <DatabaseColumn columnName="C_EMAIL" isUnique="false"/>
+            <DatabaseColumn columnName="C_SINCE" isUnique="false"/>
+            <DatabaseColumn columnName="C_LAST_LOGIN" isUnique="false"/>
+            <DatabaseColumn columnName="C_LOGIN" isUnique="false"/>
+            <DatabaseColumn columnName="C_EXPIRATION" isUnique="false"/>
+            <DatabaseColumn columnName="C_DISCOUNT" isUnique="false"/>
+            <DatabaseColumn columnName="C_BALANCE" isUnique="false"/>
+            <DatabaseColumn columnName="C_YTD_PMT" isUnique="false"/>
+            <DatabaseColumn columnName="C_BIRTHDATE" isUnique="false"/>
+            <DatabaseColumn columnName="C_DATA" isUnique="false"/>
+          </DatabaseTable>
+          <DatabaseTable tableName="address" nbOfColumns="7">
+            <DatabaseColumn columnName="ADDR_ID" isUnique="true"/>
+            <DatabaseColumn columnName="ADDR_STREET1" isUnique="false"/>
+            <DatabaseColumn columnName="ADDR_STREET2" isUnique="false"/>
+            <DatabaseColumn columnName="ADDR_CITY" isUnique="false"/>
+            <DatabaseColumn columnName="ADDR_STATE" isUnique="false"/>
+            <DatabaseColumn columnName="ADDR_ZIP" isUnique="false"/>
+            <DatabaseColumn columnName="ADDR_CO_ID" isUnique="false"/>
+          </DatabaseTable>
+          <DatabaseTable tableName="country" nbOfColumns="4">
+            <DatabaseColumn columnName="CO_ID" isUnique="true"/>
+            <DatabaseColumn columnName="CO_NAME" isUnique="false"/>
+            <DatabaseColumn columnName="CO_EXCHANGE" isUnique="false"/>
+            <DatabaseColumn columnName="CO_CURRENCY" isUnique="false"/>
+          </DatabaseTable>
+          <DatabaseTable tableName="cc_xacts" nbOfColumns="9">
+            <DatabaseColumn columnName="CX_O_ID" isUnique="true"/>
+            <DatabaseColumn columnName="CX_TYPE" isUnique="false"/>
+            <DatabaseColumn columnName="CX_NUM" isUnique="false"/>
+            <DatabaseColumn columnName="CX_NAME" isUnique="false"/>
+            <DatabaseColumn columnName="CX_EXPIRY" isUnique="false"/>
+            <DatabaseColumn columnName="CX_AUTH_ID" isUnique="false"/>
+            <DatabaseColumn columnName="CX_XACT_AMT" isUnique="false"/>
+            <DatabaseColumn columnName="CX_XACT_DATE" isUnique="false"/>
+            <DatabaseColumn columnName="CX_CO_ID" isUnique="false"/>
+          </DatabaseTable>
+        </DatabaseStaticSchema>
+      </DatabaseSchema>
+      <ConnectionManager vLogin="cecchet" rLogin="cecchet" rPassword="">
+        <VariablePoolConnectionManager initPoolSize="40"/>
+      </ConnectionManager>
+    </DatabaseBackend>
+    
+    <DatabaseBackend name="sci17" driver="org.gjt.mm.mysql.Driver" url="jdbc:mysql://sci17/small_tpcw" connectionTestStatement="select 1">
+      <DatabaseSchema dynamicPrecision="static">
+        <DatabaseStaticSchema>
+          <DatabaseTable tableName="item" nbOfColumns="22">
+            <DatabaseColumn columnName="I_ID" isUnique="true"/>
+            <DatabaseColumn columnName="I_TITLE" isUnique="false"/>
+            <DatabaseColumn columnName="I_A_ID" isUnique="false"/>
+            <DatabaseColumn columnName="I_PUB_DATE" isUnique="false"/>
+            <DatabaseColumn columnName="I_PUBLISHER" isUnique="false"/>
+            <DatabaseColumn columnName="I_SUBJECT" isUnique="false"/>
+            <DatabaseColumn columnName="I_DESC" isUnique="false"/>
+            <DatabaseColumn columnName="I_RELATED1" isUnique="false"/>
+            <DatabaseColumn columnName="I_RELATED2" isUnique="false"/>
+            <DatabaseColumn columnName="I_RELATED3" isUnique="false"/>
+            <DatabaseColumn columnName="I_RELATED4" isUnique="false"/>
+            <DatabaseColumn columnName="I_RELATED5" isUnique="false"/>
+            <DatabaseColumn columnName="I_THUMBNAIL" isUnique="false"/>
+            <DatabaseColumn columnName="I_IMAGE" isUnique="false"/>
+            <DatabaseColumn columnName="I_SRP" isUnique="false"/>
+            <DatabaseColumn columnName="I_COST" isUnique="false"/>
+            <DatabaseColumn columnName="I_AVAIL" isUnique="false"/>
+            <DatabaseColumn columnName="I_STOCK" isUnique="false"/>
+            <DatabaseColumn columnName="I_ISBN" isUnique="false"/>
+            <DatabaseColumn columnName="I_PAGE" isUnique="false"/>
+            <DatabaseColumn columnName="I_BACKING" isUnique="false"/>
+            <DatabaseColumn columnName="I_DIMENSIONS" isUnique="false"/>
+          </DatabaseTable>
+          <DatabaseTable tableName="author" nbOfColumns="6">
+            <DatabaseColumn columnName="A_ID" isUnique="true"/>
+            <DatabaseColumn columnName="A_FNAME" isUnique="false"/>
+            <DatabaseColumn columnName="A_LNAME" isUnique="false"/>
+            <DatabaseColumn columnName="A_MNAME" isUnique="false"/>
+            <DatabaseColumn columnName="A_DOB" isUnique="false"/>
+            <DatabaseColumn columnName="A_BIO" isUnique="false"/>
+          </DatabaseTable>
+          <DatabaseTable tableName="shopping_cart" nbOfColumns="2">
+            <DatabaseColumn columnName="SC_ID" isUnique="true"/>
+            <DatabaseColumn columnName="SC_TIME" isUnique="false"/>
+          </DatabaseTable>
+          <DatabaseTable tableName="shopping_cart_line" nbOfColumns="3">
+            <DatabaseColumn columnName="SCL_SC_ID" isUnique="true"/>
+            <DatabaseColumn columnName="SCL_QTY" isUnique="false"/>
+            <DatabaseColumn columnName="SCL_I_ID" isUnique="true"/>
+          </DatabaseTable>
+          <DatabaseTable tableName="customer" nbOfColumns="17">
+            <DatabaseColumn columnName="C_ID" isUnique="true"/>
+            <DatabaseColumn columnName="C_UNAME" isUnique="false"/>
+            <DatabaseColumn columnName="C_PASSWD" isUnique="false"/>
+            <DatabaseColumn columnName="C_FNAME" isUnique="false"/>
+            <DatabaseColumn columnName="C_LNAME" isUnique="false"/>
+            <DatabaseColumn columnName="C_ADDR_ID" isUnique="false"/>
+            <DatabaseColumn columnName="C_PHONE" isUnique="false"/>
+            <DatabaseColumn columnName="C_EMAIL" isUnique="false"/>
+            <DatabaseColumn columnName="C_SINCE" isUnique="false"/>
+            <DatabaseColumn columnName="C_LAST_LOGIN" isUnique="false"/>
+            <DatabaseColumn columnName="C_LOGIN" isUnique="false"/>
+            <DatabaseColumn columnName="C_EXPIRATION" isUnique="false"/>
+            <DatabaseColumn columnName="C_DISCOUNT" isUnique="false"/>
+            <DatabaseColumn columnName="C_BALANCE" isUnique="false"/>
+            <DatabaseColumn columnName="C_YTD_PMT" isUnique="false"/>
+            <DatabaseColumn columnName="C_BIRTHDATE" isUnique="false"/>
+            <DatabaseColumn columnName="C_DATA" isUnique="false"/>
+          </DatabaseTable>
+          <DatabaseTable tableName="address" nbOfColumns="7">
+            <DatabaseColumn columnName="ADDR_ID" isUnique="true"/>
+            <DatabaseColumn columnName="ADDR_STREET1" isUnique="false"/>
+            <DatabaseColumn columnName="ADDR_STREET2" isUnique="false"/>
+            <DatabaseColumn columnName="ADDR_CITY" isUnique="false"/>
+            <DatabaseColumn columnName="ADDR_STATE" isUnique="false"/>
+            <DatabaseColumn columnName="ADDR_ZIP" isUnique="false"/>
+            <DatabaseColumn columnName="ADDR_CO_ID" isUnique="false"/>
+          </DatabaseTable>
+          <DatabaseTable tableName="country" nbOfColumns="4">
+            <DatabaseColumn columnName="CO_ID" isUnique="true"/>
+            <DatabaseColumn columnName="CO_NAME" isUnique="false"/>
+            <DatabaseColumn columnName="CO_EXCHANGE" isUnique="false"/>
+            <DatabaseColumn columnName="CO_CURRENCY" isUnique="false"/>
+          </DatabaseTable>
+        </DatabaseStaticSchema>
+      </DatabaseSchema>
+      <ConnectionManager vLogin="cecchet" rLogin="cecchet" rPassword="">
+        <VariablePoolConnectionManager initPoolSize="40"/>
+      </ConnectionManager>
+    </DatabaseBackend>
+    
+    <RequestManager beginTimeout="0" commitTimeout="0" rollbackTimeout="0">   
+      <RequestScheduler>
+        <RAIDb-2Scheduler level="pessimisticTransaction"/>
+      </RequestScheduler>
+    
+      <LoadBalancer>
+        <RAIDb-2>
+          <CreateTable policy="roundRobin" numberOfNodes="1">
+            <BackendName name="sci10"/>
+            <BackendName name="sci11"/>
+            <BackendName name="sci12"/>
+          </CreateTable>
+          <RAIDb-2-RoundRobin/>
+        </RAIDb-2>
+      </LoadBalancer>
+    </RequestManager>
+    
+  </VirtualDatabase>
+
+</C-JDBC>

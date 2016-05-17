@@ -1,0 +1,12 @@
+
+<config>
+    <UDP mcast_recv_buf_size="80000" mcast_send_buf_size="150000" mcast_port="45566" use_incoming_packet_handler="false" mcast_addr="228.8.8.8" use_outgoing_packet_handler="false" ip_ttl="32"/>
+    <PING timeout="2000" num_initial_members="3"/>
+    <FD_SOCK />
+    <VERIFY_SUSPECT timeout="1500"/>
+    <UNICAST timeout="1200,2000,2500"/>
+    <FRAG frag_size="8096" down_thread="false" up_thread="false"/>
+    <TOTAL_TOKEN unblock_sending="10" block_sending="50"/>
+    <pbcast.GMS print_local_addr="true" join_timeout="3000" join_retry_timeout="2000" shun="true"/>
+    <QUEUE />
+</config>

@@ -1,0 +1,13 @@
+<scenario>
+	<configuration>
+		<database name="localhost" data="database-raidb1.template" port="9001" type="hsqldb"/>
+		<database name="localhost2" data="database-raidb1.template" port="9002"/>
+		<controller port="25322">
+			<virtualdatabase data="hsqldb-raidb1.xml"/>
+		</controller>
+	</configuration>
+	<testlet class="ClobTestLet">
+		<param name="TableName" value="clobTable"/>
+		<param name="updatedColumnValue" value="I am a CLOB"/>
+	</testlet>	
+</scenario>

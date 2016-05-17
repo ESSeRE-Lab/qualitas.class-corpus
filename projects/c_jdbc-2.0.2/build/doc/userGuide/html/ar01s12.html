@@ -1,0 +1,82 @@
+<html><head><META http-equiv="Content-Type" content="text/html; charset=ISO-8859-1"><title>12.&nbsp;Request Player</title><meta content="DocBook XSL Stylesheets V1.65.1" name="generator"><link rel="home" href="index.html" title="C-JDBC User's Guide"><link rel="up" href="index.html" title="C-JDBC User's Guide"><link rel="previous" href="ar01s11.html" title="11.&nbsp;Virtual database configuration"><link rel="next" href="ar01s13.html" title="13.&nbsp;Glossary"></head><body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF"><div class="navheader"><table summary="Navigation header" width="100%"><tr><th align="center" colspan="3">12.&nbsp;Request Player</th></tr><tr><td align="left" width="20%"><a accesskey="p" href="ar01s11.html"><img src="../../images/prev.gif" alt="Prev"></a>&nbsp;</td><th align="center" width="60%">&nbsp;</th><td align="right" width="20%">&nbsp;<a accesskey="n" href="ar01s13.html"><img src="../../images/next.gif" alt="Next"></a></td></tr></table><hr></div><div class="section" lang="en"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="request_player"></a>12.&nbsp;Request Player</h2></div></div><div></div></div><p>C-JDBC comes with a tool called 'Request Player' that allows to 
+      replay queries that have been recorded using the logging facility of the 
+      controller. This is useful for both debugging and performance 
+      tuning.</p><div class="section" lang="en"><div class="titlepage"><div><div><h3 class="title"><a name="recording_a_request_trace"></a>12.1.&nbsp;Recording a request trace</h3></div></div><div></div></div><p>There is a specific logger in the 
+        <tt class="filename">log4j.properties</tt> configuration file is located in 
+        the <tt class="filename">/c-jdbc/config</tt> directory of 
+        your installation. To learn more about configuring the log report to 
+        <a href="ar01s06.html#configuring_the_log" title="6.4.&nbsp;Configuring the Log">Section&nbsp;6.4, &ldquo;Configuring the Log&rdquo;</a>. To turn on the request tracing, 
+        update your <tt class="filename">log4j.properties</tt> with the following 
+        logger declaration:</p><pre class="programlisting">
+# To trace requests #
+log4j.logger.org.objectweb.cjdbc.controller.VirtualDatabase.request=INFO, Requests
+log4j.additivity.org.objectweb.cjdbc.controller.VirtualDatabase.request=false
+      </pre><p>The trace file is stored as defined in the logger definition. Here 
+        is the default definition that is shipped with C-JDBC:</p><pre class="programlisting">
+log4j.appender.Requests=org.apache.log4j.RollingFileAppender
+log4j.appender.Requests.File=request.log
+log4j.appender.Requests.MaxFileSize=100MB
+log4j.appender.Requests.MaxBackupIndex=5
+log4j.appender.Requests.layout=org.apache.log4j.PatternLayout
+log4j.appender.Requests.layout.ConversionPattern=%d{ABSOLUTE} %c{1} %m\n
+      </pre><p>You can set the trace file name (you can also provide a path) in 
+        the <tt class="option">log4j.appender.Requests.File</tt> property. The 
+        <tt class="option">log4j.appender.Requests.MaxFileSize</tt> property defines 
+        the maximum trace file size. Finally, 
+        <tt class="option">log4j.appender.Requests.MaxBackupIndex</tt> defines the 
+        number of trace files that will be generated. For example, in the above 
+        configuration, the trace will be made of 5 files of 100MB.</p><p>The file format expected by the request player is as follows:</p><p>
+        <tt class="literal">date virtualDatabaseName requestType transactionId 
+          SQL</tt>
+      </p><p><tt class="literal">requestType</tt> is <tt class="option">B</tt> for begin, 
+        <tt class="option">S</tt> for select statements, <tt class="option">W</tt> for write 
+        statements (insert, update, delete, create, drop), <tt class="option">C</tt> 
+        for commit and <tt class="option">R</tt> for rollback.</p><p>Here is an example of a trace of transaction n?27562:</p><pre class="programlisting">
+10:34:22,775 tpcw B 27562
+10:34:22,776 tpcw S 27562 select count(*) from shopping_cart_line where scl_sc_id = 424
+10:34:22,778 tpcw S 27562 select i_related1 from item where i_id = 5759
+10:34:22,779 tpcw S 27562 select scl_qty from shopping_cart_line where scl_sc_id = 424 and scl_i_id = 4903
+10:34:22,781 tpcw W 27562 insert into shopping_cart_line (scl_sc_id, scl_qty, scl_i_id) values (424,1,4903)
+10:34:22,782 tpcw W 27562 update shopping_cart set sc_time = now() where sc_id = 424
+10:34:22,783 tpcw S 27562 select * from shopping_cart_line, item where scl_i_id = item.i_id and scl_sc_id = 424
+10:34:22,787 tpcw C 27562
+      </pre></div><div class="section" lang="en"><div class="titlepage"><div><div><h3 class="title"><a name="replaying_a_trace_file"></a>12.2.&nbsp;Replaying a trace file</h3></div></div><div></div></div><p>The Request Player allows you to replay a trace file conforming to 
+        the format described in the previous section. The Request Player 
+        behavior is defined in a property file. The default property file is 
+        <tt class="filename">requestplayer.properties</tt> located in the <tt class="filename">/c-jdbc/config</tt> directory of your 
+        installation. The format of this file is described in <a href="ar01s12.html#requestplayer.properties" title="12.3.&nbsp;requestplayer.properties">Section&nbsp;12.3, &ldquo;requestplayer.properties&rdquo;</a>.</p><p>The <tt class="filename">bin</tt> directory of the 
+        C-JDBC distribution contains the scripts to start the Request Player. 
+        Unix users must start the controller with 
+        <span><b class="command">requestplayer.sh</b></span> whereas Windows users will use 
+        <span><b class="command">requestplayer.bat</b></span>. These scripts accepts the 
+        following options:</p><div class="itemizedlist"><ul type="disc"><li><p><tt class="option">-h</tt> or <tt class="option">--help</tt> displays a help 
+            message.</p></li><li><p><tt class="option">-f</tt> or <tt class="option">--file</tt> followed by the 
+            property file name. If this option is omitted, the default file is 
+            <tt class="filename">requestplayer.properties</tt> located in the 
+            <tt class="filename">/c-jdbc/config</tt> directory of 
+            your installation.</p></li><li><p><tt class="option">-v</tt> or <tt class="option">--version</tt> displays 
+            version information.</p></li></ul></div></div><div class="section" lang="en"><div class="titlepage"><div><div><h3 class="title"><a name="requestplayer.properties"></a>12.3.&nbsp;requestplayer.properties</h3></div></div><div></div></div><p>The Request Player properties file defines the following 
+        properties:</p><div class="itemizedlist"><ul type="disc"><li><p><tt class="option">db_driver</tt>: Database driver class (an example 
+            is <tt class="literal">org.objectweb.cjdbc.driver.Driver</tt>).</p></li><li><p><tt class="option">db_url</tt>: Database JDBC URL (an example is 
+            <tt class="literal">jdbc:cjdbc://localhost/test</tt>).</p></li><li><p><tt class="option">db_username</tt>: the login to use to connect to 
+            the database.</p></li><li><p><tt class="option">db_password</tt>: the password to use to connect to 
+            the database.</p></li><li><p><tt class="option">trace_file</tt>: the full path and name of the 
+            request trace file to replay (an example is 
+            <tt class="literal">/tmp/request.log</tt>).</p></li><li><p><tt class="option">nb_requests</tt>: the number of requests to replay 
+            or 0 if the full trace file has to be played. Note that once the 
+            specified number of requests has been reached, all opened 
+            transactions are played by the player until they finish. Therefore, 
+            there might be more requests executed than the number specified in 
+            this property.</p></li><li><p><tt class="option">nb_clients</tt>: number of emulated clients that 
+            will issue the requests in parallel (number of threads in the 
+            player).</p></li><li><p><tt class="option">timeout</tt>: request timeout in seconds, a value 
+            of 0 meaning no timeout.</p></li><li><p><tt class="option">connection_type</tt>: any value in 
+            <tt class="option">standard</tt>, <tt class="option">fixed</tt> or 
+            <tt class="option">pooling</tt>. If <tt class="option">standard</tt> is chosen, a 
+            new connection is used for each transaction or for each non 
+            transactionnal request to execute. If <tt class="option">fixed</tt> is 
+            chosen, one connection is dedicated to each client thread for the 
+            whole run. If <tt class="option">pooling</tt> is set, connection pooling 
+            is used.</p></li><li><p><tt class="option">poolsize</tt>: size of the pool if 
+            <tt class="literal">connection_type</tt> has been set to 
+            <tt class="option">pooling</tt>.</p></li></ul></div></div></div><div class="navfooter"><hr><table summary="Navigation footer" width="100%"><tr><td align="left" width="40%"><a accesskey="p" href="ar01s11.html"><img src="../../images/prev.gif" alt="Prev"></a>&nbsp;</td><td align="center" width="20%"><a accesskey="u" href="index.html"><img src="../../images/up.gif" alt="Up"></a></td><td align="right" width="40%">&nbsp;<a accesskey="n" href="ar01s13.html"><img src="../../images/next.gif" alt="Next"></a></td></tr><tr><td valign="top" align="left" width="40%">11.&nbsp;Virtual database configuration&nbsp;</td><td align="center" width="20%"><a accesskey="h" href="index.html"><img src="../../images/home.gif" alt="Home"></a></td><td valign="top" align="right" width="40%">&nbsp;13.&nbsp;Glossary</td></tr></table></div></body></html>

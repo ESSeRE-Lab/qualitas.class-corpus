@@ -1,0 +1,250 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!--
+/*
+ * C-JDBC: Clustered JDBC.
+ * Copyright (C) 2002-2005 French National Institute For Research In Computer
+ * Science And Control (INRIA).
+ * Contact: c-jdbc@objectweb.org
+ * 
+ * This library is free software; you can redistribute it and/or modify it
+ * under the terms of the GNU Lesser General Public License as published by the
+ * Free Software Foundation; either version 2.1 of the License, or any later
+ * version.
+ * 
+ * This library is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+ * FITNESS FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License
+ * for more details.
+ * 
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with this library; if not, write to the Free Software Foundation,
+ * Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA.
+ *
+ * Initial developer(s): Emmanuel Cecchet.
+ * Contributor(s): Nicolas Modrzyk
+ */
+
+ This is the XML DTD to control starting configuration of C-JDBC controllers.
+
+ Please use the following formal public identifier to identify it:
+
+ <!DOCTYPE C-JDBC-CONTROLLER PUBLIC "-//ObjectWeb//DTD C-JDBC-CONTROLLER x.y//EN"
+   "http://c-jdbc.objectweb.org/dtds/c-jdbc-controller-x.y.dtd">
+
+ Where x.y is the C-JDBC release number.
+
+ Or if you want to use a local copy of the DTD:
+
+ <!DOCTYPE C-JDBC-CONTROLLER SYSTEM "file:///path/to/c-jdbc-controller-x.y.dtd">
+
+ For example:
+
+ Unix platforms: 
+ <!DOCTYPE C-JDBC-CONTROLLER SYSTEM "file:///usr/local/c-jdbc/xml/c-jdbc-controller-x.y.dtd">
+
+ Windows platforms: 
+ <!DOCTYPE C-JDBC-CONTROLLER SYSTEM "file://c:/c-jdbc/xml/c-jdbc-controller-x.y.dtd">
+
+-->
+<!-- ******************
+        Controller
+     ****************** -->
+<!-- 
+ A controller configuration contains settings that applies to all Virtual 
+ Databases that are hosted by the controller. 
+ port: the port number on which clients (C-JDBC drivers) will connect, default
+  is 25322. 0 means that the port number is chosen automatically by the system.
+ ipAddress: The IP address to bind the controller to. Setting this value to
+  127.0.0.1 will bypass IP binding altogether. If no ipAddress is specified, 
+  the controller will try to automatically resolve the local IP address and 
+  default back to 0.0.0.0 in case of failure.
+ backlogSize: the server socket backlog size (number of connections that can
+  wait in the accept queue before the system returns 'connection refused' to
+  the client), default is 10.
+-->
+<!ELEMENT C-JDBC-CONTROLLER (Controller)>
+
+<!ELEMENT Controller (Internationalization?, Report? , JmxSettings?, VirtualDatabase*, SecuritySettings?)>
+<!ATTLIST Controller
+    port             CDATA "25322"
+    ipAddress        CDATA #IMPLIED
+    backlogSize      CDATA "10"
+>
+
+<!-- ******************
+        Internationalization
+     ****************** -->
+<!--
+If you want to change the default locale, retrieved by java.
+Only english is implemented at the moment
+-->
+<!ELEMENT Internationalization EMPTY>
+<!ATTLIST Internationalization language (en | fr | it | jp) "en">
+
+<!-- ******************
+     Report Settings
+     ****************** 
+-->
+<!--
+   A report command is included here in case you want to get a trace of what happened during
+   the execution of the controller:
+   If this tag is included in the controller.xml report is enabled and will output a report, 
+   under certain conditions, in a file named "c-jdbc.report"
+   hideSensitiveData will replace passwords by *
+   generateOnShutdown; tells the controller to generate a report when it has received a shutdown command.
+   generateOnFatal: tells the controller to generate a report when it can not recover from an error.
+   enableFileLogging: logs all the console output into a file and include this file into the report.
+   deleteOnShutdown: if file logging is used, the file will be deleted when the controller has shutdown.
+   reportLocation: specify the path where to create the report, default is CJDBC_HOME/log directory.
+-->
+<!ELEMENT Report EMPTY>
+<!ATTLIST Report
+     hideSensitiveData  (true | false) "true"
+     generateOnShutdown (true | false) "true"
+     generateOnFatal    (true | false) "true"
+     enableFileLogging  (true | false) "true"
+     deleteOnShutdown   (true | false) "false"	 
+     reportLocation     CDATA          #IMPLIED
+>
+
+<!-- ******************
+        Jmx Settings
+     ****************** -->
+<!-- 
+ Jmx is used to remotely administrate the controller. You can use the bundled
+ C-JDBC console or use your own code to access JMX MBeans via the protocol
+ adaptor.
+ C-JDBC proposes both the RMI and HTTP adaptors of the MX4J JMX server.
+-->
+<!ELEMENT JmxSettings (HttpJmxAdaptor?, RmiJmxAdaptor?)>
+<!ELEMENT HttpJmxAdaptor EMPTY>
+<!ATTLIST HttpJmxAdaptor
+     port CDATA "8090"
+>
+
+<!ELEMENT RmiJmxAdaptor (SSL?)>
+<!ATTLIST RmiJmxAdaptor
+     port      CDATA "1090"
+     username  CDATA #IMPLIED
+     password  CDATA #IMPLIED
+>
+
+<!--
+Configure ssl for encryption and/or authentication.
+
+keyStore: The file where the keys are stored
+keyStorePassword: the password to the keyStore
+keyStoreKeyPassword: the password to the key, if none is specified the same password as for the store is used
+isClientAuthNeeded: if set to false ssl is used for encryption, the server is only accepting trusted clients (the client certificate has to be in the trusted store)
+trustStore: the file where the trusted certificates are stored, if none is specified the same store as for the key is used
+trustStorePassword: the password to the trustStore, if none is specified the same password as for the keyStore is used
+-->
+<!ELEMENT SSL EMPTY>
+<!ATTLIST SSL
+     keyStore            CDATA          #REQUIRED
+     keyStorePassword    CDATA          #REQUIRED
+     keyStoreKeyPassword CDATA          #IMPLIED
+     isClientAuthNeeded  (true | false) "false"
+     trustStore	         CDATA          #IMPLIED
+     trustStorePassword	 CDATA          #IMPLIED
+>
+
+<!-- ******************
+     Virtual Database
+     ****************** -->
+<!-- 
+  This is to specify how to set up the virtual databases. 
+  configFile: The path to the config file is required.
+  virtualDatabaseName: The name of the virtual database to enable taken from
+   the configuration file 
+  autoEnableBackends: set to true by default to reenable backends from their
+   last known state as stored during last shutdown. If backends where not 
+   properly shutdown, nothing will happen. You can specify false to let the
+   backends in disabled state at startup. The force option should only be used
+   if you know exactly what you are doing and override backend status by 
+   providing a new checkpoint. 
+  checkpointName: the checkpoint to use with when autoEnableBackends is set to
+   force to enable backends in a known coherent state.
+--> 
+<!ELEMENT VirtualDatabase EMPTY>
+<!ATTLIST VirtualDatabase 
+    configFile          CDATA #REQUIRED
+    virtualDatabaseName CDATA #REQUIRED
+    autoEnableBackends  (true | false | force) "true"
+    checkpointName      CDATA ""
+>
+
+<!-- ******************
+     Security Settings
+     ****************** 
+-->
+<!-- 
+Comment this in the xml file if you do not have any security requirements or if security is enabled on a
+different layer. 
+- defaultConnect is used to allow connection by default or not. if no rules are specified and it is set to false,
+all connection will be refused.
+-->
+<!ELEMENT SecuritySettings (Jar?, Shutdown?, Accept?, Block?, SSL?)>
+<!ATTLIST SecuritySettings
+     defaultConnect (true | false) "true"
+>
+<!--
+Additional drivers can be added to the controller, but could contain malicious code.
+-->
+<!ELEMENT Jar EMPTY>
+<!ATTLIST Jar
+	allowAdditionalDriver (true | false) "true"
+>
+
+<!--
+Shutdown: you have to use the console in order to shutdown the
+controller properly. Specify if the controller should consider
+shutdown command received by one or the other, and if this command can
+only be received from localhost or not.  A default configuration would
+be:
+	<Shutdown>
+	<Client allow="true" onlyLocalhost="true"/>
+	<Console allow="true" onlyLocalhost="true"/>
+	</Shutdown>	
+To prevent unwanted and unauthorized shutdown calls, you can turn any
+of these settings to false.
+-->
+<!ELEMENT Shutdown (Client?, Console?)>
+
+<!ELEMENT Client EMPTY>
+<!ATTLIST Client
+    allow         (true | false) "true"
+    onlyLocalhost (true | false) "true"
+>
+<!ELEMENT Console EMPTY>
+<!ATTLIST Console
+    allow         (true | false) "true"
+    onlyLocalhost (true | false) "true"
+>
+
+<!--
+You can control who can connect to the controller by setting either ip addresses to accept only,
+or ip addresses to block only. 
+defaultConnect is set in the security settings above.
+Default is to accept all connections if no security manager is enabled.
+-->
+<!ELEMENT Accept (Hostname | IpAddress | IpRange)*>
+<!ELEMENT Block (Hostname | IpAddress | IpRange)*>
+
+<!-- Defines a host name -->
+<!ELEMENT Hostname EMPTY>
+<!ATTLIST Hostname 
+     value CDATA #REQUIRED
+>
+
+<!-- Defines an IP address. Example: "192.168.1.12" -->
+<!ELEMENT IpAddress EMPTY>
+<!ATTLIST IpAddress  
+     value CDATA #REQUIRED
+>
+
+<!-- Defines a range of IP addresses. Example: "192.168.1.*" -->
+<!ELEMENT IpRange EMPTY>
+<!ATTLIST IpRange  
+     value CDATA #REQUIRED
+>

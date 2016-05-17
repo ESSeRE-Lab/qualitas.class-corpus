@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF8"?>
+<!DOCTYPE C-JDBC PUBLIC "-//ObjectWeb//DTD C-JDBC @VERSION@//EN" "http://c-jdbc.objectweb.org/dtds/c-jdbc-@VERSION@.dtd">
+
+<C-JDBC>
+  
+  <VirtualDatabase name="xpetstore">
+    
+    <AuthenticationManager>
+      <Admin>
+        <User username="admin" password=""/>
+      </Admin>
+      <VirtualUsers>
+        <VirtualLogin vLogin="xpetuser" vPassword="secret"/>
+      </VirtualUsers>
+    </AuthenticationManager>
+    
+    <DatabaseBackend name="derby1" driver="org.apache.derby.jdbc.EmbeddedDriver"
+      url="jdbc:derby:c:/xpetstore;create=true"
+      connectionTestStatement="values 1">
+      <ConnectionManager vLogin="xpetuser" rLogin="APP" rPassword="APP">
+        <VariablePoolConnectionManager initPoolSize="1" minPoolSize="0"
+          maxPoolSize="50"/>
+      </ConnectionManager>
+    </DatabaseBackend>
+    
+    <RequestManager>
+      <RequestScheduler>
+        <SingleDBScheduler level="passThrough"/>
+      </RequestScheduler>
+      
+      <!-- Uncomment this part if you want to take advantage of C-JDBC caching features. Note that it is recommended to use at least the MetadataCache and the ParsingCache even if you don't use the ResultCache.
+      
+      <RequestCache>
+      <MetadataCache/>
+      <ParsingCache/>
+      <ResultCache granularity="table"/>
+      </RequestCache>
+      -->
+      
+      <LoadBalancer>
+        <SingleDB/>
+      </LoadBalancer>
+    </RequestManager>
+    
+  </VirtualDatabase>
+  
+</C-JDBC>

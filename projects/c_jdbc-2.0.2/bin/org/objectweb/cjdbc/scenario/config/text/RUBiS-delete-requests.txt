@@ -1,0 +1,102 @@
+// -----------------------------------------------------------------------------------------------------------------------
+// DELETE requests test
+//
+// The requests must have the following format:
+// #begin
+// <DELETE request>
+// #end
+// <isValid flag>: true if this request is valid
+//
+// If the request is valid:
+// <table to delete>
+// <columns concerned by the request>
+// <isUnique flag>: true if this query only deletes a single row
+// <updated pk>: pk if isUnique is flagged to true
+//
+// If the request is not valid:
+// <error message>
+//
+// do not add empty line between the lines defining a test
+// line beginning by a // are ignored except in a test
+// -----------------------------------------------------------------------------------------------------------------------
+
+#begin
+DELETE FROM items WHERE id=?
+#end
+true
+items
+id name description initial_price quantity reserve_price buy_now nb_of_bids max_bid start_date end_date seller category
+true
+id
+
+#begin
+DELETE FROM users WHERE id=?
+#end
+true
+users
+id firstname lastname nickname password email rating balance creation_date region
+true
+id
+
+#begin
+DELETE FROM users WHERE firstname=?
+#end
+true
+users
+id firstname lastname nickname password email rating balance creation_date region
+false
+null
+
+#begin
+DELETE FROM items WHERE max_bid=? AND nb_of_bids=? AND id=?
+#end
+true
+items
+id name description initial_price quantity reserve_price buy_now nb_of_bids max_bid start_date end_date seller category
+true
+id
+
+#begin
+DELETE FROM items WHERE end_date=? AND quantity=? AND id=?
+#end
+true
+items
+id name description initial_price quantity reserve_price buy_now nb_of_bids max_bid start_date end_date seller category
+true
+id
+
+#begin
+DELETE FROM items WHERE end_date=? AND id=?
+#end
+true
+items
+id name description initial_price quantity reserve_price buy_now nb_of_bids max_bid start_date end_date seller category
+true
+id
+
+#begin
+DELETE items FROM items WHERE end_date=? AND id=?
+#end
+true
+items
+id name description initial_price quantity reserve_price buy_now nb_of_bids max_bid start_date end_date seller category
+false
+id
+
+#begin
+DELETE items WHERE end_date=? AND id=?
+#end
+true
+items
+id name description initial_price quantity reserve_price buy_now nb_of_bids max_bid start_date end_date seller category
+false
+id
+
+#begin
+DELETE items FROM items,users WHERE end_date=? AND users.id=?
+#end
+true
+items
+id name description initial_price quantity reserve_price buy_now nb_of_bids max_bid start_date end_date seller category
+false
+id

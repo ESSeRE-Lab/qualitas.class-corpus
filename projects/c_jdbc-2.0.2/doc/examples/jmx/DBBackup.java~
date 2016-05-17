@@ -1,0 +1,167 @@
+ /**
+ * C-JDBC: Clustered JDBC.
+ * Copyright (C) 2002-2004 French National Institute For Research In Computer
+ * Science And Control (INRIA).
+ * Contact: c-jdbc@objectweb.org
+ *
+ * This library is free software; you can redistribute it and/or modify it
+ * under the terms of the GNU Lesser General Public License as published by the
+ * Free Software Foundation; either version 2.1 of the License, or any later
+ * version.
+ *
+ * This library is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+ * FITNESS FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License
+ * for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with this library; if not, write to the Free Software Foundation,
+ * Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA.
+ *
+ * Initial developer(s): Marc Wick.
+ * Contributor(s): troby@cavion.com.
+ */
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
+
+import javax.management.MBeanServerConnection;
+import javax.management.MBeanServerInvocationHandler;
+import javax.management.ObjectName;
+import javax.management.remote.JMXConnector;
+import javax.management.remote.JMXConnectorFactory;
+import javax.management.remote.JMXServiceURL;
+import javax.naming.Context;
+import javax.security.auth.Subject;
+
+import org.objectweb.cjdbc.common.jmx.JmxConstants;
+import org.objectweb.cjdbc.common.jmx.mbeans.VirtualDatabaseMBean;
+import org.objectweb.cjdbc.common.users.VirtualDatabaseUser;
+import org.objectweb.cjdbc.controller.authentication.PasswordAuthenticator;
+
+/**
+ * This class defines a DBBackup
+ * 
+ * @author <a href="mailto:marc.wick@monte-bre.ch">Marc Wick </a>
+ * @version 1.0
+ */
+public class DBBackup
+{
+
+  /**
+   * we call the native backup tool provided by the database vendor.
+   * <p>
+   * In this example we are calling the postgres pg_dump tool on a linux box.
+   * <p>
+   * Other daily maintenance tasks such as analyze could also be done here while
+   * the backend is offline.
+   * 
+   * @return exit value of backup process
+   * @throws IOException an IOError during execution of backup
+   * @throws InterruptedException thread was interrupted while waiting for
+   *           external backup to finish
+   */
+  public static int runDatabaseBackupTool(String backendpass,
+      String backenduser, String database_name) throws IOException,
+      InterruptedException
+  {
+
+    // mysql
+    String backupCommand = "/usr/bin/mysqlhotcopy --allowold --password="
+        + backendpass + " --user=" + backenduser + " " + database_name
+        + " /mybackupdirectory";
+    // or for postgres
+    // backupCommand = "/usr/bin/pg_dump mydb | /usr/bin/gzip > mydb.dmp.gz"
+
+    String[] args = {"/bin/bash", "-c", backupCommand};
+    Runtime rt = Runtime.getRuntime();
+    Process proc = rt.exec(args);
+    proc.waitFor();
+    BufferedReader in = new BufferedReader(new InputStreamReader(proc
+        .getInputStream()));
+    int exitStatus = proc.exitValue();
+    String line;
+    while ((line = in.readLine()) != null)
+    {
+      System.out.println("backup output: " + line);
+    }
+    return exitStatus;
+
+  }
+
+  /**
+   * disable a backend, take a backup with the native database tool and take the
+   * backend online again.
+   * 
+   * @param databaseName - name of the database
+   * @param port - jmx port ot the cjdbc controller
+   * @param vdbuser - cjdbc virtual database user
+   * @param vdbpass - cjdbc virutal database password
+   * @param backenduser - backenduser
+   * @param backendpass -password of backenduser
+   * @throws Exception - problems with backup
+   */
+  public static void main(String[] args) throws Exception
+  {
+    String databaseName = args[0];
+    String port = args[1];
+    String vdbuser = args[2];
+    String vdbpass = args[3];
+    String backenduser = args[4];
+    String backendpass = args[5];
+    String host = "localhost";
+    JMXServiceURL address = new JMXServiceURL("rmi", host, 0, "/jndi/jrmp");
+
+    Map environment = new HashMap();
+    environment.put(Context.INITIAL_CONTEXT_FACTORY,
+        "com.sun.jndi.rmi.registry.RegistryContextFactory");
+    environment.put(Context.PROVIDER_URL, "rmi://" + host + ":" + port);
+
+    // use username and password for authentication of connections
+    // with the controller, the values are compared to the ones
+    // specified in the controller.xml config file.
+    // this line is not required if no username/password has been configered
+    environment.put(JMXConnector.CREDENTIALS, PasswordAuthenticator
+        .createCredentials("jmxuser", "jmxpassword"));
+
+    JMXConnector connector = JMXConnectorFactory.connect(address, environment);
+
+    ObjectName db = JmxConstants.getVirtualDbObjectName(databaseName);
+
+    // we build a subject for authentication
+    VirtualDatabaseUser dbUser = new VirtualDatabaseUser(vdbuser, vdbpass);
+    Set principals = new HashSet();
+    principals.add(dbUser);
+    Subject subj = new Subject(true, principals, new HashSet(), new HashSet());
+
+    // we open a connection for this subject, all susequent calls with this
+    // connection will be executed on the behalf of our subject.
+    MBeanServerConnection delegateConnection = connector
+        .getMBeanServerConnection(subj);
+
+    // we create a proxy to the virtual database
+    VirtualDatabaseMBean proxy = (VirtualDatabaseMBean) MBeanServerInvocationHandler
+        .newProxyInstance(delegateConnection, db, VirtualDatabaseMBean.class,
+            false);
+
+    SimpleDateFormat fmt = new SimpleDateFormat("yyyy_MM_dd");
+    String checkpointName = fmt.format(new Date());
+
+    // we disable the backend and set a checkpoint
+    proxy.disableBackendWithCheckpoint(databaseName, checkpointName);
+
+    // we call the database specific backup tool for the backup
+    runDatabaseBackupTool(backendpass, backenduser, databaseName);
+
+    // we enable the backend again
+    proxy.enableBackendFromCheckpoint(databaseName);
+  }
+
+}

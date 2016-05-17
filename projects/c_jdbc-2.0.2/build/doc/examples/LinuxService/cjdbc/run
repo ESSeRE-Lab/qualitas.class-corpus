@@ -1,0 +1,7 @@
+#!/bin/sh
+
+exec 2>&1
+echo '*** Starting CJDBC ***'
+exec envdir ./env sh -c '
+	setuidgid $uid $CJDBC_HOME/bin/cjdbc.ctrl -f $ctrlcfg 
+'

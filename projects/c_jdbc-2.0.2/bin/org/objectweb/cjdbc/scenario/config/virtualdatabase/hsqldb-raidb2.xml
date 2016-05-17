@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="UTF8"?>
+<!DOCTYPE C-JDBC PUBLIC "-//ObjectWeb//DTD C-JDBC @VERSION@//EN" "http://c-jdbc.objectweb.org/dtds/c-jdbc-@VERSION@.dtd">
+
+<C-JDBC>
+
+  <VirtualDatabase name="myDB" blobEncodingMethod="hexa">
+
+    <AuthenticationManager>
+      <Admin>
+      	<User username="admin" password=""/>
+      </Admin> 
+      <VirtualUsers>
+        <VirtualLogin vLogin="user" vPassword=""/>        
+      </VirtualUsers>
+    </AuthenticationManager>
+
+    <DatabaseBackend name="localhost" driver="org.hsqldb.jdbcDriver" url="jdbc:hsqldb:hsql://localhost:9001" connectionTestStatement="call now()">
+      <DatabaseSchema dynamicPrecision="static">		
+		<DatabaseStaticSchema>
+          <DatabaseTable tableName="PRODUCT" nbOfColumns="3">
+		   <DatabaseColumn columnName="ID" isUnique="true"/>		
+		   <DatabaseColumn columnName="NAME" isUnique="false"/>		
+		   <DatabaseColumn columnName="COST" isUnique="false"/>				   		   
+          </DatabaseTable>
+
+          <DatabaseTable tableName="DOCUMENT" nbOfColumns="3">
+		   <DatabaseColumn columnName="ID" isUnique="true"/>		
+		   <DatabaseColumn columnName="ADDRESSID" isUnique="false"/>		
+		   <DatabaseColumn columnName="TOTAL" isUnique="false"/>				   		   
+          </DatabaseTable>
+
+          <DatabaseTable tableName="PPOSITION" nbOfColumns="5">
+		   <DatabaseColumn columnName="DOCUMENTID" isUnique="true"/>		
+		   <DatabaseColumn columnName="PPOSITION" isUnique="true"/>		
+		   <DatabaseColumn columnName="PRODUCTID" isUnique="false"/>				   		   
+		   <DatabaseColumn columnName="QUANTITY" isUnique="false"/>				   		   
+		   <DatabaseColumn columnName="PRICE" isUnique="false"/>				   		   
+          </DatabaseTable>
+
+          <DatabaseTable tableName="BLOB" nbOfColumns="2">
+		   <DatabaseColumn columnName="ID" isUnique="true"/>		
+		   <DatabaseColumn columnName="BLOB" isUnique="false"/>		
+          </DatabaseTable>
+		</DatabaseStaticSchema>
+      </DatabaseSchema>
+      <ConnectionManager vLogin="user" rLogin="TEST" rPassword="">
+        <VariablePoolConnectionManager initPoolSize="10" minPoolSize="5" maxPoolSize="50" idleTimeout="30" waitTimeout="10"/>
+      </ConnectionManager>
+
+    </DatabaseBackend>
+
+    <DatabaseBackend name="localhost2" driver="org.hsqldb.jdbcDriver" url="jdbc:hsqldb:hsql://localhost:9002" connectionTestStatement="call now()">
+		      <DatabaseSchema dynamicPrecision="static">		
+		<DatabaseStaticSchema>
+          <DatabaseTable tableName="ADDRESS" nbOfColumns="3">
+		   <DatabaseColumn columnName="ID" isUnique="true"/>		
+		   <DatabaseColumn columnName="FIRSTNAME" isUnique="false"/>		
+		   <DatabaseColumn columnName="LASTNAME" isUnique="false"/>				   		   
+		   <DatabaseColumn columnName="STREET" isUnique="false"/>				   		   
+		   <DatabaseColumn columnName="CITY" isUnique="false"/>				   		   		   		   
+          </DatabaseTable>
+		  
+          <DatabaseTable tableName="PRODUCT" nbOfColumns="3">
+		   <DatabaseColumn columnName="ID" isUnique="true"/>		
+		   <DatabaseColumn columnName="NAME" isUnique="false"/>		
+		   <DatabaseColumn columnName="COST" isUnique="false"/>				   		   
+          </DatabaseTable>
+
+          <DatabaseTable tableName="DOCUMENT" nbOfColumns="3">
+		   <DatabaseColumn columnName="ID" isUnique="true"/>		
+		   <DatabaseColumn columnName="ADDRESSID" isUnique="false"/>		
+		   <DatabaseColumn columnName="TOTAL" isUnique="false"/>				   		   
+          </DatabaseTable>
+
+          <DatabaseTable tableName="BLOB" nbOfColumns="2">
+		   <DatabaseColumn columnName="ID" isUnique="true"/>		
+		   <DatabaseColumn columnName="BLOB" isUnique="false"/>		
+          </DatabaseTable>
+
+          <DatabaseTable tableName="REGION" nbOfColumns="3">
+		   <DatabaseColumn columnName="r_regionkey" isUnique="true"/>		
+		   <DatabaseColumn columnName="r_name" isUnique="false"/>		
+		   <DatabaseColumn columnName="r_comment" isUnique="false"/>			   
+          </DatabaseTable>		  
+
+		</DatabaseStaticSchema>
+      </DatabaseSchema>
+		
+      <ConnectionManager vLogin="user" rLogin="TEST" rPassword="">
+        <VariablePoolConnectionManager initPoolSize="10" minPoolSize="5" maxPoolSize="50" idleTimeout="30" waitTimeout="10"/>
+      </ConnectionManager>
+    </DatabaseBackend>
+
+    <RequestManager>
+      <RequestScheduler>
+         <RAIDb-2Scheduler level="pessimisticTransaction"/>
+      </RequestScheduler>
+
+      <LoadBalancer>
+         <RAIDb-2>
+           <CreateTable policy="roundRobin" numberOfNodes="1">
+             <BackendName name="localhost"/>
+             <BackendName name="localhost2"/>
+           </CreateTable>
+           <RAIDb-2-RoundRobin/>
+         </RAIDb-2>
+      </LoadBalancer>
+      
+      <RecoveryLog>
+         <JDBCRecoveryLog driver="org.hsqldb.jdbcDriver" url="jdbc:hsqldb:hsql://localhost" login="TEST" password="">
+            <RecoveryLogTable tableName="RECOVERY" idColumnType="BIGINT NOT NULL" sqlColumnType="VARCHAR NOT NULL" extraStatementDefinition=",PRIMARY KEY (id)"/>
+            <CheckpointTable tableName="CHECKPOINT"/>
+            <BackendTable/>                        
+         </JDBCRecoveryLog>
+      </RecoveryLog>
+    </RequestManager>
+
+  </VirtualDatabase>
+
+</C-JDBC>

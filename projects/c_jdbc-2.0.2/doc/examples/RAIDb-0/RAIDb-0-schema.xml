@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="UTF8"?>
+<!DOCTYPE C-JDBC PUBLIC "-//ObjectWeb//DTD C-JDBC @VERSION@//EN" "http://c-jdbc.objectweb.org/dtds/c-jdbc-@VERSION@.dtd">
+<C-JDBC>
+  <VirtualDatabase name="rubis">
+
+    <AuthenticationManager>
+      <Admin>
+      	<User username="admin" password="c-jdbc"/>
+      </Admin> 
+      <VirtualUsers>
+        <VirtualLogin vLogin="user" vPassword="c-jdbc"/>
+      </VirtualUsers>
+    </AuthenticationManager>
+
+    <DatabaseBackend name="node1" driver="org.gjt.mm.mysql.Driver" url="jdbc:mysql://localhost/rubis" connectionTestStatement="select 1">
+      <DatabaseSchema>
+        <DatabaseStaticSchema>
+          <DatabaseTable tableName="users" nbOfColumns="10">
+            <DatabaseColumn columnName="id" isUnique="true"/>
+            <DatabaseColumn columnName="firstname" isUnique="false"/>
+            <DatabaseColumn columnName="lastname" isUnique="false"/>
+            <DatabaseColumn columnName="nickname" isUnique="false"/>
+            <DatabaseColumn columnName="password" isUnique="false"/>
+            <DatabaseColumn columnName="email" isUnique="false"/>
+            <DatabaseColumn columnName="rating" isUnique="false"/>
+            <DatabaseColumn columnName="balance" isUnique="false"/>
+            <DatabaseColumn columnName="creation_date" isUnique="false"/>
+            <DatabaseColumn columnName="region" isUnique="false"/>
+          </DatabaseTable>
+          <DatabaseTable tableName="items" nbOfColumns="12">
+            <DatabaseColumn columnName="id" isUnique="true"/>
+            <DatabaseColumn columnName="name" isUnique="false"/>
+            <DatabaseColumn columnName="description" isUnique="false"/>
+            <DatabaseColumn columnName="initial_price" isUnique="false"/>
+            <DatabaseColumn columnName="quantity" isUnique="false"/>
+            <DatabaseColumn columnName="reserve_price" isUnique="false"/>
+            <DatabaseColumn columnName="buy_now" isUnique="false"/>
+            <DatabaseColumn columnName="nb_of_bids" isUnique="false"/>
+            <DatabaseColumn columnName="max_bid" isUnique="false"/>
+            <DatabaseColumn columnName="start_date" isUnique="false"/>
+            <DatabaseColumn columnName="end_date" isUnique="false"/>
+            <DatabaseColumn columnName="seller" isUnique="false"/>
+            <DatabaseColumn columnName="category" isUnique="false"/>
+          </DatabaseTable>
+          <DatabaseTable tableName="bids" nbOfColumns="7">
+            <DatabaseColumn columnName="id" isUnique="true"/>
+            <DatabaseColumn columnName="user_id" isUnique="false"/>
+            <DatabaseColumn columnName="item_id" isUnique="false"/>
+            <DatabaseColumn columnName="qty" isUnique="false"/>
+            <DatabaseColumn columnName="bid" isUnique="false"/>
+            <DatabaseColumn columnName="max_bid" isUnique="false"/>
+            <DatabaseColumn columnName="date" isUnique="false"/>
+          </DatabaseTable>
+          <DatabaseTable tableName="comments" nbOfColumns="7">
+            <DatabaseColumn columnName="id" isUnique="true"/>
+            <DatabaseColumn columnName="from_user_id" isUnique="false"/>
+            <DatabaseColumn columnName="to_user_id" isUnique="false"/>
+            <DatabaseColumn columnName="item_id" isUnique="false"/>
+            <DatabaseColumn columnName="rating" isUnique="false"/>
+            <DatabaseColumn columnName="date" isUnique="false"/>
+            <DatabaseColumn columnName="comment" isUnique="false"/>
+          </DatabaseTable>
+          <DatabaseTable tableName="buy_now" nbOfColumns="5">
+            <DatabaseColumn columnName="id" isUnique="true"/>
+            <DatabaseColumn columnName="buyer_id" isUnique="false"/>
+            <DatabaseColumn columnName="item_id" isUnique="false"/>
+            <DatabaseColumn columnName="qty" isUnique="false"/>
+            <DatabaseColumn columnName="date" isUnique="false"/>
+          </DatabaseTable>
+        </DatabaseStaticSchema>
+      </DatabaseSchema>
+      <ConnectionManager vLogin="user" rLogin="user" rPassword="">
+        <RandomWaitPoolConnectionManager poolSize="40" timeout="30"/>
+      </ConnectionManager>
+    </DatabaseBackend>
+    <DatabaseBackend name="node2" driver="org.gjt.mm.mysql.Driver" url="jdbc:mysql://localhost/rubis2" connectionTestStatement="select 1">
+      <DatabaseSchema>
+        <DatabaseStaticSchema>
+          <DatabaseTable tableName="categories" nbOfColumns="2">
+            <DatabaseColumn columnName="id" isUnique="true"/>
+            <DatabaseColumn columnName="name" isUnique="false"/>
+          </DatabaseTable>
+          <DatabaseTable tableName="regions" nbOfColumns="2">
+            <DatabaseColumn columnName="id" isUnique="true"/>
+            <DatabaseColumn columnName="name" isUnique="false"/>
+          </DatabaseTable>
+          <DatabaseTable tableName="old_items" nbOfColumns="12">
+            <DatabaseColumn columnName="id" isUnique="true"/>
+            <DatabaseColumn columnName="name" isUnique="false"/>
+            <DatabaseColumn columnName="description" isUnique="false"/>
+            <DatabaseColumn columnName="initial_price" isUnique="false"/>
+            <DatabaseColumn columnName="quantity" isUnique="false"/>
+            <DatabaseColumn columnName="reserve_price" isUnique="false"/>
+            <DatabaseColumn columnName="buy_now" isUnique="false"/>
+            <DatabaseColumn columnName="nb_of_bids" isUnique="false"/>
+            <DatabaseColumn columnName="max_bid" isUnique="false"/>
+            <DatabaseColumn columnName="start_date" isUnique="false"/>
+            <DatabaseColumn columnName="end_date" isUnique="false"/>
+            <DatabaseColumn columnName="seller" isUnique="false"/>
+            <DatabaseColumn columnName="category" isUnique="false"/>
+          </DatabaseTable>
+          <DatabaseTable tableName="old_comments" nbOfColumns="7">
+            <DatabaseColumn columnName="id" isUnique="true"/>
+            <DatabaseColumn columnName="from_user_id" isUnique="false"/>
+            <DatabaseColumn columnName="to_user_id" isUnique="false"/>
+            <DatabaseColumn columnName="item_id" isUnique="false"/>
+            <DatabaseColumn columnName="rating" isUnique="false"/>
+            <DatabaseColumn columnName="date" isUnique="false"/>
+            <DatabaseColumn columnName="comment" isUnique="false"/>
+          </DatabaseTable>
+        </DatabaseStaticSchema>
+      </DatabaseSchema>
+      <ConnectionManager vLogin="user" rLogin="user" rPassword="">
+        <RandomWaitPoolConnectionManager poolSize="40" timeout="30"/>
+      </ConnectionManager>
+    </DatabaseBackend>
+
+    <RequestManager>
+
+      <RequestScheduler>
+        <RAIDb-0Scheduler level="passThrough"/>
+      </RequestScheduler>
+
+      <RequestCache>
+        <MetadataCache/>
+        <ParsingCache/>
+        <ResultCache granularity="table" />
+      </RequestCache>
+
+      <LoadBalancer>
+        <RAIDb-0/>
+      </LoadBalancer>
+    </RequestManager>
+
+  </VirtualDatabase>
+</C-JDBC>

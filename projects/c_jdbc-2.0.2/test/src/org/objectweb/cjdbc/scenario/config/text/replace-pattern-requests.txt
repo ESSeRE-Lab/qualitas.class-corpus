@@ -1,0 +1,155 @@
+// -----------------------------------------------------------------------------------------------------------------------
+// Replace pattern requests test
+//
+// do not add empty line between the lines defining a test
+// line beginning by a // are ignored except in a test
+// -----------------------------------------------------------------------------------------------------------------------
+
+//0
+#RuleType
+ReplaceAllRewritingRule
+#Rule
+"
+\"
+#endRule
+#Query
+select * from "users" limit 10,20
+#EndQuery
+#Result
+true
+select * from \"users\" limit 10,20
+#EndResult
+
+//1
+#RuleType
+ReplaceAllRewritingRule
+#Rule
+"
+\"
+#endRule
+#Query
+select * from "users" limit 10,20
+#EndQuery
+#Result
+true
+select * from \"users\" limit 10,20
+#EndResult
+
+//2
+#RuleType
+PatternRewritingRule
+#Rule
+select ?1 limit ?2,?3
+select ?1 limit ?3,?2
+#endRule
+#Query
+select * from users limit 10,20
+#EndQuery
+#Result
+true
+select * from users limit 20,10
+#EndResult
+
+//3
+#RuleType
+PatternRewritingRule
+#Rule
+?1 limit ?2,?3
+?1 limit ?3,?2
+#endRule
+#Query
+select * from users limit 10,20
+#EndQuery
+#Result
+true
+select * from users limit 20,10
+#EndResult
+
+//4
+#RuleType
+PatternRewritingRule
+#Rule
+select ?1 limit ?2,?3
+select ?1 limit ?3,?2
+#endRule
+#Query
+select * from users
+#EndQuery
+#Result
+false
+#EndResult
+
+//5
+#RuleType
+PatternRewritingRule
+#Rule
+?1 limit ?2,?3
+?1 limit ?3,?2
+#endRule
+#Query
+select * from users limit 10,20
+#EndQuery
+#Result
+true
+select * from users limit 20,10
+#EndResult
+
+//6
+#RuleType
+PatternRewritingRule
+#Rule
+?1 from ?2 where ?3
+?1 from "?2" where ?3
+#endRule
+#Query
+select * from users where users.id<100 limit 10,20
+#EndQuery
+#Result
+true
+select * from "users" where users.id<100 limit 10,20
+#EndResult
+
+//6
+#RuleType
+SimpleRewritingRule
+#Rule
+where user=1
+where user=2
+#endRule
+#Query
+select * from users where user=1
+#EndQuery
+#Result
+true
+select * from users where user=2
+#EndResult
+
+//7
+#RuleType
+ReplaceAllRewritingRule
+#Rule
+"
+\"
+#endRule
+#Query
+select * from "users" where "user"="3"
+#EndQuery
+#Result
+true
+select * from \"users\" where \"user\"=\"3\"
+#EndResult
+
+//8
+#RuleType
+ReplaceAllRewritingRule
+#Rule
+\'
+''
+#endRule
+#Query
+select * from \'users\' where \'user\'=\'3\'
+#EndQuery
+#Result
+true
+select * from ''users'' where ''user''=''3''
+#EndResult

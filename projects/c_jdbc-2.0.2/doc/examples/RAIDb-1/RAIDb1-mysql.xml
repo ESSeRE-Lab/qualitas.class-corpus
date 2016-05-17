@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF8"?>
+<!DOCTYPE C-JDBC PUBLIC "-//ObjectWeb//DTD C-JDBC @VERSION@//EN" "http://c-jdbc.objectweb.org/dtds/c-jdbc-@VERSION@.dtd">
+
+<C-JDBC>
+  
+  <VirtualDatabase name="rubis">
+ 
+    <AuthenticationManager>
+      <Admin>
+      	<User username="admin" password="c-jdbc"/>
+      </Admin> 
+      <VirtualUsers>
+        <VirtualLogin vLogin="user" vPassword="c-jdbc"/>
+      </VirtualUsers>
+    </AuthenticationManager>
+
+    <DatabaseBackend name="node1" driver="org.gjt.mm.mysql.Driver" url="jdbc:mysql://host1/backend1" connectionTestStatement="select 1">
+      <ConnectionManager vLogin="user" rLogin="user" rPassword="">
+        <VariablePoolConnectionManager initPoolSize="40"/>
+      </ConnectionManager>
+    </DatabaseBackend>
+    <DatabaseBackend name="node2" driver="org.gjt.mm.mysql.Driver" url="jdbc:mysql://host2/backend2" connectionTestStatement="select 1">
+      <ConnectionManager vLogin="user" rLogin="user" rPassword="">
+        <VariablePoolConnectionManager initPoolSize="40"/>
+      </ConnectionManager>
+    </DatabaseBackend>
+
+    <RequestManager>
+
+      <RequestScheduler>
+        <RAIDb-1Scheduler level="optimisticTransaction"/>
+      </RequestScheduler>
+
+      <RequestCache>
+        <MetadataCache/>
+        <ParsingCache/>
+        <ResultCache granularity="table" />
+      </RequestCache>
+
+      <LoadBalancer>
+        <RAIDb-1>
+          <RAIDb-1-RoundRobin/>
+        </RAIDb-1>
+      </LoadBalancer>
+
+      <RecoveryLog driver="org.gjt.mm.mysql.Driver"
+        url="jdbc:mysql://host/recovery" login="user" password="">
+        <RecoveryLogTable/>
+        <CheckpointTable/>
+        <BackendTable/>
+        <DumpTable/>
+      </RecoveryLog>
+
+    </RequestManager>
+  </VirtualDatabase>
+
+</C-JDBC>

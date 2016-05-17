@@ -1,0 +1,178 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!--
+/*
+ * C-JDBC: Clustered JDBC.
+ * Copyright (C) 2002-2004 French National Institute For Research In Computer
+ * Science And Control (INRIA).
+ * Contact: c-jdbc@objectweb.org
+ * 
+ * This library is free software; you can redistribute it and/or modify it
+ * under the terms of the GNU Lesser General Public License as published by the
+ * Free Software Foundation; either version 2.1 of the License, or any later
+ * version.
+ * 
+ * This library is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+ * FITNESS FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License
+ * for more details.
+ * 
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with this library; if not, write to the Free Software Foundation,
+ * Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA.
+ *
+ * Initial developer(s): Nicolas Modrzyk, Marc Wick
+ * Contributor(s): 
+ */
+-->
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <!--
+	This Describe a jmx event that can be raised from the jmx server
+	hosted on a C-JDBC Controller.
+	A jmxEvent is composed of three sections
+	 - info		: Gives general information about the event
+	 - source	: Gives information about the source of the event
+	 - data		: all the data that can be of interest related to this event
+	 
+	The version of the event (corresponding to the version of the controller)
+	should be included so we don't need to check the parsing.
+	-->
+  <xs:element name="jmxEvent">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="info"/>
+        <xs:element ref="source"/>
+        <xs:element minOccurs="0" maxOccurs="unbounded" ref="data"/>
+      </xs:sequence>
+      <xs:attribute name="version" type="xs:string" use="required"/>
+    </xs:complexType>
+  </xs:element>
+  <!--
+	The general information about the event is defined by the following elements:
+	 - priority     : Indicates whether the event is informational or was thrown due to an error
+	 - sequence     : The overall sequence number of this event, corresponds to the sequence 
+	                  attribute of a jmx notification.
+	 - type         : A C-JDBC specific notification type. This corresponds to the type
+	                  attribute of a jmx notification.
+	 - description  : A string description of the event. This corresponds to the description
+	                  attribute of a jmx notification.
+	 - time         : The time as a long number at which the event occured. This corresponds to
+	                  the timeStamp attribute of a jmx notification
+	-->
+  <xs:element name="info">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="priority"/>
+        <xs:element ref="sequence"/>
+        <xs:element ref="type"/>
+        <xs:element ref="description"/>
+        <xs:element ref="time"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  
+  <!-- 
+    The different values available for the types 
+  -->
+  <xs:element name="type">
+    <xs:simpleType>
+      <xs:restriction base="xs:string">
+        <!-- Related data: name of the virtual database, and its backends -->
+        <xs:enumeration value="cjdbc.virtualdatabase.backend.added"/>
+        <xs:enumeration value="cjdbc.virtualdatabase.backend.removed"/>
+        <!-- Related data: controller name, list of backends -->
+        <xs:enumeration 
+          value="cjdbc.distributedvirtualdatabase.controller.added"/>
+        <!-- Related data: controller name, failure reason, recovery policy in place -->
+        <xs:enumeration 
+          value="cjdbc.distributedvirtualdatabase.controller.removed"/>
+        <!-- Related data: backend name, current state of read, current state of write, last checkpoint -->
+        <xs:enumeration value="cjdbc.virtualdatabase.backend.state.changed"/>
+        <!-- Related data: backend name, last known checkpoint, failure reason -->
+        <xs:enumeration value="cjdbc.virtualdatabase.backend.failure"/>
+        <!-- Related data: name, list of backends -->
+        <xs:enumeration value="cjdbc.controller.virtualdatabase.added"/>
+        <!-- Related data: name -->
+        <xs:enumeration value="cjdbc.controller.virtualdatabase.removed"/>
+      </xs:restriction>
+    </xs:simpleType>
+  </xs:element>
+  
+  <!-- 
+    Priority description
+  -->
+  <xs:element name="priority">
+    <xs:simpleType>
+      <xs:restriction base="xs:string">
+        <xs:enumeration value="information"/>
+        <xs:enumeration value="failure"/>
+        <xs:enumeration value="shutdown"/>
+      </xs:restriction>
+    </xs:simpleType>
+  </xs:element>
+  
+  <xs:element name="sequence" type="xs:long"/>
+  <xs:element name="description" type="xs:string"/>
+  <xs:element name="time" type="xs:time"/>
+  <!--
+	The source of the event and some information about its origin
+	 - controller    : some information about the controller hosting the jmx server
+	                   that generated the event
+	 - mbean         : some precise information about the mbean
+	-->
+  <xs:element name="source">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="controller"/>
+        <xs:element ref="mbean"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <!-- 
+	The controller can be well defined with those elements.
+	 - name           : An example would be <example>localhost:25322</example>
+	-->
+  <xs:element name="controller">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="name" type="xs:string"/>
+        <xs:element name="ipaddress" type="xs:string"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <!--
+	Some information about the mbean, and some callback information.
+	 - server         : the ipaddress and the rmiport to connect back to the jmx server
+	 - class          : the class of the mbean that generated the event.
+	 - name           : the mbean name if many mbeans of the same type are registered.
+                    (For example, multiple DatabaseBackendMBean registered)
+	-->
+  <xs:element name="mbean">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="server"/>
+        <xs:element name="beanclass" type="xs:string"/>
+        <xs:element name="name" type="xs:string"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="server">
+    <xs:complexType>
+      <xs:attribute name="ipaddress" type="xs:string" use="required"/>
+      <xs:attribute name="rmiport" type="xs:int" use="required"/>
+    </xs:complexType>
+  </xs:element>
+  <!--
+	A list of data information. 
+	 - name           : A name for this data that can help the processing of this event
+	 - value          : A list of values relevant to this data event
+	-->
+  <xs:element name="data">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="value" type="xs:string" minOccurs="0" 
+          maxOccurs="unbounded"/>
+      </xs:sequence>
+      <xs:attribute name="name" type="xs:string" use="required"/>
+    </xs:complexType>
+  </xs:element>
+</xs:schema>

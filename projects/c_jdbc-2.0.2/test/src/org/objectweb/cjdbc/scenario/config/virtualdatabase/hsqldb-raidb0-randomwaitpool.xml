@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF8"?>
+<!DOCTYPE C-JDBC PUBLIC "-//ObjectWeb//DTD C-JDBC @VERSION@//EN" "http://c-jdbc.objectweb.org/dtds/c-jdbc-@VERSION@.dtd">
+
+<C-JDBC>
+
+  <VirtualDatabase name="myDB" blobEncodingMethod="hexa">
+
+    <Monitoring>
+      <SQLMonitoring defaultMonitoring="off">
+         <SQLMonitoringRule queryPattern="^select" caseSensitive="false" applyToSkeleton ="false" monitoring="on"/>
+      </SQLMonitoring>
+    </Monitoring>
+
+    <AuthenticationManager>
+      <Admin>
+      	<User username="admin" password=""/>
+      </Admin> 
+      <VirtualUsers>
+        <VirtualLogin vLogin="user" vPassword=""/>        
+      </VirtualUsers>
+    </AuthenticationManager>
+
+
+    <DatabaseBackend name="localhost" driver="org.hsqldb.jdbcDriver" url="jdbc:hsqldb:hsql://localhost:9001" connectionTestStatement="call now()">
+      <DatabaseSchema dynamicPrecision="table"/>		
+      <ConnectionManager vLogin="user" rLogin="TEST" rPassword="">
+        <RandomWaitPoolConnectionManager poolSize="1" timeout="1"/>
+      </ConnectionManager>
+    </DatabaseBackend>
+
+    <DatabaseBackend name="localhost2" driver="org.hsqldb.jdbcDriver" url="jdbc:hsqldb:hsql://localhost:9002" connectionTestStatement="call now()">
+	<DatabaseSchema dynamicPrecision="table"/>		
+      <ConnectionManager vLogin="user" rLogin="TEST" rPassword="">
+        <RandomWaitPoolConnectionManager poolSize="5" timeout="1"/>
+      </ConnectionManager>
+    </DatabaseBackend>
+
+    <RequestManager>
+
+      <RequestScheduler>
+        <RAIDb-0Scheduler level="passThrough"/>
+      </RequestScheduler>
+
+      <RequestCache>
+        <MetadataCache/>
+        <ParsingCache/>
+         <ResultCache granularity="table" />		
+      </RequestCache>
+
+      <LoadBalancer>
+        <RAIDb-0/>
+      </LoadBalancer>
+      
+    </RequestManager>
+
+  </VirtualDatabase>
+
+</C-JDBC>

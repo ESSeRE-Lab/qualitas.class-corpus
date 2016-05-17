@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF8"?>
+<!DOCTYPE C-JDBC PUBLIC "-//ObjectWeb//DTD C-JDBC 2.0.2//EN" "http://c-jdbc.objectweb.org/dtds/c-jdbc-2.0.2.dtd">
+
+<C-JDBC>
+  
+  <VirtualDatabase name="xpetstore">
+    
+    <Monitoring>
+      <SQLMonitoring defaultMonitoring="on"/>
+    </Monitoring>
+    
+    <AuthenticationManager>
+      <Admin>
+        <User username="admin" password=""/>
+      </Admin>
+      <VirtualUsers>
+        <VirtualLogin vLogin="xpetuser" vPassword="secret"/>
+      </VirtualUsers>
+    </AuthenticationManager>
+    
+    <DatabaseBackend name="derby1" driver="com.ibm.db2.jcc.DB2Driver"
+      url="jdbc:derby:net://localhost:1527/xpetstore;create=true;retrieveMessagesFromServerOnGetMessage=true;"
+      connectionTestStatement="values 1">
+      <ConnectionManager vLogin="xpetuser" rLogin="APP" rPassword="APP">
+        <VariablePoolConnectionManager initPoolSize="0" minPoolSize="0"
+          maxPoolSize="50"/>
+      </ConnectionManager>
+    </DatabaseBackend>
+    
+    <DatabaseBackend name="derby2" driver="com.ibm.db2.jcc.DB2Driver"
+      url="jdbc:derby:net://localhost:1528/xpetstore;create=true;retrieveMessagesFromServerOnGetMessage=true;"
+      connectionTestStatement="values 1">
+      <ConnectionManager vLogin="xpetuser" rLogin="APP" rPassword="APP">
+        <VariablePoolConnectionManager initPoolSize="0" minPoolSize="0"
+          maxPoolSize="50"/>
+      </ConnectionManager>
+    </DatabaseBackend>
+    
+    <RequestManager>
+      <RequestScheduler>
+        <RAIDb-1Scheduler level="passThrough"/>
+      </RequestScheduler>
+      
+      <RequestCache>
+        <MetadataCache/>
+        <ParsingCache/>
+        <!-- Uncomment to enable ResultCache
+        <ResultCache granularity="table" />
+        -->
+      </RequestCache>
+      
+      <LoadBalancer>
+        <RAIDb-1>
+          <WaitForCompletion policy="first"/>
+          <RAIDb-1-RoundRobin/>
+        </RAIDb-1>
+      </LoadBalancer>
+      
+      <RecoveryLog driver="com.ibm.db2.jcc.DB2Driver"
+        url="jdbc:derby:net://localhost:1529/xpetstore;create=true;retrieveMessagesFromServerOnGetMessage=true;"
+        login="APP" password="APP">
+        <RecoveryLogTable tableName="RECOVERY" idColumnType="BIGINT NOT NULL"
+          sqlColumnName="sqlStmt" sqlColumnType="VARCHAR(8192) NOT NULL"
+          extraStatementDefinition=",PRIMARY KEY (id)"/>
+        <CheckpointTable tableName="CHECKPOINT"/>
+        <BackendTable tableName="BACKENDTABLE"/>
+      </RecoveryLog>
+    </RequestManager>
+    
+  </VirtualDatabase>
+  
+</C-JDBC>

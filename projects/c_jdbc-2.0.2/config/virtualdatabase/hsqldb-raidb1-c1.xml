@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF8"?>
+<!DOCTYPE C-JDBC PUBLIC "-//ObjectWeb//DTD C-JDBC @VERSION@//EN" "http://c-jdbc.objectweb.org/dtds/c-jdbc-@VERSION@.dtd">
+
+<C-JDBC>
+
+  <VirtualDatabase name="myDB">
+
+    <Distribution/>
+    
+    <Backup>
+      <Backuper backuperName="Octopus"
+        className="org.objectweb.cjdbc.controller.backup.OctopusBackuper"
+        options="zip=true"/>
+    </Backup>
+    
+    <AuthenticationManager>
+      <Admin>
+       	<User username="admin" password=""/>
+      </Admin> 
+      <VirtualUsers>
+        <VirtualLogin vLogin="user" vPassword=""/>
+      </VirtualUsers>
+    </AuthenticationManager>
+
+    <DatabaseBackend name="hsql9001" driver="org.hsqldb.jdbcDriver"
+      url="jdbc:hsqldb:hsql://localhost:9001"
+      connectionTestStatement="call now()">
+      <ConnectionManager vLogin="user" rLogin="TEST" rPassword="">
+        <VariablePoolConnectionManager initPoolSize="10" minPoolSize="5"
+          maxPoolSize="50" idleTimeout="30" waitTimeout="10"/>
+      </ConnectionManager>
+    </DatabaseBackend>
+
+    <RequestManager>
+      <RequestScheduler>
+         <RAIDb-1Scheduler level="passThrough"/>
+      </RequestScheduler>
+
+      <LoadBalancer>
+         <RAIDb-1>
+            <WaitForCompletion policy="all"/>
+            <RAIDb-1-LeastPendingRequestsFirst/>
+         </RAIDb-1>
+      </LoadBalancer>
+
+      <RecoveryLog driver="org.hsqldb.jdbcDriver"
+        url="jdbc:hsqldb:hsql://localhost:9003" login="TEST" password="">
+        <RecoveryLogTable tableName="RECOVERY" idColumnType="BIGINT NOT NULL"
+          vloginColumnType="VARCHAR NOT NULL" sqlColumnType="VARCHAR NOT NULL"
+          extraStatementDefinition=",PRIMARY KEY (id)"/>
+        <CheckpointTable tableName="CHECKPOINT"
+          checkpointNameColumnType="VARCHAR NOT NULL"/>
+        <BackendTable tableName="BACKEND"
+          databaseNameColumnType="VARCHAR NOT NULL"
+          backendNameColumnType="VARCHAR NOT NULL"
+          checkpointNameColumnType="VARCHAR NOT NULL"/>
+        <DumpTable tableName="DUMP" dumpNameColumnType="VARCHAR NOT NULL"
+          dumpDateColumnType="VARCHAR NOT NULL"
+          dumpPathColumnType="VARCHAR NOT NULL"
+          dumpFormatColumnType="VARCHAR NOT NULL"
+          checkpointNameColumnType="VARCHAR NOT NULL"
+          backendNameColumnType="VARCHAR NOT NULL"
+          tablesColumnType="VARCHAR NOT NULL"/>
+      </RecoveryLog>
+    </RequestManager>
+
+  </VirtualDatabase>
+
+</C-JDBC>

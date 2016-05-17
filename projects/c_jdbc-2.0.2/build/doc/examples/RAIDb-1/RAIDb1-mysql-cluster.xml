@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF8"?>
+<!DOCTYPE C-JDBC PUBLIC "-//ObjectWeb//DTD C-JDBC 2.0.2//EN" "http://c-jdbc.objectweb.org/dtds/c-jdbc-2.0.2.dtd">
+
+<C-JDBC>
+
+  <VirtualDatabase name="myDB">
+
+    <AuthenticationManager>
+      <Admin>
+       	<User username="admin" password=""/>
+      </Admin> 
+      <VirtualUsers>
+        <VirtualLogin vLogin="user" vPassword=""/>
+      </VirtualUsers>
+    </AuthenticationManager>
+
+    <DatabaseBackend name="mysql-aluminium" driver="org.gjt.mm.mysql.Driver" url="jdbc:mysql://aluminium/CJDBC" connectionTestStatement="select 1">
+	  <DatabaseSchema dynamicPrecision="table"/>		
+      <ConnectionManager vLogin="user" rLogin="mysql" rPassword="">
+	<VariablePoolConnectionManager initPoolSize="20" minPoolSize="5" maxPoolSize="0" idleTimeout="180" waitTimeout="0"/>
+      </ConnectionManager>
+    </DatabaseBackend>
+
+    <DatabaseBackend name="mysql-scandium" driver="org.gjt.mm.mysql.Driver" url="jdbc:mysql://scandium/CJDBC" connectionTestStatement="select 1">
+	  <DatabaseSchema dynamicPrecision="table"/>
+      <ConnectionManager vLogin="user" rLogin="mysql" rPassword="">
+	<VariablePoolConnectionManager initPoolSize="20" minPoolSize="5" maxPoolSize="0" idleTimeout="180" waitTimeout="0"/>
+      </ConnectionManager>
+    </DatabaseBackend>
+
+    <DatabaseBackend name="mysql-tungstene" driver="org.gjt.mm.mysql.Driver" url="jdbc:mysql://tungstene/CJDBC" connectionTestStatement="select 1">
+	  <DatabaseSchema dynamicPrecision="table"/>		
+      <ConnectionManager vLogin="user" rLogin="mysql" rPassword="">
+	<VariablePoolConnectionManager initPoolSize="20" minPoolSize="5" maxPoolSize="0" idleTimeout="180" waitTimeout="0"/>
+      </ConnectionManager>
+    </DatabaseBackend>		
+	
+	<DatabaseBackend name="mysql-sodium" driver="org.gjt.mm.mysql.Driver" url="jdbc:mysql://sodium/CJDBC" connectionTestStatement="select 1">
+	  <DatabaseSchema dynamicPrecision="table"/>		
+      <ConnectionManager vLogin="user" rLogin="mysql" rPassword="">
+	<VariablePoolConnectionManager initPoolSize="20" minPoolSize="5" maxPoolSize="0" idleTimeout="180" waitTimeout="0"/>
+      </ConnectionManager>
+    </DatabaseBackend>		
+	
+
+    <RequestManager>
+      <RequestScheduler>
+         <RAIDb-1Scheduler level="pessimisticTransaction"/>
+      </RequestScheduler>
+
+      <RequestCache>
+         <MetadataCache/>
+         <ParsingCache/>		 
+         <ResultCache granularity="table" />
+      </RequestCache>
+
+      <LoadBalancer>
+         <RAIDb-1>
+            <WaitForCompletion policy="first"/>
+            <RAIDb-1-LeastPendingRequestsFirst/>
+         </RAIDb-1>
+      </LoadBalancer>
+
+    </RequestManager>
+
+  </VirtualDatabase>
+
+</C-JDBC>

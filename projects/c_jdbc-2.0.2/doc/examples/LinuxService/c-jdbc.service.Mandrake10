@@ -1,0 +1,128 @@
+#!/bin/sh
+#
+# Startup script for c-jdbc controller
+# chkconfig: - 79 20
+# description: c-jdbc controller for clustering database 
+# processname: c-jdbc 
+# pid /var/run/c-jdbc.pid
+#
+# Author: Stephane Ducas (sducas@idealx.org)
+#
+# Tested under Mandrake 10 (it probably will also work with Red-Hat)
+# You will have to modify the controller.sh for storing the PID
+# You can add these lines:
+# CJDBC_PID=/var/run/c-jdbc.pid
+# echo $$ > $CJDBC_PID
+
+
+# Source function library.
+if [ -x /etc/rc.d/init.d/functions ]; then
+.. /etc/rc.d/init.d/functions
+fi
+
+
+# Path to the c-jdbc controller launch and stop script
+CJDBC_START_SCRIPT=/usr/share/c-jdbc/bin/cg95-raidb1-controller-start.sh
+CJDBC_STOP_SCRIPT=/usr/share/c-jdbc/bin/shutdown.sh
+SHUTDOWN_WAIT=10
+
+# c-jdbc name :)
+CJDBC_PROG="c-jdbc controller for cg-95"
+
+RETVAL=0
+
+# See how we were called.
+start() {
+    echo -n "Starting $CJDBC_PROG: "
+
+	if [ -f /var/lock/subsys/c-jdbc ] ; then
+ 		if [ -f /var/run/c-jdbc.pid ]; then
+   	      		read kpid < /var/run/c-jdbc.pid
+         		if checkpid $kpid 2>&1; then
+             			echo "process allready running"
+             			return -1
+         		else
+             			echo "lock file found but no process running for pid $kpid, continuing"
+ 			fi
+ 		fi
+ 	fi
+ 
+ 	export CJDBC_PID=/var/run/c-jdbc.pid
+ 	touch $CJDBC_PID
+
+        if [ -x /etc/rc.d/init.d/functions ]; then
+        	daemon $CJDBC_START_SCRIPT  
+    	else
+                $CJDBC_START_SCRIPT
+    	fi
+
+    	RETVAL=$?
+    	echo
+    	[ $RETVAL = 0 ] && touch /var/lock/subsys/c-jdbc
+    	return $RETVAL
+}
+
+stop() {
+    echo -n "Stopping $CJDBC_PROG: "
+
+    if [ -f /var/lock/subsys/c-jdbc ] ; then
+      if [ -x /etc/rc.d/init.d/functions ]; then
+          daemon $CJDBC_STOP_SCRIPT 
+      else
+	  $CJDBC_STOP_SCRIPT
+      fi
+      RETVAL=$?
+
+      if [ $RETVAL = 0 ]; then
+        count=0;
+
+        if [ -f /var/run/c-jdbc.pid ]; then
+
+            read kpid < /var/run/c-jdbc.pid
+            let kwait=$SHUTDOWN_WAIT
+
+            until [ `ps --pid $kpid | grep -c $kpid` = '0' ] || [ $count -gt $kwait ]
+            do
+                echo "waiting for processes to exit";
+                sleep 1
+                let count=$count+1;
+            done
+
+            if [ $count -gt $kwait ]; then
+                echo "killing processes which didn't stop after $SHUTDOWN_WAIT seconds"
+                kill -9 $kpid
+            fi
+        fi
+    
+		rm -f /var/lock/subsys/c-jdbc /var/run/c-jdbc.pid
+    fi
+
+    fi
+}
+
+
+# See how we were called.
+case "$1" in
+  start)
+        start
+        ;;
+  stop)
+        stop
+        ;;
+  restart)
+        stop
+        sleep 2	
+        start
+        ;;
+  condrestart)
+        if [ -f /var/run/c-jdbc.pid ] ; then
+                stop
+                start
+        fi
+        ;;
+  *)
+        echo "Usage: c-jdbc {start|stop|restart|condrestart}"
+        exit 1
+esac
+
+exit $RETVAL

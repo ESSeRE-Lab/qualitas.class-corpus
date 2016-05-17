@@ -1,0 +1,191 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<LoaderConf>
+<!-- =======================================================================================
+        
+ LoaderGenerator MySQL database vendor configuration file.
+
+ ======================================================================================== -->
+
+<!--
+ The Database type used to store ObjectId's and Version'c
+-->
+    <OidDbType>DECIMAL (19,0)</OidDbType>
+    <VersionDbType>SMALLINT</VersionDbType>    
+<!--
+ The OidDbColumnName, VersionDbColumnName are used for generating the SQL CREATE TABLE
+ statements in the create_tables.sql and <classname>SQL.sql files
+-->    
+
+    <OidDbColumnName>oid</OidDbColumnName>    
+    <VersionDbColumnName>version</VersionDbColumnName>
+    
+
+<!-- ExcludeTables - defines system tables which you want to exclude for reading -->    
+    
+    <ExcludeTables></ExcludeTables>
+
+<!-- DateFormat
+G  Era designator  Text  AD  
+y  Year  Year  1996; 96  
+M  Month in year  Month  July; Jul; 07  
+w  Week in year  Number  27  
+W  Week in month  Number  2  
+D  Day in year  Number  189  
+d  Day in month  Number  10  
+F  Day of week in month  Number  2  
+E  Day in week  Text  Tuesday; Tue  
+a  Am/pm marker  Text  PM  
+H  Hour in day (0-23)  Number  0  
+k  Hour in day (1-24)  Number  24  
+K  Hour in am/pm (0-11)  Number  0  
+h  Hour in am/pm (1-12)  Number  12  
+m  Minute in hour  Number  30  
+s  Second in minute  Number  55  
+S  Millisecond  Number  978  
+z  Time zone  General time zone  Pacific Standard Time; PST; GMT-08:00  
+Z  Time zone  RFC 822 time zone  -0800  
+
+Example:
+"yyyy-MM-dd HH:mm:ss.SSS"	"2004-05-24 12:12:12.111"
+"yyyy.MM.dd G 'at' HH:mm:ss z"  "2001.07.04 AD at 12:08:56 PDT"
+"EEE, MMM d, ''yy"		"Wed, Jul 4, '01"
+"yyyyy.MMMMM.dd GGG hh:mm aaa"  "02001.July.04 AD 12:08 PM" 
+
+If date format isn't given, default date format is "MM/dd/yyyy hh:mm:ss".     
+Date format in mysql for type DATE is "yyyy-MM-dd"
+
+-->
+
+    <DateFormat>yyyy-MM-dd</DateFormat>
+<!--  Driver name -Driver name-->
+<!--  ClassName - Driver class-->
+<!--  Connection - Connection for the database-->
+<!--  RequiredUser = "true/false" - if database requires ures and password for connecting-->
+<!--  FirstColumnResult = "0/1" - first column in result set-->
+<!--  EnableJumpInResult = "true/false" - if jdbc driver supports absolute(int) and relative(int) methods - jump in result set -->
+<!--  AfterLastRow = "true/false"  - if jdbc driver supports moving pointer after the last row in result set-->
+<!--  EnableOrderBy = "true/false" - if jdbc driver supports "order by" sql statements in sql commands.-->
+<!--  AlterTablePrimaryKey -defines if the database support ALTER TABLE sql statemnts for creating the pirmary key.-->    
+<!--  MetaData -defines if the database support reading all meta data .-->    
+<!--  RowCountEnabled -defines if the database support count(*) method for counting the rows in database table.-->    
+<!--  SetFetchSizeEnabled -defines if the database support setFetchSize() method.-->    
+<!--  SetCursorNameEnabled -defines if the database support setCursorName() method. -->
+<!--  SetEmptyStringAsNull - defines the possibility to convert an empty string to 'null' object or not-->
+<!--  ReadingOrderRelevant - defines if order of reading data from source database is relevant or not -->
+<!--  FileSystemDatabase - defines if this driver read/write on file system -->
+<!--  MaxConstraintLength - defines max length of the name of constraint (primary key,index,..) -->
+<!--  SetMaxRowsSupported - defines if this driver suport Connection.getMetaData().getColumns() method -->
+
+    <Driver name="mm">
+        <ClassName value="org.gjt.mm.mysql.Driver"/>
+        <Connection value="jdbc:mysql://"/>  
+        <RequiredUser value="true"/>
+        <FirstColumnResult value="1"/>
+        <EnableJumpInResult value="false"/>
+        <AfterLastRow value="false"/>
+        <EnableOrderBy value="true"/>
+        <AlterTablePrimaryKey value="true"/>
+        <MetaData value="true"/> 
+        <RowCountEnabled value="false"/>
+        <SetFetchSizeEnabled value="true"/>  
+        <SetCursorNameEnabled value="false"/> 
+        <SetEmptyStringAsNull value="false"/>
+        <ReadingOrderRelevant value="false"/>
+        <FileSystemDatabase value="false"/>
+        <MaxConstraintLength value="-1"/>
+        <SetMaxRowsSupported value="true"/>
+    </Driver>    
+
+<!--    
+Here we map vendor-specific data types to JDBC types.
+
+Attributes:
+
+isBinary - attribute is used to determine is this type binary or not 
+(isBinaryObject=true/false)
+
+isNumber - attribute is used to determine if type is number or not 
+(isNumber=true/false)
+
+hasSize - attribute is used to determine if type has defined size or not(hasSize=true/false). 
+This attribute is used by Octopus Generator. If attribute hasSize=false OctopusGenerator 
+will generate sql scripts without size for this type.  
+
+isDecimal - attribute is used to determine if type is decimal or not. 
+(isDecimal=true/false)
+
+isDate - attribute is used to determine if this type is date.
+(isDate=true/false)
+
+javaType - appropriate java type for this SQL type
+
+NOTE:See documentation for more details.
+-->
+    
+    <SQLType>        
+        <LONGTEXT hasSize="true" javaType="java.lang.String">VARCHAR</LONGTEXT>
+        <NUMERIC isNumber="true" hasSize="true" javaType="java.math.BigDecimal">NUMERIC</NUMERIC>
+        <DECIMAL isDecimal="true" isNumber="true" hasSize="true" javaType="java.math.BigDecimal">DECIMAL</DECIMAL>
+        <INTEGER javaType="java.lang.Integer">INTEGER</INTEGER>
+        <SMALLINT isNumber="true" javaType="java.lang.Short">SMALLINT</SMALLINT>
+        <FLOAT isNumber="true" hasSize="true" javaType="java.lang.Float">FLOAT</FLOAT>
+        <REAL isNumber="true" javaType="java.lang.Float">REAL</REAL>
+        <DOUBLE isNumber="true" javaType="java.lang.Double">DOUBLE</DOUBLE>
+        <DATETIME isDate="true" javaType="java.sql.Timestamp">TIMESTAMP</DATETIME>
+        <DATE isDate="true" javaType="java.sql.Date">DATE</DATE>
+        <TIMESTAMP isDate="true" javaType="java.sql.Timestamp">TIMESTAMP</TIMESTAMP>
+        <TIME isDate="true" javaType="java.sql.Time">TIME</TIME>
+        <YEAR isDate="true" hasSize="true" javaType="java.sql.Timestamp">TIMESTAMP</YEAR>
+        <CHAR hasSize="true" javaType="java.lang.String">CHAR</CHAR>
+        <VARCHAR hasSize="true" javaType="java.lang.String">VARCHAR</VARCHAR>
+        <BLOB isBinary="true" javaType="byte[]">BLOB</BLOB>
+        <TEXT javaType="java.lang.String">LONGVARCHAR</TEXT>
+        <ENUM hasSize="true" javaType="none">NONE</ENUM>
+        <SET hasSize="true" javaType="none">NONE</SET>
+        <INT isNumber="true" javaType="java.lang.Integer">INTEGER</INT>        
+        <!--<TINYINT isNumber="true" javaType="java.lang.Integer">TINYINT</TINYINT>-->
+        <TINYINT javaType="java.lang.Byte">TINYINT</TINYINT>   
+        <BIGINT isNumber="true" javaType="java.lang.Long">BIGINT</BIGINT>        
+        <LONGBLOB hasSize="true" javaType="java.lang.String">NONE</LONGBLOB>
+    </SQLType>
+
+<!--
+ Here we map JDBC types to vendor-specific data types.
+ For almost all vendors, the JDBC types BIT, TINYINT, SMALLINT and BIGINT
+ are mapped to the data type INTEGER.
+ For most vendors, these types are actually INTEGER.
+ The following entries can be changed to impose size restrictions.
+ For example, to specify an actual size for a TINYINT, make the change:
+       Database.JDBCtype.TINYINT.Oracle="DECIMAL(4,0)"
+ Note that the "set" methods in the DO classes generated by DODS
+ do not test for size restrictions on integer values.
+ 
+-->    
+        
+    <JDBCType>
+        <BIT>SMALLINT</BIT>
+        <BIGINT>REAL</BIGINT>
+        <BINARY>TEXT</BINARY>
+        <BLOB>BLOB</BLOB>
+        <BOOLEAN>INTEGER</BOOLEAN>
+        <CHAR>CHAR</CHAR>
+        <CLOB>NONE</CLOB>
+        <DATE>DATE</DATE>
+        <DECIMAL>DECIMAL</DECIMAL>
+        <DOUBLE>DOUBLE PRECISION</DOUBLE>
+        <FLOAT>FLOAT</FLOAT>
+        <INTEGER>INTEGER</INTEGER>
+        <LONGVARBINARY>BLOB</LONGVARBINARY>
+        <LONGVARCHAR>VARCHAR</LONGVARCHAR>
+        <NUMERIC>NUMERIC</NUMERIC>
+        <REAL>REAL</REAL>
+        <SMALLINT>SMALLINT</SMALLINT>
+        <TIME>TIME</TIME>
+        <TIMESTAMP>TIMESTAMP</TIMESTAMP>
+        <TINYINT>SMALLINT</TINYINT>
+        <VARBINARY>TEXT</VARBINARY>
+        <VARCHAR>VARCHAR</VARCHAR>        
+    </JDBCType>    
+    
+    
+</LoaderConf>

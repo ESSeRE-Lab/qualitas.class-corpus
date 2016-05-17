@@ -1,0 +1,22 @@
+<Beans>
+    <Bean Class="net.sourceforge.squirrel_sql.fw.sql.SQLDriver">
+        <driverClassName>org.objectweb.cjdbc.driver.Driver</driverClassName>
+        <identifier Class="net.sourceforge.squirrel_sql.fw.id.UidIdentifier">
+            <string>dcb03b:f83c5c899e:-7fe8</string>
+        </identifier>
+        <jarFileName/>
+        <jarFileNames Indexed="true"/>
+        <name>C-JDBC</name>
+        <url>jdbc:cjdbc://localhost:25322/myDB</url>
+    </Bean>
+    <Bean Class="net.sourceforge.squirrel_sql.fw.sql.SQLDriver">
+        <driverClassName>org.hsqldb.jdbcDriver</driverClassName>
+        <identifier Class="net.sourceforge.squirrel_sql.fw.id.UidIdentifier">
+            <string>-19</string>
+        </identifier>
+        <jarFileName/>
+        <jarFileNames Indexed="true"/>
+        <name>HyperSonic SQL</name>
+        <url>jdbc:hsqldb:&lt;databaseName&gt;</url>
+    </Bean>
+</Beans>

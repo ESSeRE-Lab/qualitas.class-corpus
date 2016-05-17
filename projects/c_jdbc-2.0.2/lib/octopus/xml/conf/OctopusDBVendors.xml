@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<LoaderConf>
+
+<!-- =======================================================================================
+
+# LoaderGenerator Builder config file.
+#
+ ======================================================================================== -->
+
+    <Database>
+        <Vendor name="MSQL">MSQLConf.xml</Vendor>
+		<Vendor name="MySQL">MySQLConf.xml</Vendor>
+        <Vendor name="Csv">CsvConf.xml</Vendor>
+        <Vendor name="HypersonicSQL">HypersonicSQLConf.xml</Vendor>
+        <Vendor name="PostgreSQL">PostgreSQLConf.xml</Vendor>
+        <Vendor name="Oracle">OracleConf.xml</Vendor>
+        <!--
+        <Vendor name="Standard">StandardConf.xml</Vendor>
+        <Vendor name="InstantDB">InstantDBConf.xml</Vendor>
+        <Vendor name="Informix">InformixConf.xml</Vendor>
+        <Vendor name="DB2">DB2Conf.xml</Vendor>
+        <Vendor name="QED">QEDConf.xml</Vendor>
+        <Vendor name="Excel">ExcelConf.xml</Vendor>
+        <Vendor name="Xml">XMLConf.xml</Vendor>
+        <Vendor name="Access">AccessConf.xml</Vendor>
+        <Vendor name="Mckoi">MckoiConf.xml</Vendor>
+        <Vendor name="Octetstring">OctetstringConf.xml</Vendor>
+        <Vendor name="CJDBC">CJDBCConf.xml</Vendor>
+        <Vendor name="Sybase">SybaseConf.xml</Vendor>
+        <Vendor name="Paradox">ParadoxConf.xml</Vendor>
+        -->
+    </Database>
+
+   <JAVAType>
+        <BIT>boolean</BIT>
+        <BIGINT>long</BIGINT>
+        <BINARY>byte[]</BINARY>
+        <BLOB>java.sql.Blob</BLOB>
+        <BOOLEAN>boolean</BOOLEAN>
+        <CHAR>String</CHAR>
+        <CLOB>java.sql.Clob</CLOB>
+        <DATE>java.sql.Date</DATE>
+        <DECIMAL>java.math.BigDecimal</DECIMAL>
+        <DOUBLE>double</DOUBLE>
+        <FLOAT>float</FLOAT>
+        <INTEGER>int</INTEGER>
+        <LONGVARBINARY>byte[]</LONGVARBINARY>
+        <LONGVARCHAR>String</LONGVARCHAR>
+        <NUMERIC>java.math.BigDecimal</NUMERIC>
+        <REAL>float</REAL>
+        <SMALLINT>short</SMALLINT>
+        <TIME>java.sql.Time</TIME>
+        <TIMESTAMP>java.sql.Timestamp</TIMESTAMP>
+        <TINYINT>int</TINYINT>
+        <VARBINARY>byte[]</VARBINARY>
+        <VARCHAR>String</VARCHAR>
+    </JAVAType>
+</LoaderConf>

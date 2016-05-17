@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF8"?>
+<!DOCTYPE C-JDBC PUBLIC "-//ObjectWeb//DTD C-JDBC @VERSION@//EN" "http://c-jdbc.objectweb.org/dtds/c-jdbc-@VERSION@.dtd">
+
+<C-JDBC>
+  
+  <VirtualDatabase name="rubis">
+
+    <AuthenticationManager>
+      <Admin>
+      	<User username="margueri" password=""/>
+      </Admin> 
+      <VirtualUsers>
+        <VirtualLogin vLogin="margueri" vPassword=""/>
+      </VirtualUsers>
+    </AuthenticationManager>
+
+    <DatabaseBackend name="rubis" driver="org.gjt.mm.mysql.Driver" url="jdbc:mysql://sci22/rubis" connectionTestStatement="select 1">
+      <ConnectionManager vLogin="margueri" rLogin="margueri" rPassword="">
+        <VariablePoolConnectionManager initPoolSize="40"/>
+      </ConnectionManager>
+    </DatabaseBackend>
+
+    <RequestManager>
+      <RequestScheduler>
+         <SingleDBScheduler level="passThrough"/>
+      </RequestScheduler>
+
+      <RequestCache>
+         <MetadataCache/>
+         <ParsingCache/>
+         <ResultCache granularity="table" maxNbOfEntries="0" pendingTimeout="0">
+           <DefaultResultCacheRule timestampResolution="36000">
+             <EagerCaching/>
+           </DefaultResultCacheRule>
+           <!--
+           A BUNCH OF EXAMPLES TO WRITE CACHING RULES AUX PETITS OIGNONS ...
+           
+           <ResultCacheRule queryPattern="select (.*) from (.*) where id=(.*)" caseSensitive="false" applyToSkeleton="false" timestampResolution="36000">
+             <EagerCaching/>
+           </ResultCacheRule>
+           <ResultCacheRule queryPattern="select (.*) from (.*) where sid=(.*)" caseSensitive="false" applyToSkeleton="false" timestampResolution="36000">
+             <RelaxedCaching timeout="1000" keepIfNotDirty="true"/>
+           </ResultCacheRule>
+           <ResultCacheRule queryPattern="select (.*) from (.*) where sid=(.*)" caseSensitive="false" applyToSkeleton="false" timestampResolution="36000">
+             <NoCaching/>
+           </ResultCacheRule>
+           -->
+         </ResultCache>
+      </RequestCache>
+
+      <LoadBalancer>
+         <SingleDB/>
+      </LoadBalancer>
+
+    </RequestManager>
+  </VirtualDatabase>
+
+</C-JDBC>
+
+

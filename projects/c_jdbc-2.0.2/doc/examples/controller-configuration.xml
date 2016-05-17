@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF8" ?>
+<!DOCTYPE C-JDBC-CONTROLLER PUBLIC "-//ObjectWeb//DTD C-JDBC-CONTROLLER @VERSION@//EN"  "http://c-jdbc.objectweb.org/dtds/c-jdbc-controller-@VERSION@.dtd">
+<C-JDBC-CONTROLLER>
+<!-- Defines the controller, the port you have to connect to as a user, and the backlogSize you can specify -->
+	<Controller port="25322" backlogSize="5">
+	
+	<!-- 
+	This defines jmx possibilities. You can adaptors or disable them and you can change the port of each of them.
+	Default ports should not stuck your application by using same values and they can ommitted in xml files.
+	-->
+		<JmxSettings>
+		<HttpJmxAdaptor port="8080"/>
+     	 <RmiJmxAdaptor/>
+		</JmxSettings>
+		
+    <!-- You can load as many virtual database as you want from startup -->
+    <!-- You have to give the file to load from the controller's machine. The configFile has to point to a file 
+    that is checked against the c-jdbc.dtd DTD. In this file, you can define as many databases as you want
+    so we need here the virtualDatabaseName tag, to select only one dabase.-->
+    <!-- Specify if you want to controller to autoEnable the backend. WARNING! This implies you have to wait until all the backends
+    are enabled before sending requests, or the system won't be in a coherent state anymore. -->
+    <!-- From there, you can also specify from which checkpoint you want to load the system. -->
+    
+        <VirtualDatabase virtualDatabaseName="rubis" configFile="/home/niko/docs/databases/MySQLDb.xml" autoEnableBackends="true"/>
+        
+        <!-- rubis and rubis2 are defined in the same file but we need 2 calls to load them. Only rubis' backends will be loaded at startup. -->
+        <VirtualDatabase virtualDatabaseName="rubis2" configFile="/home/niko/docs/databases/MySQLDb.xml" autoEnableBackends="false"/>
+        <VirtualDatabase virtualDatabaseName="rubis3" configFile="/home/niko/docs/databases/MyPostgresDb.xml" autoEnableBackends="false" checkPoint="myCheckPoint"/>
+     
+     <!-- Furture development is under way in this section. Now you can specify if you want to allow additional drivers to be loaded at runtime.
+     default is set to false. 
+     You can also limit the shutdown command to localhost only, and you can limit the people who access the controller by filtering ip addresses
+     using the accept and block tags.
+     -->
+     
+        <SecuritySettings defaultConnect="true">
+                  <Jar allowAdditionalDriver="true"/>
+                  <Shutdown>
+                    <Client allow="true" onlyLocalhost="true"/>
+                    <Console allow="false"/>
+                  </Shutdown>
+                  <Accept>
+                    <Iprange value="*.*.*.*"/>
+                  </Accept>
+         </SecuritySettings>
+	</Controller>
+</C-JDBC-CONTROLLER>

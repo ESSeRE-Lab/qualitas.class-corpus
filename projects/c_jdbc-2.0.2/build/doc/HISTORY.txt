@@ -1,0 +1,1649 @@
+C-JDBC History File
+
+Next release
+Release date:
+CVS Tag:
+Description: 
+
+_____________________________________________________________
+
+C-JDBC 2.0.2
+Release date: Friday, 16 September 2005
+CVS Tag:c-jdbc-2_0_2
+Description: Maintenance release including mainly fix for virtual
+ database shutdown bug in distributed mode and connection pool managers
+ bugs (RandomWaitPoolConnectionManager and VariablePoolConnectionManager).
+  # Fixed OctopusBackuper that deleted dumps dir
+  # Fixed RandomWaitPoolConnectionManager synchronization that was broken in 
+    2.0.1. Problem reported by Michael Plezbert.
+  # Fixed virtual database shutdown in distributed mode where backends were not
+    disabled on the last remaining controller in the cluster.
+  # Fixed controller shutdown problem in SAFE and FORCE modes that would 
+    fallback to WAIT mode and terminate the recovery log before disabling the
+    backends.
+  # Fixed synchronization problem in VariablePoolConnectionManager that would
+    prevent its correct termination. Also fixed release time inconsistencies
+    reported by Ray Matthes.
+_____________________________________________________________
+
+C-JDBC 2.0.1
+Release date: Tuesday, 30 August 2005
+CVS Tag:c-jdbc-2_0_1
+Description: Bug fix release including also a new PostgreSQL binary backuper.
+  # Renamed PostgreSQL backuper and added binary backuper: 2 backupers
+    are now provided: PostgreSQLPlainTextBackuper and
+    PostgreSQLBinaryBackuper (instead of PostgreSQLBackuper) (Dylan).
+  # Fixed OutOfBoundException in RAIDb-1 and RAIDb-2 rollback in case a backend
+    was late to execute previous queries in the rollbacked transaction. Bug
+    reported by Christophe Taton.
+  # Fixed recovery log cleaning to use the proper SQL column name if it has
+    been overridden in the configuration file.
+  # Changed connection pools to use data structures with less synchronization 
+    overhead.
+  # Fixed bug in VariablePoolConnectionManager that did not properly update 
+    pool size on bad connection replacement. Bug reported by Ray Matthes.
+  # Failure to clean the recovery log now displays a full stack trace.
+  # Fixed cleanup of total order queue on aborts (usually happens when a 
+    connection is closed while it is in a transaction but has not played any
+    query in that transaction). This would block further query execution.
+  # Fixed DriverSQLException(SerializableException) bug introduced
+    (unfortunately) just before 2.0rc1. Controller stack trace was lost in
+    the driver due to bad constructor chaining.
+  # Fixed [BUG #303861] to accept white spaces in checkpoint name in admin
+    command "force checkpoint".
+  # Integrated fix from Ray Matthes on wrong instanceof in execute write 
+    request with keys in distributed mode.
+_____________________________________________________________
+
+C-JDBC 2.0
+Release date: Friday, 5 August 2005
+CVS Tag:c-jdbc-2_0
+Description: Support for JDBC 3.0 Savepoints, new JGroups version, new 
+ Serialization protocol, new infrastructure for database backup/restore,
+ full transparency for database metadata and new command line console.
+  # Made text console default console since graphical console is no more 
+    maintained.
+  # Upgraded JGroups to version 2.2.8 to fix problem of messages dropped when
+    view changes. Updated default configuration file for new JGroups version.
+  # Fixed distributed virtual database startup to not try to handle distributed
+    requests until initialization phase is complete.
+  # Fixed problem in C-JDBC transparent reconnect feature that would fail to
+    re-use the proper login/password information on a different controller.
+  # Upgraded to new version of Tribe that fixes problems with group membership
+    changes (controller add or remove) during active multicast.
+  # Fixed [BUG #303512] where a request would hang when another controler is 
+    killed during the request execution.
+  # Fixed potential out of order logging on controllers without backends.
+  # Fixed partial scheduler notification for distributed write requests that
+    fail to execute.
+  # Fixed bug in scheduler notification for distributed stored procedure 
+    execution that would block the backend re-enable as reported by Dylan.
+  # Fixed [BUG #303826]: Changed DumpTable element in DTD to override tables
+    column name on databases where tables is a reserved keyword.
+  # Fixed transfer command to only accept enabled backend to be transferred.
+  # Updated examples to comply to new DTD format.
+  # Renamed JDBCRecoveryLog to RecoveryLog. Modified DTD so that RecoveryLog
+    is now directly replaced by JDBCRecoveryLog content and JDBCRecoverLog
+    has been removed (it is now called RecoveryLog).
+  # Modified JDBCLoggerThread (renamed to LoggerThread) to handle LogEvents
+    that offer a clean interface to manipulate the log instead of the various
+    workarounds trying to pass their parameters in LogEntry objects.
+  # Removed AbstractRecoveryLogMBean since the interface was not meaningful
+    anymore. This will have to be re-designed when we rethink a more modular
+    JMX API. 
+  # Fixed distributed commit/rollback to be properly logged on controllers 
+    without any backend enabled. This also handles transactions that have
+    started before the controller joined the cluster.
+  # Fixed recovery log recover procedure to be protected against concurrent
+    log updates during transactions rollback.
+  # Fixed synchronization problem between requests containing the exact same
+    SQL inside the same transaction (or in autocommit mode) when using 
+    controller replication. This behavior reported by Eugene Barlow was due
+    to an incomplete equals in AbstractRequest.
+  # Fixed bug in DriverResultSet.getObject() that would generate an NPE if the
+    ResultSet is not generated from a statement. This fixes the issue reported
+    by Szymon when trying to cascade controllers.
+  # Fixed [BUG #303810] where a backend transfer would not preserve the dynamic
+    precision settings to fetch the backend schema.
+_____________________________________________________________
+
+C-JDBC 2.0rc1
+Release date: Tuesday, 26 July 2005
+CVS Tag:c-jdbc-2_0rc1
+Description: New driver/controller protocol that does not use Java 
+ serialization anymore. Completely refactored backup/restore infrastructure. 
+ New command line console with user friendly names, completion, history and 
+ advanced command. New distributed recovery features and updated documentation.
+ Many fixes for better JDBC compliance such as support for JDBC 3.0 specific
+ DatabaseMetaData.
+  # Updated user guide with new DTD, Backupers, recovery procedures and new 
+    commands in text console.
+  # Fixed [BUG #303795] where Commit/Rollback on a joining controller would
+    fail if the controller joined after the transaction was started.
+  # Refactored stored procedure scheduling so that schedulers can properly 
+    handle stored procedures instead of the previous fake read locking of 
+    tables. This also allows proper total order execution in distributed mode.
+  # FIXED [BUG #303785] when connection to a new controller, 
+    invalidate all the local MBeans instances which referers to the
+    previous Controller (and its associated MBeanServer)
+  # Fixed PreparedStatement to properly handle setXXX(null) when driver 
+    processed is set to false. This also handles properly setString('N|') that
+    matches the tag we use to escape the null tag. 
+  # Added examples for Apache Derby for both embedded and remote modes using
+    C-JDBC. All examples are located in doc/examples/Derby.
+  # Fixed driver compliance checking to not fail on getObject if the 
+    ResultSetMetadata obtained on the tables/view gathering does not contain
+    any column. Problem reported by Szymon Skorupiski.
+  # Fixed Statements to recognize 'values' keyword used by Apache Derby.
+  # DisableBackend command now does automatic checkpoint name generation.
+  # Fixed [BUG #303765] where backend replication will not replicate the 
+    dynamic precision for fetching the schema.
+  # Refactored database schema handling in virtual database and backends to 
+    force a resfresh only when needed.
+  # Updated DatabaseMetadata to fetch information from the underlying database
+    in RAIDb-1. Implemented all missing DatabaseMetadata calls that returns a
+    ResultSet including the one that are specific to JDBC 3.0.
+  # Refactored driver/controller protocol that no more uses Java serialization.
+  # Re-implemented Blobs from scratch.
+  # Refactored sql console admin. Splitted commands in their own ConsoleCommand
+    class
+  # Refactored text console. renamed commands, divided admin commands
+    between a standard mode and an expert one (a.k.a "use at your own risks!")
+  # Added [Feature request #303792] for a specific logger to record distributed
+    request execution.
+  # Added support for Savepoints (JDBC 3 feature).
+  # Fixed metadata cache consistency with regard to ALTER statements.
+  # Added initial implementation of dumps transfer on remote controllers
+    for the Octopus backuper. Initial client/server interface in Backuper.
+  # Checkpoints are now internal (no interface to set them in CLI),
+    automatic (on backend disable, dump and transfer operations, on member join/leave),
+    and global (cluster-wide atomic, set on all controllers)
+  # Added dump table in the recovery log to store dump metadata and properly
+    correlate dumps with checkpoints and backupers.
+  # Refactored backup/restore interface to use a Backuper interface. This 
+    allows multiple backupers to be used for the same virtual database. Console
+    commands for backup/restore have been modified to suit this new interface.
+    A specific command to list available backupers has also been added.
+  # Added OctopusBackuper that refactors the code for Octopus 2.8 and provides
+    a Backuper interface for Octopus.
+  # Added DerbyEmbeddedBackuper to handle embedded Derby databases backup/
+    restore. This backuper un/zips the Derby path found in the url.
+  # Implemented recovery log management copyLogFromCheckpoint
+    and deleteLogUpToCheckpoint.
+  # Fixed bug #303748. (real bug, but no-show on current code)
+    http://www.objectweb.org/wws/arc/c-jdbc-commits/2005-07/msg00077.html
+  # FIXED [BUG #303752] XML generated by saveConfiguration command in the
+    text console was not valid and could not be loaded 
+_____________________________________________________________
+
+C-JDBC 1.3.3
+Release date: Thursday, 7 July 2005
+CVS Tag:c-jdbc-1_3_3
+Description: Many fixes for better JDBC compliance and stability. Added support
+  for all types of CREATE commands. Code cleaning, group communication, stored
+  procedures and load balancers fixes and improvements especially for 
+  distributed virtual databases.
+  # Fixed potential deadlock in RAIDb-1 and RAIDb-2 load balancers when 
+    waitForAllCompletion policy is not set to all and incoming select queries
+    would deadlock with depending write queries that need to complete before
+    the select execution.
+  # Fixed [BUG #303693] backends that do not support auto-generated keys now
+    throw an appropriate exception.
+  # Fixed [BUG #303734] Changed description of "quit" command in VirtualDataBase
+    text console to be consistent with other "quit" commands in others consoles
+  # Fixed [BUG #303736] renamed command ShowRecovery to showRecovery to be 
+    consistent with other command names
+  # Uniformized group-comm timeouts, now all defaulting to
+    CJDBCGroupMessage.defaultCastTimeOut (in RAIDb1 and RAIDb2 drm)
+    http://www.objectweb.org/wws/arc/c-jdbc-commits/2005-06/msg00190.html
+  # Fixed possible class cast exceptions and other type conversion errors in
+    PreparedStatement.setObject(int, Object, int, int) to follow JDBC test 
+    suite requirements.
+  # Fixed [BUG #303718] that would give an inaccurate error message and stack
+    trace if the showbackend command was used with an invalid backend name in
+    admin console.
+  # Fixed backend disabling in RAIDb-1 and RAIDb-2 to synchronously wait for
+    backend worker threads to be terminated so that backup sanity check does
+    not fail anymore as reported by Igor Markovic.
+  # Dropped Java 1.3 compatibility for Serialization protocol.
+  # Added getXml command in admin module of the text console to get a virtual
+    database configuration xml dump.
+  # Refactored task distribution/completion in RAIDb-1 and RAIDb-2 with better
+    lock usage and fixed problem on completion when all backends are late 
+    executing a specific transaction when waitForAllCompletion policy is not 
+    set to all.
+  # Implemented streaming (fetchSize) for stored procedures (CallableStatement)
+  # Fixed [BUG #303683] to support CREATE INDEX. Also added support for create
+    function, create method, create procedure, create trigger, create type, 
+    create database, create schema, create view and create role. Functions that
+    alters the schema will trigger a database schema refresh (except for CREATE
+    TABLE that updates directly the schema).
+  # Removed obsolete BackendRecoveryPolicy in Distribution element for 
+    VirtualDatabases.
+  # Updated XML dump for JDBCRecoveryLog to comply to current DTD.
+  # Fixed lazy transaction start problem for read stored procedures that would
+    break the recovery log replay as reported by Dylan Hansen.
+  # Fixed [BUG #303667] where backend last checkpoint was not properly reset 
+    when a backend switched to write enabled state.
+  # Changed default behavior so that virtual database configuration files that
+    are loaded from the 'load' command of the console do not try to enable 
+    their backends automatically.
+  # Code cleaning with new higher checkstyle standards.  Replaced interfaces 
+    that were just holding constants with final classes.
+  # Fixed Driver.getPropertyInfo(String, Properties) to properly use URL 
+    information as default properties.
+  # Added recovery log management functions. New text console vdb admin
+    commands: copyLogFromCheckpoint and deleteLogUpToCheckpoint
+  # Fixed misleading fetchsize error message (fetchsize really is a 
+    "setfetchsize").
+  # Added showcontrollers command in console vdb admin (RFE #303676, thanxs 
+    Nick)
+_____________________________________________________________
+
+C-JDBC 1.3.2
+Release date: Wednesday, 15 June 2005
+CVS Tag:c-jdbc-1_3_2
+Description: Many fixes for better portability and improved performance, added
+  support for batch updates in proxying mode, fixed transaction isolation 
+  support, JMX fixes, improved shutdown and made connections thread-safe.
+  # Fixed ResultCache.removeFromPendingQueries to use the proper cache key to
+    remove the entry. This solves an issue that a wrong query issued twice 
+    would be blocked in the cache until the timeout expires.
+  # Fixed DistributedVirtualDatabase to remove backends from a dead controller
+    so that they do no appear anymore in viewGroupBackends.
+  # Fixed VirtualDatabaseMBean.viewGroupBackends in both VirtualDatabase and
+    DistributedVirtualDatabase to properly report an ArrayList<BackendInfo>.
+  # Modified type of the recovery log queue in JDBCLoggerThread
+    (replaced ArrayList by LinkedList which should be faster).
+  # Added a recoveryBatchSize option to recovery log to significantly speedup
+    the recovery process by replaying the log in batches. JDBCRecoverThread now
+    posts as many as recoveryBatchSize requests to its BackendWorkerThread so
+    that reading from the recovery log can occur in parallel of replaying the
+    queries on the recovering backend.
+  # Create table statement for recovery log table is now tunable to allow
+    HypersonicSQL syntax like CREATE CACHED TABLE.
+  # Added command to SQL text console to set the transaction isolation level.
+    The command is called setisolation and takes the isolation level as defined
+    in java.sql.Connection as a parameter.
+  # Made connection thread-safe to prevent protocol break in case of wild
+    sharing of C-JDBC connections. Note that there is nothing we can do if the
+    client application tries to run several transactions in parallel on the
+    same connection (setAutoCommit/commit/rollback will report an error in the
+    end). That should never happen if the client application is properly 
+    written.
+  # Fixed protocol error in connection.setTransactionIsolation().
+  # Fixed 'long shutdown' symptoms (sleeping threads now exiting immediately). 
+  # Fixed JDBC Recovery Log to properly use long type in PreparedStatement and
+    ResultSets when accessing recovery log table request id and transaction id.
+    Bug reported by Matt Magoffin.
+  # Added support for PreparedStatement batch updates in proxying mode.
+  # Fixed backend state diagnostic at startup when recovering from a crash. The
+    controller no more reports an enabled state for backends and forces 
+    unconsistent backends to the disabled state. Bug reported by Junho Wang.
+  # Fixed group communication shutdown in distributed virtual database that
+    could cause the multicast request adapter to use 100% cpu after controller
+    shutdown. Bug reported by Junho Wang.
+_____________________________________________________________
+
+C-JDBC 1.3.1
+Release date: Monday, 6 June 2005
+CVS Tag:c-jdbc-1_3_1
+Description: Mainly bug fixes including console command completion 
+  enhancements, added support for user-defined transaction isolation and query
+  result cache security issue fixed.
+  # Fixed [BUG #303602] where wrong error messages where sent to the client
+    application in case of authentication error.
+  # Fixed JDBCRecoveryLog to support MS SQL Server "feature" 
+    (http://support.microsoft.com/kb/824106) where tables containing blobs must
+    have their columns read in order. Fix provided by Charles Cordingley.
+  # Fixed result cache security issue that would allow one user to retrieve
+    results that another user would have cached regardless of its access rights
+    granted on the database. The cache entries now also include the user login
+    in the cache entry key.
+  # Removed useless CacheEntry interface and integrated constants in 
+    ResultCacheEntry that has been renamed AbstractResultCacheEntry since this
+    class is abstract.
+  # Added support for proper transaction isolation support if the default 
+    isolation level is overriden by the user by the mean of 
+    Connection.setTransactionIsolation(int level). Note that the driver will
+    report TRANSACTION_READ_UNCOMMITTED by default when getTransactionIsolation
+    is called. If the underlying does not provide TRANSACTION_READ_UNCOMMITTED by
+    default, one must call setTransactionIsolation(TRANSACTION_READ_UNCOMMITTED)
+    to enforce the usage of this transaction isolation level. 
+  # Fixed Tribe version number in README for binary version.
+  # Fixed PreparedStatement parsing bug (null markers)
+  # Made the -f <file> option working in text console (non interactive
+    mode)
+  # Added -n (--nocolor) option to allow to disable colors in non
+    interactive mode for supported system (non windows).
+  # Upgraded jline to 0.9.1 and added filename completion in text
+    console
+_____________________________________________________________
+
+C-JDBC 1.3
+Release date: Monday, 30 May 2005
+CVS Tag:c-jdbc-1_3
+Decription: major update for controller replication with many reliability fixes
+  and upgraded group communication. New features have been added to the driver
+  for dynamic controller connection policies and a new optional debug mode. 
+  Backends recovery and transfer, controller shutdown and other console 
+  commands have also been fixed and improved. 
+  # Fixed potential out of order execution of distributed queries that could
+    theoritically have been posted in different orders at each controller.
+  # Added support for java.net.URL type in PreparedStatements and ResultSets.
+  # Fixed backend transfer command to properly atomically set a checkpoint for
+    the transfered backends so that it can be re-enabled on the receiving node.
+    Note that transfer backend can only work if a recovery log is used.
+  # C-JDBC driver now has URL options to turn debug mode on and set connection
+    pooling off. Updated the user guide with this information.
+  # Fixed recovery from checkpoint to prevent forking multiple backend
+    worker threads where only one is needed.
+  # Fixed controller shutdown to properly terminate recovery log and result 
+    cache threads so that the JVM can fully terminate on shutdown.
+  # Driver-controller protocol is now fully javadoc-umented in Commands.java
+  # Fixed bug in common/util/Strings.java that prevents macros to be
+    properly replaced (was not working when a query contained several
+    times the macro).
+  # Optimized recovery log to lazily store begin orders and not store at all
+    read-only transactions.
+  # Fixed [BUG #301218] where a backend that was disabled with a checkpoint
+    just after after the commit of a transaction and before the execution of
+    the first query in the subsequent transaction would not recovery properly
+    the first transaction of the recovery log.
+  # Fixed setAutoCommit now throws the appropriate exception
+  # Text console enable/disable commands now only work with checkpoints. Two 
+    new commands called forceEnable and forceDisable have been added to allow
+    backend enabling/disabling when no recovery log is used mainly.
+  # Fixed request player stats to be case insensitive with regard to log file
+    content.
+  # Fixed synchronisation bug when enabling backend from a checkpoint that 
+    would return before the backend is fully recovered. This would also imply
+    reported by Hung Nguyen of a null schema disturbing the virtual database
+    behavior.
+  # Fixed controller identifier assignation to properly assign a unique 
+    identifier to every controller even when they are joining at the same time.
+  # Upgraded to Tribe v0.3 that fixes an issue of replicated controllers that
+    would only start in debug mode.
+  # Added C-JDBC driver URL option for debugging options of controller 
+    internals: jdbc:cjdbc://host/db?debugLevel=debug. Other values are info
+    (just reports controller failures) and off (default). All debug output is
+    redirected to standard output.
+  # Fixed case sensitivity problem in DELETE request parsing as suggested
+    by echou@holdfastgroup.com.
+  # Controller hostname in C-JDBC URLs can now include '_' characters.
+  # Virtual database name now supports '-' and '_' characters.
+  # Fixed [BUG #303558]: controllers without active backends would not update
+    their recovery log. Therefore starting to bring nodes back to the enabled
+    state would fail to restore a consistent state.
+  # Recovery log now resists to connection failures with the recovery database
+    and transparently reconnects when the recovery database becomes available
+    again.
+  # Fixed possible race condition on transaction rollback logging if logger
+    thread was late in logging the last request of the rollbacked transaction.
+  # Fixed bug in controller IP address resolution that was not properly 
+    automatically resolved when "0.0.0.0" was specified in controller.xml.
+  # Added C-JDBC driver URL options to specify a policy to choose the 
+    controller to connect to. The new options are the following:
+   + preferredController: defines the strategy to use to choose a 
+     preferred controller to connect to
+    - jdbc:cjdbc://node1,node2,node3/myDB?preferredController=ordered 
+        Always connect to node1, and if not available then try to node2 and
+        finally if none are available try node3.
+    - jdbc:cjdbc://node1,node2,node3/myDB?preferredController=random
+        Pickup a controller node randomly (default strategy)
+    - jdbc:cjdbc://node1,node2:25343,node3/myDB?preferredController=node2:25343,node3 
+        Round-robin between node2 and node3, fallback to node1 if none of node2
+        and node3 is available.
+    - jdbc:cjdbc://node1,node2,node3/myDB?preferredController=roundRobin
+        Round robin starting with first node in URL.
+   + retryIntervalInMs: once a controller has died, the driver will try to 
+     reconnect to this controller every retryIntervalInMs to see if the backend
+     is back online. The default is 5000 (5 seconds). 
+  # Fixed request parsing with tab for separating keywords as reported by
+    Benoit Hannebicq.
+  # Added support for Statement.get/setFetchDirection.
+  # Fixed MetaData fetching for JDK 1.3 only drivers. Fix contributed by 
+    Wolfgang Koppenberger.
+  # Added JGroups TCP configuration file example contributed by Sebastien Diaz.
+  # Fixed [BUG #303423] where parsing could fail if the database schema was
+    concurrently modified by a write query that concurrently modifies the 
+    schema (usually a DROP statement).
+_____________________________________________________________
+
+C-JDBC 1.2.1
+Release date: Monday, 11 April 2005
+CVS Tag:c-jdbc-1_2_1
+Description: Bug fix release including better dump and checkpoint management 
+  for backup/restore and  enable/disable operations. Shutdown implementations
+  have been refactored and renamed to better reflect their behavior. JMX 
+  management interfaces of controller and virtual databases have been cleaned.
+   # User guide and tutorial have been udpated.
+   # Fixed JMX notifications to properly report the virtual database name.
+   # Fixed confusion between checkpoint names and dump names in text console.
+   # Database dumps are now managed on a per virtual database basis and not
+     controller wide. Specific commands viewDumpNames and RemoveDumpFile have
+     been added to the text console in the virtual database admin module.
+   # Controller and Virtual database MBean interfaces have been cleaned by
+     removing unnecessary or duplicate methods and misplaced management 
+     functions.
+   # Shutdown command modes have been renamed and refactored as follows:
+     + wait mode: (previously smart mode) wait for all clients to disconnect
+       before shutting down the controller or the virtual database. This will
+       not work if the client is using a connection pool with persistent
+       connections.
+     + safe mode: (previously fast mode) wait for all currently open 
+       transactions to complete before shutting down the controller or the
+       virtual database. This is now the default mode.
+     + force mode: (previously immediate) disable all backends and exits the
+       controller without leaving backends in a coherent state. A full recovery
+       of all backends will be needed on restart. This is no more the default
+       mode for shutdown.
+   # EnableAll command from the console does not force all backends to be 
+     enabled but enable backends from their last known state.
+   # Updated VirtualDatabase element attributes in c-jdbc-controller.dtd as
+     follows:
+     Before:
+       configFile         CDATA #REQUIRED
+       virtualName        CDATA #REQUIRED
+       autoEnableBackends (true | false | force) "true"
+       checkPointName     CDATA ""
+     Now:
+       configFile          CDATA #REQUIRED
+       virtualDatabaseName CDATA #REQUIRED
+       autoEnableBackends  (true | false | force) "true"
+       checkpointName      CDATA ""
+     Examples in config/controller for demos have been updated accordingly.
+   # Fixed distributed query execution if owning statement was not serializable
+     such as HSQL CallableStatement. Problem reported by Dylan Hansen.
+   # Driver metadata now properly reports values for metadata functions that
+     takes a primitive type as a parameter. This fixes the issue reported by
+     Matt Sheppard.
+   # Fixed setCheckpoint on a backend to accurately report if the checkpoint
+     name is invalid.
+   # Fixed backend name storage in recovery log metadata that was storing the
+     whole BackendRecoveryInfo instead of the backend name only.
+   # Fixed possible leaks in recovery log and cleaned the JDBCRecoveryLog for
+     better portability. 
+   # Fixed typo where "force" attribute value was not correctly spelled for
+     controller autoEnabledBackends feature.
+   # Fixed NPE in DistributedVirtualDatabase if an EnableBackend message 
+     arrives for an unknown controller. Bug reported by Allesandro Gamboz.
+   # Trying to gather metadata on a controller with no enabled backends now
+     reports an explicit error message instead of a NullPointerException. 
+_____________________________________________________________
+
+C-JDBC 1.2
+Release date: Wednesday, 30 March 2005
+CVS Tag:c-jdbc-1_2
+Description: Added support for Updatable ResultSets, pass-through schedulers
+  for all RAIDb levels, complete DatabaseMetaData refactoring, code cleaning
+  and bug fixes.
+   # Fixed bug with CreateTable policies for RAIDb-2 where tables are created
+     on all backends ignoring the defined policy. Problem reported by Grzegorz
+     Lojek
+   # Fixed IndexOutOfBoundsException when using Random or RoundRobin
+     CreateTable policies with RAIDb-2. This exception could be thrown for a
+     policy with multiple replicas when selecting the nodes from the list of
+     possible backends for a new table. Bug reported by Grzegorz Lojek.
+   # Fixed checkpoint assignment for backup/restore operations when backends 
+     are in the disabled state.
+   # Fixed Backup/Restore problem with Octopus if the default directory was not
+     used. Problem reported and fixed by Jerome Benois.
+   # Fixed lock release bug on write query execution if no more backends are
+     available on a controller (distributed or not). Bug reported in 
+     distributed mode by Alessandro Gamboz.
+   # Fixed remote SELECT request execution with replicated controllers when the
+     controller receiving the request has no backend available.
+   # Updated user guide and added a C-JDBC replication user guide available
+     in the documentation section of the web site.
+   # Added support for updatable ResultSets.
+   # Updated c-jdbc-controller.dtd to follow naming conventions and changed the
+     default behavior of autoEnableBackends. The previous 'restore' option 
+     remains the default but is now called 'true'. What was 'true' before is 
+     now called 'force'. This is to discourage the usage of backends without 
+     checkpoints and let the recovery log manage the backend states and 
+     checkpoints automatically and properly.
+     (checkPoint => checkPointName, Ipaddress => IpAddress, Iprange =>  IpRange)   
+   # Enhanced checking of invalid checkpoint names in setCheckpoint and enable
+     backend commands. Problem reported by Willem Cazander.
+   # Fixed [BUG #303282] that was not properly parsing create queries using a
+     select statement such as CREATE TABLE foo AS SELECT ...
+   # Fixed [BUG #303186] where parsing failed when trying to insert data into a
+     column with a name ending by 'values'.
+   # Fixed [BUG #303263] so that now the value 'null' can be inserted as a
+     String when driverProcessed=false.
+   # Renamed SingleDB and RAIDb-0 query level schedulers to 'passThrough'
+     schedulers. This reflects more the behavior of these schedulers and the
+     DTD, examples and documentation has been updated accordingly.
+   # Added RAIDb-1 and RAIDb-2 pass-through schedulers similar as the SingleDB
+     and RAIDb-0 ones. All these schedulers provide database level locking 
+     which usually will translate to row-level locking.
+   # Removed unused and unimplemented optimistic transaction scheduler for 
+     SingleDB in DTD and documentation.
+   # Added SuSE start/stop script contributed by Tee Teoh on the mailing list.
+   # Improved developer guide with contribution from Steen Jansdal on setting
+     up Eclipse to debug C-JDBC.
+   # Extended DatabaseMetadata support and compatibility among backends.
+     DatabaseMetadata calls are now forwarded to the controller to reflect the
+     effective supported features by the underlying database engines.
+   # Fixed [BUG #303205] where isql.bat would not properly handle slash and
+     backslash resulting in an error when starting iSQL.
+   # Added zipped base64 encoding to the possible choice of blob encoding
+   # Fixed [BUG #303246] use HexaBlobFilter to encode ByteArray with 
+     driverProcessed=false.
+   # Fixed [BUG #303204] so that DELETE request parsing support requests of the
+     form DELETE t1 FROM t1,t2 ... . Note that deletes from multiple tables
+     such as DELETE t1,t2 FROM t1,t2 WHERE ... are not supported.
+   # Configuration option "schemaName" added to DatabaseSchema.
+   # Fixed [BUG #303180] where SimpleRewritingRule and ReplaceAllRewriting
+     would not handle properly non case sensitive matching. Thanks to Daniel
+     for the bug report and the fix.
+   # Fixed org.objectweb.cjdbc.driver.DatabaseMetaData#storesLowerCaseQuotedIdentifiers()
+     to return the database case for identifiers. Bug reported by Patrick 
+     Wunderlich.
+   # Fixed org.objectweb.cjdbc.driver.DatabaseMetaData#getTables() to return
+     an empty ResultSet instead of null for JBoss compatibility as reported by
+     Patrick Wunderlich.
+_____________________________________________________________
+
+C-JDBC 1.1
+Release date: Tuesday, 8 February 2005
+CVS Tag:c-jdbc-1_1
+Description: Major controller replication refactoring using the new Tribe group
+  communication library, enhancements to caching, improved management consoles 
+  and features, many fixes especially syncrhonization issues under high loads,
+  many components upgraded (Hsqldb, JMX, ...) and documentation updates.
+   # Integration of Tribe (http://tribe.objectweb.org) as the new group 
+     communication layer for controller replication. The current version still
+     has a wrapper on JGroups for low level total ordering but JGroups will be
+     completely dropped in the next release.
+   # Eager result cache now supports timeout on entries as a complement to the
+     LRY replacement policy to ease cache tuning and prevent out of memory 
+     errors.
+   # Fixed [BUG #301246] on missing mappings in Octopus MySQL configuration 
+     file. Contributed by Enrique Garcia-Mantilla.
+   # Fixed [BUG #301203] Hibernate/PostgreSQL 8.0 bytea serialization not
+     properly escaped. Fixed contributed by Lincan Silvan Eugen.
+   # Fixed [BUG #301072] that would deadlock controller replication on 
+     conflicting transactions. This issue has been solved by the new group
+     communication adapters provided by Tribe.
+   # Upgraded to hsqldb 1.8.0rc7
+   # Fixed possible race on stored procedure returning a ResultSet and 
+     performing a write with RAIDb-1 and RAIDb-2 configuraiton. Problem 
+     reported by Junaili Lie.
+   # Changed IzPack version to 3.7.0
+   # Added swing wizard to create and edit virtual database configuration files
+   # Fixed [BUG #301172] Blob deserialization on driver side through 
+     getObject(int). Thanks to the anonymous contributor.
+   # Integration of iSQL with automated services.
+   # Added german translations of the tutorials by Helge Stahlmann.
+   # Fixed request/commit/rollback synchronization that could race against the
+     currently executing task. Affects all RAIDb level with any 
+     waitForAllCompletion policy in write heavy transactional workloads.
+   # Added mail appender examples and libraries to the log4j system
+   # Fixed race in connection allocation for concurrent requests from the same
+     transaction. Bug reported by Steve Lounsbury.
+   # Added pending requests retrieving methods in DatabaseBackendMBean
+   # Added JMX MBean Graphic management to the GUI.
+   # Added new mbeans to better expose the CJBDC interface to the user
+   # Transformed loadbalancer to be JMX mbeans.
+   # Recovery log is now a JMX mbean.
+   # Properly escape tagmarker for driverProcessed=false
+   # Added support for statements starting with opening parenthesis as
+     requested by Junaili Lie.
+   # Fixed Statement leak in request execution if the underlying driver does
+     not properly release resources at garbage collection time.
+   # executeBatch now returns empty array of Integer (Bernard van Zuylen) if
+     the batch is empty.
+   # Fixed two bugs with stored procedures and driver proxy (Pucky Loucks).
+   # Fixed schema updates on create/drop while no parsing was necessary in
+     the virtual database configuration. Bug reported by Jens Leister.
+   # Added contributions from Stephane Ducas and Lou Kamenov to use C-JDBC as a
+     service under Linux.
+   # Added cache for JMX notifications, so that the same notification would
+     not be processed twice. This is based on the notification sequence
+     number.
+   # Fixed NPE in gui while controller connection is lost. Also, add auto
+     reconnect to the JMX server when possible.
+   # Added support for multi-threaded recovery (from recovery log)
+   # Changed checkpoint name default length in c-jdbc.dtd to handle checkpoint
+     with names larger than 20 characters (which is what happens with console
+     generated checkpoint names). New varchar length is 512.
+   # Added support for Derby database by fetching schemas in a transaction 
+     instead of autocommit mode. Also made recovery log sql column name
+     configurable since SQL is a reserved keyword in Derby.
+   # Fixed bad pool size during re-initialization.
+   # Restore backend icon in proper column in GUI.
+   # Added unset checkpoint remote JMX command to console
+   # Check JDBC connectivity from GUI and from Backend MBean
+   # Added monitoring frames for controller only and vdb only
+   # Fixed deadlock due to missing notification if currently executing query
+     was not in a transaction.
+   # Added command to see and retrieve the schema of a database backend
+     through the administration console; output to standard output of file.
+   # Fixed report generation problems.
+   # Upgraded to JMX version 2.1.0
+   # Removed unused jar files for smaller footprint, and updated script files.
+   # External octopus configuration files (not in the jar file anymore)
+   # Made octopus work with latest hsqldb release.
+   # Fixed RAIDb-0 commit/rollback of empty or read-only transactions with only
+     cache hits that would deadlock the commit/rollback task. Fix backported
+     from RAIDb-2. Bug reported by Ganesh (ssriganesha at rogers.com).
+   # Fixed controller file manipulation driven from the console that was not
+     properly decoding the URLs.
+   # Added PoweredBy logos/images by Laurence Boissieux.
+   # Fixed hqsldb startup script when called without parameters to properly
+     start in its own directory (assuming 9001 as the default port).
+   # Optimized RAIDb-1 and RAIDb-2 pessimistic schedulers for empty and 
+     read-only transactions.
+   # Fixed request/commit/rollback timeout handling to ensure consistent 
+     behavior across backends. If timeout expires before any single node
+     starts executing the query then the query is ignored and an exception
+     reporting the timeout is thrown. If one backend has started the execution
+     all other backends must execute it to be consistent. Bug reported by 
+     Steve Lounsbury.
+   # Fixed database backend disabling on failure (backend unreachable) when 
+     executing read requests with all load balancers.
+   # Added a lightweight abort for connections closed after a commit/rollback.
+   # Fixed distributed write query execution failure that might not always
+     properly notify the scheduler. Added sanity RuntimeExceptions for non-
+     distributed case.
+   # Fixed metadatacache to properly handle tables with same field names of
+     different type. Bug reported by Roland Rauch.
+   # Fixed metadatacache to use feature of caching of all fields of a request.
+   # Checkpoint name is automatically generated in the gui when dragging
+     on disabled.
+   # Added JLine library for the text console as proposed by Tee Teoh
+     tteoh@cbnco.com.
+   # Join shutdown threads on shutdown to prevent from missing data in the
+     recovery log.
+   # Fixed Octopus loader job file generation to work for both Linux and 
+     Windows.
+   # Fix re-using of connection on the driver side.
+   # Fix not-working backend choosing algorithm in RAIDb2 for write queries.
+   # Does not ask for checkpoint in gui when lastknown checkpoint is known.
+   # Fix threading bug when restoring backend from the gui.
+   # Added setCheckpoint command on a backend into the gui.
+   # Fix in RAIDb-0 backend choice that was leading to last backend to execute
+     query if no backend was found.
+   # Fixed database schema representation for RAIDb-0 and RAIDb-2 controllers.
+   # Fixed possible NPE in database schema compatibility check. Bug noticed by
+     Brandon Rogers with RAIDb-2 configurations.
+_____________________________________________________________
+
+C-JDBC 1.0.4
+Release date: Tuesday, 12 October 2004 
+CVS Tag:c-jdbc-1_0_4
+Description: Minor fixes for better robustness.
+   # Fixed connection test for postgres within transaction
+   # Fixed RecoveryLog bug when storing XML data in update queries. Bug 
+     reported by Thomas Debray.
+   # Fix GUI misbehavior when closing the checkpoint window after a drag 
+     operation.
+   # Fixed dead-lock when parsing failed after the query was scheduled.     
+   # Convert values in ResultSet.getXXX methods
+   # Accept username and password in connection url
+   # Added contribution on get/setCharacterStream from Jeremy Philippe for
+     Hibernate support.
+   # Fixed problem in Connection that was garbage-collected after a reconnect.
+   # Temporarily removed sending group message when enabling a backend.
+   # Added transfer backend command to the text console
+_____________________________________________________________
+
+C-JDBC 1.0.3
+Release date: Thursday, 09 September 2004 
+CVS Tag:c-jdbc-1_0_3
+Description: Various enhancements, encoding, memory, backend recovery, and gui.
+    # Fixed UTF encoding/decoding from driver to controller. Using writeUnshared.
+    # Added backend state persistence in the recovery log
+    # Fixed memory leaks problems from the driver. writeUnshared misbehavior! 
+      Reported by Marc.
+    # Added writeEnabled option to backends in dtd
+    # Added restore option from the controller to put back backends in the state
+      they were when shutting the database down.
+    # Fix NPE for moving backend on the gui. BackendState was refactored in 1.0.2
+      and one value was missing from the console.
+    # Added scrolling frame for exception in the gui, as asked by tom
+_____________________________________________________________
+
+C-JDBC 1.0.2
+Release date: Thursday, 02 September 2004 
+CVS Tag:c-jdbc-1_0_2
+Description: Improved code reliability and robustness (cache,recovery). Added 
+prepared statements proxying for improved portability.
+    # Fixed read queries failover in horizontal configurations where a 
+      controller has no backend enabled.
+    # Path fix for default configuration file of the controller under windows.
+    # Fixed recovery threading problem with wrong index.
+    # Fixed possible starvation on backend failure when tasks were added while
+      disabling a backend. BackendWorkerThread termination has also been fixed
+      in case of failure inside a transaction.
+    # Improved backend disabling to prevent blocking all backends while waiting
+      for all open transactions to complete.
+    # Fixed synchronization problem in enableBackendFromCheckpoint (in 
+      RequestManager) noticed by Diego Malpica.
+    # Added contribution from Diego Malpica to properly convert database
+      native Blob/Clob into C-JDBC serializable Blob/Clob.
+    # Added support for read stored procedure broadcast with horizontal
+      scalability.
+    # Added support for '}call' syntax in CallableStatement to allow the
+      execution of write stored procedure when using the execute() method.
+    # Fix recovery notification failure and prevent backend from being
+      enabled if a recovery task has failed.
+    # Added contribution from Jaco Swart to forward PreparedStatement calls
+      to the controller to be interpreted by database native drivers instead
+      of the C-JDBC driver. This resolves portability issues with some data
+      types.
+    # Fixed invalidation of cache, when table is invalidated with column or
+      finer granularities.
+    # Fixed case sensitive parsing of select and delete requests in column 
+      unique granularity.
+    # Fixed cleaning of transaction markers in the recovery log.
+    # Fixed write stored procedure execution in case of horizontal scalability.
+      Bug reported by Brandon Rogers.
+    # Added option to disable system table and view gathering when fetching
+      the schema of a backend (see feature request #300734).
+    # Fixed bug in SELECT request parsing that did not handle correctly the
+      case sensitiveness.
+    # Fixed ResultSet comparison bug in regression test suite.
+    # Added regression tests for result cache.
+    # Changed object serialization to use the unshared version of object 
+      streams to prevent memory leaks and manual reset of streams.
+    # Fixed IzPack binary install to use new script file names.
+_____________________________________________________________
+
+C-JDBC 1.0.1
+Release date: Tuesday, 17 August 2004 
+CVS Tag:c-jdbc-1_0_1
+Description: Many Bug fixes, mainly on the cache and the recovery log. Added 
+support for Alter statement.
+   # Updated Delete statement parsing to support DELETE [TABLENAME] ... used
+     by Oracle
+   # Connection commit/rollback now throws an exception if the connection is 
+     in autocommit mode (as mentioned in JDK 1.4 Javadoc). Thanks to Vincent 
+     (v.vandenschrick@finmatica.com) for reporting this.
+   # Fixed missing cache invalidation on transaction rollback as noticed by
+     v.vandenschrick@finmatica.com.
+   # Updated documentation with comments on stored procedure and load balancers
+     with horizontal scalability (replicated controllers), ResultSet streaming
+     limitations, and default cache settings.
+   # Fixed setEscapeProcessing problem on JDBCRecoveryLog when used with Oracle
+     that does not allow calling this method on PreparedStatements. Problem
+     reported by v.vandenschrick@finmatica.com.
+   # New 'Dump added' jmx notification. Handled by the GUI.
+   # Translations for monitoring module.
+   # Modified raidb1 script file. recovery log is on a different backend
+   # Fixed [BUG #300571]: ReportManager cast exception reported by Ben.
+   # Fixed [BUG #300716]: SimpleConnectionManager was not using the appropriate
+     DriverManager to load driver classes. 
+   # Changed logo to petstar pollux.
+   # Upgraded IzPack installer to 3.6.0
+   # Fixed [BUG #300532]: JDBCRecoveryLog used its own login instead of the 
+     querylogin to log begin/commit/rollback statements (queries were properly
+     logged). Fixed cleaning of transaction markers that could induce the
+     deadlock noticed in the bug report.
+   # RuntimeException is now thrown when incompatible version of driver and 
+     controller are used to prevent driver hang as noticed by Marc Wick.
+   # Fixed wrong behavior when calling setAutoCommit(true) in the middle of a
+     transaction when no further queries where issued.
+   # Fixed bug in execWriteRequest with keys for RAIDb-1. Bug found and fixed
+     by Jeremy Philippe.
+   # Added Recovery Log viewer
+   # Fixed transaction exclusive lock (used in pessimistic schedulers) to
+     properly isolate queries in autocommit mode.
+   # Added basic support for alter statements
+   # Added xmlvalidator script file on the command line, for quick xml
+     and dtd validation.
+_____________________________________________________________
+C-JDBC 1.0
+Release date: Wednesday, 4 August 2004
+CVS Tag: c-jdbc-1_0
+Description: Fixed bugs, refactored JMX code, new graphical interface for
+administration console.
+   # Work on japanization of the GUI
+   # Added class BackendInfo to share backend configuration between 
+     DistributedVirtualDatabase.
+   # Backends are now jmx mbeans that are registered in the mbean server
+   # Backend list is updated on multiple GUIs
+   # Better jmx notification handling in the gui (reporting also improved)
+   # Add/Remove backend with list updated
+   # Added checkpoint selection in GUI
+   # Added transfer of backends from the GUI
+   # Added new version of JMX to the GUI
+   # Added patch for JGroups TOTAL ordering deadlock provided by JGroups team.
+   # Fixed potential deadlock in RAIDb1 and RAIDb2 query level schedulers.
+     Problem reported by Ivan Ielin.
+   # Removed unnecessary create/drop statement parsing with RAIDb1 load 
+     balancers. Bug reported by Jeremy Philippe.
+   # Fixed scheduler schemas to be case insensitive to prevent problems
+     when a table is created with a case that is different that the one
+     used for subsequent queries on that table. Problem reported with
+     optimistic schedulers by JB van Zuylen.
+   # Fixed [BUG #300588]: ResultSet metadata fetching was done after the 
+     connection was released to the pool which was inconsistent. The load
+     balancer have been refactored to appropriately fetch the metadata as 
+     needed before releasing the connection to the pool.
+   # Fixed [BUG #300604]: max rows and fetch size were no more correctly 
+     propagated by the request serialization code.
+   # Fixed [BUG #300595] in regular expression that would cause Octopus Loader
+     Job to fail on a 'file not found'.
+   # Fixed ControllerReport to work with any kind of FileAppender and to
+     ignore any other form of appenders without failing.
+   # Fixed JDBC Recovery Log case mismatch warning (has no effect except 
+     displaying an inaccurate message). Thanks to Benjamin Hart.
+   # Fixed bug in lazy transaction begin with horizontal scalability that
+     could induce a deadlock.
+   # Upgrade to Octopus 2.8.
+   # Fixed bug in JGroups membership management that prevented controllers
+     to see themselves in the group as reported by Ivan Ielin.
+   # Added support for distributed stored procedure execution with 
+     horizontal scalability.
+   # Fixed line separator stripping problem when driver and controller have
+     different properties. Problem reported by James Morton.
+   # Fixed Statement.execute() and Statement.executeQuery() to properly detect
+     statements if they are followed by a carriage return instead of a space. 
+     Bug reported by James Morton.
+   # SingleDB is no more allowed in distributed virtual database 
+     configurations, RAIDb1 should be used instead.
+_____________________________________________________________
+
+C-JDBC 1.0rcf
+Release date: Wednesday, 23 June 2004
+CVS Tag:c-jdbc-1_0rcf
+Description: Improved reliability of horizontal scalability, general speed and
+    performance, code robustness, targeting industrial use.
+   # ControllerName is properly dispatched in the group to all.
+   # Added some parameters to the driver to use on preparedstatement. This 
+     included: booleanTrue, booleanFalse, EscapeChar, EscapeBackslash, 
+     EscapeSingleQuote.
+   # Change handling of Macros. Defined a new MacrosHandler configured via the
+     dtd instead of using static methods.
+   # Send BlobFilter description instead of BlobFilter object
+   # Refactored writeUTF method, to send bytes anytime. This is what the java
+     code is doing for long object anyway.
+   # Refactored way of sending request between the driver and the controller:
+     instead of sending the object we only send the information we need.
+   # Fix task notification again, as setAutoCommit could throw an exception
+     that we did not catch.
+   # Fix of shutdown for normal and distributed virtual database.
+   # Fix to not try to rollback a transaction if no query was executed in this
+     transaction (helpful when closing a transaction after commit/rollback).
+   # Fixed commit/rollback completion for distributed virtual databases using
+     RAIDb-1 and RAIDb-2.
+   # Fixed task notification if a node becomes unreachable when wait for
+     completion policy is set to all. In this case, a deadlock could happen
+     as noticed by Stephane Ducas.
+   # Fixed distributed virtual database configuration compatibility checking.
+   # Fixed transaction lazy begin with distributed virtual databases as
+     reported by Stephane Ducas.
+   # Added support for subselects in SELECT requests parsing according to
+     discussions on the mailing list.
+   # Added data frames to the gui (SQLStats, CacheStats, Cache content)
+   # Added new icons from Laurence Boissieux to the administration console gui.
+   # Added replicate command from the gui console
+   # Added monitoring console to the gui
+   # Added native and replicate commands to text console
+   # Refactored text console completely to use jmx proxy.
+   # Removed swing console with text commands.
+   # Adding a backend now reports if some connection managers are missing for 
+     all defined virtual logins.
+   # Added sanity checks in tasks in case a connection manager associated to a
+     virtual login is missing (was throwing NPE).
+   # Updated configuration files to new DTD.
+   # Updated xml files and dtd JUNIT testing
+   # Changed c-jdbc.dtd. Allow multiple admin users. The real login is now
+     defined in the corresponding connection manager and not in the 
+     authorization manager anymore.
+   # Fixed race in VariablePoolConnectionManager and fixed corresponding
+     JUnit test.
+   # Fixed bug in driver, that would prevent the driver manager to work
+     properly while sending a SQLException while the url was meant for 
+     another driver.
+   # Octopus new integration.
+   # Added ReplaceAllRewritingRule to replace all characters in a string 
+   # Fixed [BUG #300273]: raidb1.bat and hsqldb.bat were not correct in the
+     zip file distribution.
+   # Fixed [BUG #300298]: JDBCRecoveryLog tables are no more exported in the
+     virtual database schema to prevent caching of these tables and misusage
+     of these tables from the client side. It is still possible to enforce a
+     static schema if one wants to access these tables.
+   # Automatic state recovery when connection breaks between driver and 
+     controller even in a middle of a transaction.
+   # Fixed connection cleanup in driver automatic reconnection to prevent
+     controller from keeping dead connections opened.
+   # ssl support for cjdbc-driver.
+   # Added support for Microsoft JDBC drivers in Octopus backup/restore.
+     Patch submitted by Benjamin Yu.
+   # PreparedStatement.setObject(...) now supports BINARY, VARBINARY, 
+     LONGVARBINARY, BIT, DATALINK (not implemented), JAVA_OBJECT and OTHER
+     according to "Table 3-B: Mapping JDBC Types to Java Object Types" from
+     Appendix B of JDBC specification. BOOLEAN handling is also separated from
+     Number handling. Patch by Paul Ferraro.
+   # ResultSet.getObject() now decodes Blob using the BlobFilter used for
+     encoding. Fix provided by Paul Ferraro.
+   # Jmx with rmi over ssl implemented, with java 1.3 installation of
+     of jsse is required http://java.sun.com/products/jsse
+   # Using jaas for authentication of jmx connections with rmi. 
+     Jaas has become part of j2se with java 1.4, for java 1.3
+     you will have to download it from     
+     http://java.sun.com/products/jaas/ and put it in the jre/lib/ext     
+     directory .The RmiJmxAdaptor Element in the controller config has 
+     two new optional attributes username and password and the console 
+     takes the arguments username and secret (password). Username and 
+     password are used to build a credentials Object for connections 
+     with jmx.
+   # Bug fixes for Octopus (rick labanca).
+   # MX4J ported to 2.0.1 (jsr 160).
+   # Upgrade IzPack to 3.5.3 version.
+_____________________________________________________________
+
+C-JDBC 1.0rc6
+Release date: Monday, 26 April 2004
+CVS Tag:c-jdbc-1_0rc6
+Description: Added ResultSet streaming, new classloader mechanism for driver
+  loading, Octopus 2.7.1 integration, new caching system (parsing cache,
+  metadata cache and result cache), view support, new Blob filter and many
+  other fixes.
+   # Upgraded to Octopus 2.7.1.
+   # Fixed autocommit reset problem as noticed by Marc Wick.
+   # Fixed problem under Windows when C-JDBC is installed in a path containing
+     a space like 'Program Files'.
+   # Added support for fetching database views in the schema as needed for DB2.
+     Thanks to Hugo Pragt for the help.
+   # Fixed Connection.close() problem noticed by Jeff Kolesky. If close() is
+     called multiple times on an already closed connection, the behavior was
+     not compliant to the specification. Thanks to Jeff for the fixes.
+   # Fixed [BUG #300229]: Statement.executeBatch() was starting a new 
+     transaction instead of executing inside the current context like described
+     in the JDBC specification. Also batch was not cleared properly after
+     execution. Bug report and patch by Paul Ferraro.
+   # Added support for ResultSet streaming with variable fetch sizes. This
+     allows very large ResultSets to be fetched by blocks without getting out
+     of memory.
+   # Added hsqldb driver in Squirrel classpath for demo to work out of the box.
+   # RequestManager now displays the parsing granularity it uses when it is
+     created.
+   # Added NoneBlobFilter from Paul Ferraro. Updated c-jdbc.dtd VirtualDatabase
+     element as follows: blobEncodingMethod (none | hexa) "none". Also fixed
+     VirtualDatabase xml conversion to report the blob encoding method.
+   # Added compatibility checking between driver and controller to prevent
+     errors due to older driver used with newer controller.
+   # Optimized connection establishment and removed controller classes from
+     driver jar for a complete separation between driver and controller.
+   # Splited ResultSet in driver side ResultSet (without controller class
+     dependencies) and ControllerResultSet for optimized serialization and
+     storage on the controller side.
+   # Fixed squirrel startup script to prevent log4j errors due to classpath
+     settings.
+   # Fixed a bug which caused all schemas containing procedures to fail at 
+     merging.
+   # Changed language message files to use {0},{1},... as parameter place
+     holders instead of ? for easier translation. Technique suggested by
+     Marc Wick.
+   # Updated user documentation to remove controller name from controller
+     configuration file to reflect current DTD.
+   # Changed PreparedStatement.setBoolean() to use '0' and '1' instead of 't'
+     and 'f' which were not compatible with hsqldb as reported by Marc Wick.
+   # Re-organized RequestCache with 3 different caches: MetadataCache,
+     ParsingCache and ResultCache (former QueryCache). This affects both the
+     c-jdbc.dtd file and the source tree where all former querycache code has
+     moved into ...controller.cache.result and the 2 other caches are found
+     under controller.cache.parsing and controller.cache.metadata.
+   # Fixed xml parsing according to new DTD format and updated examples 
+     accordingly.
+   # Added metadata cache to improve C-JDBC ResultSet generation both in term
+     of cpu and memory usage.
+   # Renamed QueryCache to ResultCache in both DTD and code base.
+   # Added ParsingCache in the DTD in the RequestCache section. Moved 
+     backgroundParsing element from RequestManager to ParsingCache.
+   # Introduced ParsingCache tuning with a limited number of entries to prevent
+     memory exhaustion on long-lived systems. Several fixes to the ParsingCache
+     have also been performed.
+_____________________________________________________________
+
+C-JDBC 1.0rc5
+Release date: Tuesday, 8 April 2004
+CVS Tag:c-jdbc-1_0rc5
+Description: Major serialization refactoring for improved performance, better
+  transaction support, new automated script generation for Windows and Unix,
+  enhanced internationalization, reorganized examples, and several other fixes
+  and improvements concerning query cache and database support.
+    # Improved statistics in request player with details for getting and closing
+      connections as well as timing for begin/commit/rollback.
+    # Fixed DELETE query parsing to support the following syntax:
+      DELETE t1,t2,... FROM t1,t2,... WHERE ...
+      as reported by nikken@tiscali.ch.
+    # New automated script generation for Windows and Unix.
+    # Fixed for PreparedStatement to be independent of default Locale setting 
+      and support WebObjects timestamps (with the help of Fabian Peters).
+    # Improved streaming and request serialization for better network 
+      bandwidth and better reponse times.
+    # Fixed transaction id handling and commit completion flush with new 
+      serialization.
+    # Fixed support for changing from transaction back to autocommit.
+    # Memory leak fixed on query cache entries invalidation.
+    # Query cache LRU fixes from Gokul Soundararajan, University of Toronto.
+    # Enhanced internationalization of messages (translators are needed).
+    # Re-organized docs/examples with subdirectories and new examples.
+    # Fixed JGroups configuration for JGroups 2.2.1.
+    # Fixed [BUG #300175]: Enhanced error message on JDBC Recovery Log creation
+      failure.
+    # DatabaseMetaData.getDatabaseProductName now returns a comma separated 
+      list of database engine product names prefixed by C-JDBC as discussed
+      with Ron Cemer.
+    # PreparedStatement parsing now ignores quotes around parameter markers (?)
+      as suggested by Ron Cemer.
+    # All Jmx calls now throw a MBeanException from which we can access the 
+      original exception tha was thrown on the server.
+    # Fixed bug on ControllerParser where the octopus settings were not 
+      correct.
+_____________________________________________________________
+
+C-JDBC 1.0rc4
+Release date: Tuesday, 16 March 2004
+CVS Tag:c-jdbc-1_0rc4
+Description: Several bug fixes related to metadata and JDBC compliance, fixed 
+  allowed C-JDBC url, updated JGroups and new administration console prototype.
+    # Added new prototyped gui console with drag and drops of configuration
+      files and backend states.
+    # Generated log files and controller reports by default in
+      CJDBC_HOME/log directory.
+    # Integrated bug fix from Jeff Kolesky for macro processing in 
+      RequestManager when timestampResolution is set to 0.
+    # Fixed bug reported by Jeffrey Kolesky about DatabaseMetaData 
+      procedure column missing a type. And the order of columns
+      beeing wrong for the procedure column description.
+    # Renamed autoclean attribute of Backup element to clean in
+      c-jdbc-controller.dtd (to match parsing).
+    # Fixed usage of default controller.xml configuration file that was no more
+      detected after its move in config/controller. Also fixed autoclean 
+      attribute in Backup that has been renamed to clean.
+    # Changed name of controller to be uniquely identified by its ip 
+      address and port.
+    # Fixed non-acceptable character '-' in hostname. Added to urls tests.
+    # Fix bug #300149,#300148. Ip address is now found and used as defined
+      in xml file and/or command line. Command line still has the priority
+      of definition.
+    # Changed default ip address of the controller to 0.0.0.0
+    # Commit/Rollback now automatically starts a new transaction (implicit
+      begin) as specified in the JDBC 1.2 specification. Bug reported by 
+      Xiaoting Ye.
+    # Recovery log table names check is now case insensitive (a warning is
+      just issued if the case of the configuration file does not match the
+      case of the database).
+    # Distributed begin/commit/rollback is optimized to be only multicasted
+      for write transactions (read-only transactions execute locally without
+      any multicast message). This only applies to multiple controller 
+      configurations using horizontal scalability.
+    # Upgraded to JGroups 2.2.1.
+    # Changed request id and transaction id to long instead of int. Recovery
+      log now uses BIGINT to store these ids.
+    # Added getCatalog and getCatalogs support into the driver
+_____________________________________________________________
+
+C-JDBC 1.0rc3
+Release date: Friday, 27 February 2004
+CVS Tag:c-jdbc-1_0rc3
+Description: Several bug fixes related to failover, added a new ParallelDB load
+  balancer, Octopus 2.6.2 integration and updated documentation.
+    # Upgraded to Octopus 2.6.2.
+    # Updated documentation with Hibernate example, ParallelDB load balancer
+      description and fixed C-JDBC out of the box that does not start Squirrel
+      automatically anymore.
+    # Improved driver failover with multiple controllers and improved automatic
+      reconnection feature in driver as well.
+    # Fixed and unified scheduler transaction identifier initialization from
+      recovery log to prevent log inconsistencies. Thanks to Jeffrey Kolesky.
+    # Fixed some console commands as suggested by Morgan Hankins 
+      <mhankins@merchante-solutions.com>
+    # Added framework for RegressionTesting with configurable scenario.
+    # Feature request [#300112]: Added ParallelDB load balancer for parallel 
+      databases such as Oracle Parallel Server or Middle-R. Available load
+      balancers are RoundRobin (RR) and LeastPendingRequestFirst (LPRF).
+      This new load balancers have been added as sub-elements of the 
+      LoadBalancer element in c-jdbc.dtd.
+    # Fixed bug in connection release in case of a read request failure in
+      a transaction context as suggested by Jeffrey Kolesky.
+    # Removed old monitoring console.
+    # Fixed bug reported by Jeffrey Kolesky when a backend was left with task 
+      to execute while backing up.
+    # Fixed failover on read request reported by Jeffrey Kolesky.
+    # Updated to latest version of Doxygen 1.3.6 in ant build
+    # Fixed substring of request as reported by Jeff Kolesky <jeff@edusoft.com>.
+_____________________________________________________________
+
+C-JDBC 1.0rc2
+Release date: Friday, 20 February 2004
+CVS Tag:c-jdbc-1_0rc2
+Description: Updated installer, enhanced console with monitoring features,
+  bug fixes and improvements (mainly query cache and LPRF load balancers).
+    # Minor documentation and code updates for SAP DB.
+    # Slightly updated developer guide with current developing procedure with 
+      Eclipse 3.0M7 and ongoing development about the test suite.
+    # Query cache fixes and improvements including cache flushing, LRU updates
+      and eager entries invalidation.
+    # Added saving of configuration for monitoring console (reload windows, 
+      positions,monitoring options)
+    # Added Monitoring Console to start, stop graphs on demand. 
+    # Fixed script path bug for squirrel and raidb1. Bugs reported by 
+      Mogan Hankins.
+    # Added SQL statement dump limitations in traces and exception to prevent
+      overflow with very long queries or queries containing large objects. A
+      new attribute in virtual database can be used to set the maximum length
+      of a SQL dump.
+    # Fixed driver automatic reconnection attempts that was not properly 
+      reseted in case of a successful reconnect.
+    # Fixed bug in XML parsing for timestamp resolution with RAIDb-2 load
+      balancers. Bug noticed by Dave Seff.
+    # Fix for bug: #300087. The controller name and settarget name
+      in the console are checked before beeing called.
+    # Added HelpFrame and ReportFrame in the console
+    # Report can now be generated from the controller mbean.
+    # Added JDepend to the ant build file for code dependencies and 
+      coverage.
+    # Graphic installer packages list has been updated to: 
+      driver, console, controller,hsql, squirrel, demo.
+    # Updated izPack to latest version 3.4 so it works on mac OSX.
+_____________________________________________________________
+
+C-JDBC 1.0rc1
+Release date: Monday, 9 February 2004
+CVS Tag:c-jdbc-1_0rc1
+Description: Added horizontal scalability, rewriting rules, updated 
+  documentation, enhanced console, many fixes and improvements.
+     # Updated User guide and fixed typos in developer guide.
+     # Updated DatabaseSchema definition in the DTD, and updated user 
+       documentation
+     # Updated to octopus 2.5.
+     # Fixed problem in VariablePoolConnectionManager initialization if 
+       maxPoolSize was omitted when both initPoolSize and minPoolSize were
+       defined.
+     # Added RewritingRule to allow requests to be rewritten on-the-fly for 
+       specific backends according to user-defined rules. This offers support
+       for heterogeneous clusters.
+     # Fixed potential problem with multiple concurrent write queries execution
+       that may not have returned the exact number of modified rows or exact
+       value of auto-increment key.
+     # Added DistributedRequestManager for SingleDB, RAIDb-1 and RAIDb-2 to
+       provide horizontal scalability for these configurations.
+     # Updated c-jdbc-controller.dtd: now controller name defaults to local
+       host name instead of 'default'.
+     # Updated c-jdbc.dtd about horizontal scalability configuration.
+     # Fixed problem with task completion in case the last node of a RAIDb-1
+       configuration failed to execute a query.
+     # Better exception typing to report more accurately errors.
+     # Default controller name is no more 'default' but the name of the local
+       host if no name has been specified on the command line or in the
+       controller.xml file.
+     # Fixed missing ResultSet closing while fetching database procedures. Bug
+       notified by vrojo@unefon.com.mx.
+     # Finished integration of Octopus 2.3. Backup is now fully working
+     # Fixed org.objectweb.cjdbc.driver.Blob position(byte,long) to take into
+       account the pattern start as suggested by C.Ullenboom@java-tutor.com.
+     # Now can display multiple databases or controllers on the graph.
+     # Added new input/output streams to enable compression for writes.
+     # Added graphs to show load on the controller and the virtual databases.
+     # Added data views for controller, virtual databases and backends from
+       the console.
+     # Fixed saveConfiguration not working after xsl transformation
+     # Improved translation model, and added translation keys test that
+       checks for missing keys in java code and xsl files.
+     # Fixed bug in virutal database parsing when request cache just uses the
+       default eager cache rule.
+     # Fixed NPE when fetching stored procedures from backend. Note that if 2
+       stored procedures have the same name but different signatures, only the
+       first stored procedure found is kept in the schema. This has to be
+       improved.
+     # Fixed bugs and enhanced c-jdbc.xsl.
+     # Fixed missing timestampResolution in XML dump for RAIDb-1 and RAIDb-2
+       load balancers.
+     # Backends can now be in read-only or read-write mode according to the
+       distribution policy used for distributed virtual databases (horizontal
+       scalability).
+     # Replaced deprecated MockConnection with MockConnection2 in test suite.
+     # Improved error handling in ResultSet when trying to access a closed
+       ResultSet. Misleading exception noticed by Xavier Lawrence.
+     # Improved socket error handling in VirtualDatabaseWorkerThread.
+
+_____________________________________________________________
+
+C-JDBC 1.0b16
+Release date: Friday, 19 December 2003 
+CVS Tag:c-jdbc-1_0b16
+Description: Overall stability improved, stored procedures, security rules, new cache.
+     # Renamed getDump in console with getXml
+     # Rework xml output so the information is xslt transformed from xml
+     # Xml output has been reworked and checked. The output file can be used
+        to configure the controller and the virtual dabtase again.
+     # Implemented limited security controler in the controller based on ip address.
+     # Added showCache to text console
+     # Added driver parsing support for embedding user and password in the url
+     # Added Swing frame to display content of the cache in the console
+     # Re-Implemented cache with new design. Now three behavior for cache,
+       Eager|Relaxed|NoCache as well as a better separation between
+       Database,Table.Column,ColumnUnique caches.
+     # Implemented auto reconnection in jmx clients. 
+     # bind method for console has been fixed.
+     # Added Octopus Backup support
+     # c-jdbc.dtd changes: added a new Monitoring element, added CacheRules to
+       QueryCache, added timestampResolution to cache and load balancers, 
+       replaced several IMPLIED attributes with their default value.
+     # Added new SQL queries monitoring and statistic display in console.
+     # Added fix for stored procedures problem with postgresql.
+     # Added timestampResolution to query cache and RAIDb-1&2 load balancers 
+       to define the replacement policy for now() macros.
+     # Fixed bug that return the wrong parsing granulatity for the QueryCache.
+     # Fixed bug in merging schema with some parsing granularities
+     # Report generation is modular, and can be configured in
+       controller.xml file.
+     # Added support for read-only stored procedure that are executed
+       by a single node according to the current load balancing policy.
+     # RAIDb-2 stored procedures are now executed only by the nodes
+       having the stored procedure in their schema.
+     # Updated c-jdbc.dtd with a new connectionTestStatement attribute for the
+       DatabaseBackend element. This attribute defines the SQL statement to use
+       to check if a connection is still valid. The validity of the given
+       statement is checked during driver compliance checking.
+     # Fixed pool size initialization problem in VariablePoolConnectionManager.
+     # Fixed [BUG #488]: Bad connections are now automatically detected and 
+       replaced when needed for all kind of pools. If a backend is no more 
+       reachable (in read), it is automatically disabled (it was already ok for
+       writes).
+     # Changed RequestPlayer to use Statements instead of PreparedStatements.
+_____________________________________________________________
+
+C-JDBC 1.0b15
+Release date: Tuesday, 04 November 2003 
+CVS Tag:c-jdbc-1_0b15
+Description: More JDBC2.0 features supported, reporting, and many fixes.
+     # Added generation of report when fatal error occurs
+       or with proper shutdown.
+     # Added getProcedures and getProcedureColumns support
+       in the driver.
+     # Fix possible recoveryLog misbehavior when a checkpoint
+       was stored while some transactions were not committed.
+     # Added getColumns and getPrimaryKeys in metadata for Virtual
+       databases.
+     # Fix registration of virtual databases in Jmx. Was executed twice
+     # Fixed wrong port of the naming service for jmx. The only port
+       that was changed was the one of the JRMP adaptor. Reported by
+       Marc Wick.
+     # Fixed NPE in DriverCompliance tests
+     # Fixed getDump method that was failing in createTableRule
+     # Added IP-specific binding to permit the C-JDBC Controller to use a
+       specific IP on a multi-NIC server.
+     # Shutdown is available over Jmx
+     # Implemented three levels of shutdown of the controller. A shutdown
+       client is available through script files.
+     # Added JDBC 3.0 compatible java.sql.Statement class to allow the code
+       to compile getGeneratedKeys support with JDK 1.3
+     # Driver compliance now tests getGeneratedKeys support (not required).
+     # Moved C-JDBC ResultSet cloning from RequestManager to driver.ResultSet.
+     # Added support for getGeneratedKeys for SingleDB, RAIDb-0, RAIDb-1 and
+       RAIDb-2 based on the contribution from Vadim Kassin.
+     # Modified ResultSet method with code from Mysql driver. This is to 
+       prevent a class cast exception reported by ahoutman@bic-tech.com
+     # Fixed bug in RAIDb 0, 1 and 2 pessimistic schedulers for create queries.
+     # Fixed NPE when RAIDb-2 does not specify a create table policy.
+     # Fixed request manager database schema merging that was affecting the 
+       schema of individual backends.
+     # Fixed DriverCompliance to handle NoSuchMethodError exceptions with
+       the 2.0.x org.gjt.mm.mysql.Driver
+     # Enhanced GUI Console popup menu with basic shortcut commands and 
+       file browsers to simplify loading XML/SQL/JAR files
+     # Fixed NPE in database schema fetching when underlying driver does not
+       support getColumns or getPrimaryKeys.
+     # Fixed ArrayOutOfBoundException when calling stored procedures with
+       RAIDb-1 or RAIDb-2 with a WaitCompletionPolicy set to 
+       WaitForCompletionPolicy.ALL. Bug reported by Paolo Arcagni.
+     # Modified c-jdbc.dtd to add a specific Distribution element to define
+       distribution rules for sharing a virtual database between several
+       controllers (horizontal scalability).
+     # Removed specific distributed schedulers. The distribution is handled
+       by the DistributedRequestManager and not by each scheduler.
+     # Modified Controller and controller configuration classes to support
+       controller naming.
+_____________________________________________________________
+
+C-JDBC 1.0b14
+Release date: Thursday, 23 October 2003 
+CVS Tag:c-jdbc-1_0b14
+Description: New Configuration of controller,  as well as other things.
+     # In console, getDump and getInfo for xml dump and 
+       original getInformation method.
+     # Output of schema in xml format can be accessed via a set of 
+       additionnal getXmlInformation methods.
+     # Jmx adaptors can be specified by type and by port in the 
+       c-jdbc-controller.xml file.
+     # Fixed initialization problem with VariablePoolConnectionManager when    
+       maxPoolSize is missing. Bug reported by Guillermo Schulman.
+     # Fixed problem finding controller.xml file when C-JDBC is installed in
+       a directory containing a space on Windows. Problem reported by 
+       ahoutman@bic-tech.com.
+_____________________________________________________________
+C-JDBC 1.0b13
+Release date: Thursday, 16 October 2003 
+CVS Tag:c-jdbc-1_0b13
+Description: This release offers Jmx control, hyper sonic environment, squirrel
+ graphical tool, as well as speed optimizations.
+     # Added RAIDb-1 preconfigured example for linux and windows platforms.
+     # Added optional package hsqldb (Hyper Sonic SQL) for testing. If 
+       selected can be accessed via Squirrel with no configuration option.
+     # Added Jmx Support for the controller and the Virtual Database, Jmx is 
+       now enabled by default. Communication between the console and the 
+       controller is now done by Jmx over RMI. Removed unused interfaces and 
+       duplicates.
+     # Added Squirrel Sql Client to the binary release with a default 
+       configuration for C-JDBC. Modified the izPack installation accordingly.
+     # Disabled Nagle algorithm on driver-controller sockets using the 
+       TCP_NODELAY option. This is to solve a performance problem under 
+       Linux that ignores the flush on the output stream and waits for the 
+       Nagle algorithm's timeout (200ms) before sending small messages such as
+       C-JDBC protocol commands (integers).
+     # Fixed [BUG #512]: VariablePoolConnectionManager initialization could
+       result in a NPE due to a too early thread start.
+     # Full controller version number is now displayed at controller startup 
+       and correctly reported by the C-JDBC driver metadata. 
+  
+C-JDBC 1.0beta12
+Release date: 24 September 2003
+CVS Tag: c-jdbc-1_0beta12
+  Description: 
+     # Maintenance release as beta11 was missing files.
+     # Driver now accepts short for URLs such as jdbc:cjdbc://host/db
+     # Updated DriverTest to test new C-JDBC URL format.
+     # Fixed synchronization bug in 
+         DatabseBackendWorkerThread.waitForAllWritesToComplete
+     # Updated tests on VariablePoolConnection.
+  
+C-JDBC 1.0beta11
+Release date: 22 September 2003
+CVS Tag: c-jdbc-1_0beta11
+  Description: 
+     # Added support for loading controller configuration from xml file. Updated
+     user guide with starting instructions.
+     # Fixed inconsistent behavior of various ResultSet.getBigDecimal(...)
+       implementations as suggested by Mark Wick.
+     # Fixed [BUG #485]: VariablePoolConnectionManager accepts a minPoolSize
+       value of 0 and initializes the correct number of connections specified
+       by initPoolSize.
+     # Fixed infinite loop in virtual database admin console when connection
+       was lost with controller.
+     # Fixed backend initialization. Connection pool is no more added when the
+       backend is added but when it is enabled (which was the expected
+       behavior).
+     # Database schema is now dynamically updated when backend are enabled or
+       disabled and changes are propagated to scheduler and cache schemas.
+     # Fixed bug in controller logger definition in log4j.properties.
+     # Removed RMI communication between driver and controller. Driver and
+       controller now only communicate using sockets even for the controller
+       lookup (which was the last part using RMI). VirtualDatabaseServerThread
+       has been removed and there is now a single ControllerServerThread for
+       all databases that handle the job to ControllerWorkerThread that to the
+       dispatch and admission control for virtual databases. Finally, 
+       VirtualDatabaseWorker threads handle the connection with the driver.
+     # Fixed NPE in VirtualDatabase.getTables if table pattern is null.
+     # Added implementation of Statement.execute(sql) and 
+       Statement.getMoreResults() used by SQuirreL SQL.
+     # Updated Driver.DatabaseMetaData to support more information needed by
+       SQuirreL SQL. Changed getIdentifierQuoteString() to return a space.
+     # DriverCompliance now tests if driver supports setMaxRows and if so
+       setMaxRows is set whenever needed to reduce the amount of data to be
+       gathered by the underlying driver.
+     # Fixed admission control so that driver gets a "Too many connections"
+       error message if maximum number of connections is reached.
+     # New JDBC url format is used for connection to C-JDBC. Refer to user 
+       manual for further information. Default is: 
+       jdbc:cjdbc://hostname:portnumber/databasename 
+       and portnumber can be omitted.
+     # Fixed bugs to allow PreparedStatement.setXXX(..,"null") calls as 
+       specified in the JDBC api. Fixed by Marc Wick.
+     # Fixed PreparedStatement.setTimestamp format. Thanks to Marc Wick.
+     # Fixed [BUG #498]: Statement.getBoolean() now converts to a boolean even
+       if the database returns a number. Fixed by Alexander Laamanen.
+     # Fixed deadlock in VariablePoolConnectionManager that conflicted with 
+       RemovePoolConnectionsThread in releaseConnection().
+     # Fixed synchronization problem for read request that execute concurrently
+       outside the scope of a transaction in RAIDb-1 and RAIDb-2 controllers.
+       Bug noticed by Mark Wick when trying to debug cache code.
+     # Improved Driver connection problem error messages.
+     # Started work on internationalization. Messages are now referenced from a
+     property file, and can be translated as needed.
+     # Saving of current controller configuration can be done from the JMX console.
+  
+C-JDBC 1.0beta10
+Release date: 5 September 2003
+CVS Tag: c-jdbc-1_0beta10
+  Description: 
+    # Fixed [BUG #250]: Equivalent insert is now correctly computed when
+      fields contain spaces (JUnit tests have also been extended).
+    # Fixed [BUG #473]: Update statements parsing did not handle properly
+      case sensitivity. This is now fixed and query cache maintains coherency
+      even if parsing has failed by flushing the whole cache. Bug isolated
+      by Dominic Dupuis.
+    # Improved Ant build file (way to build IzPack installers, moved
+      jdk1.3 src from ./src_jdk1.3 to ./src/jdk1.3 directory, removed
+      hardcoded paths and other minor fixes) and upgraded from IzPack
+      3.0.7 to 3.1.0b.
+    # The Developper Guide is now not included in the bin distribution.
+    # Changed DriverCompliance testing for PreparedStatement. Failure now
+      just generates a warning and test uses a fake INSERT statement (as
+      used by the JDBCRecoveryLog) instead of an empty commit statement 
+      that was not compatible with HSQL 1.7.2alphaN. Problem reported by
+      Mark Wick.
+    # ResultSet.getBigDecimal no more throws ClassCastException if underlying
+      object is of type Double or String. It is silently converted to a
+      BigDecimal as suggested by Mark Wick.
+    # Blob and Clob are now supported and have been tested with success on 
+      mysql and postgresql on  a single backend. Special encoding is done 
+      for the data so no exception is thrown for speficic data formatting on 
+      large objects.
+    
+C-JDBC 1.0beta9
+  Release date: 26 August 2003
+  CVS Tag: c-jdbc-1_0beta9
+  Description: 
+    # Added the management of some SQL functions (COUNT, MAX, etc.)
+      when parsing queries.
+    # Added the invalidation of the cached queries associated with a
+      table in case of a DROP request.
+    # Fixed the parsing of SQL queries in case of columnUniqueDelete
+      granularity.
+    # Fixed bug related to cache invalidation when several unique
+      columns determine unique DELETE requests.
+    # Added support for Statement.setMaxRows(int) that was not
+      implemented on controller side.
+    # Fixed race in JDBCRecoveryLog that could lead to 'Duplicate
+      entry ...' errors and some requests failed to be logged. Bug
+      noticed by Jim Crossley.
+    # JDBCRecoveryLog works now asynchronously to improve performance
+      and to provide a framework to handle log failures.
+
+C-JDBC 1.0beta8
+  Release date: 21 August 2003
+  CVS Tag: c-jdbc-1_0beta8
+  Description:
+    # Modified javadoc target in the build file to build C-JDBC test
+      Suite Javadoc.
+    # Updated user documentation with console history usage and fixed
+      release procedure in developer doc.
+    # Fixed [BUG #298]: request scheduler definition has been rewritten.
+    # ResultSet.getDate, getTime and getTimestamp now gracefully converts
+      the requested object to the right type instead of throwing a cast
+      exception if the native driver returned an object of a different type.
+    # Fixed bug when query cache is running on the same host as the driver,
+      the ResultSet is not properly cloned when sent over the local emulation
+      of the socket. Now the ResultSet is systematically cloned to prevent
+      any problem.
+    # Virtual database console does not call anymore rs.beforeFirst() prior
+      to display the ResultSet. This allows to check the above bug fix and
+      is the expected behavior from a Java application.
+    # Test suite code cleaning.
+
+C-JDBC 1.0beta7
+  Release date: 19 August 2003
+  CVS Tag: c-jdbc-1_0beta7
+  Description:
+    # Added 'database' caching granularity that becomes the default caching
+      policy of the QueryCache.
+    # Cache now handles transaction commit/rollback but isolation is only
+      ensured with transaction level schedulers.
+    # Fixed bug in cache invalidation for drop queries.
+    # Updated documentation about stored procedures in console, new caching
+      functionalities, DTD updates and removed missing features that have
+      been implemented.
+    # Added package description for Javadoc.
+    # Removed test classes from C-JDBC API Javadoc.
+    # Unified management of NOW() and RAND() SQL macros by all schedulers.
+    # NOW() is handled as a Timestamp instead of a Date. 
+    # Fixed query cache behavior for statements containing SQL macros.
+    # Added tcsh like command redo (!command_prefix) to automatically recall
+      command history from GUI console.
+    # Commands are now added only once in the console history and history
+      pointer is kept between command calls.
+    # Fixed missing SQLException throwing when read request failed twice
+      in RAIDb-1 schedulers.
+    # Added read request automatic recovery and failure detection in RAIDb-2
+      controllers.
+
+C-JDBC 1.0beta6
+  Release date: 14 August 2003
+  CVS Tag: c-jdbc-1_0beta6
+  Description:
+    # Updated user documentation with DataSource usage by Marek Prochazka,
+      and added stored procedure usage.
+    # Added support for stored procedures in driver, controller, console,
+      SingleDB, RAIDb-1 and RAIDb-2.
+    # Added support for connection.setReadOnly(boolean) so that user can
+      force connections to be read-only and prevent the cache to be flushed
+      especially when calling stored procedures.
+    # Changed log and checkpoint table default names in DTD to prevent
+      case sensitivity issues with table names with some RDBMS.
+    # Fixed bad logger name in BackendWorkerThread.
+    # Fixed driver connection cache so that connection points to failed 
+      controllers are automatically flushed from the cache. This fixes the
+      'connection refused' exception that some users got when restarting
+      the controller while keeping the client running.
+    # Updated developer documentation with the C-JDBC release procedure.
+
+C-JDBC 1.0alpha5
+  Release date: 6 August 2003
+  CVS Tag: c-jdbc-1_0alpha5
+  Description:
+    # Added a section in the documentation about the Requet Player.
+    # escapeProcessing can now be disabled in PreparedStatement.setString(...)
+      if setEscapeProcessing(false) has been called. Problem reported by
+      Mike Daleiden
+    # Cache management: added a new caching granularity (columnUniqueDelete).
+    # Added basic support for batch updates.
+    # Improved syntax checking in delete statement parsing.
+    # Updated DTD with the new columnUniqueDelete cache granularity 
+      and the new JDBCRecoveryLog definition.
+    # JDBCRecovery log and checkpoint table create statement are now user
+      tunable to be portable across on database engines that does not
+      accept the default create statements.
+    # Updated examples with and documentation with various RecoveryLog 
+      definitions including a HSQL specific log table creation statement.
+    # Added configuration for CheckStyle v3.1.
+    # Removed redundant public modifiers in interfaces.
+    # Cleaned some empty statements detected by Checkstyle.
+    # Fixed bug in VirtualDatabaseConsole that prevented to exit the console
+      if the connection was lost with the controller.
+    # Added driver.DataSource implementation. This allows to bind an
+      initialized C-JDBC DataSource object at an "application server" site,
+      and to retrieve it a client site via JNDI.
+    # Fixed bug in JDBCRecoveryLog reported by Jess Sightler: setting
+      of logTableId was not thread safe.
+    # Improved requestplayer tools: added -f (--file) allowing to use
+      another configuration file instead of default file in
+      config/requestplayer.properties.
+
+C-JDBC 1.0alpha4
+  Release date: 13 June 2003
+  CVS Tag: c-jdbc-1_0alpha4
+  Description:
+    # Added graphic console: this new console is launched by default
+      and provides some facilities, but the old console can still be
+      used using the new option -t (--text).
+    # Added -f (--file) option to the console allowing to use a given
+      file as the source of commands instead of reading commands
+      interactively.
+    # Fixed bug in src distribution: src_jdk1.3 was not included
+      (reported by bd-c-jdbc@knowledgeworks.plus.com).
+    # Modified build file to allow compilation in JDK < 1.3.
+    # Query cache commit/update reports a warning instead of throwing
+      a NotImplemtentedException.
+
+C-JDBC 1.0alpha3
+  Release date: 5 June 2003
+  CVS Tag: c-jdbc-1_0alpha3
+  Description:
+    # Fixed bug in the build process reported by Greg Ward: the doc is
+      now really generated only if the generate.doc property is set in
+      build.properties (the value does not matter) and the dist target
+      succeeds now when doc is not generated.
+    # Applied [Patch #8]: Fixed typo in log and error message.
+    # Modified doc build process to include automatically the release
+      number defined in build.properties in User and Developer's
+      guides, XML config files samples, ...
+    # Fixed [BUG #272]: Ctrl-D results in NullPointerException in the
+      console.
+    # Fixed [BUG #303,#307]: Modified JDBCRecoveryLog to ensure Sybase 
+      compatibility.
+    # Fixed [BUG #296]: Console can not handle null values.
+    # Fixed bug in XML configuration file parsing which prevents
+      RAIDb-0 scheduler level query to work (reported by Xavier
+      Spengler)
+    # Fixed [BUG #299]: Console: error in admin prompt returns to main.
+    # Fixed multiple backends usage with SingleDB load balancer.
+    # Updated user documentation with Tomcat, JOnAS and JBoss configuration.
+
+C-JDBC 1.0alpha2
+  Release date: 22 May 2003
+  CVS Tag: c-jdbc-1_0alpha2
+  Description:
+    # Fixed [BUG #272]: Failed to execute query with java.sql.Statement.
+    # Fixed [BUG #273]: Unsupported Datatype in C-JDBC console.
+    # Fixed [BUG #290]: Case sensitive parsing is supported and optional
+      (this option has been added to the DTD).
+    # Fixed [BUG #291]: Typo in config.sh fixed by Greg Ward.
+    # Fixed [BUG #292]: Typo in console found by Greg Ward.
+    # Fixed ResultSet display in console if driver returns a negative
+      column display size.
+    # Added support for backend network failure (usually when the
+      backend dies) the backend is now automatically disabled and the
+      read request is performed by another backend.
+    # Updated examples.
+    # Fixed bug in packaging of the binary distribution that prevents
+      JMX http interface to work (stylesheets were missing).
+    # Added contribution from Guillaume Bort for getCatalog/setCatalog
+      and DatabaseMetaData.getTables support (needed by JBoss).
+    # Fixed missing ResultSet closing in database schema fetching (problem
+      reported by Andre Austin).
+    # Fixed PreparedStatement compliance testing that failed for SAP DB
+      (problem reported by Dan Winfield).
+    # Fixed typo in the QueryCacheDB entry of the C-JDBC DTD as reported
+      by the Apollon team.
+    # Enhanced runtime exception handling in C-JDBC console.
+    # Added sanity checks for missing user name or password when trying to get
+      a connection from the driver.
+    # Full ResultSetMetaData implementation.
+    # Fixed problem with ResultSet.getInt() for Oracle by Andre Austin.
+
+C-JDBC 1.0alpha1
+  Release date: 7 May 2003
+  CVS Tag: c-jdbc-1_0alpha1
+  Description:
+    # Fixed [BUG #144]: RMI registry startup on already used port.
+    # Fixed [BUG #262]: SQL requests where systematically converted to
+      lowercase.
+    # Added support for BLOBs.
+    # Improved error message handling in driver.
+    # Improved request parsing by using SQL skeletons given in
+      PreparedStatements.
+	
+C-JDBC 1.0alpha0
+  Release date: 29 April 2003
+  CVS Tag: c-jdbc-1_0alpha0
+  Description:
+    Initial release.

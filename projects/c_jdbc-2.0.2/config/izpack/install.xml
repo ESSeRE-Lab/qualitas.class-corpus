@@ -1,0 +1,18 @@
+<AutomatedInstallation langpack="eng">
+    <HelloPanel/>
+    <LicencePanel/>
+    <TargetPanel>
+        <installpath>@install_path@</installpath>
+    </TargetPanel>
+    <PacksPanel>
+        <pack name="C-JDBC Driver" index="0" selected="true"/>
+        <pack name="C-JDBC Controller" index="1" selected="true"/>
+        <pack name="C-JDBC Console" index="2" selected="true"/>
+        <pack name="C-JDBC Docs" index="3" selected="true"/>
+        <pack name="C-JDBC Demo" index="4" selected="true"/>
+        <pack name="Squirrel" index="5" selected="true"/>
+        <pack name="iSQL" index="6" selected="true"/>
+    </PacksPanel>
+    <InstallPanel/>
+    <FinishPanel/>
+</AutomatedInstallation>

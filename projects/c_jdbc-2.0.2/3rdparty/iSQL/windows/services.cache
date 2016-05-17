@@ -1,0 +1,5 @@
+SERVICE_ORDER=cjdbc\u0001hsqldb-9001\u0001hsqldb-9002\u0001hsqldb_recovery\u0001
+HSQLDB-9002=file\:$INSTALL_PATH/3rdparty/iSQL/.iSQL-Viewer/hsqldb-9002.service
+CJDBC=file\:$INSTALL_PATH/3rdparty/iSQL/.iSQL-Viewer/cjdbc.service
+HSQLDB-9001=file\:$INSTALL_PATH/3rdparty/iSQL/.iSQL-Viewer/hsqldb-9001.service
+HSQLDB_RECOVERY=file\:$INSTALL_PATH/3rdparty/iSQL/.iSQL-Viewer/hsqldb-recovery.service

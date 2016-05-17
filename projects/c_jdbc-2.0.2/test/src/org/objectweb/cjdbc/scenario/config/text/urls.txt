@@ -1,0 +1,184 @@
+// -----------------------------------------------------------------------------------------------------------------------
+// C-JDBC URLs parsing test
+//
+// The URLs to test must have the following format:
+// <URL to test>
+// <boolean>: true if the URL is valid
+// Then if the URL is valid: 
+// <databaseName>
+// <controler list> (eg: cluster1.objectweb.org:25322 cluster2.objectweb.org:25322)
+// <param list> (eg: user=niko password=notknown - use <empty> if there is no param)
+// -----------------------------------------------------------------------------------------------------------------------
+
+// --------------------------------------
+// Bad database names
+// --------------------------------------
+jdbc:cjdbc://host-foo../myDB
+false
+
+jdbc:cjdbc://.host.domain.org/myDB
+false
+
+jdbc:cjdbc://.localhost/myDB
+false
+
+jdbc:cjdbc://host.domain.org./myDB
+false
+
+jdbc:cjdbc://host..domain.org./myDB
+false
+
+jdbc:cjdbc://host_1.domain.org/myDB
+false
+
+jdbc:cjdbc://$host.domain.org/myDB
+false
+
+jdbc:cjdbc://mail-archive-.obje-ctweb.org/myDB
+false
+
+jdbc:cjdbc://:/tpcw
+false
+
+jdbc:cjdbc://::/tpcw
+false
+
+jdbc:cjdbc://.localhost:/tpcw
+false
+
+jdbc:cjdbc://localhost:,host.:25322/tpcw
+false
+
+// --------------------------------------
+
+jdbc:cjdbc://mail-archive.objectweb.org/myDB
+true
+myDB
+mail-archive.objectweb.org:25322
+<empty>
+
+jdbc:cjdbc://mail-archive.obje-ctweb.org/myDB
+true
+myDB
+mail-archive.obje-ctweb.org:25322
+<empty>
+
+jdbc:ccjdbc://localhost:/tpcw
+false
+
+jdbc:cjdbc://localhost:tpcw
+false
+
+jdbc:cjdbc://localhost/tpcw
+true
+tpcw
+localhost:25322
+<empty>
+
+jdbc:cjdbc://localhost:/tpcw
+true
+tpcw
+localhost:25322
+<empty>
+
+jdbc:cjdbc://localhost:25322::/tpcw
+false
+
+jdbc:cjdbc://localhost:25322:/tpcw
+false
+
+jdbc:cjdbc://localhost:/$tpcw
+false
+
+jdbc:cjdbc://,/tpcw
+false
+
+// TODO: no error thrown with the current parsing
+//jdbc:cjdbc://,localhost:/tpcw
+//false
+
+// TODO: no error thrown with the current parsing
+//jdbc:cjdbc://localhost:,/tpcw
+//false
+
+// TODO: no error thrown with the current parsing
+//jdbc:cjdbc://host1:,,host1/tpcw
+//false
+
+jdbc:cjdbc://host1, host2/tpcw
+true
+tpcw
+host1:25322 host2:25322
+<empty>
+
+jdbc:cjdbc://host1:, host2:/tpcw
+true
+tpcw
+host1:25322 host2:25322
+<empty>
+
+jdbc:cjdbc://host1:1001,host2:/database
+true
+database
+host1:1001 host2:25322
+<empty>
+
+jdbc:cjdbc://host1:,host2:/tpcw
+true
+tpcw
+host1:25322 host2:25322
+<empty>
+
+jdbc:cjdbc://localhost:c/tpcw
+false
+
+jdbc:cjdbc://localhost:25322:/tpcw
+false
+
+jdbc:cjdbc://localhost:25322/tpcw
+true
+tpcw
+localhost:25322
+<empty>
+
+jdbc:cjdbc://cluster1.objectweb.org:25322,cluster2.objectweb.org:25322/tpcw
+true
+tpcw
+cluster1.objectweb.org:25322 cluster2.objectweb.org:25322
+<empty>
+
+jdbc:cjdbc://localhost:1096,smpnode.com:1097/tpcw
+true
+tpcw
+localhost:1096 smpnode.com:1097
+<empty>
+
+jdbc:cjdbc://smpnode.com:25322,smpnode.com:1234,smpnode.com:1235,smpnode.com:1236/tpcw
+true
+tpcw
+smpnode.com:25322 smpnode.com:1234 smpnode.com:1235 smpnode.com:1236
+<empty>
+
+jdbc:cjdbc://host1:,host2:/tpcw?user=niko&password=albert
+true
+tpcw
+host1:25322 host2:25322
+user=niko password=albert
+
+jdbc:cjdbc://localhost:25322/myDB?user=user&password=
+true
+myDB
+localhost:25322
+user=user password=
+
+jdbc:cjdbc://localhost:25322/myDB;user=user;password=
+true
+myDB
+localhost:25322
+user=user password=
+
+jdbc:cjdbc://localhost/myDB?noparse=true&escape=true&truevalue=1&falsevalue=0
+true
+myDB
+localhost:25322
+noparse=true escape=true truevalue=1 falsevalue=0

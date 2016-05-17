@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF8"?>
+<!DOCTYPE C-JDBC PUBLIC "-//ObjectWeb//DTD C-JDBC @VERSION@//EN" "http://c-jdbc.objectweb.org/dtds/c-jdbc-@VERSION@.dtd">
+
+<C-JDBC>
+
+  <VirtualDatabase name="myDB" blobEncodingMethod="hexa">
+
+	<Distribution>
+	</Distribution>
+	
+   <AuthenticationManager>
+      <Admin>
+      	<User username="admin" password=""/>
+      </Admin> 
+      <VirtualUsers>
+        <VirtualLogin vLogin="user" vPassword=""/>
+      </VirtualUsers>
+    </AuthenticationManager>
+
+    <DatabaseBackend name="localhost1" driver="org.hsqldb.jdbcDriver" url="jdbc:hsqldb:hsql://localhost:9001" connectionTestStatement="call now()">
+      <DatabaseSchema dynamicPrecision="table"/>
+      <ConnectionManager vLogin="user" rLogin="TEST" rPassword="">
+        <VariablePoolConnectionManager initPoolSize="10" minPoolSize="5" maxPoolSize="50" idleTimeout="30" waitTimeout="10"/>
+      </ConnectionManager>
+    </DatabaseBackend>
+
+    <RequestManager>
+      <RequestScheduler>
+         <RAIDb-1Scheduler level="passThrough"/>
+      </RequestScheduler>
+      
+      <RequestCache>
+         <MetadataCache/>
+         <ParsingCache/>
+         <ResultCache granularity="table"/>
+      </RequestCache>
+
+      <LoadBalancer>
+         <RAIDb-1>
+            <WaitForCompletion policy="first"/>
+            <RAIDb-1-LeastPendingRequestsFirst/>
+         </RAIDb-1>
+      </LoadBalancer>
+    </RequestManager>
+  </VirtualDatabase>
+
+</C-JDBC>

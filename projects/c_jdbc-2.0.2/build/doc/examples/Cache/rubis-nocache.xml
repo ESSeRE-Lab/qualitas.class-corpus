@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF8"?>
+<!DOCTYPE C-JDBC PUBLIC "-//ObjectWeb//DTD C-JDBC 2.0.2//EN" "http://c-jdbc.objectweb.org/dtds/c-jdbc-2.0.2.dtd">
+
+<C-JDBC>
+  
+  <VirtualDatabase name="rubis">
+
+    <AuthenticationManager>
+      <Admin>
+      	<User username="margueri" password=""/>
+      </Admin> 
+      <VirtualUsers>
+        <VirtualLogin vLogin="margueri" vPassword=""/>
+      </VirtualUsers>
+    </AuthenticationManager>
+
+    <DatabaseBackend name="rubis" driver="org.gjt.mm.mysql.Driver" url="jdbc:mysql://sci22/rubis" connectionTestStatement="select 1">
+      <ConnectionManager vLogin="margueri" rLogin="margueri" rPassword="">
+        <VariablePoolConnectionManager initPoolSize="40"/>
+      </ConnectionManager>
+    </DatabaseBackend>
+
+    <RequestManager>
+
+      <RequestScheduler>
+        <SingleDBScheduler level="passThrough"/>
+      </RequestScheduler>
+
+      <LoadBalancer>
+        <SingleDB/>
+      </LoadBalancer>
+
+    </RequestManager>
+  </VirtualDatabase>
+
+</C-JDBC>
+
+

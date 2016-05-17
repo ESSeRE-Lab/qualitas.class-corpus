@@ -1,0 +1,236 @@
+<?xml version="1.0" encoding="iso-8859-1" standalone="yes" ?>
+
+<!-- IzPack install file for the binary C-JDBC distribution -->
+<installation version="1.0">
+
+  <!-- Info section -->
+  <info>
+    <appname>C-JDBC Binary Distribution</appname>
+    <appversion>@VERSION@</appversion>
+    <authors>
+      <author name="Emmanuel Cecchet" email="emmanuel.cecchet@emicnetworks.com"/>
+      <author name="Nicolas Modrzyk" email="nicolas.modrzyk@inrialpes.fr"/>
+    </authors>
+    <url>http://c-jdbc.objectweb.org/</url>
+  </info>
+
+  <!-- GUI preferences indication -->
+<!--  <guiprefs width="800" height="480" resizable="yes"> -->
+	 <guiprefs height="600" resizable="yes" width="800">
+        <laf name="metouia">
+            <os family="unix" />
+        </laf>
+    </guiprefs>
+	
+  
+  <!-- Locale section -->
+  <locale>
+    <langpack iso3="eng"/>
+  </locale>
+
+  <!-- Resources section -->
+  <resources>
+    <res id="LicencePanel.licence" src="doc/LICENSE.txt"/>
+    <res id="Installer.image" src="doc/images/logo_small.png"/>
+    <res id="TargetPanel.dir.unix" src="build/IzPack/TargetPanel.dir.unix.bin"/>
+    <res id="TargetPanel.dir.windows" src="build/IzPack/TargetPanel.dir.windows.bin"/>
+  </resources>
+  
+  <!-- Panels section -->
+  <panels>
+    <panel classname="HelloPanel"/>
+    <panel classname="LicencePanel"/>
+    <panel classname="TargetPanel"/> 
+    <panel classname="PacksPanel"/>
+    <panel classname="InstallPanel"/>
+    <panel classname="FinishPanel"/>
+  </panels>
+  
+  <!-- Packs section -->
+  <packs>
+  
+    <!-- Driver pack -->
+    <pack name="C-JDBC Driver" required="yes">
+      <description>C-JDBC driver alone.</description>
+      <file src="build/dist/bin/README.txt" targetdir="$INSTALL_PATH"/>
+      <file src="build/dist/bin/drivers/c-jdbc-driver.jar" targetdir="$INSTALL_PATH/drivers"/>
+    </pack>
+  
+    <!-- Controller pack -->
+    <pack name="C-JDBC Controller" required="no">
+      <description>C-JDBC binary files for the controller.</description>
+
+      <!-- bin -->
+      <fileset dir="build/bin" targetdir="$INSTALL_PATH/bin">
+        <include name="controller.bat"/>
+        <include name="controller.sh"/>
+        <include name="requestplayer.bat"/>   
+        <include name="requestplayer.sh"/>
+      </fileset>
+
+      <parsable targetfile="$INSTALL_PATH/bin/console.bat"/>
+      <parsable targetfile="$INSTALL_PATH/bin/console.sh" type="shell"/>
+      <parsable targetfile="$INSTALL_PATH/bin/controller.bat"/>
+      <parsable targetfile="$INSTALL_PATH/bin/controller.sh" type="shell"/>
+      <parsable targetfile="$INSTALL_PATH/bin/requestplayer.bat"/>
+      <parsable targetfile="$INSTALL_PATH/bin/requestplayer.sh" type="shell"/>
+
+      <executable targetfile="$INSTALL_PATH/bin/console.sh" stage="never"/>
+      <executable targetfile="$INSTALL_PATH/bin/controller.sh" stage="never"/>
+      <executable targetfile="$INSTALL_PATH/bin/requestplayer.sh" stage="never"/>
+
+      <!-- other files -->
+      <fileset dir="build/dist/bin/config" targetdir="$INSTALL_PATH/config">
+	<include name="*.*"/>
+      </fileset>
+      <fileset dir="build/dist/bin/config/controller" targetdir="$INSTALL_PATH/config/controller">
+	<include name="controller.xml"/>
+      </fileset>
+      <fileset dir="build/dist/bin/lib" targetdir="$INSTALL_PATH/lib"/>
+      <file src="build/dist/bin/xml" targetdir="$INSTALL_PATH"/>
+      <file src="build/dist/bin/log" targetdir="$INSTALL_PATH"/>
+    </pack>
+    
+    <!-- Console pack -->
+    <pack name="C-JDBC Console" required="no">
+      <description>C-JDBC binary files for the console and the configuration wizard.</description>
+
+      <!-- bin -->
+      <fileset dir="build/bin" targetdir="$INSTALL_PATH/bin">
+        <include name="console.bat"/>      
+        <include name="console.sh"/>
+		<include name="wizard.bat"/>      
+        <include name="wizard.sh"/>
+		
+      </fileset>
+      
+      <file src="build/dist/bin/config/language" targetdir="$INSTALL_PATH/config"/>
+
+      <parsable targetfile="$INSTALL_PATH/bin/console.bat"/>
+      <parsable targetfile="$INSTALL_PATH/bin/console.sh" type="shell"/>
+      <parsable targetfile="$INSTALL_PATH/bin/wizard.sh" type="shell"/>	  
+
+      <executable targetfile="$INSTALL_PATH/bin/wizard.sh" stage="never"/>
+
+      <!-- other files -->
+      <fileset dir="build/dist/bin/lib" targetdir="$INSTALL_PATH/lib">
+      <include name="c-jdbc-console.jar"/>
+      <include name="jcommon.jar"/>
+      <include name="jfreechart.jar"/>
+	  <include name="jline.jar"/>
+      <include name="commons-cli.jar"/>
+      <include name="log4j.jar"/>            
+      </fileset>
+      <fileset dir="build/dist/bin/lib/jmx" targetdir="$INSTALL_PATH/lib/jmx">
+      <include name="mx4j-jmx.jar"/>
+      <include name="mx4j-tools.jar"/>      
+      </fileset>
+      <file src="build/dist/bin/README.txt" targetdir="$INSTALL_PATH"/>
+    </pack>
+
+    <!-- Docs pack -->
+    <pack name="C-JDBC Docs" required="no">
+      <description>C-JDBC documentation (User's and Developer's Guides, configuration samples).</description>
+      <file src="build/dist/bin/doc" targetdir="$INSTALL_PATH" />
+    </pack>
+    
+    <!-- Demo pack -->
+    <pack name="C-JDBC Demo" required="no">
+      <description>C-JDBC demo, examples and tutorial. It includes Hsqldb to start the tutorial scenarios out of the box.</description>
+      <file src="build/dist/bin/doc" targetdir="$INSTALL_PATH" />
+      
+      <!-- Add hsqldb launch scripts to bin directory-->
+      <fileset dir="build/bin/" targetdir="$INSTALL_PATH/bin">
+        <include name="hsqldb.*"/>
+      </fileset>
+	  
+	  <fileset dir="build/bin/demo" targetdir="$INSTALL_PATH/demo">
+        <!-- Add database test files to directory -->
+        <include name="demo-*"/>
+      </fileset>
+	  
+      <!-- 
+      Install Hyper SQL folders
+      -->    
+      <fileset dir="3rdparty/hsqldb" targetdir="$INSTALL_PATH/3rdparty/hsqldb">
+        <exclude name="**/CVS/*"/>
+      </fileset>
+      <parsable targetfile="$INSTALL_PATH/bin/hsqldb.bat"/>
+      <parsable targetfile="$INSTALL_PATH/bin/hsqldb.sh" type="shell"/>
+      <parsable targetfile="$INSTALL_PATH/demo/demo-raidb1.bat"/>
+      <parsable targetfile="$INSTALL_PATH/demo/demo-raidb1.sh" type="shell"/>
+      <parsable targetfile="$INSTALL_PATH/demo/demo-distributed-raidb1-controller1.bat"/>
+      <parsable targetfile="$INSTALL_PATH/demo/demo-distributed-raidb1-controller1.sh" type="shell"/>
+      <parsable targetfile="$INSTALL_PATH/demo/demo-distributed-raidb1-controller2.bat"/>
+      <parsable targetfile="$INSTALL_PATH/demo/demo-distributed-raidb1-controller2.sh" type="shell"/>
+	  
+      <executable os="unix" targetfile="$INSTALL_PATH/bin/hsqldb.sh" keep="true" stage="never"/>
+      <executable os="unix" targetfile="$INSTALL_PATH/demo/demo-raidb1.sh" keep="true" stage="never"/>
+      <executable os="unix" targetfile="$INSTALL_PATH/demo/demo-distributed-raidb1-controller1.sh" keep="true" stage="never"/>
+      <executable os="unix" targetfile="$INSTALL_PATH/demo/demo-distributed-raidb1-controller2.sh" keep="true" stage="never"/>	  	  
+      
+      <!-- Example configuration files -->
+      <!-- Add controller demo files -->
+      <fileset dir="build/dist/bin/config/controller" targetdir="$INSTALL_PATH/config/controller">
+       <include name="*.xml"/>
+      </fileset>
+      <!-- Add virtualdatabase demo files -->      
+      <fileset dir="build/dist/bin/config/virtualdatabase" targetdir="$INSTALL_PATH/config/virtualdatabase">
+       <include name="*.xml"/>
+      </fileset>
+      
+    </pack>
+    
+    <!-- Squirrel pack -->
+    <pack name="Squirrel" required="no">
+      <description>Graphical SQL Client.</description>
+      <!-- Add launch scripts to bin directory-->
+      <fileset dir="build/bin" targetdir="$INSTALL_PATH/bin">
+        <include name="squirrel.bat"/>
+        <include name="squirrel.sh"/>
+      </fileset>
+
+      <!-- Install Squirrel -->    
+      <fileset dir="build/dist/bin/3rdparty/squirrel" targetdir="$INSTALL_PATH/3rdparty/squirrel">
+        <exclude name="**/CVS/*"/>
+      </fileset>
+      <parsable targetfile="$INSTALL_PATH/bin/squirrel.bat"/>
+      <parsable targetfile="$INSTALL_PATH/bin/squirrel.sh" type="shell"/>
+      <executable targetfile="$INSTALL_PATH/bin/squirrel.sh" stage="never"/>
+    </pack>        
+	
+	    <!-- iSQL pack -->
+    <pack name="iSQL" required="no">
+      <description>Graphical SQL Client.</description>
+      <!-- Add launch scripts to bin directory-->
+      <fileset dir="build/bin" targetdir="$INSTALL_PATH/bin">
+        <include name="isql.bat"/>
+        <include name="isql.sh"/>
+      </fileset>
+
+      <!-- Install iSQL -->    
+      <fileset dir="build/dist/bin/3rdparty/iSQL" targetdir="$INSTALL_PATH/3rdparty/iSQL">
+        <exclude name="**/CVS/*"/>
+		<exclude name="**/windows/**"/>
+		<exclude name="**/unix/**"/>		
+      </fileset>
+	  
+	  <!-- This will copy the appropriate launcher file for the sytem -->
+	  <singlefile src="build/dist/bin/3rdparty/iSQL/unix/iSQL-Viewer.lax" target="$INSTALL_PATH/3rdparty/iSQL/iSQL-Viewer.lax" os="unix"/>
+	  <singlefile src="build/dist/bin/3rdparty/iSQL/windows/iSQL-Viewer.lax" target="$INSTALL_PATH/3rdparty/iSQL/iSQL-Viewer.lax" os="windows"/>
+	  <!-- This will copy the service cache file for the sytem -->
+	  <singlefile src="build/dist/bin/3rdparty/iSQL/unix/services.cache" target="$INSTALL_PATH/3rdparty/iSQL/.iSQL-Viewer/services.cache" os="unix"/>
+	  <singlefile src="build/dist/bin/3rdparty/iSQL/windows/services.cache" target="$INSTALL_PATH/3rdparty/iSQL/.iSQL-Viewer/services.cache" os="windows"/>	  
+	  
+      <parsable targetfile="$INSTALL_PATH/bin/isql.bat"/>
+      <parsable targetfile="$INSTALL_PATH/bin/isql.sh" type="shell"/>
+	  <parsable targetfile="$INSTALL_PATH/3rdparty/iSQL/iSQL-Viewer.lax" type="javaprop"/>      
+	  <parsable targetfile="$INSTALL_PATH/3rdparty/iSQL/.iSQL-Viewer/cjdbc.service" type="shell"/>
+	  <parsable targetfile="$INSTALL_PATH/3rdparty/iSQL/.iSQL-Viewer/hsqldb-9001.service" type="shell"/>
+	  <parsable targetfile="$INSTALL_PATH/3rdparty/iSQL/.iSQL-Viewer/hsqldb-9002.service" type="shell"/>
+	  <parsable targetfile="$INSTALL_PATH/3rdparty/iSQL/.iSQL-Viewer/services.cache" type="javaprop"/>	  
+      <executable targetfile="$INSTALL_PATH/bin/isql.sh" stage="never"/>
+	  
+    </pack>
+  </packs>
+</installation>

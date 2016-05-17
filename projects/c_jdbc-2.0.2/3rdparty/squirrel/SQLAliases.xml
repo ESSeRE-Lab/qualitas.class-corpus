@@ -1,0 +1,35 @@
+<Beans>
+    <Bean Class="net.sourceforge.squirrel_sql.fw.sql.SQLAlias">
+        <driverIdentifier Class="net.sourceforge.squirrel_sql.fw.id.UidIdentifier">
+            <string>-19</string>
+        </driverIdentifier>
+        <identifier Class="net.sourceforge.squirrel_sql.fw.id.UidIdentifier">
+            <string>19da4fc:f83fb528c3:-7fe4</string>
+        </identifier>
+        <name>myHSQLdb (port 9001)</name>
+        <url>jdbc:hsqldb:hsql://localhost:9001</url>
+        <userName>TEST</userName>
+    </Bean>
+    <Bean Class="net.sourceforge.squirrel_sql.fw.sql.SQLAlias">
+        <driverIdentifier Class="net.sourceforge.squirrel_sql.fw.id.UidIdentifier">
+            <string>-19</string>
+        </driverIdentifier>
+        <identifier Class="net.sourceforge.squirrel_sql.fw.id.UidIdentifier">
+            <string>19da4fc:f83fb528c3:-7fe5</string>
+        </identifier>
+        <name>myHSQLdb (port 9002)</name>
+        <url>jdbc:hsqldb:hsql://localhost:9002</url>
+        <userName>TEST</userName>
+    </Bean>
+    <Bean Class="net.sourceforge.squirrel_sql.fw.sql.SQLAlias">
+        <driverIdentifier Class="net.sourceforge.squirrel_sql.fw.id.UidIdentifier">
+            <string>dcb03b:f83c5c899e:-7fe8</string>
+        </driverIdentifier>
+        <identifier Class="net.sourceforge.squirrel_sql.fw.id.UidIdentifier">
+            <string>149d886:f83c67db7f:-7fff</string>
+        </identifier>
+        <name>myCJDBCdb (port 25322)</name>
+        <url>jdbc:cjdbc://localhost:25322/myDB</url>
+        <userName>user</userName>
+    </Bean>
+</Beans>

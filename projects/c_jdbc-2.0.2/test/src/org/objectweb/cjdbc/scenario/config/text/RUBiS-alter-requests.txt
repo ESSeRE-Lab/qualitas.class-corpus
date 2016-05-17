@@ -1,0 +1,38 @@
+// -----------------------------------------------------------------------------------------------------------------------
+// ALTER requests test
+//
+// The request must have the following format:
+// #begin
+// <ALTER TABLE request>
+// #end
+// <isValid flag>: true if this request is valid
+//
+// If the request is valid:
+// <table concerned by the request>
+// <columns concerned by the request> (eg: "col1.unique col2 col3", .unique 
+// means the column is unique.
+//
+// If the request is not valid:
+// <error message>
+//
+// do not add empty line between the lines defining a test
+// line beginning by a // are ignored except in a test
+// -----------------------------------------------------------------------------------------------------------------------
+
+// -----------------------------------------------------------------------------------------------------------------------
+// RUBiS database (PostgreSQL)
+// -----------------------------------------------------------------------------------------------------------------------
+
+#begin
+ALTER TABLE categories ADD column people2 VARCHAR(25)
+#end
+true
+categories
+people2
+
+#begin
+ALTER TABLE items DROP column description
+#end
+true
+items
+description

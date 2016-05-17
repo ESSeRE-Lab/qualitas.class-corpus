@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF8" ?>
+
+<!DOCTYPE C-JDBC-CONTROLLER PUBLIC "-//ObjectWeb//DTD C-JDBC-CONTROLLER 2.0.2//EN"  "http://c-jdbc.objectweb.org/dtds/c-jdbc-controller-2.0.2.dtd">
+
+<C-JDBC-CONTROLLER>
+  <Controller port="25324">
+    <Report hideSensitiveData="true" generateOnShutdown="true" generateOnFatal="true" enableFileLogging="true" />
+    <JmxSettings>
+      <RmiJmxAdaptor port="1094"/>
+    </JmxSettings>
+    <VirtualDatabase configFile="derby2.xml" virtualDatabaseName="xpetstore" autoEnableBackends="force"/>
+  </Controller>
+</C-JDBC-CONTROLLER>

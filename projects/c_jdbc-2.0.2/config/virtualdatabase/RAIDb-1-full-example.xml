@@ -1,0 +1,255 @@
+<?xml version="1.0" encoding="UTF8"?>
+<!DOCTYPE C-JDBC PUBLIC "-//ObjectWeb//DTD C-JDBC @VERSION@//EN" "http://c-jdbc.objectweb.org/dtds/c-jdbc-@VERSION@.dtd">
+
+<C-JDBC>
+  
+  <!--
+	This is an example configuration file for the virtual database.
+	
+	 A VirtualDatabase contains :
+   - optional distribution rules to allow the virtual database to be shared
+     by C-JDBC controllers (horizontal scalability),
+   - optional monitoring to get runtime statistics,
+   - an Authentiation manager matches the virtual database and real
+   backends login/password,
+   - a set of real database backends,
+   - a request manager defines the behavior of the controller for this
+   VirtualDatabase.
+   
+	-->
+  <VirtualDatabase name="rubis" maxNbOfConnections="150" minNbOfThreads="40" maxNbOfThreads="150" blobEncodingMethod="hexa">
+
+<!--
+	###
+	### This is used in distributed mode only. Note that it is impossible to turn a simple database into a distributed database
+	### at runtime.
+	###
+-->
+<!--
+    <Distribution groupName="cjdbcGroup">
+    </Distribution>
+-->
+
+<!--
+	###
+	### Monitoring examples. You can set as many as you want.
+	###
+-->
+<!--
+    <Monitoring>
+	 <SQLMonitoring	defaultMonitoring="on">
+		<SQLMonitoringRule queryPattern="SELECT * FROM t1 WHERE x=?" caseSensitive="false" applyToSkeleton="false" monitoring="on"/>
+		<SQLMonitoringRule queryPattern="SELECT * FROM t2 WHERE x=?" caseSensitive="false" applyToSkeleton="false" monitoring="on"/>
+	 </SQLMonitoring>
+    </Monitoring>
+-->
+
+<!--
+	 ###
+	 ### Backuper information to dump/restore the database
+	 ###
+-->
+<!--
+    <Backup>
+      <Backuper backuperName="Octopus" className="org.objectweb.cjdbc.controller.backup.OctopusBackuper" options="zip=true"/>
+    </Backup>
+    
+-->
+	
+    <AuthenticationManager>
+      <Admin>
+      	<User username="admin" password="c-jdbc"/>
+      </Admin> 
+      <VirtualUsers>
+        <VirtualLogin vLogin="user" vPassword="c-jdbc"/>
+      </VirtualUsers>
+    </AuthenticationManager>
+
+
+<!--
+	###
+	### Here is a list (non-exhaustive) of backends that can be used with C-JDBC.
+	### Different metadata is needed for each different vendor.
+	### Uncomment the one you need for your specific backend. 
+	###
+-->
+
+
+    <DatabaseBackend name="mysql" driver="org.gjt.mm.mysql.Driver" url="jdbc:mysql://localhost/rubis" connectionTestStatement="select 1">
+	 <DatabaseSchema dynamicPrecision="all"/>
+	  <RewritingRule queryPattern="?1 LIMIT ?2,?3" rewrite="?1 LIMIT ?3,?2" matchingType="pattern"/>
+      <ConnectionManager vLogin="user" rLogin="user" rPassword="">
+	     <FailFastPoolConnectionManager poolSize="40"/>
+		 <!--
+			### 
+			### Examples of Connection Managers that can be used.
+			### Each vLogin can have a different Connection Manager attributed.
+			###
+		-->
+		<!--
+			<RandomWaitPoolConnectionManager poolSize="20"/>
+		-->
+		<!--
+			<VariablePoolConnectionManager initPoolSize="10" minPoolSize="5" maxPoolSize="50" idleTimeout="180" waitTimeout="120"/>
+		-->
+		<!--
+			<RandomWaitPoolConnectionManager poolSize="40" timeout="30"/>
+		-->
+		<!--
+			<SimpleConnectionManager/>
+	     -->
+      </ConnectionManager>
+    </DatabaseBackend>
+
+<!--
+    <DatabaseBackend name="postgresql" driver="org.postgresql.Driver" url="jdbc:postgresql://localhost/rubis" connectionTestStatement="select now()">
+	<DatabaseSchema dynamicPrecision="column"/>
+      <ConnectionManager vLogin="user" rLogin="user" rPassword="">
+	<RandomWaitPoolConnectionManager poolSize="20"/>
+      </ConnectionManager>
+    </DatabaseBackend>
+-->
+<!--
+    <DatabaseBackend name="sapdb" driver="com.sap.dbtech.jdbc.DriverSapDB" url="jdbc:sapdb://localhost/rubis" connectionTestStatement="select count(*) from versions">
+   	  <DatabaseSchema dynamicPrecision="table"/>
+      <ConnectionManager vLogin="user" rLogin="user" rPassword="">
+	<VariablePoolConnectionManager initPoolSize="10" minPoolSize="5" maxPoolSize="50" idleTimeout="180" waitTimeout="120"/>
+      </ConnectionManager>
+    </DatabaseBackend>
+-->
+<!--
+    <DatabaseBackend name="hsql" driver="org.hsqldb.jdbcDriver" url="jdbc:hsqldb:hsql://localhost" connectionTestStatement="call now()">
+      <ConnectionManager vLogin="user" rLogin="sa" rPassword="">	
+	<RandomWaitPoolConnectionManager poolSize="40" timeout="30"/>
+      </ConnectionManager>
+    </DatabaseBackend>
+-->
+
+    <RequestManager>
+		
+      <RequestScheduler>
+         <RAIDb-1Scheduler level="passThrough"/>
+		 <!--
+			### 
+			### Here are examples of RAIDb1 schedulers
+			###
+		 <RAIDb-1Scheduler level="passThrough"/>
+		 <RAIDb-1Scheduler level="query"/>
+		 <RAIDb-1Scheduler level="optimisticTransaction"/>
+		 <RAIDb-1Scheduler level="optimisticQuery"/>		 		 
+		 -->
+		 
+		 <!--
+			###
+			### Here are examples of SingleDB scheduler. You can have only one backend 
+			### define if you use this one.
+			###
+         <SingleDBScheduler level="passThrough"/>
+		 -->
+		 
+		 <!--
+			###
+			### Example of a RAIDb-0 schedulers. Backends will be considered to have 
+			### different tables.
+			###
+		 <RAIDb-0Scheduler level="passThrough"/>
+		 -->
+		 
+		 <!--
+			###
+			### Examples of RAIDb-2 schedulers, where a certain amount of redundancy
+			### is achieved through all the backends.
+			### 
+		<RAIDb-2Scheduler level="passThrough"/>
+		-->
+      </RequestScheduler>
+
+      <RequestCache>
+         <MetadataCache maxNbOfMetadata="10000" maxNbOfField="0"/>
+         <ParsingCache backgroundParsing="false" maxNbOfEntries="5000"/>		 
+         <ResultCache granularity="table" maxNbOfEntries="100000" pendingTimeout="0">
+
+	      <ResultCacheRule queryPattern="default" timestampResolution="1000">
+             <EagerCaching/>
+			 <!--
+             <RelaxedCaching timeOut="600" keepIfNotDirty="true"/>
+			 <NoCaching/>
+		     -->
+          </ResultCacheRule>
+
+		<!--	
+          <ResultCacheRule queryPattern="select ? from b where id=?" caseSensitive="false" applyToSkeleton="false" timestampResolution="1000">
+			 <NoCaching/>
+           </ResultCacheRule>	
+	    -->
+ 	     </ResultCache>
+      </RequestCache>
+
+      <LoadBalancer>
+         <RAIDb-1>
+			<!--
+				###
+				### Different Return policy
+				###
+			-->
+            <WaitForCompletion policy="first"/>
+			<!--
+              <WaitForCompletion policy="majority"/>
+			-->
+			<!--
+	          <WaitForCompletion policy="all"/>
+			-->
+			
+			<!--
+				###
+				###  C-JDBC can interpret and replace on-the-fly macros with a value computed by
+                ###  the controller (the RequestManager in fact). This prevents different backends
+                ###  to generate different values when interpreting the macros which could result
+                ###  in data inconsitencies.
+				### 
+			-->
+			<!--
+			<MacroHandling rand="float" now="timestamp" currentDate="date" currentTime="time" timeOfDay="timestamp" currentTimestamp="timestamp" timeResolution="0"/>
+			-->
+			
+            <!--
+			  ###
+			  ### The different algorithms for the RAIDb-1 load balancing
+			  ###
+			-->			
+	        <RAIDb-1-LeastPendingRequestsFirst/>
+			<!--
+				<RAIDb-1-RoundRobin/>
+			-->
+			<!--
+                <RAIDb-1-WeightedRoundRobin>
+				   <BackendWeight name="mysql" weigth="10"/>
+				   <BackendWeight name="postgresql" weigth="5"/>
+				</RAIDb-1-WeightedRoundRobin>
+			-->
+			<!--
+                <RAIDb-1-LeastPendingRequestsFirst/>
+			-->
+         </RAIDb-1>
+      </LoadBalancer>
+      
+	  <!--
+		###
+		### The optional recovery log, in case you want to re-synchronize your backends after a failure via C-JDBC.
+		###
+	  -->
+	  <!--
+      <RecoveryLog driver="org.hsqldb.jdbcDriver" url="jdbc:hsqldb:hsql://localhost" login="sa" password="">
+            <RecoveryLogTable tableName="recovery" idColumnType="BIGINT NOT NULL" sqlColumnType="VARCHAR NOT NULL" extraStatementDefinition=",PRIMARY KEY (id)"/>
+            <CheckpointTable tableName="checkpoint" checkpointNameColumnType="VARCHAR NOT NULL"/>
+            <BackendTable checkpointNameColumnType="VARCHAR NOT NULL"/>
+            <DumpTable/>
+         </JDBCRecoveryLog>
+      </RecoveryLog>
+      -->
+	  
+    </RequestManager>
+
+  </VirtualDatabase>
+
+</C-JDBC>

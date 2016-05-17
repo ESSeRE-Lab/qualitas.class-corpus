@@ -1,0 +1,1342 @@
+<!-- 
+  C-JDBC: Clustered JDBC.
+  Copyright (C) 2002-2005 French National Institute For Research In Computer
+  Science And Control (INRIA).
+  Contact: c-jdbc@objectweb.org
+ 
+  This library is free software; you can redistribute it and/or modify it
+  under the terms of the GNU Lesser General Public License as published by the
+  Free Software Foundation; either version 2.1 of the License, or any later
+  version.
+ 
+  This library is distributed in the hope that it will be useful, but WITHOUT
+  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+  FITNESS FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License
+  for more details.
+ 
+  You should have received a copy of the GNU Lesser General Public License
+  along with this library; if not, write to the Free Software Foundation,
+  Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA.
+
+  Initial developer(s): Emmanuel Cecchet.
+  Contributor(s): Nicolas Modrzyk, Mathieu Peltier.
+-->
+
+<!-- ====================================================================== -->
+<!-- C-JDBC Ant build file -->
+<!-- ====================================================================== -->
+<project name="c-jdbc" default="compile" basedir=".">
+
+  <!-- customizable properties -->
+  <property file="build.properties" />
+
+  <!-- This sets the ${histrevision} property from the CVS $Revision: number
+  extracted from the doc/HISTORY.txt file (the file that changes the most often) -->
+  <loadfile srcfile="doc/HISTORY.txt" property="histrevision" failonerror="false">
+	<filterchain>
+  		<containsregex pattern=".*\$Revi.?sion: *[^ $]*.*\$.*"/>
+  		<striplinebreaks/>
+	    <replaceregex pattern=".*\$Revi.?sion: *([^ $]*).*\$.*"
+	                    replace="-\1"/>
+	 </filterchain>
+  </loadfile>
+  <!-- backup on empty value in case HISTORY.txt is broken -->
+  <property name="histrevision" value=""/>
+	
+  <!-- uncustomizable properties -->
+  <tstamp/>
+  <!-- ${histrevision} is much better than ${DSTAMP} because it is really attached to
+  the actual version of the code and not to the date of compilation. It
+  works fine but disabled for lack of extensive testing. Too many targets use ${version}
+  below in too many different ways. One issue is that the URLs of DTDs inside XML files
+  are built using ${version}. Also needs Windows testing. -->
+  <property name="versiondatesuffix" value="${histrevision}-${DSTAMP}"/>
+  <property name="versiondatesuffix" value="-${DSTAMP}"/>
+
+  <property name="version" value="${versionnumber}${versiondatesuffix}"/>
+  <property name="packagepath" value="org/objectweb/cjdbc"/>
+  <property name="packageprefix" value="org.objectweb.cjdbc"/>
+  <property name="bin" value="${basedir}/bin"/>
+  <property name="build" value="${basedir}/build"/>
+  <property name="config" value="${basedir}/config"/>
+  <property name="dist" value="${basedir}/dist"/>
+  <property name="doc" value="${basedir}/doc"/>
+  <property name="lib" value="${basedir}/lib"/>
+  <property name="src" value="${basedir}/src"/>
+  <property name="src.jdk1.3" value="${src}/jdk1.3"/>
+  <property name="test" value="${basedir}/test"/>
+  <property name="test.src" value="${test}/src"/>
+  <property name="xml" value="${basedir}/xml"/>
+
+  <property name="build.bin" value="${build}/bin"/>
+  <property name="build.classes" value="${build}/classes"/>
+  <property name="build.dist" value="${build}/dist"/>
+  <property name="build.dist.bin" value="${build.dist}/bin"/>
+  <property name="build.dist.src" value="${build.dist}/src"/>
+  <property name="build.doc" value="${build}/doc"/>
+  <property name="build.jar" value="${build}/jar"/>
+  <property name="build.javadoc" value="${build.doc}/api"/>
+  <property name="build.doxygen" value="${build.doc}/doxygen"/>
+  <property name="build.doxygen.english" value="${build.doxygen}/english"/>
+  <property name="build.javadoc.test" value="${build.javadoc}/test"/>
+  <property name="build.docbook.stylesheets" value="${build}/docbook/stylesheet"/>
+  <property name="build.javadoccheck" value="${build}/javadoccheck"/>
+
+  <property name="build.test" value="${build}/test"/>
+  <property name="build.test.execute.scenario" value="${build}/test/execute/scenario"/>
+  <property name="build.test.classes" value="${build.test}/classes"/>
+  <property name="build.test.report" value="${build.test}/report"/>
+  <property name="build.izpack" value="${build}/IzPack"/>
+  <property name="dist.bin.installer.release.name" value="${ant.project.name}-${version}-bin-installer.jar"/>
+  <property name="dist.bin.release.name" value="${ant.project.name}-${version}-bin"/>
+  <property name="dist.src.installer.release.name" value="${ant.project.name}-${version}-src-installer.jar"/>
+  <property name="dist.src.release.name" value="${ant.project.name}-${version}-src"/>
+  <property name="docbook.local.uri" value="${xml}/docbook/dtd/simple/1.0/sdocbook.dtd"/>
+  <property name="docbook.publicId" value="-//OASIS//DTD Simplified DocBook XML V1.0//EN"/>
+  <property name="docbook.dsssl.stylesheet" value="docbook-dsssl-1.78"/> <!-- corresponding archive must be in .tar.gz format -->
+  <property name="docbook.xsl.stylesheet" value="docbook-xsl-1.65.1"/> <!-- corresponding archive must be in .tar.gz format -->
+  <property name="docbook.stylesheet.html" value="${build.docbook.stylesheets}/${docbook.xsl.stylesheet}/html/mydocbook.xsl"/>
+  <property name="docbook.stylesheet.html.chunk" value="${build.docbook.stylesheets}/${docbook.xsl.stylesheet}/html/mychunk.xsl"/>
+  <property name="docbook.stylesheet.html.chunk.src" value="${xml}/docbook/stylesheet/xsl/html/mychunk.xsl"/>
+  <property name="docbook.stylesheet.html.src" value="${xml}/docbook/stylesheet/xsl/html/mydocbook.xsl"/>
+  <property name="izpack" value="izpack-3.6.1"/> <!-- corresponding archive must be in .tar.gz format -->
+  <property name="config.izpack" value="${config}/izpack"/>
+  <property name="install.path" value="${install.dir}/${ant.project.name}-${version}-bin"/>
+
+  <property name="cvs.url.root" value=":ext:${cvs.user.name}@${cvs.url}"/>
+  <property name="date.pattern" value="EEEE, dd MMMM yyyy "/>
+	
+  <property name="wiki.url" value="http://wiki.objectweb.org"/>
+  <property name="wiki.project" value="c-jdbc"/>
+  <property name="wiki.build" value="${build}/wiki"/>
+ 
+  <!-- Previous version release -->  
+  <property name="cvs.anonymous.root" value=":pserver:anonymous@cvs.forge.objectweb.org:/cvsroot/c-jdbc/"/>
+  <property name="release.dir" value="release"/>
+
+  <!-- classpath -->
+  <path id="classpath">
+    <pathelement location="${build.classes}" />
+    <fileset dir="${lib}/octopus">
+      <include name="*.jar"/>
+    </fileset>
+    <fileset dir="${lib}">
+      <include name="*.jar"/>
+    </fileset>
+    <fileset dir="${lib}/jmx">
+      <include name="**/*.jar"/>
+    </fileset>
+    <fileset dir="${lib}/docbook">
+      <include name="xalan.jar"/>
+    </fileset>
+    <fileset dir="${lib}/other">
+      <include name="*.jar"/>
+    </fileset>
+  </path>
+
+  <!-- Regression testing and older testing have some similarities in classpathes-->
+  <path id="classpath-test-common">
+  <path refid="classpath" />
+    <!-- JUnit jar file -->
+    <pathelement location="${lib}/test/junit.jar" />
+    <!-- Compiled test classes -->
+    <pathelement location="${build.test.classes}" />
+    <!-- the following entry is used by tests requiring the C-JDBC driver -->
+    <fileset dir="${build.jar}">
+      <include name="*.jar"/>
+    </fileset>
+    <!-- the following entry is used to retrieve translation files -->
+    <pathelement location="${config}/language" />
+    <!-- JUnit Perf and mock objects -->
+    <fileset dir="${lib}/test">
+      <include name="junitperf.jar"/>      
+      <include name="mmmockobjects.jar"/>
+      <include name="mockobjects-core.jar"/>
+      <include name="mockobjects-jdk${ant.java.version}.jar"/>
+    </fileset>
+  </path>
+
+  <!-- classpath for test -->
+  <path id="classpath-test">
+    <path refid="classpath-test-common" />
+    <!-- the following entry is used to retrieve Log4j properties file -->
+    <pathelement location="${config}" />
+    <!-- the following entry is used to retrieve txt test files in test target -->
+    <pathelement location="${test.src}" />
+  </path>
+
+  <!-- classpath for regression testing -->  
+  <path id="classpath-scenario">
+   <pathelement location="3rdparty/hsqldb/lib" />
+   <pathelement location="3rdparty/hsqldb/lib/hsqldb.jar"/>
+   <pathelement location="${test.src}/${packagepath}/scenario/config"/>
+   <pathelement location="xml"/>
+   <path refid="classpath-test-common" />
+    <fileset dir="${lib}/test/drivers">
+      <include name="*.jar"/>
+    </fileset>
+  </path>
+
+  <!-- classpath for DocBook -->
+  <path id="classpath-docbook">
+    <fileset dir="${lib}/docbook">
+      <include name="**/*.jar"/>
+    </fileset>
+  </path>
+
+  <!-- ====================================================================== -->
+  <!-- Utilitary targets -->
+  <!-- ====================================================================== -->	
+  <target name="tag"
+          description="Add a tag in CVS according what is described in HISTORY.txt.">
+    <echo message="Add a tag in CVS accprding what is described in History.txt"/>
+    <echo message="c-jdbc-${version}" file="tmp/version.txt"/>
+    <replace file="tmp/version.txt" token="." value="_"/>
+    <loadfile srcfile="tmp/version.txt" property="tag"/>
+    <cvspass cvsroot="${cvs.url.root}" password="${cvs.password}" />
+    <cvs cvsRsh="ssh" cvsRoot="${cvs.url.root}" command="tag -b  ${tag}" noexec="${cvs.noexec}"/>   
+  </target>
+   
+  <!-- Build a specific version of C-JDBC from CVS                            -->
+  <!-- ${version} must be a valid CVS tag (of the form: c-jdbc-1_0beta9)      -->
+  <!-- It is read from the file "build.properties"                            -->
+  <!-- The release version will be in {release.dir}/${version}                -->
+  <!-- TODO: merge get-version and get-latest targets -->
+  <target name="get-version"
+          description="Get a specific CVS version.">
+    <echo message="Getting cvs files for version: ${version}"/>
+    <cvs compression="true" cvsRoot="${cvs.anonymous.root}" tag="${version}" command="get" package="c-jdbc" quiet="true" dest="${release.dir}/${version}"/>
+  </target>
+  
+  <target name="dist-version"
+          depends="get-version"
+          description="Create a distribution of a specific version.">
+    <echo message="Creating distribution for version ${version}"/>
+    <ant antfile="build.xml" target="dist-bin" inheritAll="false" dir="${release.dir}/${version}/c-jdbc/c-jdbc/" />
+  </target>
+  
+  <target name="get-latest"
+          description="Get a snapshot of the current CVS.">
+    <tstamp/>
+    <property name="snapdir" value ="snapshot-${DSTAMP}"/>
+    <property name="cjdbc.latest.dir" value="${basedir}/${snapdir}"/>
+    <!-- this one is cleaner (and allows recursive diffs), but "../../" has to be ok so we disable it by default -->
+    <!-- property name="cjdbc.latest.dir" value="${basedir}/../../${snapdir}"/ -->
+    <echo message="Getting current cvs snapshot"/>
+    <delete includeEmptyDirs="true" quiet="true" dir="${cjdbc.latest.dir}"/>
+    <cvs cvsRoot="${cvs.anonymous.root}" command="checkout -d ${snapdir}" package="c-jdbc" quiet="true" compression="true"/>
+  </target>
+  
+  <target name="dist-latest"
+          depends="get-latest"
+          description="Create a distribution based on the current CVS files.">
+    <ant antfile="build.xml" target="dist" inheritAll="false" dir="${cjdbc.latest.dir}/c-jdbc" />
+  </target>
+
+  <!-- ====================================================================== -->
+  <!-- compile targets -->
+  <!-- ====================================================================== -->
+  <target name="init-compile">
+    
+    <!-- Echo Target version -->
+    <echo message="Target JVM is set to: ${javac.target}"/>
+    
+    <mkdir dir="${build.classes}"/>
+    <mkdir dir="${build.test.classes}"/>
+    
+    <!-- Insert version number in CJDBC Constants and compile it -->
+    <copy filtering="true" 
+	  file="${src}/${packagepath}/common/util/Constants.java" 
+	  tofile="${build.classes}/${packagepath}/common/util/Constants.java">
+      <filterset>
+	<filter token="VERSION" value="${version}"/>
+      </filterset>
+    </copy>
+    <javac srcdir="${build.classes}"
+	   destdir="${build.classes}"
+	   includes="${packagepath}/common/util/Constants.java"
+	   target="${javac.target}"
+	   source="${javac.source}"
+	   classpathref="classpath"
+	   debug="${javac.debug}"
+	   depend="${javac.depend}"
+	   deprecation="${javac.deprecation}"
+  	   optimize="${javac.optimize}"
+	   encoding="${javac.encoding}"
+	   />
+  </target>
+
+  <target name="compile" 
+	  depends="init-compile,compile-common, compile-console, compile-driver, compile-controller, compile-requestplayer"
+	  description="Compiles the C-JDBC driver, console, controller and request player.">
+  </target>
+
+  <!-- Shared classes compilation -->
+  <target name="compile-common"
+	  depends="init-compile">
+    <javac srcdir="${src}"
+	   destdir="${build.classes}"
+	   includes="${packagepath}/common/**/*"
+	   target="${javac.target}"
+	   source="${javac.source}"    	
+	   classpathref="classpath"
+	   debug="${javac.debug}"
+	   depend="${javac.depend}"
+	   deprecation="${javac.deprecation}"
+	   optimize="${javac.optimize}"
+	   encoding="${javac.encoding}"
+	   />
+  </target>
+
+  <!-- Driver compilation -->
+  <target name="compile-driver"
+	  depends="compile-common"
+	  description="Compiles the C-JDBC driver.">
+    
+    <condition property="srcdir" value="${src.jdk1.3}:${src}">
+      <equals arg1="${ant.java.version}" arg2="1.3"/>
+    </condition>
+
+    <condition property="srcdir" value="${src}">
+      <equals arg1="${ant.java.version}" arg2="1.4"/>
+    </condition>
+  	
+    <condition property="srcdir" value="${src}">
+      <equals arg1="${ant.java.version}" arg2="1.5"/>
+    </condition>
+
+    <javac srcdir="${srcdir}"
+	   destdir="${build.classes}"
+	   includes="${packagepath}/driver/**/*"
+	   excludes="${src.jdk1.3}"
+	   source="${javac.source}"    	
+	   target="${javac.target}"
+	   classpathref="classpath"
+	   debug="${javac.debug}"
+	   depend="${javac.depend}"
+	   deprecation="${javac.deprecation}"
+  	   optimize="${javac.optimize}"
+	   encoding="${javac.encoding}"/>
+  </target>
+
+  <!-- Controller compilation -->
+  <target name="compile-controller"
+	  depends="compile-common"
+	  description="Compiles the C-JDBC controller.">
+
+    <javac srcdir="${src}"
+	   destdir="${build.classes}"
+	   includes="${packagepath}/controller/**/*"
+	   source="${javac.source}"    	
+	   target="${javac.target}"
+	   classpathref="classpath"
+	   debug="${javac.debug}"
+	   depend="${javac.depend}"
+	   deprecation="${javac.deprecation}"
+  	   optimize="${javac.optimize}"
+	   encoding="${javac.encoding}"
+	   />
+  </target>
+  
+    <!-- Console compilation -->
+  <target name="compile-console"
+	  depends="compile-common"
+	  description="Compiles the C-JDBC console.">
+
+    <javac srcdir="${src}"
+	   destdir="${build.classes}"
+	   includes="${packagepath}/console/**/*"
+	   source="${javac.source}"    	
+	   target="${javac.target}"
+	   classpathref="classpath"
+	   debug="${javac.debug}"
+	   depend="${javac.depend}"
+	   deprecation="${javac.deprecation}"
+  	   optimize="${javac.optimize}"
+	   encoding="${javac.encoding}"
+	   />
+  </target>
+  
+  <!-- Request Player tool compilation -->
+  <target name="compile-requestplayer"
+	  depends="compile-common"
+	  description="Compiles the Request Player tool.">
+	  
+    <javac srcdir="${test.src}"
+	   destdir="${build.test.classes}"
+	   includes="${packagepath}/requestplayer/**/*"
+	   source="${javac.source}"    	
+	   target="${javac.target}"
+	   classpathref="classpath"
+	   debug="${javac.debug}"
+	   depend="${javac.depend}"
+	   deprecation="${javac.deprecation}"
+  	   optimize="${javac.optimize}"
+	   encoding="${javac.encoding}"
+	   />
+  </target>
+	
+  <!-- JUnit tests compilation -->
+  <target name="compile-tests"
+	  depends="compile,jar"
+	  description="Compiles the JUnit tests.">
+   
+    <javac srcdir="${test.src}"
+	   destdir="${build.test.classes}/"
+	   excludes="${packagepath}/requestplayer/**/*"
+	   source="${javac.source}"    	
+	   target="${javac.target}"
+	   classpathref="classpath-test"
+	   debug="${javac.debug}"
+	   depend="${javac.depend}"
+	   deprecation="${javac.deprecation}"
+  	   optimize="${javac.optimize}"
+	   encoding="${javac.encoding}"
+	   />
+  </target>  
+
+  <!-- ====================================================================== -->
+  <!-- jar target -->
+  <!-- ====================================================================== -->
+  <target name="init-jar" depends="compile">
+    <mkdir dir="${build.jar}"/>
+  </target>
+
+  <target name="jar"
+	  depends="init-jar,jar-driver, jar-console, jar-controller, jar-requestplayer"
+	  description="Creates JAR files for C-JDBC driver, console, controller and request player."/>
+
+  <!-- Create the driver jar file -->
+  <target name="jar-driver"
+	  depends="init-jar, compile-driver, compile-common"
+	  description="Creates the C-JDBC driver JAR file.">
+    
+    <jar jarfile="${build.jar}/c-jdbc-driver.jar">
+      <manifest>
+	<attribute name="Specification-Title" value="${specification.title.driver}"/>
+	<attribute name="Specification-Version" value="${version}"/>
+	<attribute name="Specification-Vendor" value="${specification.vendor}"/>
+	<attribute name="Implementation-Title" value="${specification.title.driver}"/>
+	<attribute name="Implementation-Version" value="${version}"/> 
+	<attribute name="Implementation-Vendor" value="${specification.vendor}"/>
+      </manifest>
+      <fileset dir="${build.classes}"
+	       includes="${packagepath}/driver/**/*.class,
+	       ${packagepath}/common/exceptions/**/*.class,
+	       ${packagepath}/common/sql/**/*.class,
+	       ${packagepath}/common/stream/**/*.class,
+	       ${packagepath}/common/util/*.class"
+	       />
+    </jar>
+  </target>
+  
+  <!-- Create the controller jar file -->
+  <target name="jar-controller"
+	  depends="init-jar, compile-common,compile-controller"
+	  description="Creates the C-JDBC controller JAR file.">
+    
+    <jar jarfile="${build.jar}/c-jdbc-controller.jar">
+      <manifest>
+	<attribute name="Specification-Title" value="${specification.title.controller}"/>
+	<attribute name="Specification-Version" value="${version}"/>
+	<attribute name="Specification-Vendor" value="${specification.vendor}"/>
+	<attribute name="Implementation-Title" value="${specification.title.controller}"/>
+	<attribute name="Implementation-Version" value="${version}"/> 
+	<attribute name="Implementation-Vendor" value="${specification.vendor}"/>
+      </manifest>
+      <fileset dir="${build.classes}"
+	       includes="${packagepath}/controller/**/*.class,
+	       ${packagepath}/common/**/*.class"/>
+    </jar>
+  </target>
+  
+  <!-- Create the console jar file -->
+  <target name="jar-console"
+	  depends="init-jar, compile-common,compile-console"
+	  description="Creates the C-JDBC console JAR file.">
+    
+    <jar jarfile="${build.jar}/c-jdbc-console.jar">
+      <manifest>
+	<attribute name="Specification-Title" value="${specification.title.controller}"/>
+	<attribute name="Specification-Version" value="${version}"/>
+	<attribute name="Specification-Vendor" value="${specification.vendor}"/>
+	<attribute name="Implementation-Title" value="${specification.title.controller}"/>
+	<attribute name="Implementation-Version" value="${version}"/> 
+	<attribute name="Implementation-Vendor" value="${specification.vendor}"/>
+      </manifest>
+      <fileset dir="${build.classes}"
+	       includes="${packagepath}/console/**/*.class,
+	       ${packagepath}/common/**/*.class"/>
+      <fileset dir="${basedir}/doc/images/icons"
+	       includes="*.*"/>
+    </jar>
+  </target>
+  
+  <!-- Create the request player jar file -->
+  <target name="jar-requestplayer"
+	  depends="init-jar, compile-requestplayer,compile-common"
+	  description="Creates the request player JAR file.">
+    
+    <jar jarfile="${build.jar}/c-jdbc-request-player.jar">
+      <manifest>
+	<attribute name="Specification-Title" value="${specification.title.requestPlayer}"/>
+	<attribute name="Specification-Version" value="${version}"/>
+	<attribute name="Specification-Vendor" value="${specification.vendor}"/>
+	<attribute name="Implementation-Title" value="${specification.title.requestPlayer}"/>
+	<attribute name="Implementation-Version" value="${version}"/> 
+	<attribute name="Implementation-Vendor" value="${specification.vendor}"/>
+      </manifest>
+      <fileset dir="${build.test.classes}"
+	       includes="${packagepath}/requestplayer/*.class"/>
+      <fileset dir="${build.classes}"
+	       includes="${packagepath}/common/util/Stats.class"/> 
+    </jar>
+  </target>
+    
+  <!-- Create (import) the tribe jar file -->
+
+  <target name="jar-tribe"
+		  description="Creates tribe.jar (build and imports from external project).">
+  	<property name="tribe.dir" value="${basedir}/../../tribe"/>
+    <ant inheritAll="false" antfile="${tribe.dir}/build.xml" target="jar-tribe-export">
+      	<property name="export.dir" value="${lib}"/>
+    </ant>
+  </target>
+	    	
+  <!-- ====================================================================== -->
+  <!-- dist target -->
+  <!-- ====================================================================== -->
+  <target name="dist"
+	  depends="dist-bin, dist-src"
+	  description="Creates binary and source C-JDBC distributions (tar.gz, zip and Java graphical installer using IzPack)."/>
+
+  <target name="init-dist">    
+    <!-- Unpack the IzPack distribution -->   
+    <mkdir dir="${build.izpack}"/>
+    <untar src="${lib}/other/${izpack}.tar.gz"
+	   dest="${build}" 
+	   compression="gzip"
+	   overwrite="false"/>
+
+    <copy todir="${build.izpack}">
+      <fileset dir="${config.izpack}" />
+      <filterset>
+	<filter token="VERSION" value="${version}"/>
+      </filterset>
+    </copy>
+
+    <!-- Allows to use the IzPack Ant task -->
+    <taskdef name="izpack" classpath="${build}/IzPack/lib/compiler.jar"
+	     classname="com.izforge.izpack.ant.IzPackTask"/>
+	     
+    <!-- Create Izpack files to change default install directory given the plateforn the CJDBC version -->
+    <echo file="${build.izpack}/TargetPanel.dir.unix.src" append="false" message="/tmp/c-jdbc-${version}-src"/>
+    <echo file="${build.izpack}/TargetPanel.dir.unix.bin" append="false" message="/tmp/c-jdbc-${version}-bin"/>
+    <echo file="${build.izpack}/TargetPanel.dir.windows.src" append="false" message="c:\Program Files\C-JDBC-${version}-src"/>
+    <echo file="${build.izpack}/TargetPanel.dir.windows.bin" append="false" message="c:\Program Files\C-JDBC-${version}-bin"/>
+    <mkdir dir="${dist}" />
+  </target>
+
+  <!-- ====================================================================== -->
+  <!-- binary dist targets -->
+  <!-- ====================================================================== -->
+  <target name="init-dist-bin"
+	  depends="init-dist, jar, doc">
+    
+    <!-- Build dist-bin only when needed -->
+    <uptodate property="rebuild.dist-bin.not.needed" targetfile="${dist}/.dist-bin">
+      <srcfiles dir="${bin}" />
+      <srcfiles dir="${config}" />
+      <srcfiles dir="${doc}" />
+      <srcfiles dir="${lib}" />
+      <srcfiles dir="${src}" />
+      <srcfiles dir="${test.src}">
+	<include name="${packagepath}/requestplayer/**/*"/>
+      </srcfiles>
+      <srcfiles dir="${xml}" />
+      <srcfiles dir="${basedir}" includes="build.*"/>
+    </uptodate>
+  </target>
+
+  <target name="prepare-dist-bin">
+    <!-- Does most of the layout of the tar/install directory -->
+    <antcall target="generate-scripts"/>
+    
+    <!-- Copy needed files to ${build.dist.bin} -->
+    <mkdir dir="${build.dist.bin}" />
+    <copy todir="${build.dist.bin}/3rdparty">
+      <fileset dir="3rdparty" />
+    </copy>
+    <copy todir="${build.dist.bin}/bin">
+      <fileset dir="${build.bin}">
+        <include name="*.sh" />
+        <include name="*.bat" />
+      </fileset>
+    </copy>
+    <copy todir="${build.dist.bin}/demo">
+      <fileset dir="${build.bin}/demo">
+        <include name="*.sh" />
+        <include name="*.bat" />
+      </fileset>
+    </copy>
+    <copy todir="${build.dist.bin}/config">
+      <fileset dir="${config}">
+	<include name="*.*" />
+      </fileset>
+    </copy>
+    <copy todir="${build.dist.bin}/config/language">
+      <fileset dir="${config}/language">
+	<include name="*.*" />
+      </fileset>
+      <filterset>
+        <filter token="VERSION" value="${version}" />
+      </filterset>
+    </copy>    
+    <copy todir="${build.dist.bin}/config/controller">
+      <fileset dir="${config}/controller">
+	<include name="*.xml" />
+      </fileset>
+      <filterset>
+        <filter token="VERSION" value="${version}" />
+      </filterset>
+    </copy> 
+    <copy todir="${build.dist.bin}/config/virtualdatabase">
+      <fileset dir="${config}/virtualdatabase">
+	<include name="*.xml" />
+      </fileset>
+      <filterset>
+        <filter token="VERSION" value="${version}" />
+      </filterset>
+    </copy>
+    <!-- UNZIP ALL OCTOPUS CLASSES SO WE CAN EDIT XML FILES -->
+    <unzip src="${lib}/octopus/Octopus.jar" dest="${build.dist.bin}/lib/octopus"/>
+    <!-- 
+    Overwrite is set to true because we want to replace the default
+    Octopus files with our own 
+    -->
+  	
+    <mkdir dir="${build.dist.bin}/lib/octopus/xml/XmlTransform/xml/xmlschema/"/>
+    <copy toDir="${build.dist.bin}/lib/octopus/xml/XmlTransform/xml/xmlschema/">
+      <fileset dir="${build.dist.bin}/lib/octopus/xml/xmlschema/"/>
+    </copy>
+    <copy todir="${build.dist.bin}/lib" overwrite="true">
+      <fileset dir="${lib}">
+	<include name="*.jar" />
+        <exclude name="Octopus.jar"/>
+	<include name="jmx/**/*" />
+        <include name="mail/**/*" />      	
+	<include name="octopus/**/*" />	
+      </fileset>
+    </copy>
+    <copy todir="${build.dist.bin}/xml">
+      <fileset dir="${xml}">
+	<include name="*.dtd" />
+	<include name="*.xsl" />		
+      </fileset>
+    </copy>
+    <mkdir dir="${build.dist.bin}/log" />
+
+    <!-- The user has to set the CJDBC_HOME variable in this case -->
+    <replace dir="${build.dist.bin}">
+      <include name="**/*.sh"/>
+      <replacetoken><![CDATA[CJDBC_HOME=%INSTALL_PATH]]></replacetoken>
+      <replacevalue><![CDATA[if [ -z "$CJDBC_HOME" ] ; then 
+  echo "Cannot find C-JDBC home directory. Please set the CJDBC_HOME environment variable."
+  exit 1
+fi]]></replacevalue>
+    </replace>
+    <replace dir="${build.dist.bin}">
+      <include name="**/*.bat"/>
+      <replacetoken><![CDATA[SET CJDBC_HOME="$INSTALL_PATH"]]></replacetoken>
+      <replacevalue><![CDATA[if exist %CJDBC_HOME% goto begin
+echo "Cannot find C-JDBC home directory. Please set the CJDBC_HOME environment variable."
+goto end]]></replacevalue>
+    </replace>
+    <replace dir="${build.dist.bin}">
+      <include name="**/*.bat"/>
+      <exclude name="**/hsqldb.bat"/>
+      <exclude name="**/raidb1.bat"/>
+      <replacetoken><![CDATA[/]]></replacetoken>
+      <replacevalue><![CDATA[\]]></replacevalue>
+    </replace>
+    <chmod perm="ugo+rx">
+      <fileset dir="${build.dist.bin}">
+	<include name="**/*.sh"/>
+      </fileset>
+    </chmod>
+
+    <mkdir dir="${build.dist.bin}/drivers"/>
+    <copy todir="${build.dist.bin}/drivers" file="${build.jar}/c-jdbc-driver.jar"/>
+
+    <copy todir="${build.dist.bin}/lib">
+      <fileset dir="${build.jar}">
+	<include name="c-jdbc-controller.jar"/>
+	<include name="c-jdbc-request-player.jar"/>
+	<include name="c-jdbc-console.jar"/>	
+	<include name="c-jdbc-common.jar"/>	
+      </fileset>
+    </copy>
+
+    <!-- workaround: failonerror="false" on copy does not seems to
+    work with a nested fileset (the build.doc dir does not exist if
+    the doc has not been generated) -->
+    <mkdir dir="${build.doc}"/> 
+    <mkdir dir="${build.dist.bin}/doc"/>
+    <copy todir="${build.dist.bin}/doc">
+      <fileset dir="${build.doc}">
+	<include name="**/*"/>
+	<exclude name="api/**/*"/>
+	<exclude name="api"/>
+	<exclude name="index-*.html"/>
+	<exclude name="developerGuide/**"/>
+	<exclude name="developerGuide"/>
+      </fileset>
+    </copy>
+    <copy file="${doc}/README-bin.txt" tofile="${build.dist.bin}/README.txt" />
+    <copy file="${build.doc}/index-bin.html" tofile="${build.dist.bin}/doc/index.html" failonerror="false"/>       
+  </target>
+  
+  <!-- Generate the scripts to use C-JDBC -->
+  <target name="generate-scripts" depends="init-compile, compile-common">
+    <mkdir dir="${build.bin}"/>
+    <!-- First split the scripts.xml file -->
+    <taskdef name="split" classname="${packageprefix}.common.util.SplitXmlTask" classpath="${build.classes}"/>  
+    <split scriptXmlFile="${bin}/scripts.xml" outputDir="${build.bin}" parsingTagName="script" ouputFileAttribute="name"/>
+
+    <!-- Generation sh and bat scripts -->
+    <xslt basedir="${build.bin}" destdir="${build.bin}" extension=".sh" style="${bin}/unix-script.xsl"> 
+      <include name="*.xml"/>
+    </xslt>
+    <xslt basedir="${build.bin}" destdir="${build.bin}" extension=".bat" style="${bin}/windows-script.xsl"> 
+      <include name="*.xml"/>
+    </xslt>
+  	
+    <!-- Replace backslashes with slashes for some windows scripts -->
+    <replace dir="${build.bin}">
+      <include name="**/isql.bat"/>
+      <replacetoken>\</replacetoken>
+      <replacevalue>/</replacevalue>
+    </replace>
+
+    <!-- Copy other scripts not generated by XML -->
+    <copy todir="${build.bin}">
+      <fileset dir="${bin}">
+	<include name="**/*.sh"/>
+	<include name="**/*.bat"/>
+      </fileset>
+    </copy>
+  </target>
+  
+  <!-- Build zip bin distribution -->    
+  <target name="dist-bin-zip" depends="init-dist-bin">
+    <zip destfile="${dist}/${dist.bin.release.name}.zip" update="true">
+      <zipfileset dir="${build.dist.bin}" prefix="${dist.bin.release.name}" filemode="755">
+        <include name="bin/*.sh"/>
+      </zipfileset>
+      <zipfileset dir="${build.dist.bin}" prefix="${dist.bin.release.name}">
+        <exclude name="bin/*.sh"/>
+      </zipfileset>
+    </zip>
+  </target>
+  
+  <!-- Build tar.gz bin distribution -->
+  <target name="dist-bin-targz" depends="init-dist-bin">
+    <!-- workaround: new files seem not to be updated by default? So
+    just delete first the file to be sure -->
+    <delete file="${dist}/${dist.bin.release.name}.tar.gz"/>
+    <tar destfile="${dist}/${dist.bin.release.name}.tar.gz" longfile="gnu" compression="gzip" >
+      <tarfileset dir="${build.dist.bin}" prefix="${dist.bin.release.name}" mode="755">
+        <include name="bin/*.sh"/>
+      </tarfileset>
+      <tarfileset dir="${build.dist.bin}" prefix="${dist.bin.release.name}">
+        <exclude name="bin/*.sh"/>
+      </tarfileset>
+    </tar>
+  </target>
+  
+  <target name="dist-bin-installer" depends="init-dist-bin">
+    <!-- Build Java graphical installer bin distribution -->
+    <izpack input="${build.izpack}/bin-release.xml"
+	    output="${dist}/${dist.bin.installer.release.name}"
+	    basedir="${basedir}"
+	    izPackDir="${build.izpack}"/>
+  </target>
+    
+  <target name="dist-bin"
+	  depends="init-dist-bin"
+	  description="Creates binary C-JDBC distributions (tar.gz, zip and Java graphical installer using IzPack)."
+	  unless="rebuild.dist-bin.not.needed">
+    <antcall target="prepare-dist-bin"/>
+    <antcall target="dist-bin-targz"/>
+    <antcall target="dist-bin-zip"/>
+    <antcall target="dist-bin-installer"/>
+    <touch file="${dist}/.dist-bin"/>
+  </target>
+	
+  <!-- ====================================================================== -->
+  <!-- sources dist target -->
+  <!-- ====================================================================== -->
+  <target name="init-dist-src"
+	  depends="init-dist, jar, javadoc, doc">
+
+    <!-- Build dist-src only when needed -->
+    <uptodate property="rebuild.dist-src.not.needed" targetfile="${dist}/.dist-src">
+      <srcfiles dir="${bin}" />
+      <srcfiles dir="${config}" />
+      <srcfiles dir="${doc}" />
+      <srcfiles dir="${lib}" />
+      <srcfiles dir="${src}" />
+      <srcfiles dir="${test.src}" />
+      <srcfiles dir="${xml}" />
+      <srcfiles dir="${basedir}" includes="build.*"/>
+    </uptodate>
+  </target>
+
+  <target name="dist-src"
+	  depends="init-dist-src"
+	  description="Creates source C-JDBC distributions (tar.gz, zip and Java graphical installer using IzPack)."
+	  unless="rebuild.dist-src.not.needed">
+
+    <!-- Copy needed files to ${build.dist.src} -->
+    <mkdir dir="${build.dist.src}"/>
+    <copy todir="${build.dist.src}/3rdparty">
+      <fileset dir="3rdparty" />
+    </copy>
+    <copy todir="${build.dist.src}/bin">
+      <fileset dir="${bin}" />
+    </copy>
+    <copy todir="${build.dist.src}">
+      <fileset dir="${basedir}">
+	<include name="build.*"/>
+      </fileset>
+    </copy>
+    <copy todir="${build.dist.src}/build/doc">
+      <fileset dir="${build.doc}">
+	<exclude name="index-*.html"/>
+      </fileset>
+    </copy>
+    <copy file="${doc}/README-src.txt" tofile="${build.dist.src}/README.txt" />
+    <move file="${build.doc}/index-src.html" tofile="${build.dist.src}/build/doc/index.html" failonerror="false"/>
+    <copy todir="${build.dist.src}/config">
+      <fileset dir="${config}" />
+    </copy>
+    <copy todir="${build.dist.src}/doc">
+      <fileset dir="${doc}" />
+    </copy>
+    <copy todir="${build.dist.src}/lib">
+      <fileset dir="${lib}" />
+    </copy>
+    <copy todir="${build.dist.src}/src">
+      <fileset dir="${src}" />
+    </copy>
+    <copy todir="${build.dist.src}/test">
+      <fileset dir="${test}" />
+    </copy>
+    <copy todir="${build.dist.src}/xml">
+      <fileset dir="${xml}" />
+    </copy>
+    <chmod perm="ugo+rx">
+      <fileset dir="${build.dist.src}/bin">
+	<include name="*.sh"/>
+      </fileset>
+    </chmod>
+
+    <!-- Build zip src distribution -->
+    <zip destfile="${dist}/${dist.src.release.name}.zip" update="true">
+      <zipfileset dir="${build.dist.src}" prefix="${dist.src.release.name}"/>
+    </zip>
+
+    <!-- Build tar.gz src distribution -->
+    <!-- workaround: new files seem not to be updated by default? So
+    just delete first the file to be sure -->
+    <delete file="${dist}/${dist.src.release.name}.tar.gz"/>
+    <tar destfile="${dist}/${dist.src.release.name}.tar.gz" longfile="gnu" compression="gzip">
+      <tarfileset dir="${build.dist.src}" prefix="${dist.src.release.name}" mode="755">
+        <include name="bin/*.sh"/>
+      </tarfileset>
+      <tarfileset dir="${build.dist.src}" prefix="${dist.src.release.name}">
+        <exclude name="bin/*.sh"/>
+      </tarfileset>
+    </tar>
+
+    <!-- Build Java graphical installer src distribution -->
+    <izpack input="${build.izpack}/src-release.xml"
+	    output="${dist}/${dist.src.installer.release.name}"
+	    basedir="${basedir}"
+	    izPackDir="${build.izpack}"/>
+
+    <touch file="${dist}/.dist-src"/>
+  </target>
+
+
+  <!-- ====================================================================== -->
+  <!-- install targets -->
+  <!-- ====================================================================== -->
+  <target name="install"
+	  depends="init-dist-bin,prepare-dist-bin,dist-bin-installer"
+	  description="Installs C-JDBC distribution in the directory specified by ${install.dir}.">
+
+    <copy file="${config}/izpack/install.xml" tofile="${build.izpack}"/>
+
+    <replace file="${build.izpack}/install.xml">
+  	<replacefilter token="@install_path@" value="${install.path}"/>   
+  	</replace> 
+
+  	<java jar="${dist}/${dist.bin.installer.release.name}" failonerror="true" fork="true" maxmemory="128m">
+     <arg value="${build.izpack}/install.xml"/>
+     <classpath>
+       <pathelement location="${dist}/${dist.bin.installer.release.name}"/>
+     </classpath>
+   </java>
+  	
+    <!-- Fix permissions -->
+    <chmod perm="ugo+rx">
+      <fileset dir="${install.path}/bin">
+       <include name="*.sh"/>
+      </fileset>
+      <fileset dir="${install.path}/demo">
+       <include name="*.sh"/>
+      </fileset>    	
+    </chmod>
+    
+    <echo message="Done installation in ${install.path}"/>
+  </target>
+
+  <target name="update-install-jars"
+          depends="jar,prepare-dist-bin"
+          description="Update jar files only into the ${install.dir} directory.">
+    <sync todir="${install.path}/lib"
+          overwrite="true" includeEmptyDirs="true">
+      <fileset dir="${build.dist.bin}/lib">
+  	<include name="**/*.*"/>
+      </fileset>
+    </sync>    
+  	
+    <copy todir="${install.path}/drivers"
+		  overwrite="true" includeEmptyDirs="true">
+      <fileset dir="${build.dist.bin}/drivers">
+    	<include name="**/*.*"/>
+      </fileset>
+    </copy>  	
+  </target>
+
+  <!-- ====================================================================== -->
+  <!-- doc target -->
+  <!-- ====================================================================== -->
+  <target name="init-doc"
+	  if="generate.doc">
+
+    <mkdir dir="${build.doc}"/>
+
+    <!-- Build HTML, PS and PDF doc only when needed -->
+    <uptodate property="rebuild.doc.not.needed" targetfile="${build}/.doc">
+      <srcfiles dir="${lib}/docbook" />
+      <srcfiles dir="${doc}">
+	<include name="userGuide/**/*"/>
+	<include name="developerGuide/**/*"/>
+	<include name="Makefile"/>
+	<include name="rules.mk"/>
+      </srcfiles>
+      <srcfiles dir="${xml}/docbook" />
+    </uptodate>
+  </target>
+
+  <target name="doc" description="Generates documentation." depends="init-doc,make-doc">
+    <echo message="Warning, this target requires the following tools: make, LaTeX, jade, jadetex, dvips, dvipdf."/>
+    <echo message="This target is skipped if the 'generate.doc' property is not defined in build.properties."/>
+  </target>
+
+  <target name="make-doc"
+	  if="generate.doc"
+	  unless="rebuild.doc.not.needed">
+
+    <!-- Unpack the stylesheets distribution -->
+    <mkdir dir="${build.docbook.stylesheets}"/>
+    <untar src="${lib}/docbook/${docbook.xsl.stylesheet}.tar.gz"
+	   dest="${build.docbook.stylesheets}" 
+	   compression="gzip"
+	   overwrite="false"/>
+    <untar src="${lib}/docbook/${docbook.dsssl.stylesheet}.tar.gz" 
+	   dest="${build.docbook.stylesheets}" 
+	   compression="gzip"
+	   overwrite="false"/>
+    <copy file="${docbook.stylesheet.html.src}" tofile="${docbook.stylesheet.html}"/>
+    <copy file="${docbook.stylesheet.html.chunk.src}" tofile="${docbook.stylesheet.html.chunk}"/>
+
+    <!-- Copy static needed files -->
+    <copy todir="${build.doc}/userGuide/html/images">
+      <fileset dir="${doc}/userGuide/images"/>
+    </copy>
+    <copy todir="${build.doc}/images">
+      <fileset dir="${build.docbook.stylesheets}/${docbook.xsl.stylesheet}/images">
+        <include name="**/*.gif" />
+      </fileset>
+    </copy>
+    <copy todir="${build.doc}/images">
+      <fileset dir="${doc}/images">
+        <include name="**/*" />
+      </fileset>
+    </copy>
+    
+    <copy todir="${build.doc}">
+      <fileset dir="${doc}">
+	<exclude name="README-*.txt"/>
+	<exclude name="images/**/*"/>
+      </fileset>
+    </copy>
+    
+    <replace dir="${build.doc}" token="@VERSION@" value="${version}" excludes="**/images/**/*.*"/>
+    
+    <!-- Transform DocBook into HTML (multiple files) --> 
+    <style basedir="${build.doc}/userGuide"
+	   destdir="${build.doc}/userGuide/html"
+	   style="${docbook.stylesheet.html.chunk}">
+      <include name="userGuide.xml"/>
+      <xmlcatalog>
+        <dtd publicId="${docbook.publicId}" location="${docbook.local.uri}"/>
+      </xmlcatalog>
+      <classpath refid="classpath-docbook"/>
+    </style>
+
+    <!-- Transform DocBook into HTML (one file) --> 
+    <style basedir="${build.doc}"
+	   style="${docbook.stylesheet.html}"
+	   in="${build.doc}/userGuide/userGuide.xml"
+	   out="${build.doc}/userGuide/html/one.html">
+      <xmlcatalog>
+        <dtd publicId="${docbook.publicId}" location="${docbook.local.uri}"/>
+      </xmlcatalog>
+      <classpath refid="classpath-docbook"/>
+    </style>
+    <move file="${build.doc}/userGuide/html/one.html" tofile="${build.doc}/userGuide/html/userGuide.html"/>
+
+    <!-- Transform DocBook into PDF and PS --> 
+    <exec dir="${build.doc}" executable="make" failonerror="false" failifexecutionfails="false">
+      <arg line="all"/>
+    </exec>
+
+    <!-- Delete useless files --> 
+    <delete>
+      <fileset dir="${build.doc}" defaultexcludes="no">
+        <include name="Makefile"/>
+        <include name="**/*/Makefile"/>
+        <include name="rules.mk"/>
+        <include name="**/*.aux"/>
+        <include name="**/*.log"/>
+      </fileset>
+    </delete>
+
+    <touch file="${build}/.doc"/>
+  </target>
+
+  <!-- ====================================================================== -->
+  <!-- Doxygen target: Generate documentation in japanese and in english -->
+  <!-- ====================================================================== -->
+  <target name="doxygene-language">
+    <echo message="Generating doxygene for language: ${language}"/>
+    <taskdef name="doxygen" classname="org.doxygen.tools.DoxygenTask" classpath="./lib/other/ant_doxygen.jar" />
+    <!-- 
+    See configuration options with url:
+    http://www.stack.nl/~dimitri/doxygen/config.html
+    -->
+    <mkdir dir="${build.doxygen}/${language}" />
+    <doxygen versionCompatible="1.3.9.1">
+      <property name="INPUT" value="${src}" />
+      <property name="PROJECT_NAME" value="CJDBC version ${version}" />
+      <property name="HAVE_DOT" value="YES" />	    	
+      <property name="OUTPUT_DIRECTORY" value="${build.doxygen}/${language}"/>
+      <property name="RECURSIVE" value="YES" />
+      <property name="INLINE_SOURCE" value="YES" />	 
+      <property name="SOURCE_BROWSER" value="YES" />	 	 
+      <property name="QUIET" value="no" />
+      <property name="OPTIMIZE_OUTPUT_JAVA" value="YES" />
+      <property name="TAB_SIZE" value="2" />
+      <property name="OUTPUT_LANGUAGE" value="${language}" />
+      <property name="REFERENCED_BY_RELATION" value="YES" />
+      <property name="CLASS_GRAPH" value="YES" />
+      <property name="CLASS_DIAGRAM" value="YES" />
+      <property name="INCLUDE_GRAPH" value="YES" />
+      <property name="WARN_LOGFILE" value="${build}/doxygen.log" />
+      <property name="GRAPHICAL_HIERARCHY" value="YES" />
+      <property name="COLLABORATION_GRAPH" value="YES" />
+      <property name="SEARCHENGINE" value="YES" />
+    </doxygen>
+  </target>
+
+  <target name="doxygen"
+          description="Generate Doxygen documentation. Warning! Doxygen is required on the path for this to work.">
+    <!-- Maybe in the future, we can include ant-contrib.jar from sourceforge ... 
+    <foreach list="english,japanese" target="doxygene-language" parallel="true" param="language"/>
+    -->
+    <antcall target="doxygene-language"><param name="language" value="english"/></antcall>
+    <antcall target="doxygene-language"><param name="language" value="japanese"/></antcall>
+  </target>
+
+  <!-- ====================================================================== -->
+  <!-- javadoc target -->
+  <!-- ====================================================================== -->
+  <target name="init-javadoc">
+
+    <!-- Build Javadoc only when a src file has been modified -->
+    <uptodate property="rebuild.javadoc.not.needed" targetfile="${build}/.javadoc">
+      <srcfiles dir="${src}"/>
+    </uptodate>    
+  </target>
+
+  <target name="javadoc"
+	  depends="init-javadoc,jar"
+	  description="Generates Javadoc documentation." 
+	  unless="rebuild.javadoc.not.needed">
+
+    <mkdir dir="${build.javadoc.test}"/>
+
+    <condition property="additionalparam" value="-breakiterator">
+      <equals arg1="${ant.java.version}" arg2="1.4"/>
+    </condition>
+
+    <condition property="additionalparam" value="">
+      <equals arg1="${ant.java.version}" arg2="1.3"/>
+    </condition>
+    
+    <javadoc classpathref="classpath"
+             stylesheetfile="doc/javadoc-stylesheet.css"
+	     defaultexcludes="yes"
+	     destdir="${build.javadoc}"
+	     author="true"
+	     version="true"
+	     use="true"
+	     private="true"
+	     windowtitle="${javadoc.doctitle}"
+	     additionalparam="${additionalparam}">
+      <packageset dir="${src}">
+	<include name="org/**/*"/>
+	<exclude name="java/**/*"/>
+      </packageset>
+      <fileset dir="${src}">
+	<exclude name="org/**/*.java"/>
+	<include name="java/**/*.java"/>
+      </fileset>
+      <doctitle><![CDATA[<h1>${javadoc.doctitle}</h1>]]></doctitle>
+      <bottom><![CDATA[<i>${javadoc.bottom}</i>]]></bottom>
+    </javadoc>
+    
+    <javadoc classpathref="classpath-test" stylesheetfile="doc/javadoc-stylesheet.css"
+	     defaultexcludes="yes"
+	     destdir="${build.javadoc.test}"
+	     author="true"
+	     version="true"
+	     use="true"
+	     private="true"
+	     windowtitle="${javadoc.doctitle.test}"
+	     additionalparam="${additionalparam}">
+      <packageset dir="${test.src}" defaultexcludes="yes" />
+      <link offline="true" href=".." packagelistLoc="${build.javadoc}" />
+      <doctitle><![CDATA[<h1>${javadoc.doctitle.test}</h1>]]></doctitle>
+      <bottom><![CDATA[<i>${javadoc.bottom}</i>]]></bottom>
+    </javadoc>
+
+    <touch file="${build}/.javadoc"/>
+  </target>
+
+  <!-- ===================================================================  -->
+  <!-- javadoc-check target -->
+  <!-- ===================================================================  -->
+  <target name="javadoc-check"
+	  description="Checks the Javadoc syntax and produces detailed errors report.">
+
+    <mkdir dir="${build.javadoccheck}"/>
+
+    <javadoc doclet="com.sun.tools.doclets.doccheck.DocCheck"
+	     docletpath="lib/other/doccheck.jar"
+	     packagenames="${packageprefix}.*.*,java.sql.*"
+	     sourcepath="${src};${test.src}"
+	     classpathref="classpath-test"
+	     defaultexcludes="yes"
+	     destdir="${build.javadoccheck}"
+	     author="true"
+	     version="true"
+	     private="true"/>
+  </target>
+  
+  <!-- ===================================================================  -->
+  <!-- test target -->
+  <!-- ===================================================================  -->  
+
+  <target name="scenari"
+          depends="jar,compile-tests"
+	  description="Start single scenario regression testing. Use -Dscenari=[scenarioName]. Eg: -Dscenari=raidb2.Raidb2BasicFailoverScenario">
+    <echo message="Using initial memory setting:${junit.memory.initial}, and maximum:${junit.memory.maximum}"/>
+    <delete dir="${build.test.report}" />
+    <mkdir dir="${build.test.report}" />
+    <mkdir dir="${build.test.execute.scenario}"/>
+    <junit fork="true" dir="${build.test.execute.scenario}"
+	   printsummary="true"
+	   showoutput="true">
+      <jvmarg value="-Dorg.xml.sax.driver=org.apache.crimson.parser.XMLReaderImpl"/>
+      <jvmarg value="-Dcjdbc.dir=${basedir}"/>	
+      <jvmarg value="-Dstandalone=${standalone}"/>	
+      <jvmarg value="-Xmx${junit.memory.maximum}m"/>	    	
+      <jvmarg value="-Xms${junit.memory.initial}m"/>	    	    	
+      <classpath refid="classpath-scenario" />
+      <formatter type="xml" />
+      <test name="${packageprefix}.scenario.${scenari}"
+	    todir="${build.test.report}"
+	    filtertrace="false"
+	    haltonfailure="false"
+	    haltonerror="false"/>      	 
+    </junit>
+    <antcall target="test-beautify"/>
+  </target>
+	
+
+  <target name="regression-testing"
+          depends="get-latest"
+          description="Run scenario on latest CVS.">
+    <ant antfile="build.xml" target="scenario" inheritAll="false" dir="${cjdbc.latest.dir}/c-jdbc/" />
+  </target>
+	
+  <target name="scenario"
+          depends="jar,compile-tests"
+          description="Start regression testing">
+    <echo message="Using initial memory setting:${junit.memory.initial}, and maximum:${junit.memory.maximum}"/>
+    <delete dir="${build.test.report}" />
+    <mkdir dir="${build.test.report}" />
+    <mkdir dir="${build.test.execute.scenario}"/>
+    <junit fork="true" dir="${build.test.execute.scenario}"
+	   printsummary="true"	   
+	   showoutput="false"
+    	   timeout="${test.timeout}">
+      <jvmarg value="-Dorg.xml.sax.driver=org.apache.crimson.parser.XMLReaderImpl"/>
+      <jvmarg value="-Dcjdbc.dir=${basedir}"/>
+      <jvmarg value="-Xmx${junit.memory.maximum}m"/>	    	
+      <jvmarg value="-Xms${junit.memory.initial}m"/>	    	    		    	    	
+      <classpath refid="classpath-scenario" />
+      <formatter type="xml" />
+      <batchtest todir="${build.test.report}"
+		 haltonfailure="false"
+		 haltonerror="false"
+		 filtertrace="false">
+        <fileset dir="${test.src}">
+          <include name="**/*Scenario.java" />
+          <include name="**/*Test.java" />
+        </fileset>
+      </batchtest>
+    </junit>
+    <antcall target="test-beautify"/>
+  </target>
+  
+  <target name="scenario-quick"
+          description="Same as scenario but skip the lengthy ones" depends="jar,compile-tests">
+    <echo message="Using initial memory setting:${junit.memory.initial}, and maximum:${junit.memory.maximum}"/>
+    <delete dir="${build.test.report}" />
+    <mkdir dir="${build.test.report}" />
+    <mkdir dir="${build.test.execute.scenario}"/>
+    <junit fork="true" dir="${build.test.execute.scenario}"
+	   printsummary="true"	   
+	   showoutput="false">
+      <jvmarg value="-Dorg.xml.sax.driver=org.apache.crimson.parser.XMLReaderImpl"/>
+      <jvmarg value="-Dcjdbc.dir=${basedir}"/>
+      <jvmarg value="-Xmx${junit.memory.maximum}m"/>	    	
+      <jvmarg value="-Xms${junit.memory.initial}m"/>	    	    		    	    	
+      <classpath refid="classpath-scenario" />
+      <formatter type="xml" />
+      <batchtest todir="${build.test.report}"
+		 haltonfailure="false"
+		 haltonerror="false"
+		 filtertrace="false">
+        <fileset dir="${test.src}">
+          <include name="**/*Scenario.java" />
+          <include name="**/*Test.java" />
+          <exclude name="**/Raidb1IntensiveBackupScenario.java"/>
+        </fileset>
+      </batchtest>
+    </junit>
+    <antcall target="test-beautify"/>
+  </target>
+	
+  <target name="scenario-pkg"
+          depends="jar,compile-tests"
+          description="Test only one package of files. Use -Dpkg=&lt;packageName&gt;. Eg: -Dpkg=raidb1/cache">
+    <echo message="Using initial memory setting:${junit.memory.initial}, and maximum:${junit.memory.maximum}"/>
+    <mkdir dir="${build.test.report}" />  	
+  	<mkdir dir="${build.test.execute.scenario}"/>
+  	<junit fork="true" dir="${build.test.execute.scenario}"
+  		   printsummary="true"	   
+  		   showoutput="false">
+  	    	<jvmarg value="-Dorg.xml.sax.driver=org.apache.crimson.parser.XMLReaderImpl"/>
+  	    	<jvmarg value="-Dcjdbc.dir=${basedir}"/>
+        <jvmarg value="-Xmx${junit.memory.maximum}m"/>	    	
+        <jvmarg value="-Xms${junit.memory.initial}m"/>	    	    	  	  		
+  	      <classpath refid="classpath-scenario" />
+  	      <formatter type="xml" />
+  	      <batchtest todir="${build.test.report}"
+  			 haltonfailure="false"
+  			 haltonerror="false"
+  			 filtertrace="false">
+  	        <fileset dir="${test.src}">
+  	          <include name="**/${pkg}/**/*Test.java" />
+  	          <include name="**/${pkg}/**/*Scenario.java" />  
+                  <exclude name="**/Raidb1IntensiveBackupScenario.java"/>
+  	        </fileset>
+  	      </batchtest>
+    </junit>
+    <antcall target="test-beautify"/>
+  </target>
+
+  <!-- disabled by default, too dangerous
+  <target name="release"
+          description="You need to use -Dcvs.password=xxxx for the build to be completely automated">
+    <ant inheritAll="true" antfile="build-release.xml" target="release"/>
+  </target>
+  -->
+	
+  <target name="test-beautify"
+          description="Generate Junit HTML report from a previous test run.">
+    <tstamp><format property="today" pattern="${date.pattern}"/></tstamp> 
+    <junitreport todir="${build.test.report}">
+      <fileset dir="${build.test.report}">
+        <include name="TEST-*.xml"/>
+      </fileset>
+      <report format="frames" todir="${build.test.report}/html"/>
+    </junitreport>
+
+    <replace dir="${build.test.report}" value="C-JDBC ${version} JUnit Report Generated:${today}">
+    <include name="**/*.html"/>
+    <replacetoken>Unit Test Results</replacetoken>
+    </replace>
+  </target>
+	
+  <target name="test-gui"
+	  depends="jar, compile-tests"
+	  description="Launchs the GUI test runner of JUnit.">
+    <java classname="junit.swingui.TestRunner"
+	  failonerror="false"
+	  fork="true">
+      <jvmarg value="-Dorg.xml.sax.driver=org.apache.crimson.parser.XMLReaderImpl"/>
+      <jvmarg value="-Dcjdbc.dir=${basedir}"/>    	
+      <classpath refid="classpath-test"/>
+      <classpath refid="classpath-scenario" />
+    </java>
+  </target>
+  
+  <!-- ===================================================================  -->
+  <!-- clean target -->
+  <!-- ===================================================================  -->
+  <target name="clean"
+	  description="Deletes all generated files and emacs backup files.">
+
+    <delete dir="${build}"/>
+    <delete dir="${dist}"/>
+    <delete>
+      <fileset dir="${basedir}" defaultexcludes="no">
+        <patternset>
+	  <!-- emacs backup files -->
+          <include name="**/*~"/>
+        </patternset>
+      </fileset>
+    </delete>
+    <exec dir="${doc}" executable="make" failonerror="false" failifexecutionfails="false"> 
+      <arg line="clean"/>
+    </exec>
+  </target>
+</project>

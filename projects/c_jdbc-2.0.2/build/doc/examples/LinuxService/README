@@ -1,0 +1,32 @@
+# Contribution from Lou Kamenov (kamenovl@gmail.com)
+
+CJDBC meets daemontools.
+
+(From http://cr.yp.to/daemontools.html)
+
+Daemontools is a collection of tools for managing UNIX services.
+Supervise monitors a service. It starts the service and restarts the service if
+it dies. Setting up a new service is easy: all supervise needs is a directory 
+with a run script that runs the service.
+
+Multilog saves error messages to one or more logs. It optionally timestamps 
+each line and, for each log, includes or excludes lines matching specified 
+patterns. It automatically rotates logs to limit the amount of disk space used.
+If the disk fills up, it pauses and tries again, without losing any data. 
+
+For more information on how the cjdbc daemontools scripts work see:
+http://cr.yp.to/daemontools/faq/create.html#runlog
+
+This dir contains few files:
+
+cjdbc.ctrl - a sample script to start cjdbc.
+cjdbc/run - run script for cjdbc. (see above)
+cjdbc/log/run - run script for multilog. 
+				(see http://cr.yp.to/daemontools/multilog.html) 
+cjdbc/env:
+	o	CJDBC_HOME	- contains cjdbc home directory - /opt/cjdbc
+	o 	JAVA_HOME	- contains java home directory - /opt/java
+	o	ctrlcfg		- cjdbc controller config file - CJDBC_HOME/config/ctrl.cfg
+	o	uid			- restrict cjdbc to run under specific UID - cjdbc.
+
+Good luck!

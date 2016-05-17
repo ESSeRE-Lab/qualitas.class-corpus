@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<!DOCTYPE C-JDBC-CONTROLLER PUBLIC "-//ObjectWeb//DTD C-JDBC-CONTROLLER @VERSION@//EN"  "http://c-jdbc.objectweb.org/dtds/c-jdbc-controller-@VERSION@.dtd">
+<C-JDBC-CONTROLLER>
+  <Controller port="25322">
+    <Report/>
+    <JmxSettings>
+      <RmiJmxAdaptor/>
+    </JmxSettings>
+    <VirtualDatabase configFile="hsqldb-raidb1.xml" virtualDatabaseName="myDB" autoEnableBackends="force" checkpointName="Initial_empty_recovery_log"/>
+  </Controller>
+</C-JDBC-CONTROLLER>

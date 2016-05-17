@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF8" ?>
+<!DOCTYPE C-JDBC-CONTROLLER PUBLIC "-//ObjectWeb//DTD C-JDBC-CONTROLLER @VERSION@//EN"  "http://c-jdbc.objectweb.org/dtds/c-jdbc-controller-@VERSION@.dtd">
+<C-JDBC-CONTROLLER>
+	<Controller port="25322">
+    <JmxSettings>
+    	<RmiJmxAdaptor/>
+	</JmxSettings>
+	</Controller>
+</C-JDBC-CONTROLLER>

@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF8"?>
+<!DOCTYPE C-JDBC PUBLIC "-//ObjectWeb//DTD C-JDBC 2.0.2 //EN" "http://c-jdbc.objectweb.org/dtds/c-jdbc-2.0.2.dtd">
+
+<C-JDBC>
+  
+  <VirtualDatabase name="tpcw">
+
+    <AuthenticationManager>
+      <Admin>
+      	<User username="admin" password="c-jdbc"/>
+      </Admin> 
+      <VirtualUsers>
+        <VirtualLogin vLogin="cecchet" vPassword=""/>
+      </VirtualUsers>
+    </AuthenticationManager>
+
+    <DatabaseBackend name="sci10" driver="org.gjt.mm.mysql.Driver" url="jdbc:mysql://sci10/small_tpcw" connectionTestStatement="select 1">
+      <ConnectionManager vLogin="cecchet" rLogin="cecchet" rPassword="">
+        <VariablePoolConnectionManager initPoolSize="40"/>
+      </ConnectionManager>
+    </DatabaseBackend>
+
+    <DatabaseBackend name="sci13" driver="org.gjt.mm.mysql.Driver" url="jdbc:mysql://sci13/small_tpcw" connectionTestStatement="select 1">
+      <ConnectionManager vLogin="cecchet" rLogin="cecchet" rPassword="">
+        <VariablePoolConnectionManager initPoolSize="40"/>
+      </ConnectionManager>
+    </DatabaseBackend>
+
+    <DatabaseBackend name="sci11" driver="org.gjt.mm.mysql.Driver" url="jdbc:mysql://sci11/small_tpcw" connectionTestStatement="select 1">
+      <ConnectionManager vLogin="cecchet" rLogin="cecchet" rPassword="">
+        <VariablePoolConnectionManager initPoolSize="40"/>
+      </ConnectionManager>
+    </DatabaseBackend>
+
+    <DatabaseBackend name="sci15" driver="org.gjt.mm.mysql.Driver" url="jdbc:mysql://sci15/small_tpcw" connectionTestStatement="select 1">
+      <ConnectionManager vLogin="cecchet" rLogin="cecchet" rPassword="">
+        <VariablePoolConnectionManager initPoolSize="40"/>
+      </ConnectionManager>
+    </DatabaseBackend>
+
+    <DatabaseBackend name="sci12" driver="org.gjt.mm.mysql.Driver" url="jdbc:mysql://sci12/small_tpcw" connectionTestStatement="select 1">
+      <ConnectionManager vLogin="cecchet" rLogin="cecchet" rPassword="">
+        <VariablePoolConnectionManager initPoolSize="40"/>
+      </ConnectionManager>
+    </DatabaseBackend>
+
+    <DatabaseBackend name="sci17" driver="org.gjt.mm.mysql.Driver" url="jdbc:mysql://sci17/small_tpcw" connectionTestStatement="select 1">
+      <ConnectionManager vLogin="cecchet" rLogin="cecchet" rPassword="">
+        <VariablePoolConnectionManager initPoolSize="40"/>
+      </ConnectionManager>
+    </DatabaseBackend>
+
+    <RequestManager beginTimeout="0" commitTimeout ="0" rollbackTimeout ="0">
+      <RequestScheduler>
+         <RAIDb-2Scheduler level="pessimisticTransaction"/>
+      </RequestScheduler>
+
+      <LoadBalancer>
+         <RAIDb-2>
+           <CreateTable policy="roundRobin" numberOfNodes="1">
+             <BackendName name="sci10"/>
+             <BackendName name="sci11"/>
+             <BackendName name="sci12"/>
+           </CreateTable>
+           <RAIDb-2-RoundRobin/>
+         </RAIDb-2>
+      </LoadBalancer>
+      
+      <RecoveryLog driver="org.gjt.mm.mysql.Driver"
+        url="jdbc:mysql://localhost/rubis" login="user" password="">
+        <RecoveryLogTable tableName="tpcwDBLogTable"/>
+        <CheckpointTable tableName="tpvwDBCheckpointTable"/>
+        <BackendTable/>
+        <DumpTable/>
+      </RecoveryLog>
+      
+    </RequestManager>
+
+  </VirtualDatabase>
+
+</C-JDBC>

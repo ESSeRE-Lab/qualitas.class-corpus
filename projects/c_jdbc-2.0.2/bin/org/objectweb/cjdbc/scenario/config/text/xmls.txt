@@ -1,0 +1,36 @@
+######################################################
+### Controller Configuration files
+######################################################
+config/controller;xml/c-jdbc-controller.dtd;true
+
+### Cache tests
+doc/examples/Cache/controller;xml/c-jdbc-controller.dtd;true
+
+### Test Configuration files
+test/src/org/objectweb/cjdbc/scenario/config/controller;xml/c-jdbc-controller.dtd;true
+
+######################################################
+### Virtual Database Configuration files
+######################################################
+config/virtualdatabase;xml/c-jdbc.dtd;true
+
+### Raidb0 configuration files
+doc/examples/RAIDb-0;xml/c-jdbc.dtd;true
+
+### Raidb1 configuration files
+doc/examples/RAIDb-1;xml/c-jdbc.dtd;true
+
+### Raidb2 configuration files
+doc/examples/RAIDb-2;xml/c-jdbc.dtd;true
+
+### SingleDB configuration files
+doc/examples/SingleDB;xml/c-jdbc.dtd;true
+
+### Recovery Configuration files
+doc/examples/RecoveryLog;xml/c-jdbc.dtd;true
+
+### Cache Configuration Files 
+doc/examples/Cache;xml/c-jdbc.dtd;true
+
+### Test Configuration files
+test/src/org/objectweb/cjdbc/scenario/config/virtualdatabase;xml/c-jdbc.dtd;true

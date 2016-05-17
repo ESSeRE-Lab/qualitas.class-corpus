@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF8"?>
+<!DOCTYPE C-JDBC PUBLIC "-//ObjectWeb//DTD C-JDBC @VERSION@//EN" "http://c-jdbc.objectweb.org/dtds/c-jdbc-@VERSION@.dtd">
+
+<C-JDBC>
+  
+  <VirtualDatabase name="rubis" maxNbOfConnections="150" minNbOfThreads="40" maxNbOfThreads="150">
+
+    <AuthenticationManager>
+      <Admin>
+      	<User username="admin" password="c-jdbc"/>
+      </Admin> 
+      <VirtualUsers>
+        <VirtualLogin vLogin="user" vPassword="c-jdbc"/>
+      </VirtualUsers>
+    </AuthenticationManager>
+
+    <DatabaseBackend name="mysql" driver="org.gjt.mm.mysql.Driver" url="jdbc:mysql://localhost/rubis" connectionTestStatement="select 1">
+      <ConnectionManager vLogin="user" rLogin="user" rPassword="">
+	<FailFastPoolConnectionManager poolSize="40"/>
+      </ConnectionManager>
+    </DatabaseBackend>
+    <DatabaseBackend name="postgresql" driver="org.postgresql.Driver" url="jdbc:postgresql://localhost/rubis" connectionTestStatement="select now()">
+      <ConnectionManager vLogin="user" rLogin="user" rPassword="">
+	<RandomWaitPoolConnectionManager poolSize="20"/>
+      </ConnectionManager>
+    </DatabaseBackend>
+    <DatabaseBackend name="sapdb" driver="com.sap.dbtech.jdbc.DriverSapDB" url="jdbc:sapdb://localhost/rubis" connectionTestStatement="select count(*) from versions">
+      <ConnectionManager vLogin="user" rLogin="user" rPassword="">
+	<VariablePoolConnectionManager initPoolSize="10" minPoolSize="5" maxPoolSize="50" idleTimeout="180" waitTimeout="120"/>
+      </ConnectionManager>
+    </DatabaseBackend>
+    <DatabaseBackend name="hsql" driver="org.hsqldb.jdbcDriver" url="jdbc:hsqldb:hsql://localhost" connectionTestStatement="call now()">
+      <ConnectionManager vLogin="user" rLogin="sa" rPassword="">	
+	<RandomWaitPoolConnectionManager poolSize="40" timeout="30"/>
+      </ConnectionManager>
+    </DatabaseBackend>
+
+
+    <RequestManager>
+      <RequestScheduler>
+         <RAIDb-1Scheduler level="pessimisticTransaction"/>
+      </RequestScheduler>
+
+      <LoadBalancer>
+         <RAIDb-1>
+            <WaitForCompletion policy="first"/>
+	        <RAIDb-1-LeastPendingRequestsFirst/>
+         </RAIDb-1>
+      </LoadBalancer>
+      
+      <RecoveryLog driver="org.hsqldb.jdbcDriver"
+        url="jdbc:hsqldb:hsql://localhost" login="sa" password="">
+        <RecoveryLogTable tableName="RECOVERY" idColumnType="BIGINT NOT NULL"
+          vloginColumnType="VARCHAR NOT NULL" sqlColumnType="VARCHAR NOT NULL"
+          extraStatementDefinition=",PRIMARY KEY (id)"/>
+        <CheckpointTable tableName="CHECKPOINT"
+          checkpointNameColumnType="VARCHAR NOT NULL"/>
+        <BackendTable tableName="BACKEND"
+          databaseNameColumnType="VARCHAR NOT NULL"
+          backendNameColumnType="VARCHAR NOT NULL"
+          checkpointNameColumnType="VARCHAR NOT NULL"/>
+        <DumpTable tableName="DUMP" dumpNameColumnType="VARCHAR NOT NULL"
+          dumpDateColumnType="VARCHAR NOT NULL"
+          dumpPathColumnType="VARCHAR NOT NULL"
+          dumpFormatColumnType="VARCHAR NOT NULL"
+          checkpointNameColumnType="VARCHAR NOT NULL"
+          backendNameColumnType="VARCHAR NOT NULL"
+          tablesColumnType="VARCHAR NOT NULL"/>
+      </RecoveryLog>
+      
+    </RequestManager>
+
+  </VirtualDatabase>
+
+</C-JDBC>

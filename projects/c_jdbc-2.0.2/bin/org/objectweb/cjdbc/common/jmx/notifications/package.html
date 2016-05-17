@@ -1,0 +1,101 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+</head>
+<body>
+JmxNotification that can be sent are in the list <code>CjdbcNotificationList</code>.<br>
+JmxNotification themselves are created from the <code>JmxNotification</code> class 
+and are serialized via xml.
+<!--
+<table border=1 cellpadding=10 cellspacing=0>
+<tr>
+	<th>notification type</th>
+	<th>emitters</th>
+	<th>user object or custom class</th>
+	<th>description</th>
+	<th>notification class</th>
+</tr>
+
+<tr>
+	<td>cjdbc.controller.virtualdatabase.added<br>cjdbc.controller.virtualdatabase.removed</td>
+	<td>controller bean </td>
+	<td>name of virtual database</td>
+	<td>a new virtual database was added/removed with the console</td>
+	<td>javax.management.Notification</td>
+</tr>
+
+<tr>
+	<td>cjdbc.loadbalancer.backend.disabled.failure</td>
+	<td>loadbalancer bean (or also backend bean ?)</td>
+	<td>backendname (failure reasons : trxIds ?)</td>
+	<td>the backend was disabled due to a failure</td>
+	<td>javax.management.Notification</td>
+</tr>
+
+<tr>
+	<td>cjdbc.virtualdatabase.backend.disabled <br>cjdbc.virtualdatabase.backend.enabled</td>
+	<td>virtual database bean (or also backend bean ?)</td>
+	<td>backendname</td>
+	<td>the backend was manually disabled/enabled with the console</td>
+	<td>javax.management.Notification</td>
+</tr>
+
+<tr>
+	<td>cjdbc.virtualdatabase.backend.disabled.checkpoint<br>cjdbc.controller.backend.enabled.checkpoint<br>what about read/write enabled ?</td>
+	<td>virtual database bean (or also backend bean ?)</td>
+	<td>backendname, checkpoint name</td>
+	<td>the backend was disabled/enabled for a checkpoint</td>
+	<td>javax.management.Notification</td>
+</tr>
+
+<tr>
+	<td>cjdbc.virtualdatabase.backend.added<br>cjdbc.virtualdatabase.backend.removed</td>
+	<td>virtual database bean </td>
+	<td>name of backend (or a lot more info url, database vendor type,...)</td>
+	<td>a new (disabled)backend was added/removed with the console</td>
+	<td>javax.management.Notification</td>
+</tr>
+
+<tr>
+	<td>cjdbc.distributedvirtualdatabase.controller.added<br>cjdbc.distributedvirtualdatabase.controller.removed</td>
+	<td>distributed virtual database bean </td>
+	<td>name of controller </td>
+	<td>a controller was added/removed from the group</td>
+	<td>javax.management.Notification</td>
+</tr>
+
+</table>
+
+<p>
+
+If the information we want to pass in the notification is only a string the javax.management.Notification is sufficient.
+
+If we want to pass more information we have three options :
+<ul>
+<li> subclass of  javax.management.Notification 
+<li> custom class in the userobject
+<li> pass more than one data object as string in the user data and provide a parser to extract the relevant information from the data object
+</ul>
+
+<pre>
+Do we need notifications like:
+
+8- Backend has finished backup (success/failure status)
+11- Configuration of VirtualDatabase has changed (? in the case we keep the parsing of the virtual database in memory and allow some changes in  pool size and logins ...) 
+
+comment marc:
+I am going to make my backups with my own jmx client and don't need a backup notification. But I don't know about others.
+
+</pre>
+<p>
+open issues :
+<p>
+
+- generic notifications ?  <p>
+- for backend read/write enabled  : do we need the previous state as well ?, what state transitions are possible ?  <p>
+- does cjdbc offer predefined NotificationFilters for notification types. <p>
+
+
+-->
+</body>
+</html>

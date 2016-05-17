@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8" standalone='yes' ?>
+<isql-service secure="false" name="cjdbc" >
+        <authorization user="user" password=""/>
+        <config driver="org.objectweb.cjdbc.driver.Driver" url="jdbc:cjdbc://localhost/myDB" >
+        </config>
+</isql-service>
