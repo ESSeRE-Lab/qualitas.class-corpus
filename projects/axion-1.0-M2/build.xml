@@ -1,0 +1,428 @@
+<?xml version="1.0"?>
+
+<project name="AxionDB" basedir="." default="test">
+
+    <!-- ================================================================= -->
+    <!-- P R O P E R T I E S                                               -->
+    <!-- ================================================================= -->
+
+    <!-- read in property files -->
+    <property file="${user.home}/build.properties" />
+    <property file="build.properties" />
+
+    <!-- set default properties -->
+
+    <!-- program name -->
+    <property name="name" value="AxionDB"/>
+
+    <!-- project name -->
+    <property name="project" value="axion"/>
+
+    <!-- project version -->
+    <property name="version" value="1.0-M2"/>
+
+    <!-- final project name -->
+    <property name="final.name" value="${project}-${version}"/>
+
+    <!-- package name to javadoc -->
+    <property name="package" value="org.axiondb"/>
+
+    <!-- the library directory -->
+    <property name="lib.repo" value="${basedir}/lib"/>
+
+    <!-- where the java source files live -->
+    <property name="src-java" value="${basedir}/src"/>
+
+    <!-- where the javacc grammar files live -->
+    <property name="src-javacc" value="${basedir}/grammars"/>
+
+    <!-- where the test source files live -->
+    <property name="src-test" value="${basedir}/test"/>
+
+    <!-- where the source for generated docs live -->
+    <!-- currently not used
+    <property name="src-docs" value="${basedir}/xdocs"/>
+    -->
+
+    <!-- the destination directory -->
+    <property name="dest" value="${basedir}/bin"/>
+
+    <!-- where the class files go -->
+    <property name="dest.classes" value="${dest}/classes"/>
+
+    <!-- where the test class files go -->
+    <property name="dest.testclasses" value="${dest}/testclasses"/>
+
+    <!-- where the generated documentation goes -->
+    <property name="dest.doc" value="${dest}/docs"/>
+
+    <!-- where the javadocs go -->
+    <property name="dest.doc.api" value="${dest.doc}/api"/>
+
+
+    <!-- javac properties -->
+    <property name="javac.deprecation" value="off"/>
+    <property name="javac.optimize" value="on"/>
+    <property name="javac.debug" value="on"/>
+    <property name="javac.minVMVersion" value="1.2"/>
+
+    <!-- test (junit) properties -->
+    <property name="test.runner" value="junit.textui.TestRunner"/>
+    <property name="test.fork" value="yes"/>
+    <property name="test.failonerror" value="true"/>
+    <property name="test.entry" value="org.axiondb.TestAll"/>
+
+    <!-- classpath -->
+    <path id="classpath">
+        <pathelement location="${collections.jar}"/>
+        <pathelement location="${codec.jar}"/>
+        <pathelement location="${logging.jar}"/>
+        <pathelement location="${logging-impl.jar}"/>
+        <pathelement location="${regexp.jar}"/>
+        <!-- include JARs in ${lib.repo} if any -->
+        <fileset dir="${lib.repo}" >
+            <include name="**/*.jar" />
+        </fileset>
+        <pathelement path="${dest.classes}"/>
+    </path>
+
+    <!-- test classpath -->
+    <path id="test-classpath">
+        <pathelement location="${junit.jar}"/>
+        <pathelement location="${collections.jar}"/>
+        <pathelement location="${codec.jar}"/>
+        <pathelement location="${logging.jar}"/>
+        <pathelement location="${logging-impl.jar}"/>
+        <pathelement location="${regexp.jar}"/>
+        <!-- include JARs in ${lib.repo} if any -->
+        <fileset dir="${lib.repo}" >
+            <include name="**/*.jar" />
+        </fileset>
+        <pathelement path="${dest.classes}"/>
+        <pathelement path="${dest.testclasses}"/>
+        <pathelement path="${lib.repo}" />
+    </path>
+
+    <!-- ================================================================= -->
+    <!-- E N V                                                             -->
+    <!-- ================================================================= -->
+
+    <target name="env" description="Report environment settings.">
+        <echo message="== path settings =="/>
+        <echo message="java.home        = ${java.home}"/>
+        <echo message="user.home        = ${user.home}"/>
+        <echo message="== classpath settings =="/>
+        <echo message="junit.jar        = ${junit.jar}"/>
+        <echo message="collections.jar  = ${collections.jar}"/>
+        <echo message="codec.jar        = ${codec.jar}"/>
+        <echo message="logging.jar      = ${logging.jar}"/>
+        <echo message="logging-impl.jar = ${logging-impl.jar}"/>
+        <echo message="regexp.jar       = ${regexp.jar}"/>
+        <echo message="lib.repo         = ${lib.repo}"/>
+        <echo message="== source settings =="/>
+        <echo message="src-java         = ${src-java}"/>
+        <echo message="src-test         = ${src-test}"/>
+        <echo message="== destination settings =="/>
+        <echo message="dest             = ${dest}"/>
+        <echo message="dest.classes     = ${dest.classes}"/>
+        <echo message="dest.testclasses = ${dest.testclasses}"/>
+        <echo message="dest.doc         = ${dest.doc}"/>
+        <echo message="dest.doc.api     = ${dest.doc.api}"/>
+    </target>
+
+    <!-- ================================================================= -->
+    <!-- I N I T                                                           -->
+    <!-- ================================================================= -->
+
+    <target name="init">
+    </target>
+
+    <target name="init-daily-build-suffix" if="daily-build">
+        <tstamp>
+            <format property="daily-build-suffix" pattern="-yyyyMMdd"/>
+        </tstamp>
+    </target>
+
+    <target name="dont-init-daily-build-suffix" unless="daily-build">
+        <property name="daily-build-suffix" value=""/>
+    </target>
+
+    <!-- ================================================================= -->
+    <!-- J A V A C C                                                       -->
+    <!-- ================================================================= -->
+
+    <target name="javacc" depends="init">
+      <javacc target="${src-javacc}/AxionSqlParser.jj"
+              javacchome="${javacc.home}"
+              outputdirectory="${src-java}/org/axiondb/parser"
+      />
+    </target>
+
+    <!-- ================================================================= -->
+    <!-- C O M P I L E                                                     -->
+    <!-- ================================================================= -->
+
+    <target name="compile" depends="javacc">
+        <mkdir dir="${dest.classes}" />
+        <javac srcdir="${src-java}"
+               destdir="${dest.classes}"
+               debug="${javac.debug}"
+               deprecation="${javac.deprecation}"
+               optimize="${javac.optimize}"
+               target="${javac.minVMVersion}"
+               >
+            <classpath refid="classpath" />
+        </javac>
+        <copy todir="${dest.classes}" file="${basedir}/conf/axiondb.properties"/>
+    </target>
+
+
+    <!-- ================================================================= -->
+    <!-- J A R                                                             -->
+    <!-- ================================================================= -->
+
+    <target name="jar" depends="compile" description="Generate the JAR file.">
+        <jar jarfile="${dest}/${final.name}.jar"
+             compress="true"
+             basedir="${dest.classes}">
+        </jar>
+    </target>
+
+    <!-- ================================================================= -->
+    <!-- A L L                                                             -->
+    <!-- ================================================================= -->
+
+    <target name="all" depends="test,jar,doc" description="Build and test everything.">
+        <echo message="${project} built!"/>
+    </target>
+
+
+    <!-- ================================================================= -->
+    <!-- T E S T                                                           -->
+    <!-- ================================================================= -->
+
+    <target name="compile-test">
+        <mkdir dir="${dest.testclasses}"/>
+        <javac srcdir="${src-test}"
+               destdir="${dest.testclasses}"
+               excludes="**/package.html"
+               debug="${javac.debug}"
+               deprecation="${javac.deprecation}"
+               optimize="${javac.optimize}">
+            <classpath refid="test-classpath"/>
+        </javac>
+    </target>
+
+    <target name="test" depends="jar,compile-test,copy-log-config-test"
+            description="Run the unit test suite.">
+        <mkdir dir="testdb" />
+        <java classname="${test.runner}"
+              fork="${test.fork}"
+              failonerror="${test.failonerror}">
+            <arg value="${test.entry}"/>
+            <classpath refid="test-classpath"/>
+        </java>
+        <delete dir="testdb"/>
+    </target>
+
+    <target name="test-hprof" depends="jar,compile-test,copy-log-config-test"
+            description="Run the unit test suite.">
+        <mkdir dir="testdb" />
+        <java classname="${test.runner}"
+              fork="true"
+              failonerror="${test.failonerror}">
+            <jvmarg line="-Xrunhprof:cpu=samples,depth=6,heap=all,thread=y"/>
+            <arg value="${test.entry}"/>
+            <classpath refid="test-classpath"/>
+        </java>
+        <delete dir="testdb"/>
+    </target>
+
+    <target name="copy-log-config-test" if="logging-impl.config">
+        <copy file="${logging-impl.config}" todir="${dest.classes}"/>
+    </target>
+
+    <!-- ================================================================= -->
+    <!-- D O C                                                             -->
+    <!-- ================================================================= -->
+
+    <target name="doc" depends="init,javadoc" description="Generate documentation.">
+
+    </target>
+
+    <!-- ================================================================= -->
+    <!-- J A V A D O C                                                     -->
+    <!-- ================================================================= -->
+
+    <target name="javadoc" depends="init">
+        <mkdir dir="${dest.doc.api}"/>
+        <javadoc packagenames="${package}.*"
+                 sourcepath="${src-java}"
+                 destdir="${dest.doc.api}"
+                 author="false"
+                 private="false"
+                 version="true"
+                 use="true"
+                 windowtitle="${name} ${version} API"
+                 doctitle="${name} ${version} API"
+                 >
+            <classpath refid="classpath" />
+            <link href="http://java.sun.com/j2se/1.3/docs/api/"/>
+        </javadoc>
+    </target>
+
+    <!-- ================================================================= -->
+    <!-- D I S T                                                           -->
+    <!-- ================================================================= -->
+
+    <target name="dist" depends="init-daily-build-suffix,dont-init-daily-build-suffix,all"
+                        description="Generate binary and source distributions.">
+
+        <property name="dist.dir" value="${dest}/${final.name}" />
+
+        <filter token="VERSION" value="${version}" />
+
+        <!-- BINARY DISTRIBUTION -->
+        <mkdir dir="${dist.dir}" />
+        <mkdir dir="${dist.dir}/lib" />
+
+        <!-- Copy text files -->
+        <copy todir="${dist.dir}" file="${basedir}/LICENSE.txt"/>
+
+        <!-- Copy jars -->
+        <!-- copy primary jar to root -->
+        <copy todir="${dist.dir}">
+            <fileset dir="${dest}">
+                <include name="${final.name}.jar"/>
+            </fileset>
+        </copy>
+
+        <!-- lib and ./lib/* to lib -->
+        <copy todir="${dist.dir}/lib">
+            <fileset dir="./lib">
+                <include name="**/*.jar" />
+            </fileset>
+        </copy>
+
+        <!-- Copy documentation -->
+        <copy todir="${dist.dir}/docs">
+            <fileset dir="${dest.doc}">
+                <include name="**" />
+            </fileset>
+        </copy>
+
+        <!-- create tar.gz -->
+        <tar tarfile="${dest}/${final.name}${daily-build-suffix}.tar"
+             longfile="gnu"
+             basedir="${dest}"
+             includes="${final.name}/**"/>
+        <gzip zipfile="${dest}/${final.name}${daily-build-suffix}.tar.gz"
+              src="${dest}/${final.name}${daily-build-suffix}.tar" />
+        <delete file="${dest}/${final.name}${daily-build-suffix}.tar" />
+
+        <!-- create a zip file -->
+        <zip zipfile="${dest}/${final.name}${daily-build-suffix}.zip" >
+            <zipfileset dir="${dest}" >
+                <include name="${final.name}/**" />
+            </zipfileset>
+        </zip>
+
+        <!-- SOURCE DISTRIBUTION -->
+        <delete>
+            <fileset dir="${dist.dir}" >
+                <include name="**/*.jar" />
+            </fileset>
+        </delete>
+
+        <copy todir="${dist.dir}" file="${basedir}/build.properties.sample" />
+        <copy todir="${dist.dir}" file="${basedir}/build.xml" />
+        <copy todir="${dist.dir}" file="${basedir}/BUILDING.txt"/>
+        <copy todir="${dist.dir}" file="${basedir}/LICENSE.txt"/>
+        <!-- copy todir="${dist.dir}" file="${basedir}/MANIFEST.MF" / -->
+
+        <copy todir="${dist.dir}/src">
+            <fileset dir="${src-java}">
+                <include name="**" />
+                <exclude name="**.*~" />
+            </fileset>
+        </copy>
+
+        <!-- create tar.gz -->
+        <tar tarfile="${dest}/${final.name}-src${daily-build-suffix}.tar"
+             longfile="gnu"
+             basedir="${dest}"
+             includes="${final.name}/**"/>
+        <gzip zipfile="${dest}/${final.name}-src${daily-build-suffix}.tar.gz"
+              src="${dest}/${final.name}-src${daily-build-suffix}.tar" />
+        <delete file="${dest}/${final.name}-src${daily-build-suffix}.tar" />
+
+        <!-- create a zip file -->
+        <zip zipfile="${dest}/${final.name}-src${daily-build-suffix}.zip" >
+            <zipfileset dir="${dest}" >
+                <include name="${final.name}/**" />
+            </zipfileset>
+        </zip>
+
+    </target>
+
+    <!-- ================================================================= -->
+    <!-- C L E A N                                                         -->
+    <!-- ================================================================= -->
+
+    <target name="clean" depends="init" description="Clean all build products.">
+        <delete dir="${dest.classes}" />
+        <delete dir="${dest.testclasses}"/>
+        <delete dir="${dest.doc.api}" />
+        <delete dir="${dest.doc}" />
+        <delete dir="${dest}" />
+        <delete>
+            <!-- java source files created by javacc -->
+            <fileset dir="${src-java}/org/axiondb/parser/">
+                <include name="TokenMgrError.java"/>
+                <include name="Token.java"/>
+                <include name="SimpleCharStream.java"/>
+                <include name="ParseException.java"/>
+                <include name="OracleSqlParserTokenManager.java"/> <!-- old name -->
+                <include name="OracleSqlParserConstants.java"/>    <!-- old name -->
+                <include name="OracleSqlParser.java"/>             <!-- old name -->
+                <include name="AxionSqlParserTokenManager.java"/>
+                <include name="AxionSqlParserConstants.java"/>
+                <include name="AxionSqlParser.java"/>
+            </fileset>
+        </delete>
+    </target>
+
+    <!-- ================================================================= -->
+    <!-- O T H E R                                                         -->
+    <!-- ================================================================= -->
+
+   <target name="jlint" depends="init,compile" description="runs JLint on the module">
+      <property name="jlint-args" value=""/>
+      <echo message="======================================================"/>
+      <echo message="Running JLint on the module. If you run into problems,"/>
+      <echo message="make sure the jlint executable (or script) is in your"/>
+      <echo message="path."/>
+      <echo message="See http://artho.com/jlint/ for more on JLint."/>
+      <echo message="======================================================"/>
+      <exec executable="jlint" failonerror="true">
+         <arg line="${jlint-args}"/>
+         <arg value="-source"/>
+         <arg path="${src-java}"/>
+         <arg path="${dest.classes}"/>
+      </exec>
+   </target>
+
+   <target name="antic" depends="init" description="runs AntiC on the module">
+      <echo message="======================================================"/>
+      <echo message="Running AntiC on the module. If you run into problems,"/>
+      <echo message="make sure the antic executable (or script) is in your"/>
+      <echo message="path."/>
+      <echo message="See http://artho.com/jlint/ for more on AntiC."/>
+      <echo message="======================================================"/>
+      <exec executable="antic" failonerror="true">
+         <arg value="-java"/>
+         <arg path="${src-java}"/>
+      </exec>
+   </target>
+
+</project>

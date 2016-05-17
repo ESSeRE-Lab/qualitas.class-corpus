@@ -1,0 +1,66 @@
+<project default="java:jar" xmlns:j="jelly:core">
+
+  <!-- where the javacc grammar files live -->
+  <property name="src.javacc" value="${basedir}/grammars"/>
+
+  <!-- run JavaCC -->
+  <preGoal name="java:compile">
+    <javacc target="${src.javacc}/AxionSqlParser.jj"
+            javacchome="${maven.repo.local}/javacc/jars"
+            outputdirectory="${pom.build.sourceDirectory}/org/axiondb/parser"/>
+  </preGoal>
+
+  <!-- clean JavaCC generated files -->
+  <postGoal name="clean:clean">
+    <delete>
+      <fileset dir="${pom.build.sourceDirectory}/org/axiondb/parser/">
+        <include name="TokenMgrError.java"/>
+        <include name="Token.java"/>
+        <include name="SimpleCharStream.java"/>
+        <include name="ParseException.java"/>
+        <include name="OracleSqlParserTokenManager.java"/> <!-- old name -->
+        <include name="OracleSqlParserConstants.java"/>    <!-- old name -->
+        <include name="OracleSqlParser.java"/>             <!-- old name -->
+        <include name="AxionSqlParserTokenManager.java"/>
+        <include name="AxionSqlParserConstants.java"/>
+        <include name="AxionSqlParser.java"/>
+      </fileset>
+    </delete>
+  </postGoal>
+  	
+  <!-- copy the config files -->
+  <postGoal name="test:compile">
+    <copy todir="${maven.build.dest}" file="conf/axiondb.properties"/>
+    <delete dir="testdb"/>
+  </postGoal>
+
+  <!-- copy the config files to the clover classpath-->
+  <postGoal name="clover:on">
+    <copy todir="target/clover/classes" file="conf/axiondb.properties"/>
+  </postGoal>
+
+  <!-- copy in some additional src files -->
+  <postGoal name="dist:prepare-src-filesystem">
+    <copy todir="${maven.dist.src.assembly.dir}">
+      <fileset dir=".">
+        <include name="build.properties.sample"/>
+      </fileset>
+    </copy>
+
+    <mkdir dir="${maven.dist.src.assembly.dir}/conf"/>
+    <copy todir="${maven.dist.src.assembly.dir}/conf">
+      <fileset dir="./conf">
+        <include name="axiondb.properties"/>
+      </fileset>
+    </copy>
+
+    <mkdir dir="${maven.dist.src.assembly.dir}/grammars"/>
+    <copy todir="${maven.dist.src.assembly.dir}/grammars">
+      <fileset dir="./grammars">
+        <include name="AxionSqlParser.jj"/>
+      </fileset>
+    </copy>
+
+  </postGoal>
+
+</project>

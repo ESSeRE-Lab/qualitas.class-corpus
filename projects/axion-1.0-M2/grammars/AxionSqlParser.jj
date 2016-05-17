@@ -1,0 +1,2305 @@
+/*
+ * $Id: AxionSqlParser.jj,v 1.44 2003/07/08 21:45:48 rwald Exp $
+ * =======================================================================
+ * Copyright (c) 2002-2003 Axion Development Team.  All rights reserved.
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions
+ * are met:
+ *
+ * 1. Redistributions of source code must retain the above
+ *    copyright notice, this list of conditions and the following
+ *    disclaimer.
+ *
+ * 2. Redistributions in binary form must reproduce the above copyright
+ *    notice, this list of conditions and the following disclaimer in
+ *    the documentation and/or other materials provided with the
+ *    distribution.
+ *
+ * 3. The names "Tigris", "Axion", nor the names of its contributors may
+ *    not be used to endorse or promote products derived from this
+ *    software without specific prior written permission.
+ *
+ * 4. Products derived from this software may not be called "Axion", nor
+ *    may "Tigris" or "Axion" appear in their names without specific prior
+ *    written permission.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+ * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+ * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A
+ * PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
+ * OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+ * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+ * LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+ * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+ * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+ * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+ * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ * =======================================================================
+ * This grammar is derived from an Oracle PL/Sql grammar written by Kevin
+ * (?) (kevinh@empower.com.au) available from the Javacc Grammar Repository 
+ * (http://cobase-www.cs.ucla.edu/pub/javacc/).
+ */
+
+// ----------------------------------------------------------------------------
+// OPTIONS
+// ----------------------------------------------------------------------------
+
+options {
+  IGNORE_CASE = true;
+  STATIC = false;
+  UNICODE_INPUT = true;
+  
+  // some performance optimizations
+  OPTIMIZE_TOKEN_MANAGER = true;
+  ERROR_REPORTING = false;
+}
+
+// ----------------------------------------------------------------------------
+// PARSER
+// ----------------------------------------------------------------------------
+
+PARSER_BEGIN(AxionSqlParser)
+
+package org.axiondb.parser;
+
+import org.axiondb.*;
+import org.axiondb.constraints.*;
+import org.axiondb.types.*;
+import org.axiondb.functions.*;
+import org.axiondb.expression.*;
+import org.axiondb.engine.commands.*;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
+import java.io.InputStream;
+import java.io.ByteArrayInputStream;
+
+import java.util.*;
+
+/** 
+ * JavaCC generated SQL parser. 
+ * Generated from AxionSqlParser.jj ($Header: /cvs/axion/grammars/AxionSqlParser.jj,v 1.44 2003/07/08 21:45:48 rwald Exp $).
+ * Do not edit this (.java) file directly, it is programmaticly generated.
+ * 
+ * @author kevinh (at) empower.com.au
+ * @author Doug Sale
+ * @author Chuck Burdick
+ * @author Rodney Waldhoff
+ * @author James Strachan
+ * @author Rob Oxspring
+ * @author Amrish Lal
+ * @author Rahul Dwivedi
+ */
+public class AxionSqlParser implements Parser {
+
+    public AxionSqlParser() {
+        this(new ByteArrayInputStream(new byte[0]));
+        _log.debug("created new parser");
+    }
+
+    public AxionCommand parse(String sql) throws AxionException {
+        this.ReInit(new ByteArrayInputStream(sql.getBytes()));
+        try {
+            return this.SqlCommand();
+        } catch(TokenMgrError e) {
+            throw new AxionException(e);
+        } catch(ParseException ex) {
+            throw new AxionException(ex);
+        }
+    }
+
+  /**
+   * Replaces all occurances of <i>old</i> in <i>src</i> with <i>nu</i>.
+   *
+   * @param src the source String
+   * @param old the character to replace
+   * @param nu  the String to replace <i>old</i> with
+   * @return a copy of <i>src</i> with all instances of <i>old</i>
+   *         replaced by <i>nu</i>
+   * @throws java.lang.NullPointerException if any argument is null.
+   */
+  private final static String replace(String src, String old, String nu) {
+    int srclen = src.length();
+    int cur = 0;
+    int loc = 0;
+    int oldlen = old.length();
+    StringBuffer buf = new StringBuffer(srclen+nu.length());
+    do {
+      loc = src.indexOf(old,cur);
+      if(loc != -1) {
+        buf.append(src.substring(cur,loc));
+        buf.append(nu);
+        cur = loc + oldlen;
+      }
+    } while(loc != -1);
+    if(cur < srclen) {
+      buf.append(src.substring(cur));
+    }
+    return buf.toString();
+  }
+
+  private static Log _log = LogFactory.getLog(AxionSqlParser.class);
+}
+
+PARSER_END(AxionSqlParser)
+
+// ----------------------------------------------------------------------------
+// TOKENS
+// ----------------------------------------------------------------------------
+
+SKIP:
+{
+  " " | "\n" | "\r" | "\t"
+}
+
+SKIP:
+{
+  <LINE_COMMENT: "--" (~["\n","\r"])* ("\n"|"\r"|"\r\n") >
+}
+
+SKIP:
+{
+  <BLOCK_COMMENT: "/*" (~["*"])* "*" ("*" | (~["*","/"] (~["*"])* "*"))* "/">
+}
+
+TOKEN:  // KEYWORDS
+{
+    < ADD: "add" >
+  | < ALL: "all" >
+  | < ALTER: "alter" >
+  | < AND: "and" >
+  | < ASC: "asc" >
+  | < BEGIN: "begin" >
+  | < BETWEEN: "between" >
+  | < BY: "by" >
+  | < CASE: "case" >
+  | < CHECK: "check" >
+  | < CREATE: "create" >
+  | < CONSTRAINT: "constraint" >
+  | < DEFERRED: "deferred" >
+  | < DEFERRABLE: "deferrable" >
+  | < DELETE: "delete" >
+  | < DESC: "desc" >
+  | < DISTINCT: "distinct" >
+  | < DROP: "drop" >
+  | < ELSE: "else" >
+  | < END: "end" >
+  | < EXISTS: "exists" >
+  | < FALSE: "false" >
+  | < FROM: "from" >
+//  | < FULL: "full" >
+  | < GROUP: "group" >
+  | < HAVING: "having" >
+  | < IF: "if" >
+  | < IMMEDIATE: "immediate" >
+  | < IN: "in" >
+  | < INITIALLY: "initially" >
+  | < INDEX: "index" >
+  | < INNER: "inner" >
+  | < INSERT: "insert" >
+  | < INTO: "into" >
+  | < IS: "is" >
+  | < JOIN: "join" >
+  | < KEY: "key" >
+  | < LEFT: "left" >
+  | < LIKE: "like" >
+  | < LIMIT: "limit" >
+  | < NOT: "not" >
+  | < NULL: "null" >
+  | < OFFSET: "offset" >
+  | < ON: "on" >
+  | < OR: "or" >
+  | < ORDER: "order" >
+  | < OUTER: "outer" >
+  | < PRIMARY: "primary" >
+  | < RIGHT: "right" >
+  | < SELECT: "select" >
+  | < SEQUENCE: "sequence" >
+  | < SET: "set" >
+  | < STARTS: "starts" >
+  | < SYSDATE: "sysdate" >
+  | < TABLE: "table" >
+  | < THEN: "then" >
+  | < TRUE: "true" >
+  | < UNIQUE: "unique" >
+  | < UPDATE: "update" >
+  | < USER: "user" >
+  | < VALUES: "values" >
+  | < WHEN: "when" >
+  | < WHERE: "where" >
+  | < WITH: "with" >
+}
+
+TOKEN:  // LITERALS
+{
+    < INTEGER_LITERAL: ("-")?(["0"-"9"])+ >
+  | < FLOATING_POINT_LITERAL:
+          ("-")?(["0"-"9"])+ "." (["0"-"9"])+ (<EXPONENT>)?
+        | ("-")?"." (["0"-"9"])+ (<EXPONENT>)?
+        | ("-")?(["0"-"9"])+ <EXPONENT>
+        | ("-")?(["0"-"9"])+ (<EXPONENT>)?
+    >
+  | < #EXPONENT: ["e","E"] (["+","-"])? (["0"-"9"])+ >
+  | < STRING_LITERAL: "'" (~["'"])* ( "''" (~["'"])* )* "'" >
+}
+
+TOKEN:  // IDENTIFIERS
+{
+    < ID: ( <LETTER> )+ ( "_" | "$" | "#" | <DIGIT> | <LETTER> )* >
+  | < #LETTER: ["A"-"Z", "a"-"z"] >
+  | < #DIGIT: ["0"-"9"] >
+}
+
+TOKEN:  // SEPARATORS AND OPERATORS
+{
+    < ASSIGN: ":=" >
+  | < COMMA: "," >
+  | < CONCAT: "||" >
+  | < SEMICOLON: ";" >
+  | < DOT: "." >
+  | < LESS: "<" >
+  | < LESSEQUAL: "<=" >
+  | < GREATER: ">" >
+  | < GREATEREQUAL: ">=" >
+  | < EQUAL: "=" >
+  | < NOTEQUAL: "!=" >
+  | < NOTEQUAL2: "<>" >
+  | < JOINPLUS: "(+)" >
+  | < OPENPAREN: "(" >
+  | < CLOSEPAREN: ")" >
+  | < ASTERISK: "*" >
+  | < SLASH: "/" >
+  | < PLUS: "+" >
+  | < MINUS: "-" >
+  | < QUESTIONMARK: "?" >
+}
+
+// ----------------------------------------------------------------------------
+// SQL GRAMMAR
+// ----------------------------------------------------------------------------
+
+// ----------------------------------------------------------------------------
+// COMMANDS
+// ----------------------------------------------------------------------------
+
+AxionCommand SqlCommand() :
+{
+    AxionCommand result = null;
+}
+{
+  (
+    result = SqlSelect()
+  | result = SqlInsert()
+  | result = SqlUpdate()
+  | result = SqlDelete()
+  | result = SqlCreate()
+  | result = SqlDrop()
+  | result = SqlAlterTable()
+  | result = SqlAxionCustom()
+  ) [<SEMICOLON>] <EOF>
+  {
+    if(_log.isDebugEnabled()) { _log.debug("SqlCommand: created \"" + result + "\""); }
+    return result;
+  }
+}
+
+// ----------------------------------------------------------------------------
+// COMMANDS: AXION CUSTOM
+// ----------------------------------------------------------------------------
+
+AxionCommand SqlAxionCustom() :
+{ }
+{
+  <ID>
+  {
+    if("CHECKPOINT".equalsIgnoreCase(token.image)) {
+      return new CheckpointCommand();
+    } else if("REMOUNT".equalsIgnoreCase(token.image)) {
+      return SqlRemount();
+    } else if("SHUTDOWN".equalsIgnoreCase(token.image)) {
+      return new ShutdownCommand();
+    } else if("CHECKFILESTATE".equalsIgnoreCase(token.image)) {
+      return new CheckFileStateCommand();
+    } else {
+      throw new ParseException("Expected CHECKPOINT, REMOUNT, SHUTDOWN, or CHECKFILESTATE found \"" + token.image + "\".");
+    }
+  }
+}
+
+AxionCommand SqlRemount() :
+{
+    RemountCommand remount = new RemountCommand();
+    Object dir;
+}
+{
+  [
+     <ID>
+     {
+        remount.setTable(new TableIdentifier(token.image));
+     }
+     [
+       <ID>
+       {
+        if("data".equalsIgnoreCase(token.image)) {
+          remount.setDataFilesOnly(true);
+        } else {
+          throw new ParseException("Expected \"DATA\", found \"" + token.image + "\"");
+        }
+       }
+     ]
+  ]
+  (
+   <STRING_LITERAL>
+   {
+      if(_log.isDebugEnabled()) { _log.debug("SqlRemount: consumed \"" + token + "\""); }
+      // trim off the open and close quotes
+      String trimmed = token.image.substring(1, token.image.length() - 1);
+      // replace all '' with '
+      String result = replace(trimmed,"''","'");
+      if(_log.isDebugEnabled()) { _log.debug("SqlRemount: path \"" + result + "\""); }
+      dir = result;
+      remount.setDirectory(result);
+   }
+   | dir = SqlBindVar()
+     {
+       remount.setDirectory((Literal)dir);
+     }
+  )
+  {
+     return remount;
+  }
+}
+
+// ----------------------------------------------------------------------------
+// COMMANDS: CREATE
+// ----------------------------------------------------------------------------
+
+AxionCommand SqlCreate() :
+{
+    AxionCommand result = null;
+    String type = null;
+    boolean unique = false;
+}
+{
+  <CREATE>
+  [
+     <UNIQUE>
+     {
+        unique = true;
+     }
+  ]
+  [
+     type = SqlIdentifier()
+  ]
+  (
+      result = SqlCreateTable(type)
+    | result = SqlCreateIndex(unique,type)
+    | result = SqlCreateSequence()
+  )
+  {
+    return result;
+  }
+}
+
+AxionCommand SqlCreateTable(String type) :
+{
+    CreateTableCommand result = new CreateTableCommand();
+    result.setType(type);
+    String str = null;
+}
+{
+  <TABLE>
+  str = SqlIdentifier()
+  {
+     result.setName(str);
+  }
+  <OPENPAREN>
+  SqlColumnExpression(result)
+  (
+    <COMMA>
+  	SqlColumnExpression(result)
+  )*
+  <CLOSEPAREN>
+  {
+    return result;
+  }
+}
+
+void SqlColumnExpression(CreateTableCommand result) :
+{
+    String[] pair = null;
+    Constraint constraint = null;
+}
+{
+  (
+    constraint = SqlTableConstraint()
+    {
+        if(null != constraint) {
+            result.addChildCommand(new AddConstraintCommand(result.getName(),constraint));
+            constraint = null;
+        } 
+    }
+  )
+  |
+  (
+    pair = SqlColumnDef()
+    {
+      result.addColumn(pair[0],pair[1]);
+    }
+    (
+      constraint = SqlColumnConstraint(result.getName(),pair[0])
+      {
+        if(null != constraint) {
+            result.addChildCommand(new AddConstraintCommand(result.getName(),constraint));
+            constraint = null;
+        } 
+      }
+    )*
+  )
+}
+
+AxionCommand SqlCreateIndex(boolean unique, String type) :
+{
+    CreateIndexCommand result = new CreateIndexCommand();
+    result.setUnique(unique);
+    result.setType(type);
+    String str = null;
+}
+{
+  <INDEX>
+  {
+     if(_log.isDebugEnabled()) { _log.debug("SqlCreateIndex: consumed \"" + token + "\""); }
+  }
+  str = SqlIdentifier()
+  {
+     if(_log.isDebugEnabled()) { _log.debug("SqlCreateIndex: consumed \"" + str + "\""); }
+     result.setName(str);
+     str = null;
+  }
+  <ON>
+  {
+     if(_log.isDebugEnabled()) { _log.debug("SqlCreateIndex: consumed \"" + token + "\""); }
+  }
+  str = SqlLValueTerm()
+  {
+     if(_log.isDebugEnabled()) { _log.debug("SqlCreateIndex: consumed \"" + str + "\""); }
+     result.setTable(str);
+     str = null;
+  }
+  <OPENPAREN>
+  {
+     if(_log.isDebugEnabled()) { _log.debug("SqlCreateIndex: consumed \"" + token + "\""); }
+  }
+  str = SqlIdentifier()
+  {
+     if(_log.isDebugEnabled()) { _log.debug("SqlCreateIndex: consumed \"" + str + "\""); }
+     result.addColumn(str);
+     str = null;
+  }
+  (
+    <COMMA>
+    str = SqlIdentifier()
+    {
+       if(_log.isDebugEnabled()) { _log.debug("SqlCreateIndex: consumed \"" + str + "\""); }
+       result.addColumn(str);
+       str = null;
+    }
+  )*
+  <CLOSEPAREN>
+  {
+     if(_log.isDebugEnabled()) { _log.debug("SqlCreateIndex: consumed \"" + token + "\""); }
+     return result;
+  }
+}
+
+AxionCommand SqlCreateSequence() :
+{
+    CreateSequenceCommand result = new CreateSequenceCommand();
+    String name = null;
+    Token t = null;
+}
+{
+  <SEQUENCE>
+  {
+     if(_log.isDebugEnabled()) { _log.debug("SqlCreateSequence: consumed \"" + token + "\""); }
+  }
+  name = SqlIdentifier()
+  {
+    if(_log.isDebugEnabled()) { _log.debug("SqlCreateSequence: found sequence name  \"" + name + "\""); }
+    result.setName(name);
+  }
+  [
+      <STARTS>
+      <WITH>
+      t = <INTEGER_LITERAL>
+      {
+          result.setStartValue(t.image);
+      }
+  ]
+  {
+    return result;      
+  }
+}
+
+// ----------------------------------------------------------------------------
+// COMMANDS: DELETE
+// ----------------------------------------------------------------------------
+
+AxionCommand SqlDelete() :
+{ 
+    TableIdentifier table = null;
+    Selectable where = null;
+}
+{
+  <DELETE>
+  { if(_log.isDebugEnabled()) { _log.debug("SqlDelete: consumed \"" + token + "\""); } }
+  [
+    <FROM>
+    { if(_log.isDebugEnabled()) { _log.debug("SqlDelete: consumed \"" + token + "\""); } }
+  ]
+  table = SqlTableRef()
+  [
+     where = SqlWhere()
+  ]
+  {
+     return new DeleteCommand(table,(WhereNode)where);
+  }
+}
+
+// ----------------------------------------------------------------------------
+// COMMANDS: ALTER TABLE
+// ----------------------------------------------------------------------------
+
+AxionCommand SqlAlterTable() :
+{
+    AxionCommand result = null;
+    String tablename = null;
+}
+{
+    <ALTER>
+    <TABLE>
+    tablename = SqlIdentifier()
+    (
+        result = SqlAddConstraint(tablename)
+        |
+        result = SqlDropConstraint(tablename)
+    )
+    {
+        return result;
+    }
+}
+
+AxionCommand SqlDropConstraint(String tablename) :
+{
+    String constraintname = null;
+}
+{
+    <DROP>
+    <CONSTRAINT>
+    constraintname = SqlIdentifier()
+    {
+        return new DropConstraintCommand(tablename,constraintname);
+    }
+}
+
+AxionCommand SqlAddConstraint(String tablename) :
+{
+    Constraint constraint = null;
+}
+{
+    <ADD>
+    constraint = SqlTableConstraint()
+    {
+        if(null == constraint) {
+            return null;
+        } else {
+            return new AddConstraintCommand(tablename,constraint);
+        }
+    }
+}
+
+// ----------------------------------------------------------------------------
+// COMMANDS: DROP
+// ----------------------------------------------------------------------------
+
+AxionCommand SqlDrop() :
+{
+    AxionCommand result = null;
+}
+{
+  <DROP>
+  {
+     if(_log.isDebugEnabled()) { _log.debug("SqlDrop: consumed \"" + token + "\""); }
+  }  
+  (
+      result = SqlDropTable()
+    | result = SqlDropSequence()
+  )
+  {
+    return result;
+  }
+}
+
+AxionCommand SqlDropTable() :
+{
+    DropTableCommand result = null;
+    String tableName = null;
+    boolean exists = false;
+}
+{
+  (
+    <TABLE>
+    {
+       if(_log.isDebugEnabled()) {  _log.debug("SqlDropTable: consumed \"" + token + "\""); }
+    }
+    [
+        <IF> <EXISTS>
+        {
+            exists = true;
+        }
+    ]
+    tableName = SqlIdentifier()
+    {
+       if(_log.isDebugEnabled()) { _log.debug("SqlDropTable: found table name  \"" + tableName + "\""); } 
+       result = new DropTableCommand(tableName, exists);
+    }
+  )
+  {
+    return result;
+  }
+}
+
+AxionCommand SqlDropSequence() :
+{
+    DropSequenceCommand result = null;
+    String sequenceName = null;
+}
+{
+  (
+    <SEQUENCE>
+    {
+       if(_log.isDebugEnabled()) {  _log.debug("SqlDropSequence: consumed \"" + token + "\""); }
+    }
+    sequenceName = SqlIdentifier()
+    {
+       if(_log.isDebugEnabled()) { _log.debug("SqlDropSequence: found sequence name  \"" + sequenceName + "\""); } 
+       result = new DropSequenceCommand(sequenceName);
+    }
+  )
+  {
+    return result;
+  }
+}
+
+// ----------------------------------------------------------------------------
+// COMMANDS: INSERT
+// ----------------------------------------------------------------------------
+
+AxionCommand SqlInsert() :
+{
+    TableIdentifier table = null;
+    List columns = null;
+    List values = null;
+}
+{
+  <INSERT>
+  <INTO>
+  table = SqlTableRef()
+  [
+   <OPENPAREN>
+   columns = SqlSelectCols()
+   <CLOSEPAREN>
+  ]
+  <VALUES>
+  <OPENPAREN>
+  values = SqlSelectList()
+  <CLOSEPAREN>
+  {
+    return new InsertCommand(table, columns, values);
+  }
+}
+
+// ----------------------------------------------------------------------------
+// COMMANDS: SELECT
+// ----------------------------------------------------------------------------
+
+AxionCommand SqlSelect() :
+{
+   SelectCommand result = new SelectCommand();
+   List temp = null;
+   Selectable where = null;
+   List order = null;
+   Literal limit = null;
+   Literal offset = null;
+   FromNode from = null;
+}
+{
+  <SELECT>
+  [
+    <ALL>
+    {
+        result.setDistinct(false);
+    }
+    |
+    <DISTINCT>
+    {
+        result.setDistinct(true);
+    }
+  ]
+  // can gather all cols here and add to builder as list
+  // or one at a time farther down the parse tree
+  // problem is, farther down the parse tree, might not
+  // know we're getting column identifiers, might need to
+  // pass column identifiers back to production where
+  // context is obvious
+  temp = SqlSelectCols()
+  {
+    result.setSelect(temp);
+  }
+  // <INTO> not supported right now anyway
+  // [ <INTO>
+  //   SqlSelectList()
+  // ]
+  [ 
+      <FROM>
+      from = SqlFrom()
+      {
+         result.setFrom(from);
+      }
+  ]
+  [ where = SqlWhere()   ]
+  // [ SqlGroupBy() ]
+  [ order = SqlOrderBy() ]
+  [ limit = SqlSelectLimit() ]
+  [ offset = SqlSelectOffset() ]
+  {
+    result.setWhere((WhereNode)where);
+    result.setOrderBy(order);
+    result.setLimit(limit);
+    result.setOffset(offset);
+    return result;
+  }
+}
+
+List SqlSelectCols() :
+{
+  List list = new ArrayList();
+}
+{
+  [
+    <ASTERISK>
+    {
+        list.add(new ColumnIdentifier("*"));
+    }
+    |
+    list = SqlSelectList()
+  ]
+  {
+    return list;
+  }
+}
+
+Literal SqlSelectLimit() :
+{
+  Literal limit = null;
+}
+{
+  <LIMIT>
+  limit = SqlNumericLiteralOrBindVar()
+  {
+    return limit;
+  }
+}
+
+Literal SqlSelectOffset() :
+{
+  Literal offset = null;
+}
+{
+  <OFFSET>
+  offset = SqlNumericLiteralOrBindVar()
+  {
+    return offset;
+  }
+}
+
+Literal SqlNumericLiteralOrBindVar() :
+{
+  Literal value = null;
+}
+{
+  value = SqlLiteralOrBindVar()
+  {
+     try {
+        if(!(value instanceof BindVariable || value.evaluate(null) instanceof Number)) {
+           throw new ParseException("Expected numeric literal or bind variable.");
+        } 
+     } catch(AxionException e) {
+        throw new ParseException("AxionException " + e.toString() + " while parsing OFFSET. Shouldn't happen.");
+     }
+  }
+  {
+    return value;
+  }
+}
+
+Literal SqlLiteralOrBindVar() :
+{
+  Literal value = null;
+}
+{
+  ( value = SqlLiteral() | value = SqlBindVar() )
+  {
+    return value;
+  }
+}
+
+// ----------------------------------------------------------------------------
+// COMMANDS: UPDATE
+// ----------------------------------------------------------------------------
+
+AxionCommand SqlUpdate() :
+{
+    TableIdentifier table = null;
+    List colvalpairs = new ArrayList();
+    Selectable where = null;
+    Selectable[] curpair = null;
+}
+{
+  <UPDATE>
+  table = SqlTableRef()
+  <SET>
+  (
+   curpair = SqlUpdateAssignment()
+   {
+      colvalpairs.add(curpair);
+   }
+   [
+    <COMMA>
+   ]
+  )+
+  [ where = SqlWhere() ]
+  {
+        UpdateCommand cmd = new UpdateCommand();
+        cmd.setTable(table);
+        Iterator iter = colvalpairs.iterator();
+        while(iter.hasNext()) {
+            Selectable[] pair = (Selectable[])(iter.next());
+            cmd.addColumn((ColumnIdentifier)pair[0]);
+            cmd.addValue(pair[1]);
+        }
+        cmd.setWhere((WhereNode)where);
+        return cmd;
+  }
+}
+
+Selectable[] SqlUpdateAssignment() :
+{
+    Selectable[] pair = new Selectable[2];
+}
+{
+  pair[0] = SqlColumnRef()
+  <EQUAL>
+  // akl: Be careful, we may run into "Halloween problem" here. Statements
+  // such as "update table t set a = a + 1" tend to go into a infinite
+  // recursive loop doing a = a + 1.
+  //pair[1] = SqlSelectableElements() // no expressions in update statement.
+  pair[1] = SqlSumExprSelectable()
+  {
+    return pair;
+  }
+}
+
+
+// ----------------------------------------------------------------------------
+// CONSTRAINTS
+// ----------------------------------------------------------------------------
+
+Constraint SqlTableConstraint() :
+{
+    Constraint constraint = null;
+    String name = null;
+}
+{
+    [
+        <CONSTRAINT>
+        [
+            name = SqlIdentifier()
+        ]
+    ]
+    (
+        (
+            constraint = SqlSelectableBasedConstraintType(name)
+            SqlSelectableBasedConstraintArgs((SelectableBasedConstraint)constraint)
+        )
+        |
+        (
+            constraint = SqlCheckConstraintType(name)
+        )
+    )
+    [
+        LOOKAHEAD(2) SqlDeferrable(constraint)
+    ]
+    [
+        SqlInitiallyDeferredOrImmediate(constraint)
+    ]
+    {
+        return constraint;
+    }
+}
+
+Constraint SqlColumnConstraint(String tablename, String columnname) :
+{
+    Constraint constraint = null;
+    String name = null;
+}
+{
+    [
+        <CONSTRAINT>
+        [
+            name = SqlIdentifier()
+        ]
+    ]
+    (
+        (
+            constraint = SqlSelectableBasedConstraintType(name)
+            {
+                ((SelectableBasedConstraint)constraint).addSelectable(new ColumnIdentifier(new TableIdentifier(tablename),columnname));
+            }
+        )
+        |
+        (
+            constraint = SqlCheckConstraintType(name)
+        )
+    )
+    [
+        LOOKAHEAD(2) SqlDeferrable(constraint)
+    ]
+    [
+        SqlInitiallyDeferredOrImmediate(constraint)
+    ]
+    {
+        return constraint;
+    }
+}
+
+SelectableBasedConstraint SqlSelectableBasedConstraintType(String constraintname) :
+{
+    SelectableBasedConstraint constraint = null;
+}
+{
+    (
+    
+        (
+            <PRIMARY>
+            <KEY>
+            {
+                constraint = new PrimaryKeyConstraint(constraintname);
+            }
+        )
+        |
+        (
+            <NULL>
+            {
+                constraint = new NullConstraint(constraintname);
+            }
+        )
+        |
+        (
+            <NOT>
+            <NULL>
+            {
+                constraint = new NotNullConstraint(constraintname);
+            }
+        )
+        |
+        (
+            <UNIQUE>
+            {
+                constraint = new UniqueConstraint(constraintname);
+            }
+        )    
+    )
+    {
+        return constraint;
+    }
+}
+
+CheckConstraint SqlCheckConstraintType(String constraintname) :
+{
+    CheckConstraint constraint = null;
+    Selectable where = null;
+}
+{
+    (
+        <CHECK>
+        {
+            constraint = new CheckConstraint(constraintname);
+        }
+        <OPENPAREN>
+        where = SqlWhereOr()       
+        <CLOSEPAREN>
+        {
+            constraint.setCondition((WhereNode)where);
+        }
+    )
+    {
+        return constraint;
+    }
+}
+
+void SqlSelectableBasedConstraintArgs(SelectableBasedConstraint constraint) :
+{
+    Selectable selectable = null;
+}
+{
+    <OPENPAREN>
+    selectable = SqlSelectableElements()
+    {
+      constraint.addSelectable(selectable);
+    }
+    (
+      <COMMA>
+      selectable = SqlSelectableElements()
+      {
+        constraint.addSelectable(selectable);
+      }
+    )*
+    <CLOSEPAREN>            
+}
+
+void SqlDeferrable(Constraint constraint) :
+{
+    boolean deferrable = true;
+}
+{
+    [
+        <NOT> 
+        {
+            deferrable = false;
+        }
+    ]
+    <DEFERRABLE>
+    {
+        constraint.setDeferrable(deferrable);
+    }
+}
+
+void SqlInitiallyDeferredOrImmediate(Constraint constraint) :
+{
+}
+{
+    <INITIALLY> 
+    (
+        (
+        
+            <DEFERRED>
+            {
+                try {
+                    constraint.setDeferred(true);
+                } catch(AxionException e) {
+                    throw new ParseException("Constraint not deferrable (use DEFERRABLE before INITIALLY DEFERRED)");
+                }
+            }
+        )
+        |
+        (
+            <IMMEDIATE>
+            {
+                try {
+                    constraint.setDeferred(false);
+                } catch(AxionException e) {
+                    throw new ParseException("Constraint not deferrable (use DEFERRABLE)");
+                }
+            }
+        )
+    )
+}
+
+// ----------------------------------------------------------------------------
+// GENERIC STUFF (IDENTIFIERS, LITERALS, ETC.)
+// ----------------------------------------------------------------------------
+
+
+String SqlIdentifier() :
+{
+   Token t = null;
+}
+{
+   t = <ID>
+   {
+      return t.image;
+   }
+}
+
+List SqlIdentifierList() :
+{
+   List result = new ArrayList();
+   String curIdent = null;
+}
+{
+   curIdent = SqlIdentifier()
+   {
+      result.add(curIdent);
+   }
+   [
+      <COMMA>
+      curIdent = SqlIdentifier()
+      {
+         result.add(curIdent);
+      }
+   ]
+   {
+      return result;
+   }
+}
+
+BindVariable SqlBindVar() :
+{ }
+{
+   <QUESTIONMARK>
+   {
+      return new BindVariable();
+   }
+}
+
+String[] SqlColumnDef() :
+{
+    String[] pair = new String[2];
+}
+{
+    (
+        pair[0] = SqlLValueTerm()
+        pair[1] = SqlLValueTerm()
+    )
+    [ <OPENPAREN> <INTEGER_LITERAL> (<COMMA> <INTEGER_LITERAL> )* <CLOSEPAREN> ]
+    {
+        return pair;
+    }
+}
+
+ColumnIdentifier SqlColumnRef() :
+{
+   String column = null;
+}
+{
+   column = SqlLValueTerm()
+   {
+      return new ColumnIdentifier(column);
+   }
+}
+
+Selectable SqlCase() :
+{
+    List   caseargs = new ArrayList();
+    List   whenargs = null;
+    //
+    Selectable condition = null;
+    Selectable thenArg = null;
+    Selectable elseArg = null;
+    //
+    FunctionIdentifier whenFn = null;
+    FunctionIdentifier caseFn = null;
+}
+{
+    <CASE>
+    (
+        <WHEN>
+        (   
+            condition = SqlWhereOr()
+            {
+                whenargs = new ArrayList();
+                whenargs.add((WhereNode)condition);
+            }
+        )
+        <THEN>
+        (
+            thenArg = SqlSelectable()
+            {
+                whenargs.add(thenArg);
+                whenFn = new FunctionIdentifier("IFTHEN", whenargs);
+                caseargs.add(whenFn);
+            }
+        )
+    )+
+    
+    [
+        <ELSE>
+        elseArg = SqlSelectable()
+        {
+            caseargs.add(elseArg);
+        }
+    ]
+    <END>
+    {
+        caseFn = new FunctionIdentifier("COALESCE", caseargs);        
+        return (caseFn);
+    }
+}
+
+
+Selectable SqlPseudoColumn() :
+{
+    Selectable sel = null;
+}
+{
+    <SYSDATE>
+    {
+        if(_log.isDebugEnabled()) { _log.debug("SqlPseudoColumn: consumed \"" + token + "\""); }
+        sel = new FunctionIdentifier("now",Collections.EMPTY_LIST);
+    }
+  {
+    return sel;
+  }
+}
+
+
+Selectable SqlFunction() :
+{
+  String name = null;
+  List fnargs = null;
+}
+{
+    <ID>
+    {
+        if(_log.isDebugEnabled()) { _log.debug("SqlFunction: consumed \"" + token + "\""); }
+        name = token.image;
+    }
+    fnargs = SqlFunctionArgs()
+  {
+    return new FunctionIdentifier(name,fnargs);
+  }
+}
+
+List SqlFunctionArgs() :
+{
+    List args = new ArrayList();
+}
+{
+  <OPENPAREN>
+  args = SqlSelectCols()
+  <CLOSEPAREN>
+  {
+    return args;
+  }
+
+}
+
+Selectable SqlSumExprSelectable() :
+{
+	Selectable sel = null;
+	Selectable temp = null;
+	short operation = -1;
+	Selectable prv = null;
+    }
+{	
+	 
+	sel = SqlProductExprSelectable() 
+	(LOOKAHEAD(2) ( <PLUS> {  operation = ExpressionIdentifier.PLUS_OPERATION; }
+			| <MINUS> { operation = ExpressionIdentifier.MINUS_OPERATION; }
+			| <CONCAT> { operation = ExpressionIdentifier.CONCAT_OPERATION; }
+			) temp = SqlProductExprSelectable() 
+			{ 
+			   ExpressionIdentifier expr = new ExpressionIdentifier("Sum");
+			   if(prv == null){
+				prv = sel;
+			   }
+			   expr.setLeftSelectable(prv);
+			   expr.setRightSelectable(temp); 
+			   expr.setOperationType(operation);
+			   prv = expr;
+			
+			})*
+   { 
+	
+	if(null==prv){
+		 return sel;
+	}
+	else{
+		return  prv; 
+	}
+   
+   }
+}
+Selectable SqlProductExprSelectable() :
+{
+	Selectable sel = null;
+	Selectable temp = null;
+	short operation = -1;
+    Selectable prv = null;
+}
+
+{
+	sel = SqlParenthExprSelectable()
+	 ( ( "*" {  operation = ExpressionIdentifier.MULT_OPERATION;}
+	    | "/" {  operation = ExpressionIdentifier.DIV_OPERATION;}
+	  ) 
+            temp = SqlParenthExprSelectable() 
+        { 
+            ExpressionIdentifier expr = new ExpressionIdentifier("Product");
+            if(prv == null){
+		prv = sel;
+	    }
+            expr.setLeftSelectable(prv);
+            expr.setRightSelectable(temp);  
+            expr.setOperationType(operation);
+            prv = expr;
+        } 
+        )*
+	  
+	 { 
+	 if(null==prv){
+		 return sel;
+	}
+	else{
+		return  prv; 
+	}
+	}
+
+
+}
+
+Selectable SqlParenthExprSelectable() :
+{
+	Selectable sel = null;
+}
+{
+	(LOOKAHEAD(3)  ( <OPENPAREN> sel = SqlSumExprSelectable() <CLOSEPAREN> ) | sel = SqlUnaryExprSelectable() )   
+    {  }
+
+{ return sel; }
+
+}
+
+Selectable SqlUnaryExprSelectable() :
+{
+	//UnaryExpression unary = null;
+	Selectable sel = null;
+	//List others = new ArrayList();
+	//Selectable temp = null;
+}
+{	
+	 
+	[ ( <PLUS>  { }
+	   | <MINUS> { }
+	   ) 
+	] sel = SqlSelectableElements() {   }
+
+{ return sel; }
+
+}
+
+List SqlLiteralList() :
+{
+   List result = new ArrayList();
+   Object cur = null;
+}
+{
+   (cur = SqlLiteral() | cur = SqlBindVar())
+   {
+      result.add(cur);
+   }
+   (
+      <COMMA>
+      (cur = SqlLiteral() | cur = SqlBindVar())
+      {
+         result.add(cur);
+      }
+   )*
+   {
+      return result;
+   }
+}
+
+String SqlLValue() :
+{ String s = null; }
+{
+  (
+    s = SqlLValueTerm()
+  )
+  {
+    return s;
+  }
+}
+
+Literal SqlLiteral() :
+{
+   Literal literal = null;
+   Token t = null;
+}
+{
+   ( t = <STRING_LITERAL>
+   {
+      if(_log.isDebugEnabled()) { _log.debug("SqlLiteral: consumed \"" + token + "\""); }
+      // trim off the open and close quotes
+      String trimmed = t.image.substring(1, t.image.length() - 1);
+      // replace all '' with '
+      String result = replace(trimmed,"''","'");
+      literal = new Literal(result,new StringType());
+      if(_log.isDebugEnabled()) { _log.debug("SqlLiteral: result \"" + result + "\""); }
+   }
+   | t = <INTEGER_LITERAL>
+   {
+      if(_log.isDebugEnabled()) { _log.debug("SqlLiteral: consumed \"" + token + "\""); }
+      literal = new Literal(new Long(t.image), new LongType());
+   }
+   | t = <FLOATING_POINT_LITERAL>
+   {
+      if(_log.isDebugEnabled()) { _log.debug("SqlLiteral: consumed \"" + token + "\""); }
+      literal = new Literal(new Float(t.image),new FloatType());
+   }
+   | <NULL>
+   {
+      if(_log.isDebugEnabled()) { _log.debug("SqlLiteral: consumed \"" + token + "\""); }
+      literal = new Literal(null);
+   }
+   | <TRUE>
+   {
+      if(_log.isDebugEnabled()) { _log.debug("SqlLiteral: consumed \"" + token + "\""); }
+      literal = new Literal(Boolean.TRUE,new BooleanType());
+   }
+   | <FALSE>
+   {
+      if(_log.isDebugEnabled()) { _log.debug("SqlLiteral: consumed \"" + token + "\""); }
+      literal = new Literal(Boolean.FALSE,new BooleanType());
+   }
+   | <ASTERISK>
+   {
+      if(_log.isDebugEnabled()) { _log.debug("SqlLiteral: consumed \"" + token + "\""); }
+   }
+   )
+   {
+      return literal;
+   }
+}
+
+String SqlLValueTerm() :
+{
+  StringBuffer buffer = new StringBuffer();
+  Token t = null;
+}
+{
+  t = <ID>
+  {
+    buffer.append(t.image);
+    if(_log.isDebugEnabled()) { _log.debug("SqlLValueTerm: consumed \"" + token + "\""); }
+  }
+  ( t = <DOT>
+    {
+      buffer.append(t.image);
+      if(_log.isDebugEnabled()) { _log.debug("SqlLValueTerm: consumed \"" + token + "\""); }
+    }
+    t = <ID>
+    {
+      buffer.append(t.image);
+      if(_log.isDebugEnabled()) { _log.debug("SqlLValueTerm: consumed \"" + token + "\""); }
+    }
+  )*
+
+  {
+    return buffer.toString();
+  }
+}
+
+Selectable SqlSelectable() :
+{
+	Selectable sel = null;
+}
+{
+
+    sel = SqlWhereOr()
+	{
+		return sel;
+	}
+}
+
+Selectable SqlSelectableElements() :
+{
+   Selectable sel = null;
+}
+{
+   ( LOOKAHEAD(2) sel = SqlFunction() | sel = SqlColumnRef() | sel = SqlLiteral() | sel = SqlBindVar() | sel = SqlCase() | sel = SqlPseudoColumn() )
+   {
+      return sel;
+   }
+}
+
+List SqlSelectList() :
+{
+  List list = new ArrayList();
+  Selectable curCol = null;
+}
+{
+  curCol = SqlSelectable()
+  {
+      list.add(curCol);
+  }
+  (
+    <COMMA>
+    {
+      if(_log.isDebugEnabled()) { _log.debug("SqlSelectList: consumed \"" + token + "\""); }
+    }
+
+    curCol = SqlSelectable()
+    {
+      list.add(curCol);
+    }
+  )*
+  {
+    return list;
+  }
+}
+
+
+TableIdentifier SqlTableRef() :
+{
+  Token t = null;
+  String name = null;
+  String alias = null;
+}
+{
+  t = <ID>
+  {
+    name = t.image;
+    if(_log.isDebugEnabled()) { _log.debug("SqlTableRef: consumed \"" + token + "\""); }
+  }
+  [
+    t = <ID>
+    {
+      alias = t.image;
+      if(_log.isDebugEnabled()) { _log.debug("SqlTableRef: consumed \"" + token + "\""); }
+    }
+  ]
+  {
+    return new TableIdentifier(name, alias);
+  }
+}
+
+void SqlLValueList() :
+{ }
+{
+  SqlLValueElement()
+  (
+   <COMMA>
+   { if(_log.isDebugEnabled()) { _log.debug("SqlValueList: consumed \"" + token + "\""); } }
+   SqlLValueElement()
+  )*
+}
+
+void SqlLValueElement() :
+{ }
+{
+  ( <NULL>
+  { if(_log.isDebugEnabled()) { _log.debug("SqlValueElement: consumed \"" + token + "\""); } }
+  | SqlSelect()
+  )
+}
+
+// ----------------------------------------------------------------------------
+// ORDER BY CLAUSE
+// ----------------------------------------------------------------------------
+
+List SqlOrderBy() :
+{
+   List result = null;
+}
+{
+   <ORDER>
+   { if(_log.isDebugEnabled()) { _log.debug("SqlOrderBy: consumed \"" + token + "\""); } }
+   <BY>
+   { if(_log.isDebugEnabled()) { _log.debug("SqlOrderBy: consumed \"" + token + "\""); } }
+   result = SqlOrderByList()
+   {
+      return result;
+   }
+}
+
+OrderNode SqlOrderByElem() :
+{
+   Selectable sel = null;
+   boolean ascending = true;
+}
+{
+   sel = SqlSelectableElements()
+   [ ascending = SqlOrderDirection() ]
+   {
+      return new OrderNode(sel, !ascending);
+   }
+}
+
+List SqlOrderByList() :
+{
+   List result = new ArrayList();
+   OrderNode cur = null;
+}
+{
+   cur = SqlOrderByElem()
+   {
+      result.add(cur);
+   }
+   ( LOOKAHEAD(2)
+      <COMMA>
+      { if(_log.isDebugEnabled()) { _log.debug("SqlOrderByList: consumed \"" + token + "\""); } }
+      cur = SqlOrderByElem()
+      {
+         result.add(cur);
+      }
+   )*
+   {
+      return result;
+   }
+}
+
+boolean SqlOrderDirection() :
+{
+   boolean ascending = true;
+}
+{
+  (
+    <ASC>
+    { if(_log.isDebugEnabled()) { _log.debug("SqlOrderDirection: consumed \"" + token + "\""); } }
+  | <DESC>
+    { if(_log.isDebugEnabled()) { _log.debug("SqlOrderDirection: consumed \"" + token + "\""); } }
+    { ascending = false; }
+  )
+  {
+   return ascending;
+  }
+}
+
+
+
+// ----------------------------------------------------------------------------
+// FROM CLAUSE
+// ----------------------------------------------------------------------------
+
+FromNode SqlFrom() :
+{
+    FromNode node = new FromNode();
+    TableIdentifier curTable = null;
+}
+{
+
+    curTable = SqlTableRef()
+    {
+        node.setLeft(curTable);
+        node.setType(FromNode.TYPE_SINGLE);
+        node.setCondition(null);
+    }
+    
+    (LOOKAHEAD(2)
+     (node = SqlTableList(node)) 
+     | 
+     (node = SqlJoin(node))
+    )?
+
+    {
+        return (node);
+    }
+}
+
+
+FromNode SqlTableList(FromNode node) :
+{
+    FromNode temp = null;
+    TableIdentifier curTable = null;
+}
+{
+
+  (LOOKAHEAD(2)
+   <COMMA>
+   {
+     if (temp != null) {
+       temp.setLeft(node);
+       node = temp;
+       temp = null;
+     }
+
+     node.setCondition(null);
+     node.setType(FromNode.TYPE_INNER);
+   }
+   curTable = SqlTableRef()
+   {
+     node.setRight(curTable);
+   }
+
+   {
+     temp = new FromNode();
+   }
+  )+
+
+  {
+    return node;
+  }
+}
+
+
+FromNode SqlJoin(FromNode node) :
+{
+    FromNode temp = null;
+    Selectable condition = null;
+    TableIdentifier curTable = null;
+    int curType = -1;
+}
+{
+    (
+       curType = SqlJoinType()
+       {
+          if (temp != null) {
+            temp.setLeft(node);
+            node = temp;
+            temp = null;
+          }
+          node.setType(curType);
+       }
+
+       curTable = SqlTableRef()
+       {
+          node.setRight(curTable);
+       }
+       <ON>
+       <OPENPAREN>
+       condition = SqlWhereOr()
+       {
+          node.setCondition((WhereNode)condition);
+       }
+       <CLOSEPAREN>
+       {
+          temp = new FromNode();
+       }
+    )+
+
+  {
+      return (node);
+  }
+}
+
+int SqlJoinType() :
+{
+    int type = FromNode.TYPE_UNDEFINED;
+}
+{
+   (
+     (
+       <LEFT> [<OUTER>] <JOIN>
+       {
+         type = FromNode.TYPE_LEFT;
+       }
+     ) 
+     |
+     (
+       <RIGHT> [<OUTER>] <JOIN>
+       {
+         type = FromNode.TYPE_RIGHT;
+       }
+     )
+     |
+//     (
+//       <FULL> [<OUTER>] <JOIN>
+//       {
+//         type = FromNode.TYPE_FULL;
+//       }
+//     )
+//     |
+     (
+       [<INNER>] <JOIN>
+       {   
+         type = FromNode.TYPE_INNER;
+       }
+     )
+   )
+
+   {
+        return (type);
+   }
+}
+
+
+// ----------------------------------------------------------------------------
+// GROUP BY CLAUSE
+// ----------------------------------------------------------------------------
+
+void SqlGroupBy() :
+{ }
+{
+  <GROUP>
+  { if(_log.isDebugEnabled()) { _log.debug("SqlGroupBy: consumed \"" + token + "\""); } }
+  <BY>
+  { if(_log.isDebugEnabled()) { _log.debug("SqlGroupBy: consumed \"" + token + "\""); } }
+  SqlOrderByList()
+}
+
+// ----------------------------------------------------------------------------
+// WHERE CLAUSE
+// ----------------------------------------------------------------------------
+
+Selectable SqlWhere() :
+{
+   Selectable result = null;
+}
+{
+   <WHERE>
+   { if(_log.isDebugEnabled()) { _log.debug("SqlWhere: consumed \"" + token + "\""); } }
+   result = SqlWhereOr()
+   {
+      return result;
+   }
+}
+
+Selectable SqlWhereOr() :
+{
+   BinaryBranchWhereNode parent = null;
+   Selectable left = null;
+   Selectable right = null;
+   Selectable result = null;
+}
+{
+   left = SqlWhereAnd()
+   {
+      result = left;
+   }
+   (LOOKAHEAD(2)
+     <OR>
+     { if(_log.isDebugEnabled()) { _log.debug("SqlWhereOr: consumed \"" + token + "\""); } }
+     right = SqlWhereAnd()
+     {
+         parent = new BinaryBranchWhereNode();
+         parent.setLeft((WhereNode)left);
+         parent.setRight((WhereNode)right);
+         parent.setIsOr(true);
+         left = (Selectable) parent;
+         result = (Selectable) parent;
+     }
+   )*
+   {
+      return result;
+   }
+}
+
+Selectable SqlWhereAnd() :
+{
+   BinaryBranchWhereNode parent = null;
+   Selectable left = null;
+   Selectable right = null;
+   Selectable result = null;
+}
+{
+   left = SqlWhereNot()
+   {
+      result = left;
+   }
+   (LOOKAHEAD(2)
+     <AND>
+     { if(_log.isDebugEnabled()) { _log.debug("SqlWhereAnd: consumed \"" + token + "\""); } }
+     right = SqlWhereNot()
+     {
+         parent = new BinaryBranchWhereNode();
+         parent.setLeft((WhereNode)left);
+         parent.setRight((WhereNode)right);
+         parent.setIsAnd(true);
+         left = (Selectable) parent;
+         result = (Selectable) parent;
+     }
+   )*
+   {
+      return result;
+   }
+}
+
+Selectable SqlWhereNot() :
+{
+   Selectable child = null;
+}
+{
+   (
+      <NOT>
+      {
+         if(_log.isDebugEnabled()) { _log.debug("SqlWhereNot: consumed \"" + token + "\""); }
+      }
+      child = SqlWhereElt()
+      {
+         return ((Selectable)new NotWhereNode((WhereNode)child));
+      }
+   )
+   |
+   child = SqlWhereElt()
+   {
+     return child;
+   }   
+}
+
+Selectable SqlWhereElt() :
+{
+   Selectable result = null;
+}
+{
+  (LOOKAHEAD(6)
+     (
+       result = SqlCompareExpr()
+       {
+         return result;
+       }
+     )
+     |
+     (
+       <OPENPAREN>
+       result = SqlWhereOr()
+       <CLOSEPAREN>
+       {
+         return result;
+       }   
+     )
+  )
+}
+
+Selectable SqlCompareExpr() :
+{
+   Selectable left = null;
+   Selectable right = null;
+   ComparisonOperator op = null;
+   Selectable[] endpts = null;
+   List elements = null;
+   Selectable result = null;
+}
+{
+   left = SqlSumExprSelectable()
+   (
+     op = SqlIsClause()
+     {
+        result = new LeafWhereNode(left, op, null);
+     }
+   | endpts = SqlBetweenClause()
+     {
+        BinaryBranchWhereNode between = new BinaryBranchWhereNode();
+        between.setIsAnd(true);
+        between.setLeft(new LeafWhereNode(left, ComparisonOperator.GREATER_THAN_OR_EQUAL, endpts[0]));
+        between.setRight(new LeafWhereNode(left, ComparisonOperator.LESS_THAN_OR_EQUAL, endpts[1]));
+        result = between;
+     }
+   | op = SqlCompareOp() 
+     right = SqlSumExprSelectable()    
+     {
+        result = new LeafWhereNode(left, op, right);
+     }
+   | <IN>
+     <OPENPAREN>
+     elements = SqlLiteralList()
+     <CLOSEPAREN>
+     {
+         result = new InWhereNode(left, elements);
+     }
+   | <LIKE>
+     right = SqlSumExprSelectable()
+     {
+         List likeArgs = new ArrayList();
+         likeArgs.add(right);
+         FunctionIdentifier like = new FunctionIdentifier("like2regexp", likeArgs);
+
+         List matchArgs = new ArrayList();
+         matchArgs.add(left);
+         matchArgs.add(like);
+         FunctionIdentifier matches = new FunctionIdentifier("matches", matchArgs);
+
+         Literal troo = new Literal(Boolean.TRUE, new BooleanType());
+         result = new LeafWhereNode(matches, ComparisonOperator.EQUAL, troo);
+     }
+   )?
+   {    
+        if (result == null) {
+            result = left;
+        }
+        return (result);
+   }
+}
+
+ComparisonOperator SqlCompareOp() :
+{
+   ComparisonOperator result = null;
+}
+{
+   (
+      <EQUAL>
+      {
+         if(_log.isDebugEnabled()) { _log.debug("SqlCompareOp: consumed \"" + token + "\""); }
+         result = ComparisonOperator.EQUAL;
+      }
+      | <NOTEQUAL>
+      {
+         if(_log.isDebugEnabled()) { _log.debug("SqlCompareOp: consumed \"" + token + "\""); }
+         result = ComparisonOperator.NOT_EQUAL;
+      }
+      | <NOTEQUAL2>
+      {
+         if(_log.isDebugEnabled()) { _log.debug("SqlCompareOp: consumed \"" + token + "\""); }
+         result = ComparisonOperator.NOT_EQUAL;
+      }
+      | <GREATER>
+      {
+         if(_log.isDebugEnabled()) { _log.debug("SqlCompareOp: consumed \"" + token + "\""); }
+         result = ComparisonOperator.GREATER_THAN;
+      }
+      | <GREATEREQUAL>
+      {
+         if(_log.isDebugEnabled()) { _log.debug("SqlCompareOp: consumed \"" + token + "\""); }
+         result = ComparisonOperator.GREATER_THAN_OR_EQUAL;
+      }
+      | <LESS>
+      {
+         if(_log.isDebugEnabled()) { _log.debug("SqlCompareOp: consumed \"" + token + "\""); }
+         result = ComparisonOperator.LESS_THAN;
+      }
+      | <LESSEQUAL>
+      {
+         if(_log.isDebugEnabled()) { _log.debug("SqlCompareOp: consumed \"" + token + "\""); }
+         result = ComparisonOperator.LESS_THAN_OR_EQUAL;
+      }
+   )
+   {
+      return result;
+   }
+}
+
+ComparisonOperator SqlIsClause() :
+{ 
+   boolean foundnot = false;
+}
+{
+  <IS>
+  { if(_log.isDebugEnabled()) { _log.debug("SqlIsClause: consumed \"" + token + "\""); } }
+  [
+   <NOT>
+   { 
+     if(_log.isDebugEnabled()) { _log.debug("SqlIsClause: consumed \"" + token + "\""); }
+     foundnot = true;
+   }
+  ]
+  <NULL>
+  { 
+     if(_log.isDebugEnabled()) { _log.debug("SqlIsClause: consumed \"" + token + "\""); }
+     return (foundnot ? ComparisonOperator.IS_NOT_NULL : ComparisonOperator.IS_NULL);
+  }
+}
+
+
+Selectable[] SqlBetweenClause() :
+{ 
+   Selectable[] pair = new Selectable[2];
+}
+{
+  <BETWEEN>
+  { if(_log.isDebugEnabled()) { _log.debug("SqlBetweenClause: consumed \"" + token + "\""); } }
+  pair[0] = SqlSumExprSelectable()
+  <AND>
+  { if(_log.isDebugEnabled()) { _log.debug("SqlBetweenClause: consumed \"" + token + "\""); } }
+  pair[1] = SqlSumExprSelectable()
+  { return pair; }
+}
+
+// ----------------------------------------------------------------------------
+// UNSUSED: old or not yet supported stuff
+// ----------------------------------------------------------------------------
+/*
+
+void SqlBetweenClause() :
+{ }
+{
+  [
+    <NOT>
+    { if(_log.isDebugEnabled()) { _log.debug("SqlBetweenClause: consumed \"" + token + "\""); } }
+  ]
+  <BETWEEN>
+  { if(_log.isDebugEnabled()) { _log.debug("SqlBetweenClause: consumed \"" + token + "\""); } }
+  SqlSumExpr()
+  <AND>
+  { if(_log.isDebugEnabled()) { _log.debug("SqlBetweenClause: consumed \"" + token + "\""); }}
+  SqlSumExpr()
+}
+
+void SqlCompareExprRight() :
+{ }
+{
+  (
+    LOOKAHEAD(2) SqlLikeClause()
+  | LOOKAHEAD(2) SqlInClause()
+  | SqlLeftJoinClause()
+  | LOOKAHEAD(SqlCompareOp() SqlSumExpr() "(+)") SqlRightJoinClause()
+  | LOOKAHEAD(2) SqlBetweenClause()
+  | SqlCompareOp() SqlSumExpr()
+  )
+}
+
+void SqlExistsClause() :
+{ }
+{
+  <EXISTS>
+  { if(_log.isDebugEnabled()) { _log.debug("SqlExistsClause: consumed \"" + token + "\""); } }
+  <OPENPAREN>
+  { if(_log.isDebugEnabled()) { _log.debug("SqlExistsClause: consumed \"" + token + "\""); } }
+  SqlSelect()
+  <CLOSEPAREN>
+  { if(_log.isDebugEnabled()) { _log.debug("SqlExistsClause: consumed \"" + token + "\""); } }
+}
+
+void SqlInClause() :
+{ }
+{
+  [
+   <NOT>
+   { if(_log.isDebugEnabled()) { _log.debug("SqlInClause: consumed \"" + token + "\""); } }
+  ]
+  <IN>
+  { if(_log.isDebugEnabled()) { _log.debug("SqlInClause: consumed \"" + token + "\""); } }
+  <OPENPAREN>
+  { if(_log.isDebugEnabled()) { _log.debug("SqlInClause: consumed \"" + token + "\""); } }
+  SqlLValueList()
+  <CLOSEPAREN>
+  { if(_log.isDebugEnabled()) { _log.debug("SqlInClause: consumed \"" + token + "\""); } }
+}
+
+void SqlLeftJoinClause() :
+{ }
+{
+  "(+)"
+  { if(_log.isDebugEnabled()) { _log.debug("SqlLeftJoinClause: consumed \"" + token + "\""); } }
+  SqlCompareOp()
+  SqlSumExpr()
+}
+
+void SqlLikeClause() :
+{ }
+{
+  [
+   <NOT>
+   { if(_log.isDebugEnabled()) { _log.debug("SqlLikeClause: consumed \"" + token + "\""); } }
+  ]
+  <LIKE>
+  { if(_log.isDebugEnabled()) { _log.debug("SqlLikeClause: consumed \"" + token + "\""); } }
+  SqlPattern()
+}
+
+void SqlPattern() :
+{ }
+{
+  ( <STRING_LITERAL>
+    { if(_log.isDebugEnabled()) { _log.debug("SqlPattern: consumed \"" + token + "\""); } }
+  | <QUESTIONMARK>
+    { if(_log.isDebugEnabled()) { _log.debug("SqlPattern: consumed \"" + token + "\""); } }
+  | <USER>
+    { if(_log.isDebugEnabled()) { _log.debug("SqlPattern: consumed \"" + token + "\""); } }
+  | SqlLValue()
+  )
+}
+
+List SqlProductExpr() :
+{
+  List list = new ArrayList();
+  String column = null;
+}
+{
+  // currently ignoring operators
+  // just gather operands
+
+  column = SqlUnaryExpr()
+  {
+    list.add(new ColumnIdentifier(column));
+  }
+  (
+    (
+      <ASTERISK>
+      { if(_log.isDebugEnabled()) { _log.debug("SqlProductExpr: consumed \"" + token + "\""); } }
+    |
+      <SLASH>
+      { if(_log.isDebugEnabled()) { _log.debug("SqlProductExpr: consumed \"" + token + "\""); } }
+    )
+    column = SqlUnaryExpr()
+    {
+      list.add(new ColumnIdentifier(column));
+    }
+  )*
+  {
+    return list;
+  }
+}
+
+void SqlRightJoinClause() :
+{ }
+{
+  SqlCompareOp()
+  SqlSumExpr()
+  "(+)"
+  { if(_log.isDebugEnabled()) { _log.debug("SqlProductExpr: consumed \"" + token + "\""); } }
+}
+
+List SqlSumExpr() :
+{
+  // this production called from multiple productions...
+  // context not clear, return results up parse tree
+  List list = null, l = null;
+}
+{
+  list = SqlProductExpr()
+
+  // currently ignoring operators - just determining operands
+  (
+    LOOKAHEAD(2)
+    (
+      <PLUS>
+      { if(_log.isDebugEnabled()) { _log.debug("SqlSumExpr: consumed \"" + token + "\""); } }
+    |
+      <MINUS>
+      { if(_log.isDebugEnabled()) { _log.debug("SqlSumExpr: consumed \"" + token + "\""); } }
+    |
+      <CONCAT>
+      { if(_log.isDebugEnabled()) { _log.debug("SqlSumExpr: consumed \"" + token + "\""); } }
+    )
+    l = SqlProductExpr()
+    {
+      list.addAll(l);
+    }
+  )*
+  {
+    return list;
+  }
+}
+
+String SqlTerm() :
+{ String s = null; }
+{
+  (
+    <OPENPAREN>
+    { if(_log.isDebugEnabled()) { _log.debug("SqlTerm: consumed \"" + token + "\""); } }
+    SqlOrExpr()
+    <CLOSEPAREN>
+    { if(_log.isDebugEnabled()) { _log.debug("SqlTerm: consumed \"" + token + "\""); } }
+  | s = SqlIdentifier()
+  | SqlLiteral()
+  | LOOKAHEAD(2) SqlFunction()
+  )
+  {
+    return s;
+  }
+}
+
+String SqlUnaryExpr() :
+{ String s = null; }
+{
+  [ ( 
+       <PLUS>
+       { if(_log.isDebugEnabled()) { _log.debug("SqlUnaryExpr: consumed \"" + token + "\""); } }
+     | <MINUS>
+       { if(_log.isDebugEnabled()) { _log.debug("SqlUnaryExpr: consumed \"" + token + "\""); } }
+    )
+  ]
+  s = SqlTerm()
+  {
+    return s;
+  }
+}
+
+*/
+
+// ----------------------------------------------------------------------------
+// EOF
+// ----------------------------------------------------------------------------

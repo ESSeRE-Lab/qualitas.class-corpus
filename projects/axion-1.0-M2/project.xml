@@ -1,0 +1,173 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- $Id: project.xml,v 1.12 2003/06/09 20:33:01 rwald Exp $ -->  
+<project>
+  <pomVersion>3</pomVersion>
+  <name>axion</name>
+  <id>axion</id>
+  <currentVersion>1.0-M2</currentVersion>
+  <organization>
+    <name>Axion Development Team</name>
+    <url>http://axion.tigris.org/</url>
+  </organization>
+  
+  <inceptionYear>2002</inceptionYear>
+  <package>org.axiondb</package>
+  
+  <!-- Gump integration -->
+  <gumpRepositoryId/>
+  <shortDescription>Axion Database Engine</shortDescription>
+  <description>Axion is a small, fast, JDBC and SQL compliant database engine.</description>
+
+  <url>http://axion.tigris.org/</url>
+  <issueTrackingUrl>http://axion.tigris.org/servlets/ProjectIssues</issueTrackingUrl>
+  <siteAddress>axion.tigris.org</siteAddress>
+  <siteDirectory>/www/</siteDirectory>
+  <distributionDirectory>/www/releases/SNAPSHOT/</distributionDirectory>
+
+  <repository>
+    <connection>scm:cvs:pserver:guest@cvs.tigris.org:/cvs:axion</connection>
+    <url>http://axion.tigris.org/source/browse/axion/</url>
+  </repository>
+
+  <mailingLists>
+    <mailingList>
+      <name>Axion User List</name>
+      <subscribe>user-subscribe@axion.tigris.org</subscribe>
+      <unsubscribe>user-unsubscribe@axion.tigris.org</unsubscribe>
+      <archive>http://axion.tigris.org/servlets/SummarizeList?listName=user</archive>
+    </mailingList>
+    <mailingList>
+      <name>Axion Developer List</name>
+      <subscribe>dev-subscribe@axion.tigris.org</subscribe>
+      <unsubscribe>dev-unsubscribe@axion.tigris.org</unsubscribe>
+      <archive>http://axion.tigris.org/servlets/SummarizeList?listName=dev</archive>
+    </mailingList>
+  </mailingLists>
+
+  <developers>
+    <developer>
+      <name>Chuck Burdick</name>
+      <id>cburdick</id>
+      <email/>
+      <organization/>
+    </developer>
+    <developer>
+      <name>David Pekarek Krohn</name>
+      <id>dkrohn</id>
+      <email/>
+      <organization/>
+    </developer>
+    <developer>
+      <name>Daniel Rall</name>
+      <id>dlr</id>
+      <email>dlr@finemaltcoding.com</email>
+      <organization>CollabNet, Inc.</organization>
+    </developer>
+    <developer>
+      <name>Geir Magnusson Jr.</name>
+      <id>geir</id>
+      <email/>
+      <organization/>
+    </developer>
+    <developer>
+      <name>James Burke</name>
+      <id>jburke</id>
+      <email/>
+      <organization/>
+    </developer>
+    <developer>
+      <name>James Strachan</name>
+      <id>jstrachan</id>
+      <email/>
+      <organization/>
+    </developer>
+    <developer>
+      <name>Jason van Zyl</name>
+      <id>jvanzyl</id>
+      <email>jason@zenplex.com</email>
+      <organization>Zenplex</organization>
+    </developer>
+    <developer>
+      <name>Morgan Delagrange</name>
+      <id>morgand</id>
+      <email/>
+      <organization/>
+    </developer>
+    <developer>
+      <name>Martin Poeschl</name>
+      <id>mpoeschl</id>
+      <email>mpoeschl@marmot.at</email>
+      <organization>Tucana</organization>
+    </developer>
+    <developer>
+      <name>Rodney Waldhoff</name>
+      <id>rwald</id>
+      <email/>
+      <organization/>
+    </developer>
+    <developer>
+      <name>Steve Polyak</name>
+      <id>spolyak</id>
+      <email/>
+      <organization/>
+    </developer>
+  </developers>
+
+  <!-- Need to mark these as compile-time/run-time (but how?) -->
+  <dependencies>
+    <dependency>
+      <id>commons-collections</id>
+      <version>SNAPSHOT</version>
+      <url>http://jakarta.apache.org/commons/collections</url>
+    </dependency>
+    <dependency>
+      <id>commons-logging</id>
+      <version>1.0</version>
+      <url>http://jakarta.apache.org/commons/logging</url>
+    </dependency>
+    <dependency>
+      <id>commons-codec</id>
+      <version>1.0-dev</version><!-- more recent version would be fine, maven just doesn't have them right now -->
+      <url>http://jakarta.apache.org/commons/codec</url>
+    </dependency>
+    <dependency>
+      <id>junit</id>
+      <version>3.7</version>
+    </dependency>
+    <dependency>
+      <id>javacc</id>
+      <version>2.1</version>
+      <jar>JavaCC.zip</jar>
+    </dependency>
+    <dependency>
+      <id>regexp</id>
+      <version>1.2</version>
+    </dependency>
+
+    <!-- these two aren't really required by axion, but by maven -->
+    <dependency><id>xml-apis</id><version>2.0.2</version></dependency>
+    <dependency><id>xerces</id><version>2.0.2</version></dependency>
+    <!-- /these two aren't really required by axion, but by maven -->
+
+  </dependencies>
+
+  <build>
+    <nagEmailAddress>dev@axion.tigris.org</nagEmailAddress>
+    <sourceDirectory>src</sourceDirectory>
+    <unitTestSourceDirectory>test</unitTestSourceDirectory>
+    <unitTest>
+      <includes>
+        <include>org/axiondb/TestAll.java</include>
+      </includes>
+    </unitTest>
+    <resources>
+      <includes>
+        <include>**/*.properties</include>
+      </includes>
+    </resources>
+    <jarResources>
+      <jarResource>**/*.properties</jarResource>
+    </jarResources>
+  </build>
+
+</project>
