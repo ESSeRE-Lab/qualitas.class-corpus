@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="src" path="src/src"/>
+	<classpathentry kind="src" path="src/testFiles/GlobalModelJUnitTestFiles"/>
+	<classpathentry kind="lib" path="src/lib/asm-3.1.jar"/>
+	<classpathentry kind="lib" path="src/lib/buildlib/ant-contrib.jar"/>
+	<classpathentry kind="lib" path="src/lib/buildlib/cenquatasks.jar"/>
+	<classpathentry kind="lib" path="src/lib/buildlib/concutest-junit-4.7-withrt-nodep.jar"/>
+	<classpathentry kind="lib" path="src/lib/buildlib/findbugs-ant.jar"/>
+	<classpathentry kind="lib" path="src/lib/buildlib/junit.jar"/>
+	<classpathentry kind="lib" path="src/lib/buildlib/netbeans-memory-leak-utils.jar"/>
+	<classpathentry kind="lib" path="src/lib/buildlib/plt-ant.jar"/>
+	<classpathentry kind="lib" path="src/lib/concutest-junit-4.7-withrt-nodep.jar"/>
+	<classpathentry kind="lib" path="src/lib/docs.jar"/>
+	<classpathentry kind="lib" path="src/lib/dynamicjava-base.jar"/>
+	<classpathentry kind="lib" path="src/lib/ecj-3.6M7.jar"/>
+	<classpathentry kind="lib" path="src/lib/forms-1.2.1.jar"/>
+	<classpathentry kind="lib" path="src/lib/javalanglevels-base.jar"/>
+	<classpathentry kind="lib" path="src/lib/looks-2.2.2.jar"/>
+	<classpathentry kind="lib" path="src/lib/platform.jar"/>
+	<classpathentry kind="lib" path="lib/tools.jar"/>
+	<classpathentry kind="lib" path="lib/drjava-stable-20100913-r5387.jar"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="output" path="bin"/>
+</classpath>
