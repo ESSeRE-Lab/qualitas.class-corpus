@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="src" path="antlr-ant/main/antlr3-task/antlr3-src"/>
+	<classpathentry kind="src" path="antlr3-maven-plugin/src/main/java"/>
+	<classpathentry kind="src" path="gunit-maven-plugin/src/main/java"/>
+	<classpathentry kind="src" path="gunit/src/main/java"/>
+	<classpathentry kind="src" path="gunit/src/test/java"/>
+	<classpathentry kind="src" path="runtime/Java/src/main/java"/>
+	<classpathentry excluding="output1/" kind="src" path="runtime/ObjC/Framework/examples/simplecTreeParser"/>
+	<classpathentry kind="src" path="runtime/ObjC/Framework/examples/treeparser"/>
+	<classpathentry kind="src" path="tool/src/main/java"/>
+	<classpathentry kind="src" path="tool/src/test/java"/>
+	<classpathentry kind="lib" path="runtime/ActionScript/project/lib/FlexAntTasks.jar"/>
+	<classpathentry kind="lib" path="lib/com.springsource.org.apache.tools.ant-1.8.1.jar"/>
+	<classpathentry kind="lib" path="lib/maven-artifact-2.0.jar"/>
+	<classpathentry kind="lib" path="lib/maven-plugin-api-3.0.3.jar"/>
+	<classpathentry kind="lib" path="lib/maven-project-2.0.jar"/>
+	<classpathentry kind="lib" path="lib/plexus-compiler-api-1.6.jar"/>
+	<classpathentry kind="lib" path="lib/plexus-utils-1.1.jar"/>
+	<classpathentry kind="lib" path="lib/antlr-3.4-complete.jar"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/4"/>
+	<classpathentry kind="output" path="bin"/>
+</classpath>
