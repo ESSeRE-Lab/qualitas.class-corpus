@@ -1,0 +1,1143 @@
+Columba v1.0 
+
+Bug fixes:
+- TreeSelection after Popup fixed. The problem was that the boolean flags to check
+  if this event is popup-event must be reset to false after the menu is shown.
+- Refactored MarkAsReadTimer. It is now independant of the TableController which 
+  makes more sense. It works with the util Timer to avoid execting an add to 
+  the CommandProcess in the EventDispatcherThread. It fixes unwanted MarkAsRead 
+  when the messagepreview is hidden.
+- #958065 sort order, when changing columns. ColumnHeaderTable model should be 
+  listener to tablecolumnmodel
+- Small bug in synchronization of HeaderLists: Deleted local uids were not 
+  counted in the message balance. This resulted in a complete sync which is 
+  not necessary.
+- Minor IMAP tweaks to get more performance/nicer connection handling.
+- Flags and Attributes need to be cloned when used as parameters in the 
+  addMessage method.
+- Headerlist was not instantiated when new subfolders were created.
+- Virtual Folder now also does binning on innerCopy and MarkMessage. Huge
+  speedup for large copy/move/delete commands on VirtualFolders.
+- All IMAPFolders can now be synced by the checkmail action.
+- #1281648, edit in external editor doesn't work
+- #1281632, edit group dialog doesn't let you add new contacts
+- use interfaces for selection handling where possible, improved package 
+  dependencies 
+- cleanup of gui.toolbar package, resembling the extendable menu code
+- #1276646, Selection in Copy Messag Dialog
+- #1275847 Mark as read after N seconds has no effect. Issues fixed.
+- Default Account should be seleted in the Composer instead of the first account.
+- Charset Menu fixes. There are not as many charsets available as 
+  previously assumed.
+- Do decoding of message body streams
+- Handle too long Strings when writing headercache.
+- Refactoring of the HeaderCacheFramework. Now HeaderList and its persistance 
+  are transparently handled. Now we can even start looking into using
+  BerkelyDB in the future. Unplanned (but not unwelcome), this refactoring
+  also includes some IMAP speedups :-)
+- make sure that message list and message viewer are cleared, if no 
+  folder or message selected
+- fixed composer layout, component height should be the same in every row
+- replace all AbstractFolder class references with interface IMailFolder
+- Speedup of MessageViewing: Use a static instance of DateTimeFormater 
+  instead of reinstantiating every time.
+- when changing folder selections, sometimes the row selection was set, 
+  but wasn't visible. In this case, the scrollpane wasn't changed correctly
+- folder options were executed twice, when selecting folder
+- JTextComponent undo/redo works correctly again
+- signature viewer uses same message viewer-like box style now, added 
+  "edit signature..." button, now visually more separated from text editor.
+- fixed table cellrenderer, selection foreground/background color
+- #1256120 Save as Draft should not append signature. 
+- refactored chat example plugin to remove cyclic dependencies, 
+  added api/ source folder (first test of using multiple source folders in a plugin) - works perfectly ;-)
+- removed all cyclic dependencies from core (columba) package
+- #1250862, add menuitem to view the error log file
+- #1250951, wrong font color in message list component (still, 
+  the extension interface is too complicated, going to simplify later)
+- fixed pending resource loader problem. This works now correctly. 
+  See chat.altura plugin for examples on how to load resources. 
+  "this.getClass().getResourceAsStream(String str)" does the trick.
+- fine-tune default theme settings
+- updated winlaf look and feel (jdic project containing bugfixes to make 
+  the JDK win L&F look more native)
+- Added native support for Mac application and web browser open.
+- added new recipient list autocomplete textfield
+- Performance tuned mbox importer.
+- Add a default signature when creating a new account.
+- Messages are marked as deleted before moved to trash. Now Expunge 
+  Folders works as users expect it to on the trash folder.
+- Handle multiparts in the alternative part. Ignore charset of HMTLDocument.
+- refactored plugin system, refactored menu extension system
+- Refactoring and clean-up for platfrom independence. From this commit 
+  on, all not natively supported platforms are again supported.
+  I have created default fallbacks for the mime association and the trayicon
+  features. It is now also easier to integrate the mac features with their native jars.
+- Html to Text was not charset aware.
+- Image Viewer speedup: Use the FAST scaling method instead of smooth.
+- Added a new edit Signature action. This opens the external text editor 
+  to edit the Signature. Can be run from Identitypanel or Composer. I also
+  added the MailAccount configuration to the Composer menu.
+- Virtual Folder speedup: Packed searches instead of every single for its 
+  own. Also fixed some problems with recursive VFolders.
+- selection handling changed. If you open the context-menu, the selection 
+  changes will not trigger the message viewer. This works for the tree and 
+  the message list.
+- #958067,cut/copy/paste messages throws exception fixed
+- Added more information on the messageFlagedChanged event. With this
+  additional information it is now possible to update the VFolders 
+  correctly if the flags change. Further, a new search is triggered if the 
+  flags change so that the VFolders get these changes. There is still a good 
+  way missing for removing messages after a Flag change.
+	
+
+Columba v1.0 RC3
+
+New features:
+- vFolders are now active and reflect changes of the folders
+- cleanup of message viewer component
+- added show attachments inline viewer for message viewer
+- added plugin-based viewers for various contents types
+- cleanup of table model for message list component
+- new filter toolbar for message list
+- moved concept of folders, filters and filter actions into core 
+- improved plugin system exception handling 
+- improved interpreter plugin support 
+- new Groovy (http://groovy.codehaus.org/) interpreter plugin, allows
+  you to write plugins in the Groovy language 
+- added a Groovy language Hello World plugin 
+- cleanup of header-cache, performance improvements 
+- cleanup of SpamAssassin plugin, added filter action
+- integration of JDIC (https://jdic.dev.java.net/) for trayicon support
+  and opening attachments with the system's default application 
+- sending messages can now be canceled
+- more progress updates on IMAP operations
+- updated to JGoodies Looks 1.3.1
+- updated to JGoodes Forms 1.0.5
+- updated berkleydb je to version 1.7.1
+- cleanup of Filter Editing Dialog
+- Added more exception handling to the pop3 header cache. Should help 
+  in debugging any further errors. (tstich)
+
+  
+Fixed bugs:
+- #1097936, textviewer should be initialized empty
+- tablemodel didn't update if null, header-cache default fields were modified
+- #1097017, Java 1.5 compiler warnings
+- #1095621, Font Color (white) is bad
+- #1097751, #1097717, inline attachment viewer "open" action
+- #1097756, online/offline mode doesn't as expected
+- #1093822, table model list doesn't update correctly sometimes
+- #1097822, allow to create vFolder as vFolder child
+- #1097935, double-click open-action in attachment list
+- #1092866, message-list shows thread-parent in italic
+- #1088886, building plugins broken
+- #1097751, inline attachment viewer "open" action
+- #1097935, double-click open-action in attachment list	
+- #1097756, online/offline mode doesn't as expected
+- #1098015, vFolder history grows too large
+- #1098057, scale image when showing attachments inline
+- #1098058, show controls, if showing rfc822message inline
+- #1098059, add hide/show button for inline viewer
+- #1120945, configuration messed up
+- #1188639, edit draft message, creates message duplicate
+- #1106616, sent later saves email in draft folder
+- updated maven build scripts (waffel)
+- prevent StackOverflow, some ensureXXXstate calls where missing. (tstich)
+- Wrong attribute in LocalMimepart set. (tstich)
+- Remove references on the deleted OpenAttachmentWith Action (tstich)
+- Remove the WorkerListener when no longer needed. (tstich)
+- Smtp now also checks the correct state. Should fix the problems 
+  that marc encountered. (tstich)
+- profile manager: Check if the folder still exists before trying to 
+  delete it. (tstich)
+- IMAPFolder: Concurrency bug in the ensureSynchronized() method cause 
+  strange connection dropped exceptions. (tstich)
+- build-files: added the source/target attribute to the build.xmls to 
+  ensure java 1.4 compatibility. (tstich)
+- Change the table only if the selected folder in the tree did not change. (tstich)
+- VFolder: only do a search if the filter contains a FLAGS criteria. (tstich)
+- fixed all mail test-case compile errors, fixed many testcases (fdietz)  
+- MailOptions Dialog: Values were not set from the configuration! (tstich)
+- only execute filter if enabled==true (fdietz)
+- Converting the character inputstream into a StringBuffer 
+  went wrong for 16bit charsets. (tstich)
+- Synchronize Subsribed missed some deleted folders. Adjusted the traversing 
+  index when a child got removed from the list. (tstich)
+- Added more information on the messageFlagedChanged event. With this 
+  additional information it is now possible to update the VFolders 
+  correctly if the flags change. Further a new search is triggered 
+  if the flags change so that the VFolders get these changes. There 
+  is still a good way missing for removing messages after a Flag change. (tstich)
+- #1211225, The delete key doesn't work in the 20050520 build
+- #1211662, New email crash
+- #1214713, folder tree CSS parser exception with Java5
+- #1214736, composer window doesn't remember size
+- #958067, cut/copy/paste messages throws exception
+
+Columba v1.0 RC2
+
+New features:
+- changed title bar to make it obvious when running in debug mode (mlivingstone)
+- updated forms library to v1.0.4 (mlivingstone)
+- international IMAP mailbox naming using UTF-7 encoding/decoding (tstich)
+- added show next/previous message and unread message actions (fdietz)
+- #999257, show/hide message preview panel (fdietz)
+- offer three choices for viewing email headers: default, custom, all (fdietz)
+- #1000003, doubleclick From: header, displayname included (fdietz)
+- #999871, "subject or sender contains" should do filtering on typing (fdietz)
+- show recent message count in folder tree using blue font (fdietz)
+- cleanup of menu, added many new shortcuts (fdietz)
+- #1000002, doubleclick support for addressbook (cliffb53)
+- #986558, Dbl-click in contact table should open edit dialog (cliffb53)
+- #1011978, Reply All- Keyboard Command (fdietz)
+- #999748, in preview panel,full emailadress should be displayed beside (fdietz)
+- added a debug-class to easily track down awt-event-dispatcher problems (fdietz)
+- added complete sorting and filtering support for contact JTable (fdietz)
+- added framemediator caching, this way switching between mail/addressbook
+  is now really fast (fdietz)
+- added facade access to mailbox folders (fdietz)
+- cleanup of the frame package, removed all circular dependencies, simplified design, 
+  using only one level of inheritance now. This makes adding new frames very easy. 
+  Also introduced the paradigm of a container which encapsulates views. (fdietz)
+- speedup of IMAP mailbox selection and auto-check (tstich)
+- cleanup of build-system (tstich)
+- created API for mail/addressbook components thereby introduced a much cleaner
+  separation which is also reflected by the new build-system (fdietz)
+- cleanup of mimetype icons, moved icons in their own folder and added many new
+  icons (fdietz) 
+- replaced MainInterface/MailInterface/AddressbookInterface with singleton 
+  based approach (fdietz)
+- set Columba to default-email client on win32 using jniwrapper (tstich)  
+- added nice version numbering method for release/build system (tstich)
+- added jpim library for vCard import/export (fdietz)
+- added a debug class for repaintmanager, this way we can easily detect 
+  calls to swing components outside the awt-event-dispatcher thread (fdietz)
+- cleanup of xml-based menu/toolbar generation code (fdietz)
+  
+
+Fixed bugs:
+- #773118 ? in name of Directory (tstich)
+- #1014346 IMAP rename problems (tstich)
+- #1014345 IMAP Subscribe problems (tstich)
+- #1015839, incoming/move spam custom folder is mixed (fdietz)
+- #1018922, catch charset exceptions and add sane fall-back (fdietz)
+- #1018504, threading is not including all messages (fdietz)
+- #1016577, Moving messages to same folder makes no sense (fdietz)
+- #1018497, expunge on root folder causes nullpointer exception (fdietz)
+- #1018505, threaded view plus/minus button mouse error (fdietz)
+- make sure "columba.size" (message-size) is never 0 KB (fdietz)
+- #1018095, SEVERE: composer i18n strings missing (fdietz)
+- #985273, "recent" value on MouseOver-Box of Folders, fixed handling of recent 
+  flag when POP3 downloading new messages (fdietz)
+- #996491, License on Help-Menu (see followups) (fdietz)
+- #1013624, Preview not reset on switching to empty folder (fdietz)
+- #1015839, incoming/move spam custom folder is mixed (fdietz)
+- check auth methods now use whatever is configured on screen instead of 
+  using stored account settings (cliffb53)
+- #1011038, Save password security warning (cliffb53)
+- Moves the cursor to the SMTP field at startup, as the other 
+  wizard dialog does (redsolo)
+- dnd selection in JTree changes fixed (fdietz)
+- shutdown-thread could be started twice times, which lead to 
+  config-file corruption, etc. (fdietz) 
+- do not try to disable internal plugin, its not possible anyway! (fdietz)
+- #1056686 Exception during IMAP auto-check (tstich)
+- ensure "Cancel" toolbar button is not visible twice times (fdietz)
+- replaced jargs with Jakarta CLI package, added Mozilla compatible support for
+  the mail component commandline options (tstich)
+- fixed Composer attachment viewer bug (fdietz)
+- changed frapuccino package to its correct name (fdietz)
+- #1033273, closing composer should show confirm dialog (fdietz)
+- #1029705 profile manager deletes complete directories (fdietz)
+- composer/message-frame are now unmanaged (fdietz)
+- cleanup of todo/fixme statements, added @author tag to these statements (fdietz)
+- added more detailed error logs and more documentation to plugin handler - 
+  should make finding bugs much easier for developers (fdietz)
+  
+Columba v1.0 RC1-final
+
+New features:
+- replaced recipient editor in composer with new component (fdietz)
+- replaced attachment editor with iconpanel (fdietz)
+- added Redirect Message action/command (kastanie)
+- POP3: messages can be deleted from server after n days (tstich)
+- added stripping of HTML messages (mirion/fdietz)
+
+Fixed bugs:
+- #987481, classcast exception in ToRenderer (fdietz)
+- only save spam DB if necessary (fdietz)
+- Contact Dialog: adapted to GUI design guidelines by making 
+  use of OK-Cancel pattern (javaprog)
+- don't send bcc in message header, fixed bug which caused 
+  random contacts to be placed in the Cc: and Bcc: headerfields (fdietz)
+- #985982 fixed (tstich)
+- Ristretto Refactoring (tstich)  
+- #985284, Composing - wrong mail adress from adressbook (fdietz)
+- get rid of "is never used" Warnings (kastanie)
+- #984579, can't delete group folder (fdietz)
+- fixed Nullpointer exception in ForwardCommand (diginetdev)
+- #983356, save as draft/template recipient problem (fdietz)
+- added a source reference to composermodel, this way the composer 
+  knows the initial message and is able to mark the message as 
+  answered after successfully sending it (fdietz)
+- .html or .htm Links weren't able to launch (kastanie) 
+- changed default mimetype to RFC1521 conform type Application/octet-stream (kastanie)
+- Improved handling of unexpected IMAP disconnect and unsolicited reponses (tstich)
+- Added Handling of IMAPExceptions (tstich)
+- add fall-back if filetype is unknown on windows (kastanie)
+- added double click functionality to almost all JList components (cliffb53)
+- added API functionality to allow special processing of various kinds of URLs (cliffb53)
+- #995828 (cliffb53)
+- replaced error dialogs with JOptionPane, added error dialog guidelines to wiki (javaprog)
+- #999920 ClassCastExcpetion on Login: Added fallback and proper error dialog (tstich)
+- #983935 ALT-E hotkey used twice times; replaced all ALT shortcuts with CTRL-SHIFT (fdietz)
+- #997560 reply to all do not work, #1000037 composer doesn't set CC/BCC headerfields (fdietz)
+- #996381, Profiles: Add any file cause Exception on launch (fdietz)
+- URLs with & included didnt start correctly (kastanie)
+- #999990, doubleclick email with attachment, then doubleclick attachment (fdietz)
+- #999986, search dialog twice (fdietz)
+- #999668, contact folder uses wrong UID for new contacts (fdietz)
+- #997513, remove group which isnt empty cause Excep. (fdietz)
+- #997607, mailaccounts not editable when "check every" is empty (fdietz)
+- exception handling cleanups (javaprog)
+- #997599, emailadress in brackets within emailbody wrong displayed : RegExpr replaced (kastanie) 
+- #996412, #995834 (cliffb53)
+- #985283, New Composing window shouldn't have attachment view box.. (fdietz)
+- #995883 Task Manager - empty list - cancel cause Except. (fdietz)
+- #995880 Folder not renameable via properties. (cliffb53)
+- upgrade to jwizz-0.1.2 providing bugfixes for windows laf issues (javaprog)
+- fixed statusbar update handling (fdietz)
+- #1001121 authentication issues, like exception when sending message (stich) 
+- #987483, Bug when forwarding messages with attachments
+- #999289, IMAP:All MSGs have size of 0KB; added fecth of RFC822.SIZE (tstich)
+- textpart was shown as attachment with 'open message in composer' (tstich)
+- all composed messages where tagged as having attachments (tstich)
+- #1009952, trayicon not visible if using columba.jar/webstart (fdietz)
+
+Columba v1.0 RC1-test4
+
+New features:
+- cleanup of addressbook component including:
+  - selecting handling fixes, enable/disable actions
+  - moved group support out of table, instead use JTree nodes for groups
+    much like Virtual Folders in the mail component
+  - added support for all vCard properties in the xml backend
+  - added jdom.jar based xml-parser backend
+  - cleanup of folder package, JTable tablemodel, list-component, dialogs
+  - added more facade methods for accessing addressbook from mail or
+    plugins 
+- added taskmanager dialog
+- added acknowledge panel to About Dialog listing all third-party libraries, use 
+  Contributurs and License file instead of hardcoded Strings
+- support of secure connections via IMAPs/POP3s and TLS for IMAP, POP3 and SMTP
+- message-viewer is now running asynchronous
+
+Fixed bugs:
+- #980605, can't install plugin
+- #980612,sorting doesn't work for spam flag column
+- Account Dialog layout cleanup
+- #979674, folder options->advanced ui isse
+- #972185, external editor doesn't work on win32
+- #977315, added hotkeys for all toggle flag actions
+- Made the HeaderParser more robust against bogus multiple headerfields (tstich)
+- removed all unnecessary exceptions, don't show error dialog, instead display 
+  exception message in pgp-status panel
+- #956284, To much logging in default setting
+- #979675, move/copy filter action exception if folder doesn't exist
+- Spam filter: message wasn't moved to Junk, directly execute command -> much better speed
+- #972818, Problem when changing pop hostname in account
+- #972776, menu-mnemonics & was visible in popup menu
+- #972475, doesn't start if ".columba" directory missing
+- added missing ForwardInline action to message-frame
+- #982766, daylight savings bug (kastanie)
+- #980606, .html or .htm Links weren't able to launch (kastanie)
+- #982663, changed default mimetype to RFC1521 conform type Application/octet-stream (kastanie)
+
+Columba v1.0 RC1-test3
+
+New features:
+- profile management (see http://blog.frederikdietz.de for more info)
+- added error dialog with "show more details" button
+- replace filter/filteractions combobox with menu, showing 
+  the user all available items without the need to scroll
+- added jniwrapper (kindly provided by jniwrapper.com)
+- added win32 trayicon support with context-menu
+- added win32 mimetype lookup (Hana Giat)
+
+Fixed bugs:
+- #968740, can't choose folder in filter dialog
+- addressbook group dialog didn't show up 
+- fixed classcast exception in addressbook, actions are enabled/disabled correctly 
+  again
+- #966413: mimetype viewer doesn't remember apps
+- refactored ConnectionStateImpl to singleton pattern, receiveAndSend action 
+  wasn't sending messages fixed, automatically go in online state if user 
+  sends or receives messages explicitly, don't automatically check for new 
+  messages if in offline state
+- fixed class-cast exception, when tree is not sorted
+- fixed exception on plugin loading failure. Only show error dialog once.
+- fixed tablemodel update notification in MarkFolderAsReadCommand.updateGUI()
+- #964416 and #964415: both selection handling bugs
+- fixed incoming spam filter bug, using less threads leads to increased performance
+- added more-failsafe handling of loading/saving header-cache
+- added jniwrapper support, trayicon for win32
+- moved independent classes to core, deleted independent directory
+- #926690, Forward Message with Attachment files
+- #956286, Date/time is not displayed correctly for my date settings
+- fixed dialog parent frame reference for many dialogs
+- #956288, recent mailfolderinfo wasn't updated when deleting message
+- #958066 character encoding when editing mails is lost
+- #956280 Create filter based on subject throws an NPE
+- #958078 POP3 header-cache is saved too often
+- #933636 make message visible after changin sorting order
+
+
+
+Columba v1.0 RC1-test2
+
+New features:
+- re-added "Drafts" flag
+- when double-clicking "marked as draft" messages, open the composer directly
+- mark message as read in Sent folder, after successful sending
+
+Fixed Bugs:
+- when marking message as spam, it was learned as non-spam
+- #955296, removal of plugin fails - tree model wasn't updated correctly
+- #951519 better error dialog handling
+- added central location for exception handling, custom human-readable 
+  messages added for most exceptions
+- if viewer application isn't found on its path, prompt user for new viewer path
+- #952161 Changed URLConnection's caching behaviour (javaprog)
+- fixes the folderoptions bug, which caused column data lose, check if columns 
+  exist, if not, create new default column data
+- fixed major bug in spam marking. messages were learned twice times, 
+  which created false message scoring
+- #952189, added dialog to prompt user to save his work in composer, 
+  using windowClosing event here
+- #951531, added decoding of headerfield
+- #951522 fixed initial selection of folder selection dialog
+- #951528, newly created folders are now selected as expected
+- #952164 signature file defaults to signature.txt which should be more 
+  familiar for windows users
+- #952184, creating virtual folder sets parent correctly now. additionally 
+  the search dialog is opened immediately
+- #953239 fixed nullpointer exception when searching IMAP folders
+- replaced JTextArea multi line label with a slightly better approach (javaprog)
+
+
+
+Columba v1.0 RC1-test1
+
+New features:
+- changed usage of String to char[] for passwords (javaprog/dietz)
+- added adaptive spam filter, using Macchiato library (fdietz)
+- added drag'n'drop support for composer and attachment panel (redsolo)
+- added sortable tree component, supports sorting by name or unread message
+  count (redsolo)
+- added HTTP proxy support (javaprog)
+- added preliminary offline/online support (javaprog)
+- added Folder->Mark Folder as Read action(redsolo)
+- changed Message->Mark Message to toggle state model(fdietz)
+- changed View->Charset menu to radiobuttons, improved usability (fdietz)
+- added testsuite for folder package, folder commands and composer commands,
+  filters (fdietz)
+- added readme.txt to all plugins (fdietz)
+- FrameView is loaded dynamically, added new plugin handler (diginetdev)
+- added security warning if user stores passwords in unsafe location (javaprog)
+- added match all filter (fdietz)
+- added "is sender in addressbook" filter (fdietz)
+- added license tab to About Dialog (javaprog)
+- moved code into separate package Frappucino, including TreeTable, editable List,
+  Checkable List, Checkable Tree, Dnd code (redsolo/fdietz)
+- moved PGP security code in JSCF package (waffel)
+- added location of configuration folder to Windows Installer (karlpeder)
+
+
+Code cleanups:
+- refactored selection handling (fdietz)
+- cleanup of mailbox folders using composition instead of inheritance (fdietz)
+- added improved listener model to mailbox folders (javaprog)
+- cleanup of TreeTableModel updating code, depends on frappucino (fdietz)
+- refactored message viewer component, improved header viewer, 
+  added status panel (fdietz)
+- added plugin-handler registry, using xml files (fdietz)
+- added testcases for plugin manager (fdietz)
+- refactored logging  (redsolo)
+- refactored Frame view/controller classes (diginetdev)
+- improved session management (javaprog)
+- cleanup of addressbook tablemodel (fdietz)
+
+Bugs:
+- fixed URL parsing bugs, which caused StackOverflow exceptions when
+  viewing messages (tstich)
+- fixed bugs caused by unclosed streams (tstich/redsolo)
+- fixed missing path separator for mailbox (fdietz)
+- fixed SMTP openConnection bug (tstich)
+- fixed inputstream bug when forwarding (tstich)
+- fixed windows focusing problems (fdietz)
+- fixed account selection when replying (karlpeder)
+- vFolder didn't allow dnd operations (fdietz)
+- fixed IMAP filtering bugs (fdietz)
+
+Columba v1.0 M2
+
+- enabled state of newly created vFolders was disabled (fdietz)
+- creating vFolders on IMAP account, accidently created a new IMAP folders on the server (tstich)
+- multiple build-file fixes (mlivingstone)
+- fixed missing charsets (mlivingstone)
+- fixed missing icons (mlivingstone)
+- fixed missing tooltips (mlivingstone)
+- updated lucene, forms, looks libraries (fdietz)
+- To, Cc, headerfields parsing added (tstich)
+- added Folder->Move up/down menuitem (fdietz)
+- added sortable treemodel, this will be activated in M3 (redsolo) 
+- better logging for ristretto (tstich)
+- fixed authentication fall-back mechanism (tstich)
+- added message quoting for html messages when replying/forwarding (karlpeder)
+- removing html comments when opening messages in composer (karlpeder)
+- fixed bug when drag'n'dropping folder (redsolor)
+- address wasn't shown correctly in composer (tstich)
+- cleanup of checkable/radiobutton menuitem (javaprog)
+- cleanup of charset menu (javaprog)
+- cleanup of composer commands (javaprog)
+- fixed plugin configuration in plugin manager (fdietz)
+- cleanup of configuration (javaprog)
+- fixed tooltip in attachment panel (tstich)
+- User manual updates / corrections / fixes (mlivingstone)
+
+Columba v1.0 M2 Release Candidate
+
+New features:
+- added import/export of filters in the filters dialog (redsolo)
+- added drag and drop support between two filter dialogs (redsolo)
+- adding always sign feature to security panel (waffel)
+- added question dialog when delete a folder
+- cleanup of mail-checking, unified POP3/IMAP mail-checking, added IMAP accounts
+  the the "Check for new Message..." submenu (fdietz)
+- added folder-based options support, a new plugin entrypoint to easily
+  add more options in the future, a plugin selection dialog, currently
+  supports filtering/sorting/threadedview/columns configuration (fdietz)
+- visible columns can be customized with new dialog, see 
+  View->Configure Columns.. menuitem (fdietz)
+- added Message coloring support, added filter and filter action (redsolo)
+- cleanup of all addressbook dialogs (fdietz)
+- added tooltips to message-list columns (fdietz)
+- fixed exception dialog layout (fdietz)
+- SMTP/IMAP/POP3 authentication cleanups, includes automatically selecting the
+  most secure method, including updates in the account dialog, to query
+  for these methods (tstich)
+- filters can be enabled/disabled (fdietz)
+- cleanup of filter framework (fdietz)
+- cleanup of JTree folder DND, added DND of messages support (redsolo)
+- added subscribe dialog (tstich)
+- replaced log4j, with java.util.logging (javaprog)
+- cleanup of composer.commands, using inputstreams only (tstich)
+- added account-based filter (redsolo)
+- new About Dialog, added contributors list, added memory monitor (ryad kalla/javaprog)
+- cleanup of the action infrastructure (javaprog)
+- cleanup of message-builder package (fdietz)
+- added spam column, spam filters, filter actions, mark as spam/not spam actions (fdietz)
+- refactored Config framework (javaprog)
+- refactored startup process and session management (javaprog)
+- improved mnemonic handling in resource loading framework
+- improved reaction to deleted messages by other applications (e.g. virus killers) while columba is running.
+- added "Open Link/With" items to message-viewer context-menu
+
+Fixed bugs:
+- fixed error in printing when no character set is specified
+  in message (karlpeder)
+- the correct account is now selected when replying (karlpeder)
+- fixed bug which caused attachments to be dupplicated when 
+  switching between html and plain text in the composer (karlpeder)
+- fixed open file handles of attachments after sending
+- fixed bug which caused message size to be zero after import (karlpeder)
+- fixing getting the right id for signing, if a id is given in the security panel it 
+  should be used instead of the sender
+- fixed bug in security panel, now the settings are saved and remember 
+  correct (waffel)
+- fixed bug when hit Alt+D to delete a message (waffel)
+- made AboutDialog non-modal and singleton to be able to use email links (javaprog)
+- fixed copy/move of encrypted messages (tstich)
+- fixed race condition in mail checking on POP3 (tstich)
+
+
+  
+Columba v1.0 M1.1
+
+Bugs:
+- wasn't able to enter chinese or other more advanced character sets in
+  composer subject textfield (forum member Turbo Chen)
+- fixed garbage appended to larger messages (tstich)
+- fixed problems with \n lineendings which should be converted 
+  to \r\n when sending (cburkey/tstich)
+- fixed wheel mouse scrolling support in message viewer (fdietz)
+- fixed SMTP SSL enabling/disabling configuration bug (karlpeder)
+- fixed JavaWebstart problems with forms.jar and JavaHelp support (fdietz)
+- cleanup of toolbar options (javaprog)
+- nicer handling of plugin loader exceptions (fdietz)
+- cleanup of external tools plugin method signature (javaprog)
+- more i18n cleanups (javaprog)
+- do not allow dragging of IMAPFolder, IMAPRootFolder and LocalRootFolder (fdietz)
+- only open composer window, if at least one account exists (fdietz)
+- decode filenames of attachments when saving to disk (fdietz)
+- win32 removing of messages bug (tstich)
+- fixed SMTP authentication bug (fdietz)
+
+Columba v1.0 M1 ::Black Mamba::
+
+Bugs:
+- fixed open attachment bug on win32 (karlpeder)
+- fixed PGP verify using IMAP (tstich)
+- fixed signing of multipart messages (tstich)
+- added send message dialog, block composer window (fdietz)
+- including latest user manual (fdietz)
+- added context-help for almost all dialogs (fdietz)
+- all mail dialogs are now ui guideline conform (fdietz)
+- new startup logo (marc)
+- fixed jwizz focus problems, disabled left steps pane, using
+  white header as default now (javaprog)
+- removed all not yet implemented features (fdietz)
+- fixed focusing problems with shortcuts, etc. (fdietz)
+- fixed rename folder F2 shortcut (rsk)
+- mail/addressbook import wizards show description (fdietz)
+- nicer password dialog (fdietz) 
+- account-dialog validates user input (fdietz)
+- better automatic configuration of account (fdietz)
+- more tooltips, many mnemonic i18n fixes (karlpeder/fdietz)
+- some new icons (fdietz)
+- use SSL is disabled by default (fdietz)
+- email-address was missing in account-dialog (fdietz)
+- attachment column wasn't working (fdietz)
+- implemented fetchHeaderfield(String[] fields) -> Reply to mailinglist works
+  also when using IMAP (tstich)
+- IMAP size column in message list works (tstich)
+- added testing framework using junit with ant (waffel)
+- use system beep as default sound notification (fdietz)
+- font settings weren't applied correctly (fdietz)
+- nullpointer exception when selection root folders (tstich)
+- IMAP special folders have special icons (tstich)
+
+Known Problems:
+- Verifying of Evolution signed messages doesn't work - probably caused
+  by binary signature format
+
+Version 0.13.0 (unstable):
+
+Columba:
+
+New features:
+# HTML-editor in composer, this allows simple formatting of messages (karlpeder)
+# reply with template (fdietz)
+# improved dialogs, using jforms API (includes account-dialog, mail options,
+  general options) (fdietz/karlpeder)
+# external apps configuration dialog (fdietz)
+# plugin manager dialog (fdietz)
+# Ristretto backend is distributed as jar and completly separated from Columba (tstich/fdietz) 
+# encryption/decryption/verification/signing of messages using GnuPG (waffel/tstich/fdietz)
+# folder options dialog added (fdietz)
+# export folder to mbox file (fdietz)
+# tree remembers collapsed/expanded state of individual folders (fdietz)
+# new context-menu for message-viewer, including copy link location (fdietz)
+# most components in Columba now support cut/copy/paste/delete/select all (fdietz)
+# IMAP automatically configures special folders like drafts, templates, send and 
+  trash (tstich)
+# added nicer "create new folder" dialog (tstich)
+# added option "prefere multipart/alternative or html only) (karlpeder)
+# better handling of mnemonics (i18n tranlatores should see the updated documentation
+  in the wiki)
+# dutch translation ()
+# removed jakarta.oro library, replaced by javax.util.regexp (tstich) 
+# massive code cleanups and code documentation
+# added default settings for frames (karlpeder)
+# context-specific help using JavaHelp, integrated usermanual (fdietz)
+# add sort submenu for message list (fdietz)
+
+
+Bigger bugs:
+# creating new root folders didn't work (tstich)
+# searching on IMAP folders with non-usascii strings (fdietz)
+
+Ristretto (low-level mail-backend):
+
+This is the mail backend Columba uses. Its a low-level API in comparison to SUNs JavaMail high-level
+API. 
+
+Bugs:
+# fixed too long client command IMAP error (when working with large sets of messages) (fdietz/tstich)
+# fixed non-contigous IMAP messagesets error (fdietz)
+# fixed handling of unsolicited IMAP server responses (tstich/fdietz)
+# fixed creating/deleting/renaming of IMAP folders (tstich)
+# parsing of IMAP child folders (tstich)
+
+
+Version 0.12.1:
+
+bugfixes:
+# "Open with" action in attachment viewer wasn't working on type rfc822 message (fdietz)
+# jwizz library updated to v0.1.1 (fixes some theme specific problems) (javaprog)
+# addressbook import wizard wasn't working (fdietz)
+# File->New->Mail window wasn't working (fdietz)
+# nullpointer exception in local CachedFolder (fdietz)
+# collapse tree in SelectedFolderDialog from mail and addressbook (fdietz)
+# focus on login dialog fixed (fdietz)
+# removed windowsmaximizer.dll and replaced it with java code (fdietz)
+# make addressbook window remember its size (karlpeder)
+# reply-to-mailinglist uses X-BeenThere headerfield which works much better (fdietz)
+# automatically collection addresses wasn't checking for email lists, just
+  for single addresses (fdietz)
+# fixed regular expression for parsing urls in message viewer (fdietz)
+# attachment viewer context menu wasn't working (fdietz)
+
+
+
+Version 0.12.0:
+
+New Features:
+
+# Printing support for text and html-messages (karlpeder)
+# Added the new message frame which only shows the message without tree/table (fdietz)
+# New Wizard framework added, AccountWizard, MailImportWizard and AddressbookWizard  
+  integrated (javaprog)
+# Delete message from POP3 server (fdietz)
+# Save Bodytext/Save Message as File (karlpeder)
+# Create Filter/vFolder from Subject/From/To (karlpeder)
+# MessageFolderInfo (total/unread/recent count) is loaded/saved (fdietz)
+# quotes are colored lightgray, smily images replace ASCII-text (tstich/fdietz)
+# New TreeTable component (fixes many visual glitches) (fdietz)
+# New plugin-handler for Look and Feels (Metouia and Kunstoff plugins) added
+# Headercache optimization for local-/remote folders and POP3 cache (tstich/fdietz)
+# Cut/Copy/Paste of messages (fdietz)
+# Using background-thread to shutting down Columba, make sure that no tasks are 
+  running before exiting (fdietz)
+# Use background-thread to save configuration, folder-headercache, pop3-headercache 
+  when no other tasks are running (fdietz)
+# Cleanups of local folders structure to make it easier to add new mailbox formats 
+  (fdietz)
+# Started porting Columba to JDK1.4, this makes this version incompatible to JDK1.3
+# Font settings are disabled by default. User can choose to overwrite the Look and 
+  Feel font settings (javaprog/fdietz)
+# added plugin-handler for addressbook import (fdietz)
+# added new default Look and Feel from jGoodies, ThinColumba is still available
+  as plugin (fdietz)
+# when using --debug show all logging information, otherwise show nothing
+  (this also includes info/error messages) (javaprog)
+# massive amount of i18n fixes and source code cleanups (javaprog/waffel)
+# Bounce message action is removed from Columba's core and now available
+  as separate plugin (fdietz)
+# show dialog box with error message when POP3 error occurs
+# added a couple of testcases for several parsers, de-/encoders and IMAP
+# allow searching with IMAP using non US-ASCII characters (fdietz)
+# folder remembers last selected message and re-selects it again
+  automatically (waffel)
+# mark message as read after x seconds reactivated (waffel)
+# added several build files for all components (waffel)
+# added buildall.sh script to build all available plugins at once (fdietz)
+# moved text/html related parsers to independent for allowing 
+  easier reuse (karlpeder)
+# moving up/down arrow keys in table viewer updates message view (waffel)
+# rpm package adds Gnome/KDE icons to corresponding menu (fdietz)
+ 
+Bigger Bugs:
+- #774117: header viewer wasn't adjusting width correctly (karlpeder)
+- #771747: save as draft/template, using trash and sent folder
+  wasn't working when using IMAP (fdietz) 
+- #758315: From column empty when using translation files (fdietz)
+- #734175: Open With in attachment viewer opens native windows
+  dialog to choose application (karlpeder)
+- #766995: searching wasn't using the correct configuration item
+  in some cases (fdietz)
+- window maximization wasn't working correctly on Linux/Unix (fdietz)
+- locking problem when downloading mail from your POP3 server (fdietz)
+- character encoding wasn't initialized correctly in composer (karlpeder)
+- table viewer wasn't updating correctly (fdietz)
+- action plugin were only able to extend the core menu (fdietz)
+- table viewer selection problems (fdietz)
+- many IMAP parser fixes for CommuniGate Pro server (fdietz)
+- fixed pending PGP bugs, this feature will be activated in
+  the next version (waffel)
+- problems if messages are > 10MB (tstich)
+- baseURL wasn't reset correctly in message viewer (tstich)
+- xml backend wasn't replacing " characters correctly (karlpeder)
+- fixed classloader problems when using Java Webstart (fdietz)
+
+Version 0.10.2:
+ - mailurl commandline argument handling fixed
+ - opening composer with commandline argument wasn't updating 
+   the view correctly
+
+Version 0.10.1:
+
+ - xml-configuration saved as UTF-8 stream
+ - attachment viewer wasn't drawing all attachments when window too small
+ - on win32 platform opening attachments wasn't executing in background and blocked Columba
+ - disabled pop-before-smtp (SMTP authentification) when using IMAP
+ - sending/receiving of very small attachments wasn't working correctly
+ - fixed rpm package argument passing
+ 
+Version 0.10.0 ::lola rennt::
+
+ - Mail-Component:
+    - better i18n support (tested with japanese and russian charsets)
+    - mark message as unread, not flagged, not expunged added
+    - major speed improvements in table renderer-code
+    - folders remember if the threaded-view is enabled
+    - email-headers and attachments are displayed in the message-view          
+    - Lucene (http://jakarta.apache.org/lucene) support for local folders 
+      added (high-performance, full-featured text search engine)
+    - added several plugin-handlers: folder, filter, filter-action,
+      pop3-preprocessor
+    
+ - Core-Component:
+ 	- sax based configuration backend (results in much better speed and
+ 	  memory consumption)
+ 	- threading infrastructure was re-designed and is much faster and more
+ 	  responsive now
+ 	- menus and toolbars are customizable (xml-based)
+ 	- every component is now model/view/controller based, so you can open
+ 	  multiple windows and Columba saves the session for you
+ 	- much dialog polishing (mnemonics, i18n, ui guidelines)
+ 	- added several plugin-handlers: interpreter, action, menu
+ 	- switching between translation packages supported
+ 	- new french translation package 
+
+Version 0.9.11
+
+ - mail-component
+    * protocol:
+       - imap flags are now synchronized, correctly
+       - imap mark as read/flagged/expunged works again
+       - bodystructure parser fixes (respects stuff
+         like multipart/alternative)
+       - smtp sending From and recipient addresses are
+         normalized correctly
+       - added imap automatic mail-check support
+    * support for specifying a default account 
+      (other accounts can inherit customization from
+       default account)
+    * overall dialog-polishing, new account-,
+      login- and filter-dialog
+    * changed MimePartCollection to a tree-like structure
+      (things like content-type alternative in combination
+       with the "enable/disable prefer html"-option work now
+       as expected)
+    * new menu to choose character coding 
+    * composer:
+       - many fixes to the address-completion
+       - address-table-widget bugfixes
+       - address-table-widget is now editable on
+         double-click (former single-click)
+       - remove entries with DEL-shortcut
+       - external editor support (Tony)
+       - new menu to choose character coding
+    * configuration-file changes:
+       - all mail-component stuff moved to new folder "mail"
+    * folder format is now really mh-style 
+    
+ - core-component
+    * dialogs are now all centered
+    * Mainframe window is maximized correctly 
+ 	* translations can be added dynamically
+ 	  (packaged as jar-files) (Hrk)
+ 	* improved windows-launcher
+ 	   - now written in plain c
+ 	   - nicely layouted "make to default email-client" dialog
+ 	* added log4j logging support(Thomas)
+ 	* added some unit test for the imap-parser
+ 	  (using JUnit)
+ 	* added program-icon
+ 	* added basic python-scription support 
+ 	  (using jython)
+ 	  
+ - translation
+    * more mnemonics externalized
+    * new finnish fi_FI translation (Jari)
+    * more german translation stuff
+    
+ 
+Version 0.9.10
+
+ - mail-component:
+    * added attachable addressbook-frame to composer
+       - easy switching between addressbooks with tabs
+       - drag'n'drop contacts/groups in composer
+       - use to/cc/bcc buttons for multiple selection
+         adding
+    * added printing support
+    * imap mailfolderinfo fixes (total count/unread/recent message
+      numbers are correct now)
+    * imap synchronize fixes
+    * imap lsub fixes (there were some problems with retrieving the
+      folder list and the path delimiter)
+    *???local folder locking fixes (local folders are now locked from
+      an outside controller - removed nearly all locking code
+      from the folder)
+    * new composer-ui:
+       - new to/cc/bcc headerfield editor is now a JTable with
+         a JComboBox to choose to/cc/bcc
+       - JTextField is the editor, which supports auto-completion
+         using the personal and the collected addresses addressbook
+       - using TAB moves focus to the subject-JTextField
+       - using BACKSPACE removes a (empty) row in the JTable
+       - attachment-viewer is now a standard JList (working
+         context menu), attachments can be removed with the DEL-
+         key
+    * threaded-view parsing fixes
+    * threaded-view "mark message"-actions fixed
+    * mailfolderinfo-toolbar looks nicer now (created a base-class
+      which the mainframe/composer use)
+    * added some icons to represent mimetypes like MS WORD-documents
+      text/html-files, etc. (gnome2 stock icons)
+    * POP3 was opening the port twice times is fixed
+    * account name in wizard is correctly changed, updating of account 
+      info works correctly now, too
+    
+ - addressbook-component:
+    * address parser fixes
+    * address list parser fixes
+    * dnd support for addressbook JList-component
+    * address auto-completion (shivchow)
+    
+    
+ - core:
+    * new default icon set (gnome2 stock icons - artist: tigert@ximian.com)
+    * more string externalization
+    * toolbar can be:
+       - icons only
+       - text only
+       - text beside icons (default)
+       - text under icons
+    * added tooltips to every button
+    * added copy/move/delete message buttons to toolbar
+    
+        
+Version 0.9.9
+
+ - mail-component:
+    * mailbox import filter added (mbox, pegasus, mozilla, evolution)
+    * open message with composer now handles contact-lists correctly
+    * redesigned filter toolbar enables faster filtering
+    * selected words in the messageviewer can now be looked up in a online 
+      dictionary ( utilities->dict.org lookup )
+    * added preliminary spell-check support (using aspell 
+      as backend) (John Murga)
+    * new drag'n'drop system enables dnd for tree and table with the 
+      left mouse button
+    * imap header-synchronization bugs fixed
+    * imap folder-list bugfix
+    * added expunge-folder action for imap
+    * delete/move messages in imap only marks messages as expunged
+    * added automatically apply filter on inbox for imap
+    * multipart/alternative messages are now handled better 
+      (text/html is first viewed)
+    * fixed a bug which doesn't show the html-part of the message correctly
+    * signed messages now show up as expected
+    * Columba works now with JDK1.3 (John Murga)
+    * esmtp authentication saves password
+    * Columba automatically detects anther running version and uses only 
+      one VM (commands can be send to the running version). You can for 
+      example open a composer from your favourite web-browser.
+    * some new command-line options:
+        - debug (show debugging info from pop3, smtp, imap)
+        - composer (open composer window)
+        - rcpt (specify recipients)
+        - body (specifiy message body)
+        - message-url (this is for MS Windows integration)
+    * you can now change the wav-file for mail-check notification
+      in the account-dialog
+    * new menu arrangement to comply more with ui recommendations 
+      like Gnome2 (www.gnome.org)
+    * wheel-mouse support (JDK1.4 only)
+    * new general options dialog, lets you configure:
+       - mark message as read interval
+       - prefer HTML messages, if available
+       - configure path to aspell-executable
+       - themes and icons (new iconsets/pulsators install button)
+       - fonts
+    * Search history-functionality. Every search is automatically
+      appended to the "Search" vFolder as child-folder. 
+      History functionality saves the last 10 searches. If you
+      want to keep vFolders just drag'n'drop them to somewhere  
+      else
+    * added some default vFolders, for first time startup
+    * added "expunge folder" action for imap-folders
+    * delete/move message just marks message "as expunged". You have
+      to manually "expunge folder" to remove them.
+    * added some links to our website in the Help-menu
+    * fixed attachment encoding/decoding bug (this affects only
+      binary attachments)
+    * fixed attachment sending bug on Windows platform
+    * added tooltips to Tree-View to show total/unread/recent messages
+      count
+    * numerous i18n fixes
+    * added ant-build system (Thomas Wabner alias Waffel)
+
+ - addressbook-component: 
+    * vcard, csv and ldif addressbook import filter 
+    * new addressbook folder format
+    * new collected addresses addressbook saves all emails 
+      from your replies automatically and therefor helps to keep 
+      your personal addressbook clean
+    * new edit contact dialog ( respects vcard keywords )
+    * numerious address/lists parsing bugfixes 
+    * added tooltips to contact-lists widget to have easy access
+      to name and email address
+    
+      
+
+
+Version 0.9.8
+
+    * Fixed the ELHO/HELO smtp commands to use "localhost.localdomain" 
+      instead of the real hostname. This should fix problems with 
+      TCP-tunneling, NAT (IP Masquerading in Linux), and hosts without 
+      fully qualified domainname (Eduardo P???rez)
+    * Fixed imap folder bug, which prevented INBOX from appearing (Frederik)
+    * Changed imap folder hierarchy parser. The delimiter character isn't 
+      hardcoded anymore. This fixes the folder hierarchy view for cyrus 
+      imapd. (Frederik)
+    * Imap serverside copying/moving/deleting operates on all messages at 
+      once, instead of sending a command for every message. (Frederik)
+    * Fixed imap headerlist synchronization bug (Frederik)
+    * Imap headercache-file is regenerated automatically on startup, 
+      if corrupted. (Frederik)
+    * Imap adding/removing folders now correctly un-/subscribes folder 
+      automatically. This fixes a problem with uw-imapd server, 
+      which showed folders as subscribed even if they didn't 
+      exist anymore. (Frederik)
+    * Fixed a outbox-folder bug, which prevented sending mails, if you 
+      didn't selected it at some time before. (Frederik)
+    * Added AUTH PLAIN SMTP authentication method.
+    * Changed the smtp-authenticate default behaviour. Columba tries to 
+      use ESMTP now, if the user wants to, even if the CAPABILITY response 
+      didn't comply to RFC.
+    * Applying filters is know blazingly fast (Timo)
+    * Fixed a threading bug, which made the gui-worker freeze. A worker 
+      can now be cancelled, which automatically cancels the corresponding 
+      worker on the other end of the channel. (Timo)
+
+
+
+Version 0.9.7
+   
+   - ported to JDK1.4
+   - no more need for jaxp.jar/parser.jar packages (just do a 
+     "java org.columba.main.Main",no classpath modification needed) 
+   - you can use now one config-folder for different operation systems
+   - default behavior for "reply"-action is know to show the message inline
+   - added "reply as attachment"
+   - added "forward inline"
+   - added "open message in composer" action
+   - in the composer you can save a message as draft or template
+   - you can open now multiple instances of the composer frame
+   - added "send later" action
+   - fixes attachment encoding/decoding bug
+   - fixed some gui bugs (treeviewer, attachmentviewer)
+
+   
+
+Version 0.9.6
+    
+    * imap subscribe/unsubscribe-dialog works now correctly
+    * implemented imap server-side searching (you can now apply filters on 
+      imap folders and especially use VFolders)
+    * added POP-before-SMTP (SMTP-after-POP) authentification to mail sending
+    * fixed some pop3 synchronization bugs
+
+
+
+
+
+Version 0.9.5
+
+This release finally fixed those POP3 authentification problems people had. 
+We have to thank James Beam for his extraordinary help on this subject. 
+But we have also added some new features:
+
+    * POP3 mailchecking plays a soundfile when new messages arrive
+    * new options for POP3 mailchecking to enable/disable automatic message 
+      downloading
+    * serverside IMAP copying/moving/deleting of messages
+    * when downloading bodytext or mimepart from IMAP server you can now 
+      see the download progress
+    * bodytext doesn't get fetched twice times from IMAP server anymore
+
+
+
+Version 0.9.4
+
+This is a minor bugfix release. We had complains from people who couldn't 
+authenticate via POP3. So I hope this version fixes the problem.
+Also added a small feature: if you reply or forward a message it gets 
+marked as replied.
+
+
+
+
+Version 0.9.3
+
+This is a *must have* release. We fixed some very serious bugs and added some 
+mailing-list specific features. So if you are not already subscribed to our 
+<http://columba.sourceforge.net/img/dok.gif>  mailinglist, this is the right time ;-)
+
+    * fixed some imap parsing stuff, attachments work now correctly (Timo)
+    * Popup-Menus work now on Windows (Timo)
+    * fixed a date-parsing bug, which lead to wrong sorting of messages (Timo)
+    * fixed a pop3-fetch bug, which created a out-of-memory exception (Timo)
+    * "save as .."-dialog shows now attachment-filenames, even when changing 
+      folders (Timo)
+    * reply to mailinglist works now as expected (Frederik)
+    * added Message-ID, In-Reply-To and References headers - we need these for 
+      message threading (Frederik)
+    * fixed some pop3-remote-control bugs (Frederik)
+
+
+
+Version 0.9.2
+
+    * fixed a translation bug, which prevented Columba from starting
+    * fixed a pop3 mail fetch bug
+
+
+
+Version 0.9.1:
+
+    * Tree Component:
+          * folder renaming now works as expected
+          * folders can be moved up and down
+          * folders can be rearranged with drag'n'drop (middle mouse button!)
+          * folders mailbox-file is loaded dynamically, instead of on program start
+          * imap Folder renaming, removing and rearranging up and down implemented
+    * Table Component:
+          * sort in order received added
+          * message filtering is also possible with Menu entry. You don't need to 
+            use the filter toolbar.
+          * message threading implemented. This is useful for mailing lists
+          * message are marked as read after 2sec delay. Timespan can be customizied.
+    * Message Viewer Component:
+          * Headers are now hyperlink aware. This is an easy way to add a sender 
+            to your addressbook or reply.
+          * new plugin system: At the moment you have the choice between our old 
+            raw text Viewer (fast), or you choose the Advanced Viewer which 
+	    shows Hyperlinks in the message text. You also have the choise to use 
+            a html viewer for html messages.
+    * POP3:
+          * message download size limit implemented
+          * added a remote server control window. You can easily see what 
+            message are on the server, 
+            and remove and fetch them individually.
+          * added the interval message checking feature
+          * better compatibility with older servers which do not support APOP
+    * IMAP:
+          * added folder adding, removing and renaming
+          * messages can be copied, moved, deleted and marked
+          * added subscribe folder dialog
+    * Filters:
+          * added much more filter options like body, date, size, etc.
+          * filters now run non-blocking
+          * much improved filter dialog
+    * We added PGP support this time (VERY unstable). You need the commandline 
+      GnuPG for this to work:
+          * encryption/decryption works
+          * signing/verifying doesn't work yet
+

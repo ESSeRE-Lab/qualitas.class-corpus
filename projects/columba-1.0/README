@@ -1,0 +1,93 @@
+-----------------------------------------------------------------------------------------
+                                     THE COLUMBA PROJECT
+-----------------------------------------------------------------------------------------
+  
+ Columba is a full-featured Java EMail-Client. 
+ It runs on every platform supporting Java. 
+
+ For the latest information on new releases, website or ressource changes, 
+ please visit http://columba.sourceforge.net
+
+
+ TABLE OF CONTENTS
+ *****************
+
+1. Disclaimer
+2  Requirements
+3. Compiling Columba
+4. Getting Help
+5. Obtaining Columba
+6. License
+7. Contact Email
+ 
+
+1. Disclaimer
+-------------
+We are not liable for any damage caused by the use of this program.
+
+
+2. Requirements
+---------------
+Columba requires a Java 1.4 or later compatible virtual machine for
+your operating system (Java 1.4.2 is recommended)
+
+The most recent version of Java can be obtained from 
+http://java.sun.com/j2se/.
+
+
+3. Compiling Columba
+---------------------
+The CVS repository has the following directory structure:
+
+/          Development directory that contains project, build and source files
+/src       Source Root
+/res       Resource files like images and translations
+/lib       Libraries used by Columba
+/native    native code for a better integration of Columba
+/plugins   a collection of plugins to extend Columba's functionality
+/classes   compiled classes will be put here
+/doc       run 'ant doc' to generate the JavaDocs
+/report    reports of the Unit tests run with 'ant test-report'
+
+The scripts are used to build the binary and source distributions. 
+
+o Building Columba:
+  bash# ant
+  
+  Running Columba
+  bash# ant run
+
+To get more information on all defined ant tasks:
+  bash# ant -p
+
+4. Getting Help
+---------------
+
+The user manual is available at
+http://columba.sourceforge.net/usermanual.php
+
+Our forum offers a great wealth of support material
+http://columba.sourceforge.net/phpBB2/
+
+For the latest information on new releases, website or resource changes, 
+please visit http://columba.sourceforge.net
+
+
+5. Obtaining Columba
+--------------------
+The website of Columba can be found at http://columba.sourceforge.net.
+
+Download: http://prdownloads.sourceforge.net/columba/?sort_by=date&sort=desc
+
+6. License
+----------
+For legal and licensing issues, please read the LICENSE file.
+
+
+7. Contact Email
+----------------
+Frederik Dietz  (developer)     fdietz@users.sourceforge.net
+Timo Stich      (developer)     tstich@users.sourceforge.net
+
+For more information please visit
+http://columba.sourceforge.net/contact.php

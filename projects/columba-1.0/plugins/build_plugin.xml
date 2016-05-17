@@ -1,0 +1,132 @@
+<?xml version="1.0"?>
+<project name="plugin" default="jar" basedir=".">
+
+	
+
+	<!-- include plugin-specific build-variables -->
+
+	<!--
+ This includes only:
+  - "plugin_id", unique id of plugin (also the name of the zip-package)
+    (for example: plugin_id=org.columba.example.HelloWorld)
+  - "plugin_dir", directory containing the source files
+  - "plugin_resources", directory containing resource files (optional)
+  - "plugin_classpath", plugin classpath (add all libraries here) (optional)
+    (for example: plugin_classpath=lib/junit.jar:lib/xml.jar)
+ -->
+
+	<!-- include plugin-specific build-variables -->
+	<property file="${plugin_dir}/build.properties" />
+
+	<!-- source files -->
+	<property name="src" value="${plugin_sources}/" />
+	
+	<!-- location of class files -->
+	<property name="build" value="${plugin_dir}/build" />
+
+	<!-- location of columba's build/ directory containing all class files -->
+	<property name="columba_build" value="${plugin_dir}/../../classes" />
+
+	<!-- jar-file must be called "plugin.jar" -->
+	<property name="jarfile" value="plugin.jar" />
+	
+	<!-- custom classpath, including Columba's build/ directory and 
+      plugin-specific directories and libraries -->
+	<property name="ownclasspath" value="${columba_classpath}:${columba_build}:${plugin_classpath}" />
+
+	<!-- cleanup build/ directory -->
+	<target name="clean" description="Cleans the build system">
+		<delete dir="${build}" />
+		<delete file="${plugin_dir/${jarfile}" />
+	</target>
+
+	<!-- create build/ directory -->
+	<target name="init" depends="clean" description="Initialises the build system">
+		<fail message="This ant-build must not be run directly! Run 'ant -Dplugin_dir=your_plugin plugin' in the main columba directory to build your plugin.">
+	     <condition>
+	       <not>
+	         <isset property="columba_classpath"/>					       	 	
+	       </not>
+	     </condition>
+	   </fail>
+
+		<fail message="No plugin_dir set! Run with 'ant -Dplugin_dir=your_plugin plugin'.">
+	     <condition>
+	       <not>
+	         <isset property="plugin_dir"/>					       	 	
+	       </not>
+	     </condition>
+	   </fail>
+
+		
+	<echo message="Building ${plugin_dir}" />
+	   <echo message="you are running java version ${ant.java.version}" />
+		<mkdir dir="${build}" />
+
+    	<antcall target="check"></antcall>
+
+	</target>
+
+	<target name="check">
+		<xmlproperty prefix="plugin_xml" file="${plugin_dir}/plugin.xml"/>
+		<fail message="plugin id in build.properties and plugin.xml must be ${plugin_dir}!" >
+			<condition>
+				<not>
+					<equals arg1="${plugin_dir}" arg2="${plugin_xml.plugin(id)}"/>
+				</not>
+			</condition>
+		</fail>
+		<fail message="plugin version in build.properties and plugin.xml must be the same!" >
+			<condition>
+				<not>
+					<equals arg1="${plugin_version}" arg2="${plugin_xml.plugin(version)}"/>
+				</not>
+			</condition>
+		</fail>
+	</target>
+	
+	<!-- copy all resources to build/ directory if the variable plugin_resources is set in the build.properties file -->
+	<target name="copy-resources" if="plugin_resources" depends="init" description="Copies all resources to the ${build} folder">
+		<echo message="copy ressources now" />
+		<copy todir="${build}">
+			<fileset dir="${plugin_resources}">
+				<include name="**" />
+			</fileset>
+		</copy>
+	</target>
+
+	<!-- compile the classes -->
+	<target name="compile" depends="copy-resources">
+		<echo message="the classes are going to ${build}" />
+		<echo message="columba class files are in ${columba_build}" />
+		<echo message="classpath: ${ownclasspath}" />
+		<javac srcdir="${src}" destdir="${build}" classpath="${ownclasspath}" encoding="ISO-8859-1" debug="yes" />
+	</target>
+
+	<!-- package in plugin.jar -->
+	<target name="jar" depends="compile">
+		<echo message="plug-in packaged in ${jarfile}" />
+		<jar basedir="${build}" jarfile="${plugin_dir}/${jarfile}">
+			<include name="**" />
+
+			<!-- the external classloader should include all libraries automatically
+        there's no need to set the classpath in the MANIFEST file again -->
+			<manifest>
+			</manifest>
+
+		</jar>
+	</target>
+
+	<!-- create plugin_id.zip file ready for releasing -->
+	<target name="release" depends="jar">
+		<echo message="zip-file is going to ${plugin_id}-${plugin_version}.zip" />
+		<zip zipfile="${plugin_id}-${plugin_version}.zip" update="true">
+			<zipfileset dir="${plugin_dir}" prefix="${plugin_id}">
+				<include name="${jarfile}" />
+				<include name="plugin.xml" />
+				<include name="lib/**" />
+			</zipfileset>
+		</zip>
+	</target>
+
+</project>

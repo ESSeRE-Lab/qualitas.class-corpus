@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<menubar>
+	<menu id="menu_file" placeholderid="open">
+	<!-- -->	
+	</menu>
+	
+	<menu id="menu_file" placeholderid="top">
+		<menuitem id="Connect" />
+		<menuitem id="Disconnect" />
+		<separator/>
+		<menuitem id="AddContact"/>	
+		<menuitem id="RemoveContact" />
+		<separator/>
+		<menuitem id="OpenConversation" />
+	</menu>
+	
+	<menu id="menu_utilities" placeholderid="bottom">
+
+	</menu>
+	
+</menubar>

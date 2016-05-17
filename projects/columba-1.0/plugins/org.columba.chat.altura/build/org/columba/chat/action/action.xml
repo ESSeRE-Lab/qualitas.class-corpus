@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- <!DOCTYPE folderlist SYSTEM "folder.dtd"> -->
+
+<extensionlist>
+ <extension id="Connect" class="org.columba.chat.ui.action.ConnectAction"/>
+ <extension id="Disconnect" class="org.columba.chat.ui.action.DisconnectAction"/>
+ <extension id="AddContact" class="org.columba.chat.ui.action.AddContactAction"/>
+ <extension id="RemoveContact" class="org.columba.chat.ui.action.RemoveContactAction"/>
+ <extension id="OpenConversation" class="org.columba.chat.ui.action.OpenConversationAction"/>
+</extensionlist>

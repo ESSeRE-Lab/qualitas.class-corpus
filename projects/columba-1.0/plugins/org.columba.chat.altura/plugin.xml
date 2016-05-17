@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<plugin name="Altura Messenger" 
+        description="Altura Instant Messenger" 
+        id="org.columba.chat.altura" 
+        version="1.0" 
+        category="Application" 
+        enabled="true">
+  <extensionlist id="org.columba.core.component">
+    <extension id="AlturaMessenger" class="org.columba.chat.AlturaComponent" />
+  </extensionlist>
+  <extensionlist id="org.columba.core.frame">
+    <extension id="AlturaFrame" class="org.columba.chat.frame.AlturaFrameController">
+     <properties managed="true" />
+    </extension>
+  </extensionlist>
+</plugin>
