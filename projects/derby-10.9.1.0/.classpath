@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry excluding="nserverdemo/SimpleNetworkClientSample.java|nserverdemo/SimpleNetworkServerSample.java" kind="src" path="db-derby-10.9.1.0-src/generated/java"/>
+	<classpathentry kind="src" path="db-derby-10.9.1.0-src/java/build"/>
+	<classpathentry excluding="org/apache/derby/client/am/ColumnMetaData.java|org/apache/derby/client/am/LogicalCallableStatement.java|org/apache/derby/client/am/LogicalConnection.java|org/apache/derby/client/am/LogicalDatabaseMetaData.java|org/apache/derby/client/am/LogicalPreparedStatement.java|org/apache/derby/client/am/ParameterMetaData.java|org/apache/derby/client/am/PreparedStatement.java|org/apache/derby/client/net/NetConnection.java|org/apache/derby/client/net/NetDatabaseMetaData.java|org/apache/derby/client/net/NetResultSet.java|org/apache/derby/client/am/CallableStatement.java|org/apache/derby/client/am/Statement.java|org/apache/derby/jdbc/ClientDataSource.java|org/apache/derby/client/ClientPooledConnection.java" kind="src" path="db-derby-10.9.1.0-src/java/client"/>
+	<classpathentry excluding="vtis/java/|workingwithderby/|scores/java/client/|simplemobile/|scores/java/common/|simple/|scores/java/server/|localcal/src/|nserverdemo/" kind="src" path="db-derby-10.9.1.0-src/java/demo"/>
+	<classpathentry kind="src" path="db-derby-10.9.1.0-src/java/demo/localcal/src"/>
+	<classpathentry kind="src" path="db-derby-10.9.1.0-src/java/demo/scores/java/client"/>
+	<classpathentry kind="src" path="db-derby-10.9.1.0-src/java/demo/scores/java/common"/>
+	<classpathentry kind="src" path="db-derby-10.9.1.0-src/java/demo/scores/java/server"/>
+	<classpathentry kind="src" path="db-derby-10.9.1.0-src/java/demo/simple"/>
+	<classpathentry kind="src" path="db-derby-10.9.1.0-src/java/demo/simplemobile"/>
+	<classpathentry kind="src" path="db-derby-10.9.1.0-src/java/demo/vtis/java"/>
+	<classpathentry kind="src" path="db-derby-10.9.1.0-src/java/demo/workingwithderby"/>
+	<classpathentry kind="src" path="db-derby-10.9.1.0-src/java/drda"/>
+	<classpathentry kind="src" path="db-derby-10.9.1.0-src/java/shared"/>
+	<classpathentry kind="src" path="db-derby-10.9.1.0-src/java/storeless"/>
+	<classpathentry excluding="org/apache/derbyTesting/functionTests/tests/lang/WarehouseVTI.java|org/apache/derbyTesting/functionTests/tests/lang/VTITest.java|org/apache/derbyTesting/functionTests/tests/jdbcapi/ResultSetJDBC30Test.java|org/apache/derbyTesting/functionTests/tests/junitTests/compatibility/JDBCDriverTest.java|org/apache/derbyTesting/functionTests/tests/largedata/LobLimitsTest.java|org/apache/derbyTesting/functionTests/tests/largedata/|org/apache/derbyTesting/functionTests/tests/tools/SysinfoAPITest.java" kind="src" path="db-derby-10.9.1.0-src/java/testing"/>
+	<classpathentry kind="src" path="db-derby-10.9.1.0-src/java/tools"/>
+	<classpathentry kind="src" path="db-derby-10.9.1.0-src/maven2"/>
+	<classpathentry kind="src" path="db-derby-10.9.1.0-src/plugins/eclipse/org.apache.derby.ui/src"/>
+	<classpathentry excluding="org/apache/derby/iapi/jdbc/BrokeredPreparedStatement30.java|org/apache/derby/iapi/jdbc/BrokeredCallableStatement30.java|org/apache/derby/iapi/jdbc/BrokeredConnection30.java|org/apache/derby/iapi/jdbc/BrokeredStatement.java|org/apache/derby/impl/jdbc/EmbedCallableStatement169.java|org/apache/derby/impl/jdbc/EmbedCallableStatement30.java|org/apache/derby/impl/jdbc/EmbedConnection30.java|org/apache/derby/impl/jdbc/EmbedPreparedStatement169.java|org/apache/derby/impl/jdbc/EmbedPreparedStatement30.java|org/apache/derby/impl/jdbc/EmbedResultSet169.java|org/apache/derby/impl/jdbc/EmbedResultSet20.java|org/apache/derby/impl/jdbc/EmbedParameterMetaData30.java|org/apache/derby/impl/jdbc/EmbedStatement.java|org/apache/derby/impl/jdbc/EmbedDatabaseMetaData.java|org/apache/derby/impl/jdbc/EmbedResultSetMetaData.java|org/apache/derby/catalog/TriggerNewTransitionRows.java|org/apache/derby/catalog/TriggerOldTransitionRows.java|org/apache/derby/vti/VTITemplateBase.java|org/apache/derby/impl/load/ImportBlob.java|org/apache/derby/impl/load/ImportClob.java|org/apache/derby/impl/load/ImportResultSetMetaData.java|org/apache/derby/jdbc/EmbeddedDataSource.java|org/apache/derby/jdbc/EmbedPooledConnection.java|org/apache/derby/jdbc/EmbeddedSimpleDataSource.java" kind="src" path="db-derby-10.9.1.0-src/java/engine"/>
+	<classpathentry kind="src" path="db-derby-10.9.1.0-src/java/stubs/jdbc4"/>
+	<classpathentry kind="lib" path="db-derby-10.9.1.0-doc-src/lib/avalon-framework-4.2.0.jar"/>
+	<classpathentry kind="lib" path="db-derby-10.9.1.0-doc-src/lib/batik-all-1.6.jar"/>
+	<classpathentry kind="lib" path="db-derby-10.9.1.0-doc-src/lib/commons-io-1.1.jar"/>
+	<classpathentry kind="lib" path="db-derby-10.9.1.0-doc-src/lib/commons-logging-1.0.4.jar"/>
+	<classpathentry kind="lib" path="db-derby-10.9.1.0-doc-src/lib/fop.jar"/>
+	<classpathentry kind="lib" path="db-derby-10.9.1.0-doc-src/lib/serializer-2.7.0.jar"/>
+	<classpathentry kind="lib" path="db-derby-10.9.1.0-doc-src/lib/xalan-2.7.0.jar"/>
+	<classpathentry kind="lib" path="db-derby-10.9.1.0-doc-src/lib/xercesImpl-2.7.1.jar"/>
+	<classpathentry kind="lib" path="db-derby-10.9.1.0-doc-src/lib/xml-apis-1.3.02.jar"/>
+	<classpathentry kind="lib" path="db-derby-10.9.1.0-doc-src/lib/xmlgraphics-commons-1.1.jar"/>
+	<classpathentry kind="lib" path="db-derby-10.9.1.0-src/jars/sane/derby.jar"/>
+	<classpathentry kind="lib" path="db-derby-10.9.1.0-src/jars/sane/derbyclient.jar"/>
+	<classpathentry kind="lib" path="db-derby-10.9.1.0-src/jars/sane/derbyLocale_cs.jar"/>
+	<classpathentry kind="lib" path="db-derby-10.9.1.0-src/jars/sane/derbyLocale_de_DE.jar"/>
+	<classpathentry kind="lib" path="db-derby-10.9.1.0-src/jars/sane/derbyLocale_es.jar"/>
+	<classpathentry kind="lib" path="db-derby-10.9.1.0-src/jars/sane/derbyLocale_fr.jar"/>
+	<classpathentry kind="lib" path="db-derby-10.9.1.0-src/jars/sane/derbyLocale_hu.jar"/>
+	<classpathentry kind="lib" path="db-derby-10.9.1.0-src/jars/sane/derbyLocale_it.jar"/>
+	<classpathentry kind="lib" path="db-derby-10.9.1.0-src/jars/sane/derbyLocale_ja_JP.jar"/>
+	<classpathentry kind="lib" path="db-derby-10.9.1.0-src/jars/sane/derbyLocale_ko_KR.jar"/>
+	<classpathentry kind="lib" path="db-derby-10.9.1.0-src/jars/sane/derbyLocale_pl.jar"/>
+	<classpathentry kind="lib" path="db-derby-10.9.1.0-src/jars/sane/derbyLocale_pt_BR.jar"/>
+	<classpathentry kind="lib" path="db-derby-10.9.1.0-src/jars/sane/derbyLocale_ru.jar"/>
+	<classpathentry kind="lib" path="db-derby-10.9.1.0-src/jars/sane/derbyLocale_zh_CN.jar"/>
+	<classpathentry kind="lib" path="db-derby-10.9.1.0-src/jars/sane/derbyLocale_zh_TW.jar"/>
+	<classpathentry kind="lib" path="db-derby-10.9.1.0-src/jars/sane/derbynet.jar"/>
+	<classpathentry kind="lib" path="db-derby-10.9.1.0-src/jars/sane/derbyrun.jar"/>
+	<classpathentry kind="lib" path="db-derby-10.9.1.0-src/jars/sane/derbytools.jar"/>
+	<classpathentry kind="lib" path="db-derby-10.9.1.0-src/tools/java/geronimo-spec-servlet-2.4-rc4.jar"/>
+	<classpathentry kind="lib" path="db-derby-10.9.1.0-src/tools/java/jakarta-oro-2.0.8.jar"/>
+	<classpathentry kind="lib" path="db-derby-10.9.1.0-src/tools/java/javacc.jar"/>
+	<classpathentry kind="lib" path="db-derby-10.9.1.0-src/tools/java/junit.jar"/>
+	<classpathentry kind="lib" path="db-derby-10.9.1.0-src/tools/java/xml-apis.jar"/>
+	<classpathentry kind="lib" path="lib/com.springsource.org.apache.tools.ant-1.8.1.jar"/>
+	<classpathentry kind="lib" path="lib/com-sun-tools-doclets-Taglet.jar"/>
+	<classpathentry kind="lib" path="lib/com-sun-javadoc.jar"/>
+	<classpathentry kind="lib" path="lib/org.eclipse.core.resources.jar"/>
+	<classpathentry kind="lib" path="lib/org.eclipse.core.runtime-3.1.0.jar"/>
+	<classpathentry kind="lib" path="lib/org.eclipse.swt-3.1.jar"/>
+	<classpathentry kind="lib" path="lib/eclipse.jdt.core_3.1.0.jar"/>
+	<classpathentry kind="lib" path="lib/org.eclipse.jface-3.1.0.jar"/>
+	<classpathentry kind="lib" path="lib/org.eclipse.ui.workbench-3.1.0.jar"/>
+	<classpathentry kind="lib" path="lib/org.eclipse.debug.core_3.7.0.v20110518.jar"/>
+	<classpathentry kind="lib" path="lib/org.eclipse.jdt.launching_3.6.0.v20110509.jar"/>
+	<classpathentry kind="lib" path="lib/json.jar"/>
+	<classpathentry kind="lib" path="lib/org.eclipse.osgi.jar"/>
+	<classpathentry kind="lib" path="lib/eclipse-equinox-common-3.5.0.jar"/>
+	<classpathentry kind="lib" path="lib/commons-math-2.2.jar"/>
+	<classpathentry kind="lib" path="lib/gdata-core.jar"/>
+	<classpathentry kind="lib" path="lib/gdata-calendar-1.0.jar"/>
+	<classpathentry kind="lib" path="lib/gdata-client.jar"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.6"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/4"/>
+	<classpathentry kind="output" path="db-derby-10.9.1.0-src/classes.storeless"/>
+</classpath>
